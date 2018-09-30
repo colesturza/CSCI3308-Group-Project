@@ -1,0 +1,2 @@
+C:\Users\aalbert\source\repos\3308_GroupProj\Website\UHub.Tests\obj\Debug\UHub.Tests.csprojAssemblyReference.cache
+C:\Users\aalbert\source\repos\3308_GroupProj\Website\UHub.Tests\obj\Debug\UHub.Tests.csproj.CoreCompileInputs.cache
