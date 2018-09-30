@@ -1,0 +1,6 @@
+C:\Users\aalbert\source\repos\3308_GroupProj\Website\UHub.CoreLib\bin\Debug\UHub.CoreLib.dll
+C:\Users\aalbert\source\repos\3308_GroupProj\Website\UHub.CoreLib\bin\Debug\UHub.CoreLib.pdb
+C:\Users\aalbert\source\repos\3308_GroupProj\Website\UHub.CoreLib\obj\Debug\UHub.CoreLib.csprojAssemblyReference.cache
+C:\Users\aalbert\source\repos\3308_GroupProj\Website\UHub.CoreLib\obj\Debug\UHub.CoreLib.csproj.CoreCompileInputs.cache
+C:\Users\aalbert\source\repos\3308_GroupProj\Website\UHub.CoreLib\obj\Debug\UHub.CoreLib.dll
+C:\Users\aalbert\source\repos\3308_GroupProj\Website\UHub.CoreLib\obj\Debug\UHub.CoreLib.pdb
