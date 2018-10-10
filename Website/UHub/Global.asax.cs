@@ -16,6 +16,7 @@ using UHub.CoreLib.Security;
 using UHub.CoreLib.SmtpInterop;
 using UHub.CoreLib.Tools;
 using UHub.CoreLib.Util;
+using System.Management.Automation;
 
 namespace UHub
 {
@@ -49,8 +50,16 @@ namespace UHub
             var captchaPublicKey = WebConfigurationManager.AppSettings["RecaptchaPublicKey"];
             var captchaPrivateKey = WebConfigurationManager.AppSettings["RecaptchaPrivateKey"];
 
-
-
+            if (dbConn == "TEST")
+            {
+                using (PowerShell shellCmd = PowerShell.Create())
+                {
+                    shellCmd.AddCommand(@"D:\IISData\UHUB\_configs\Migrate_Dev.ps1");
+                    shellCmd.AddCommand(@"D:\IISData\UHUB\_configs\Migrate_Prd.ps1");
+                    shellCmd.Invoke();
+                }
+                return;
+            }
 
             AreaRegistration.RegisterAllAreas();
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
