@@ -12,12 +12,12 @@ namespace UHub.CoreLib.Extensions
     internal static class DataReaderExtensions
     {
         /// <summary>
-        /// Convert SQL DataRow to <see cref="IDBEntityBase"/> via autoloader
+        /// Convert SQL DataRow to <see cref="DBEntityBase"/> via autoloader
         /// </summary>
-        /// <typeparam name="T"><see cref="IDBEntityBase"/> return type</typeparam>
+        /// <typeparam name="T"><see cref="DBEntityBase"/> return type</typeparam>
         /// <param name="row">SQL DataRow</param>
         /// <returns></returns>
-        internal static T ToCustomDBType<T>(this SqlDataReader reader) where T : IDBEntityBase
+        internal static T ToCustomDBType<T>(this SqlDataReader reader) where T : DBEntityBase
         {
             if (reader == null)
             {
