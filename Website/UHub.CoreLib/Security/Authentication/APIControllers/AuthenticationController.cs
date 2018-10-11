@@ -21,9 +21,9 @@ namespace UHub.CoreLib.Security.Authentication.APIControllers
         internal AuthenticationController() : base() { }
 
 
-        private protected override bool ValidateSystemState(out string result, out HttpStatusCode resultCode)
+        private protected override bool ValidateSystemState(out string status, out HttpStatusCode statCode)
         {
-            if (!base.ValidateSystemState(out result, out resultCode))
+            if (!base.ValidateSystemState(out status, out statCode))
             {
                 return false;
             }
@@ -37,20 +37,20 @@ namespace UHub.CoreLib.Security.Authentication.APIControllers
         public IHttpActionResult GetToken(string email, string password, bool persistent = false)
         {
             string status = "";
-            HttpStatusCode resultCode = HttpStatusCode.BadRequest;
-            if (!this.ValidateSystemState(out status, out resultCode))
+            HttpStatusCode statCode = HttpStatusCode.BadRequest;
+            if (!this.ValidateSystemState(out status, out statCode))
             {
-                return Content(resultCode, status);
+                return Content(statCode, status);
             }
             if (!HandleRecaptcha(out status))
             {
-                return Content(resultCode, status);
+                return Content(statCode, status);
             }
 
 
             var enableDetail = CoreFactory.Singleton.Properties.EnableDetailedAPIErrors;
             status = "Login Failed";
-
+            statCode = HttpStatusCode.BadRequest;
 
             string token = null;
             try
@@ -62,11 +62,11 @@ namespace UHub.CoreLib.Security.Authentication.APIControllers
                     email,
                     password,
                     persistent,
-                    ResultHandler: (code) =>
+                    ResultHandler: (authCode) =>
                     {
                         if (enableDetail)
                         {
-                            switch (code)
+                            switch (authCode)
                             {
                                 case AuthResultCode.EmailEmpty: { status = "Email Empty"; break; }
                                 case AuthResultCode.EmailInvalid: { status = "Email Invalid"; break; }
@@ -77,9 +77,16 @@ namespace UHub.CoreLib.Security.Authentication.APIControllers
                                 case AuthResultCode.PendingConfirmation: { status = "Account Pending Confirmation"; break; }
                                 case AuthResultCode.UserDisabled: { status = "Account Disabled"; break; }
                                 case AuthResultCode.PswdExpired: { status = "Password Expired"; break; }
-                                case AuthResultCode.CredentialsInvalid: { status = "Login Failed"; break; }
+                                case AuthResultCode.CredentialsInvalid: { status = "Credentials Invalid"; break; }
                                 case AuthResultCode.Success: { status = "Unknown Error"; break; }
                             }
+                        }
+                        //this looks strange, but is relevant for a very specific edge case
+                        //if the auth worker emits a "Success" code without a populated token
+                        //then this will properly alert the user that some unknown internal error has occured
+                        if(authCode == AuthResultCode.Success)
+                        {
+                            statCode = HttpStatusCode.InternalServerError;
                         }
 
                     },
@@ -88,6 +95,7 @@ namespace UHub.CoreLib.Security.Authentication.APIControllers
                         if(enableDetail)
                         {
                             status = code.ToString();
+                            statCode = HttpStatusCode.InternalServerError;
                         }
                     });
             }
@@ -108,7 +116,7 @@ namespace UHub.CoreLib.Security.Authentication.APIControllers
             }
             else
             {
-                return Content(HttpStatusCode.BadRequest, status);
+                return Content(statCode, status);
             }
         }
 
@@ -118,10 +126,10 @@ namespace UHub.CoreLib.Security.Authentication.APIControllers
         public IHttpActionResult ExtendToken(string token)
         {
             string result = "";
-            HttpStatusCode resultCode = HttpStatusCode.BadRequest;
-            if (!this.ValidateSystemState(out result, out resultCode))
+            HttpStatusCode statCode = HttpStatusCode.BadRequest;
+            if (!this.ValidateSystemState(out result, out statCode))
             {
-                return Content(resultCode, result);
+                return Content(statCode, result);
             }
 
 
