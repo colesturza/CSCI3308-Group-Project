@@ -90,7 +90,7 @@ namespace UHub.CoreLib.Users.Management
             }
         }
 
-        internal static void UpdateUserInfo(IUser_Update_Public cmsUser)
+        internal static void UpdateUserInfo(IUser_Update_Private cmsUser)
         {
             if (!CoreFactory.Singleton.IsEnabled)
             {

@@ -21,9 +21,9 @@ namespace UHub.CoreLib.Security.Authentication.APIControllers
         internal AuthenticationController() : base() { }
 
 
-        private protected override bool ValidateSystemState(out string error)
+        private protected override bool ValidateSystemState(out string result, out HttpStatusCode resultCode)
         {
-            if (!base.ValidateSystemState(out error))
+            if (!base.ValidateSystemState(out result, out resultCode))
             {
                 return false;
             }
@@ -34,25 +34,22 @@ namespace UHub.CoreLib.Security.Authentication.APIControllers
 
         [Route("GetToken")]
         [HttpPost()]
-#pragma warning disable CS1998 // This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
-        public string GetToken(string email, string password, bool persistent = false)
-#pragma warning restore CS1998 // This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
+        public IHttpActionResult GetToken(string email, string password, bool persistent = false)
         {
-            string error = "";
-
-            if (!base.ValidateSystemState(out error))
+            string status = "";
+            HttpStatusCode resultCode = HttpStatusCode.BadRequest;
+            if (!this.ValidateSystemState(out status, out resultCode))
             {
-                return error;
+                return Content(resultCode, status);
             }
-            if (!HandleRecaptcha(out error))
+            if (!HandleRecaptcha(out status))
             {
-                return error;
+                return Content(resultCode, status);
             }
 
 
             var enableDetail = CoreFactory.Singleton.Properties.EnableDetailedAPIErrors;
-            var er = "Login Failed";
-            error = er;
+            status = "Login Failed";
 
 
             string token = null;
@@ -69,58 +66,65 @@ namespace UHub.CoreLib.Security.Authentication.APIControllers
                     {
                         if (enableDetail)
                         {
-                            error = er;
-                        }
-                        else
-                        {
                             switch (code)
                             {
-                                case AuthResultCode.EmailEmpty: { error = "Email Empty"; break; }
-                                case AuthResultCode.EmailInvalid: { error = "Email Invalid"; break; }
-                                case AuthResultCode.PswdEmpty: { error = "Password Empty"; break; }
-                                case AuthResultCode.UserInvalid: { error = "Account Invalid"; break; }
-                                case AuthResultCode.UserLocked: { error = "Account Locked"; break; }
-                                case AuthResultCode.PendingApproval: { error = "Account Pending Approval"; break; }
-                                case AuthResultCode.PendingConfirmation: { error = "Account Pending Confirmation"; break; }
-                                case AuthResultCode.UserDisabled: { error = "Account Disabled"; break; }
-                                case AuthResultCode.PswdExpired: { error = "Password Expired"; break; }
-                                case AuthResultCode.CredentialsInvalid: { error = "Login Failed"; break; }
-                                case AuthResultCode.Success: { error = "Unknown Error"; break; }
+                                case AuthResultCode.EmailEmpty: { status = "Email Empty"; break; }
+                                case AuthResultCode.EmailInvalid: { status = "Email Invalid"; break; }
+                                case AuthResultCode.PswdEmpty: { status = "Password Empty"; break; }
+                                case AuthResultCode.UserInvalid: { status = "Account Invalid"; break; }
+                                case AuthResultCode.UserLocked: { status = "Account Locked"; break; }
+                                case AuthResultCode.PendingApproval: { status = "Account Pending Approval"; break; }
+                                case AuthResultCode.PendingConfirmation: { status = "Account Pending Confirmation"; break; }
+                                case AuthResultCode.UserDisabled: { status = "Account Disabled"; break; }
+                                case AuthResultCode.PswdExpired: { status = "Password Expired"; break; }
+                                case AuthResultCode.CredentialsInvalid: { status = "Login Failed"; break; }
+                                case AuthResultCode.Success: { status = "Unknown Error"; break; }
                             }
                         }
 
                     },
-                    GeneralFailHandler: (code) => { error = enableDetail ? code.ToString() : er; });
+                    GeneralFailHandler: (code) =>
+                    {
+                        if(enableDetail)
+                        {
+                            status = code.ToString();
+                        }
+                    });
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex);
-                return error;
+                var errCode = "4717C1CF-7C2E-4596-9917-119FF7248B10";
+                Exception ex_outer = new Exception(errCode, ex);
+                CoreFactory.Singleton.Logging.CreateErrorLog(ex_outer);
+
+                return Content(HttpStatusCode.InternalServerError, status);
             }
 
 
 
             if (token.IsNotEmpty())
             {
-                return token;
+                return Ok(token);
             }
             else
             {
-                return error;
+                return Content(HttpStatusCode.InternalServerError, status);
             }
         }
 
 
         [Route("ExtendToken")]
         [HttpPost()]
-#pragma warning disable CS1998 // This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
         public IHttpActionResult ExtendToken(string token)
-#pragma warning restore CS1998 // This async method lacks 'await' operators and will run synchronously. Consider using the 'await' operator to await non-blocking API calls, or 'await Task.Run(...)' to do CPU-bound work on a background thread.
         {
-            if (!base.ValidateSystemState(out var error))
+            string result = "";
+            HttpStatusCode resultCode = HttpStatusCode.BadRequest;
+            if (!this.ValidateSystemState(out result, out resultCode))
             {
-                return new res.NegotiatedContentResult<string>(HttpStatusCode.Forbidden, error, this);
+                return Content(resultCode, result);
             }
+
+
 
             //in case of any error, fail silent and return the original token
             string newToken = token;
@@ -130,7 +134,9 @@ namespace UHub.CoreLib.Security.Authentication.APIControllers
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex);
+                var errCode = "7D136E21-6F6C-436B-89E3-9F57E6C0861D";
+                Exception ex_outer = new Exception(errCode, ex);
+                CoreFactory.Singleton.Logging.CreateErrorLog(ex_outer);
             }
 
 

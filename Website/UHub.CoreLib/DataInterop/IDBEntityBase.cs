@@ -13,7 +13,7 @@ namespace UHub.CoreLib.DataInterop
     /// <summary>
     /// Base class for all custom DB interface objects.
     /// </summary>
-    public abstract partial class CustomDBTypeBase
+    public interface IDBEntityBase
     {
 
     }

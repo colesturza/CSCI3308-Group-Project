@@ -10,7 +10,7 @@ using UHub.CoreLib.Management;
 namespace UHub.CoreLib.Security.Authentication
 {
     [DataClass]
-    internal sealed partial class UserAuthInfo : CustomDBTypeBase
+    internal sealed partial class UserAuthInfo : IDBEntityBase
     {
 
         #region DataProperties

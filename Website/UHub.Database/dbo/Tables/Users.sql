@@ -12,14 +12,18 @@
 );
 
 
+
+
 GO
 CREATE UNIQUE NONCLUSTERED INDEX [IX_Users_Email]
     ON [dbo].[Users]([Email] ASC);
 
 
 GO
-CREATE NONCLUSTERED INDEX [IX_Users_Username]
+CREATE UNIQUE NONCLUSTERED INDEX [IX_Users_Username]
     ON [dbo].[Users]([Username] ASC);
+
+
 
 
 GO

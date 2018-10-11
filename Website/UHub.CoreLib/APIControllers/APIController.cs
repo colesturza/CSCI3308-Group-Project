@@ -33,22 +33,26 @@ namespace UHub.CoreLib.APIControllers
         /// <summary>
         /// Validate that the CMS system is enabled and the requested API is available
         /// </summary>
-        private protected virtual bool ValidateSystemState(out string error)
+        private protected virtual bool ValidateSystemState(out string result, out HttpStatusCode resultCode)
         {
             //Check if system is enabled
             if (!CoreFactory.Singleton.IsEnabled)
             {
-                throw new SystemDisabledException();
+                result = "System Disabled";
+                resultCode = HttpStatusCode.InternalServerError;
+                return false;
             }
 
             //CHECK HTTPS STATUS
             if (Request.RequestUri.Scheme != Uri.UriSchemeHttps)
             {
-                error = "Must Use HTTPS";
+                result = "Must Use HTTPS";
+                resultCode = HttpStatusCode.UpgradeRequired;
                 return false;
             }
 
-            error = "System Validated";
+            result = "System Validated";
+            resultCode = HttpStatusCode.OK;
             return true;
         }
 
@@ -84,11 +88,11 @@ namespace UHub.CoreLib.APIControllers
         /// <summary>
         /// Throw error if Recaptcha status is not valid
         /// </summary>
-        private protected bool HandleRecaptcha(out string error)
+        private protected bool HandleRecaptcha(out string result)
         {
             if (!CoreFactory.Singleton.Properties.EnableRecaptcha)
             {
-                error = "Recaptcha Not Required";
+                result = "Recaptcha Not Required";
                 return true;
             }
 
@@ -99,28 +103,28 @@ namespace UHub.CoreLib.APIControllers
 
                 if (captchaResponse == null)
                 {
-                    error = "Recaptcha Failed";
+                    result = "Recaptcha Failed";
                     return false;
                 }
 
                 if (captchaResponse.IsEmpty())
                 {
-                    error = ResponseStrings.RecaptchaError.RECAPTCHA_MISSING;
+                    result = ResponseStrings.RecaptchaError.RECAPTCHA_MISSING;
                     return false;
                 }
                 if (!CoreFactory.Singleton.Recaptcha.IsCaptchaValid(captchaResponse))
                 {
-                    error = ResponseStrings.RecaptchaError.RECAPTCHA_INVALID;
+                    result = ResponseStrings.RecaptchaError.RECAPTCHA_INVALID;
                     return false;
                 }
 
-                error = "Recaptcha Validated";
+                result = "Recaptcha Validated";
                 return true;
 
             }
             catch
             {
-                error = "Recaptcha Failed";
+                result = "Recaptcha Failed";
                 CoreFactory.Singleton.Logging.CreateErrorLog(new Guid("2773EC77-FA18-4445-9EBB-41780638D993"));
                 return false;
             }

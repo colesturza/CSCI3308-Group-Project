@@ -15,7 +15,7 @@ namespace UHub.CoreLib.Users
 {
 
     [DataClass]
-    public partial class User : CustomDBTypeBase, IUser_Internal, IUser_Create_Internal, IUser_Update_Public
+    public partial class User : IDBEntityBase, IUser_Internal, IUser_Create_Internal, IUser_Update_Private
     {
         [DataProperty("ID", EnableDBColumnValidation: false)]
         public long? UserID { get; set; }

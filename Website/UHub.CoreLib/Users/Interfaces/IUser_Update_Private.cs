@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace UHub.CoreLib.Users.Interfaces
 {
-    public interface IUser_Update_Public
+    public interface IUser_Update_Private
     {
         long? UserID { get; set; }
         string Name { get; set; }

@@ -9,7 +9,7 @@ using UHub.CoreLib.DataInterop;
 namespace UHub.CoreLib.Security.Authentication
 {
     [DataClass]
-    internal sealed partial class TokenValidator : CustomDBTypeBase
+    internal sealed partial class TokenValidator : IDBEntityBase
     {
 
         #region DataProperties

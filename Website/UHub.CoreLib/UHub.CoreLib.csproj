@@ -134,7 +134,7 @@
     <Compile Include="Config\CmsConfig_Security.cs" />
     <Compile Include="Config\CmsConfig_Storage.cs" />
     <Compile Include="Config\SchemaVersion.cs" />
-    <Compile Include="DataInterop\CustomDBTypeBase.cs" />
+    <Compile Include="DataInterop\IDBEntityBase.cs" />
     <Compile Include="DataInterop\DataConverterGenerator.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -215,7 +215,7 @@
     <Compile Include="Tools\RgxPatterns.cs" />
     <Compile Include="Users\Enums\UserReferenceType.cs" />
     <Compile Include="Users\Interfaces\IUser_Create_Internal.cs" />
-    <Compile Include="Users\Interfaces\IUser_Update_Public.cs" />
+    <Compile Include="Users\Interfaces\IUser_Update_Private.cs" />
     <Compile Include="Users\Interfaces\IUser_Create_Public.cs" />
     <Compile Include="Users\Interfaces\IUser_Public.cs" />
     <Compile Include="Users\Interfaces\IUserRecoveryContext.cs" />
@@ -247,6 +247,7 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="APIControllers\Enums\" />
     <Folder Include="Entities\SchoolMajor\" />
     <Folder Include="Entities\School\" />
     <Folder Include="Logging\APIControllers\" />

@@ -14,7 +14,7 @@ using UHub.CoreLib.Users.Management;
 namespace UHub.CoreLib.Users
 {
     [DataClass]
-    internal sealed partial class UserRecoveryContext : CustomDBTypeBase, IUserRecoveryContext
+    internal sealed partial class UserRecoveryContext : IDBEntityBase, IUserRecoveryContext
     {
         #region DataProperties
         [DataProperty]
