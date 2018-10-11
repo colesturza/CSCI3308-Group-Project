@@ -23,12 +23,7 @@ namespace UHub.CoreLib.Extensions
                 return null;
             }
 
-            //TODO: TEST THIS
-            /*/
-            return (T)(object)row;
-            /*/
             return (T)(dynamic)row;
-            //*/
         }
 
         /// <summary>
