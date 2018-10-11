@@ -108,7 +108,7 @@ namespace UHub.CoreLib.Security.Authentication.APIControllers
             }
             else
             {
-                return Content(HttpStatusCode.InternalServerError, status);
+                return Content(HttpStatusCode.BadRequest, status);
             }
         }
 
