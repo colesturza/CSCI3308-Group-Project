@@ -1,17 +1,15 @@
 ﻿
 
-CREATE proc [dbo].[Post_Create]
+
+
+CREATE proc [dbo].[SchoolClubModerator_Create]
 
 	--CREATE PARAMETERS
 	
 	--DYNAMIC
-	@Name nvarchar(200),
-	@Content nvarchar(max),
-	@IsModified bit,
-	@ViweCount bigint,
-	@IsLocked bit,
-	@CanComment bit,
-	@IsPublic bit,
+	@UserID bigint,
+	@IsOwner  bit,
+	@IsValid bit,
 
 	--HIERARCHY
 	@ParentID bigint,
@@ -27,10 +25,10 @@ begin
 	begin try
 		BEGIN TRAN
 
-		--POST ENT ID => 6
+		--POST ENT ID => 5
 		--use variable to manage ent type easier
 		declare @_entTypeID smallint
-		set @_entTypeID = 6
+		set @_entTypeID = 5
 		declare @_entID bigint
 		declare @_isNew bit = 1
 
@@ -136,66 +134,30 @@ begin
 		--set properties
 		--if any insert fails, it will throw an error and invalidate the entire entity
 
-		--Name [2]
+		--UserID [18]
 		exec [dbo].[_vEnts_Helper]
 			@EntID = @_entID,
 			@EntTypeID = @_entTypeID,
-			@PropID = 2,
-			@PropValue = @Name,
+			@PropID = 18,
+			@PropValue = @UserID,
 			@ModifiedBy = @_entID,
 			@IsNewRecord = @_isNew
 
-		--Content [12]
+		--IsOwner [19]
 		exec [dbo].[_vEnts_Helper]
 			@EntID = @_entID,
 			@EntTypeID = @_entTypeID,
-			@PropID = 12,
-			@PropValue = @Content,
+			@PropID = 19,
+			@PropValue = @IsOwner,
 			@ModifiedBy = @_entID,
 			@IsNewRecord = @_isNew
 
-		--IsModified [13]
+		--IsValid [22]
 		exec [dbo].[_vEnts_Helper]
 			@EntID = @_entID,
 			@EntTypeID = @_entTypeID,
-			@PropID = 13,
-			@PropValue = @IsModified,
-			@ModifiedBy = @_entID,
-			@IsNewRecord = @_isNew
-
-		--ViewCount [14]
-		exec [dbo].[_vEnts_Helper]
-			@EntID = @_entID,
-			@EntTypeID = @_entTypeID,
-			@PropID = 14,
-			@PropValue = @ViweCount,
-			@ModifiedBy = @_entID,
-			@IsNewRecord = @_isNew
-
-		--IsLocked [33]
-		exec [dbo].[_vEnts_Helper]
-			@EntID = @_entID,
-			@EntTypeID = @_entTypeID,
-			@PropID = 33,
-			@PropValue = @IsLocked,
-			@ModifiedBy = @_entID,
-			@IsNewRecord = @_isNew
-
-		--CanComment [34]
-		exec [dbo].[_vEnts_Helper]
-			@EntID = @_entID,
-			@EntTypeID = @_entTypeID,
-			@PropID = 34,
-			@PropValue = @CanComment,
-			@ModifiedBy = @_entID,
-			@IsNewRecord = @_isNew
-
-		--IsPublic [35]
-		exec [dbo].[_vEnts_Helper]
-			@EntID = @_entID,
-			@EntTypeID = @_entTypeID,
-			@PropID = 35,
-			@PropValue = @IsPublic,
+			@PropID = 22,
+			@PropValue = @IsValid,
 			@ModifiedBy = @_entID,
 			@IsNewRecord = @_isNew
 
