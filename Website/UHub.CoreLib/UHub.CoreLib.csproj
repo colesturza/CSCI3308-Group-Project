@@ -158,6 +158,12 @@
     <Compile Include="DataInterop\SqlConfig.cs" />
     <Compile Include="DataInterop\SqlConverters.cs" />
     <Compile Include="DataInterop\SqlWorker.cs" />
+    <Compile Include="Entities\Comments\Comment.cs" />
+    <Compile Include="Entities\Files\File.cs" />
+    <Compile Include="Entities\Images\Image.cs" />
+    <Compile Include="Entities\Posts\Post.cs" />
+    <Compile Include="Entities\SchoolClubModerators\SchoolClubModerator.cs" />
+    <Compile Include="Entities\SchoolClubs\SchoolClub.cs" />
     <Compile Include="Entities\SchoolMajors\SchoolMajor.cs" />
     <Compile Include="Entities\Schools\APIControllers\SchoolController.cs" />
     <Compile Include="Entities\Schools\DTOs\School_R_PublicDTO.cs" />
