@@ -158,6 +158,7 @@
     <Compile Include="DataInterop\SqlConfig.cs" />
     <Compile Include="DataInterop\SqlConverters.cs" />
     <Compile Include="DataInterop\SqlWorker.cs" />
+    <Compile Include="Entities\SchoolMajors\SchoolMajor.cs" />
     <Compile Include="Entities\Schools\APIControllers\SchoolController.cs" />
     <Compile Include="Entities\Schools\DTOs\School_R_PublicDTO.cs" />
     <Compile Include="Entities\Schools\Interfaces\ISchool_R_Public.cs" />
