@@ -174,5 +174,13 @@
     <Build Include="dbo\Stored Procedures\SchoolClub_GetByID.sql" />
     <Build Include="dbo\Stored Procedures\Posts_GetAll.sql" />
     <Build Include="dbo\Stored Procedures\Post_Create.sql" />
+    <Build Include="dbo\Stored Procedures\SchoolMajor_Create.sql" />
+    <Build Include="dbo\Stored Procedures\SchoolClubModerator_Create.sql" />
+    <Build Include="dbo\Stored Procedures\SchoolClub_Create.sql" />
+    <Build Include="dbo\Stored Procedures\School_Create.sql" />
+    <Build Include="dbo\Stored Procedures\Posts_GetByPage.sql" />
+    <Build Include="dbo\Stored Procedures\Image_Create.sql" />
+    <Build Include="dbo\Stored Procedures\File_Create.sql" />
+    <Build Include="dbo\Stored Procedures\Comment_Create.sql" />
   </ItemGroup>
 </Project>

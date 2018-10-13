@@ -1,6 +1,7 @@
 ﻿
 
-CREATE proc [dbo].[Post_Create]
+
+CREATE proc [dbo].[Comment_Create]
 
 	--CREATE PARAMETERS
 	
@@ -9,9 +10,6 @@ CREATE proc [dbo].[Post_Create]
 	@Content nvarchar(max),
 	@IsModified bit,
 	@ViweCount bigint,
-	@IsLocked bit,
-	@CanComment bit,
-	@IsPublic bit,
 
 	--HIERARCHY
 	@ParentID bigint,
@@ -27,10 +25,10 @@ begin
 	begin try
 		BEGIN TRAN
 
-		--POST ENT ID => 6
+		--POST ENT ID => 7
 		--use variable to manage ent type easier
 		declare @_entTypeID smallint
-		set @_entTypeID = 6
+		set @_entTypeID = 7
 		declare @_entID bigint
 		declare @_isNew bit = 1
 
@@ -71,7 +69,7 @@ begin
 		--validate parent enabled flag
 		if(@_prnt_IsEnabled = 0)
 		begin
-			;throw 51000, '403: This School Club cannot be modified', 1;
+			;throw 51000, '403: This Post cannot be modified', 1;
 		end
 		--validate parent readonly flag
 		--ensure that parent entity does not have the readonly flag set
@@ -169,33 +167,6 @@ begin
 			@EntTypeID = @_entTypeID,
 			@PropID = 14,
 			@PropValue = @ViweCount,
-			@ModifiedBy = @_entID,
-			@IsNewRecord = @_isNew
-
-		--IsLocked [33]
-		exec [dbo].[_vEnts_Helper]
-			@EntID = @_entID,
-			@EntTypeID = @_entTypeID,
-			@PropID = 33,
-			@PropValue = @IsLocked,
-			@ModifiedBy = @_entID,
-			@IsNewRecord = @_isNew
-
-		--CanComment [34]
-		exec [dbo].[_vEnts_Helper]
-			@EntID = @_entID,
-			@EntTypeID = @_entTypeID,
-			@PropID = 34,
-			@PropValue = @CanComment,
-			@ModifiedBy = @_entID,
-			@IsNewRecord = @_isNew
-
-		--IsPublic [35]
-		exec [dbo].[_vEnts_Helper]
-			@EntID = @_entID,
-			@EntTypeID = @_entTypeID,
-			@PropID = 35,
-			@PropValue = @IsPublic,
 			@ModifiedBy = @_entID,
 			@IsNewRecord = @_isNew
 

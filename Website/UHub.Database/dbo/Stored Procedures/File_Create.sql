@@ -1,17 +1,18 @@
 ﻿
 
-CREATE proc [dbo].[Post_Create]
+
+CREATE proc [dbo].[File_Create]
 
 	--CREATE PARAMETERS
 	
 	--DYNAMIC
 	@Name nvarchar(200),
-	@Content nvarchar(max),
-	@IsModified bit,
-	@ViweCount bigint,
-	@IsLocked bit,
-	@CanComment bit,
-	@IsPublic bit,
+	@FilePath nvarchar(250),
+	@Description nvarchar(500),
+	@FileHash_SHA256 nvarchar(100),
+	@SourceName nvarchar(200),
+	@SourceType nvarchar(50),
+	@DownloadName nvarchar(200),
 
 	--HIERARCHY
 	@ParentID bigint,
@@ -27,10 +28,10 @@ begin
 	begin try
 		BEGIN TRAN
 
-		--POST ENT ID => 6
+		--POST ENT ID => 8
 		--use variable to manage ent type easier
 		declare @_entTypeID smallint
-		set @_entTypeID = 6
+		set @_entTypeID = 8
 		declare @_entID bigint
 		declare @_isNew bit = 1
 
@@ -71,7 +72,7 @@ begin
 		--validate parent enabled flag
 		if(@_prnt_IsEnabled = 0)
 		begin
-			;throw 51000, '403: This School Club cannot be modified', 1;
+			;throw 51000, '403: This Parent cannot be modified', 1;
 		end
 		--validate parent readonly flag
 		--ensure that parent entity does not have the readonly flag set
@@ -145,57 +146,57 @@ begin
 			@ModifiedBy = @_entID,
 			@IsNewRecord = @_isNew
 
-		--Content [12]
+		--FilePath [23]
 		exec [dbo].[_vEnts_Helper]
 			@EntID = @_entID,
 			@EntTypeID = @_entTypeID,
 			@PropID = 12,
-			@PropValue = @Content,
+			@PropValue = @FilePath,
 			@ModifiedBy = @_entID,
 			@IsNewRecord = @_isNew
 
-		--IsModified [13]
+		--Description [24]
 		exec [dbo].[_vEnts_Helper]
 			@EntID = @_entID,
 			@EntTypeID = @_entTypeID,
-			@PropID = 13,
-			@PropValue = @IsModified,
+			@PropID = 24,
+			@PropValue = @Description,
 			@ModifiedBy = @_entID,
 			@IsNewRecord = @_isNew
 
-		--ViewCount [14]
+		--FileHash_SHA256 [25]
 		exec [dbo].[_vEnts_Helper]
 			@EntID = @_entID,
 			@EntTypeID = @_entTypeID,
-			@PropID = 14,
-			@PropValue = @ViweCount,
+			@PropID = 25,
+			@PropValue = @FileHash_SHA256,
 			@ModifiedBy = @_entID,
 			@IsNewRecord = @_isNew
 
-		--IsLocked [33]
+		--SourceName [26]
 		exec [dbo].[_vEnts_Helper]
 			@EntID = @_entID,
 			@EntTypeID = @_entTypeID,
-			@PropID = 33,
-			@PropValue = @IsLocked,
+			@PropID = 26,
+			@PropValue = @SourceName,
 			@ModifiedBy = @_entID,
 			@IsNewRecord = @_isNew
 
-		--CanComment [34]
+		--SourceType [28]
 		exec [dbo].[_vEnts_Helper]
 			@EntID = @_entID,
 			@EntTypeID = @_entTypeID,
-			@PropID = 34,
-			@PropValue = @CanComment,
+			@PropID = 28,
+			@PropValue = @SourceType,
 			@ModifiedBy = @_entID,
 			@IsNewRecord = @_isNew
 
-		--IsPublic [35]
+		--DownloadName [29]
 		exec [dbo].[_vEnts_Helper]
 			@EntID = @_entID,
 			@EntTypeID = @_entTypeID,
-			@PropID = 35,
-			@PropValue = @IsPublic,
+			@PropID = 29,
+			@PropValue = @DownloadName,
 			@ModifiedBy = @_entID,
 			@IsNewRecord = @_isNew
 
