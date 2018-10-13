@@ -5,14 +5,15 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
+using System.Net;
 using UHub.CoreLib.ErrorHandling.Exceptions;
 using UHub.CoreLib.Extensions;
 using UHub.CoreLib.Management;
 using UHub.CoreLib.Security;
-using UHub.CoreLib.Users.Interfaces;
+using UHub.CoreLib.Entities.Users.Interfaces;
 using UHub.CoreLib.ClientFriendly;
-using System.Net;
 using UHub.CoreLib.Security.Authentication;
+using UHub.CoreLib.Entities.Users;
 
 namespace UHub.CoreLib.APIControllers
 {
@@ -62,7 +63,7 @@ namespace UHub.CoreLib.APIControllers
         /// <param name="currentUser">Capture current user (or Anon)</param>
         /// <param name="tokenStatus">Capture token validation status</param>
         /// <returns></returns>
-        private protected bool IsUserLoggedIn(out IUser_Internal currentUser, out TokenValidationStatus tokenStatus)
+        private protected bool IsUserLoggedIn(out User currentUser, out TokenValidationStatus tokenStatus)
         {
 
             bool isLoggedIn = false;

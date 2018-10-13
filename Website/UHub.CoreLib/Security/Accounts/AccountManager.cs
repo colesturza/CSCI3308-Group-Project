@@ -4,18 +4,18 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 using SysSec = System.Web.Security;
 using UHub.CoreLib.DataInterop;
 using UHub.CoreLib.ErrorHandling.Exceptions;
 using UHub.CoreLib.Extensions;
-using UHub.CoreLib.Users.Interfaces;
+using UHub.CoreLib.Entities.Users.Interfaces;
 using UHub.CoreLib.Management;
-using System.Text.RegularExpressions;
 using UHub.CoreLib.ClientFriendly;
 using UHub.CoreLib.SmtpInterop;
 using UHub.CoreLib.Tools;
-using UHub.CoreLib.Users.Management;
-using UHub.CoreLib.Users;
+using UHub.CoreLib.Entities.Users.Management;
+using UHub.CoreLib.Entities.Users;
 
 namespace UHub.CoreLib.Security.Accounts
 {
@@ -41,10 +41,10 @@ namespace UHub.CoreLib.Security.Accounts
         /// <param name="GeneralFailHandler">Error handler in case DB cannot be reached or there is other unknown error</param>
         /// <param name="SuccessHandler">Args: new user object, auto login [T|F]</param>
         /// <returns></returns>
-        public static bool TryCreateUser(IUser_Create_Internal NewUser, bool AttemptAutoLogin,
+        public static bool TryCreateUser(User NewUser, bool AttemptAutoLogin,
             Action<AccountResultCode> ArgFailHandler = null,
             Action<Guid> GeneralFailHandler = null,
-            Action<IUser_Internal, bool> SuccessHandler = null
+            Action<User, bool> SuccessHandler = null
             )
         {
             if (!CoreFactory.Singleton.IsEnabled)
@@ -358,7 +358,7 @@ namespace UHub.CoreLib.Security.Accounts
                 }
 
                 var modUser = UserReader.GetUser(UserID);
-                if (modUser == null || modUser.UserID == null)
+                if (modUser == null || modUser.ID == null)
                 {
                     ResultHandler?.Invoke(AccountResultCode.InvalidUser);
                     return false;
@@ -391,7 +391,7 @@ namespace UHub.CoreLib.Security.Accounts
                 }
                 try
                 {
-                    UpdateUserPassword_DB(modUser.UserID.Value, hashedPsd, salt);
+                    UpdateUserPassword_DB(modUser.ID.Value, hashedPsd, salt);
                 }
                 catch
                 {
@@ -441,7 +441,7 @@ namespace UHub.CoreLib.Security.Accounts
         /// <exception cref="SystemDisabledException"></exception>
         /// <exception cref="InvalidOperationException"></exception>
         /// <returns>Status flag</returns>
-        public static bool TryResetPassword(
+        internal static bool TryResetPassword(
             string UserEmail,
             string NewPassword,
             Action<AccountResultCode> ResultHandler = null,
@@ -491,7 +491,7 @@ namespace UHub.CoreLib.Security.Accounts
         /// <exception cref="SystemDisabledException"></exception>
         /// <exception cref="InvalidOperationException"></exception>
         /// <returns>Status flag</returns>
-        public static bool TryResetPassword(
+        internal static bool TryResetPassword(
             long UserID,
             string NewPassword,
             Action<AccountResultCode> ResultHandler = null,
@@ -524,7 +524,7 @@ namespace UHub.CoreLib.Security.Accounts
                 }
 
                 var modUser = UserReader.GetUser(UserID);
-                if (modUser == null || modUser.UserID == null)
+                if (modUser == null || modUser.ID == null)
                 {
                     ResultHandler?.Invoke(AccountResultCode.InvalidUser);
                     return false;
@@ -552,7 +552,7 @@ namespace UHub.CoreLib.Security.Accounts
                 }
                 try
                 {
-                    UpdateUserPassword_DB(modUser.UserID.Value, hashedPsd, salt);
+                    UpdateUserPassword_DB(modUser.ID.Value, hashedPsd, salt);
                 }
                 catch
                 {
@@ -615,15 +615,15 @@ namespace UHub.CoreLib.Security.Accounts
         /// </summary>
         /// <param name="RequestedBy"></param>
         /// <param name="CmsUser"></param>
-        private static void _deleteUser(IUser_Internal CmsUser)
+        private static void _deleteUser(User CmsUser)
         {
             try
             {
-                if (CmsUser != null && CmsUser.UserID != null)
+                if (CmsUser != null && CmsUser.ID != null)
                 {
                     CmsUser.UpdateVersion();
 
-                    UserWriter.DeleteUser((long)CmsUser.UserID);
+                    UserWriter.DeleteUser((long)CmsUser.ID);
                 }
             }
             catch (Exception ex)
@@ -646,7 +646,7 @@ namespace UHub.CoreLib.Security.Accounts
         /// <param name="GeneralFailHandler">Error handler in case DB cannot be reached or there is other unknown error</param>
         /// <param name="SuccessHandler"></param>
         /// <returns></returns>
-        public static void CreateUserRecoveryContext(
+        internal static void CreateUserRecoveryContext(
             string UserEmail,
             bool IsOptional = true,
             Action<AccountResultCode> ArgFailHandler = null,
@@ -683,7 +683,7 @@ namespace UHub.CoreLib.Security.Accounts
         /// <param name="GeneralFailHandler">Error handler in case DB cannot be reached or there is other unknown error</param>
         /// <param name="SuccessHandler"></param>
         /// <returns></returns>
-        public static void CreateUserRecoveryContext(
+        internal static void CreateUserRecoveryContext(
             long UserID,
             bool IsOptional = true,
             Action<AccountResultCode> ArgFailHandler = null,
@@ -694,7 +694,7 @@ namespace UHub.CoreLib.Security.Accounts
             {
                 var cmsUser = UserReader.GetUser(UserID);
 
-                if (cmsUser == null || cmsUser.UserID == null)
+                if (cmsUser == null || cmsUser.ID == null)
                 {
                     ArgFailHandler?.Invoke(AccountResultCode.InvalidUser);
                     return;

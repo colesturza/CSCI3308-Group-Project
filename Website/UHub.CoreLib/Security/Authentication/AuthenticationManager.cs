@@ -10,9 +10,9 @@ using UHub.CoreLib.ErrorHandling.Exceptions;
 using UHub.CoreLib.Extensions;
 using UHub.CoreLib.Management;
 using UHub.CoreLib.Security.Authentication.Interfaces;
-using UHub.CoreLib.Users;
-using UHub.CoreLib.Users.Interfaces;
-using UHub.CoreLib.Users.Management;
+using UHub.CoreLib.Entities.Users;
+using UHub.CoreLib.Entities.Users.Interfaces;
+using UHub.CoreLib.Entities.Users.Management;
 
 namespace UHub.CoreLib.Security.Authentication
 {
@@ -54,7 +54,7 @@ namespace UHub.CoreLib.Security.Authentication
             }
 
 
-            bool userTokenHandler(IUser_Internal cmsUser)
+            bool userTokenHandler(User cmsUser)
             {
                 var authCookieName = CoreFactory.Singleton.Properties.AuthTknCookieName;
 
@@ -111,7 +111,7 @@ namespace UHub.CoreLib.Security.Authentication
 
             string token = "";
 
-            bool userTokenHandler(IUser_Internal cmsUser)
+            bool userTokenHandler(User cmsUser)
             {
                 //everything good
                 //write user auth cookie
@@ -263,7 +263,7 @@ namespace UHub.CoreLib.Security.Authentication
                 throw new SystemDisabledException();
             }
 
-            var isValid = ValidateAuthToken(tokenStr, out IUser_Internal cmsUser, out tokenStatus);
+            var isValid = ValidateAuthToken(tokenStr, out User cmsUser, out tokenStatus);
             if (!isValid)
             {
                 cmsUser = UserReader.GetAnonymousUser();
@@ -272,7 +272,7 @@ namespace UHub.CoreLib.Security.Authentication
             }
 
 
-            if (cmsUser == null || cmsUser.UserID == null)
+            if (cmsUser == null || cmsUser.ID == null)
             {
                 cmsUser = UserReader.GetAnonymousUser();
                 HttpContext.Current.Items[AuthenticationManager.REQUEST_CURRENT_USER] = cmsUser;
@@ -282,7 +282,7 @@ namespace UHub.CoreLib.Security.Authentication
 
             HttpContext.Current.Items[AuthenticationManager.REQUEST_CURRENT_USER] = cmsUser;
 
-            return cmsUser.UserID != null;
+            return cmsUser.ID != null;
         }
 
         /// <summary>
@@ -292,7 +292,7 @@ namespace UHub.CoreLib.Security.Authentication
         /// <param name="CmsUser">User encapsulated by auth token (if valid)</param>
         /// <param name="tokenStatus">Return auth token validation status</param>
         /// <returns></returns>
-        public bool ValidateAuthToken(string tokenStr, out IUser_Internal CmsUser, out TokenValidationStatus tokenStatus)
+        public bool ValidateAuthToken(string tokenStr, out User CmsUser, out TokenValidationStatus tokenStatus)
         {
             if (!CoreFactory.Singleton.IsEnabled)
             {
@@ -317,7 +317,7 @@ namespace UHub.CoreLib.Security.Authentication
         /// </summary>
         /// <param name="CmsUser"></param>
         /// <returns></returns>
-        public bool IsUserLoggedIn(out IUser_Internal CmsUser)
+        public bool IsUserLoggedIn(out User CmsUser)
         {
             return IsUserLoggedIn(out CmsUser, out _);
         }
@@ -328,7 +328,7 @@ namespace UHub.CoreLib.Security.Authentication
         /// Returns the authenticated user or a reference to Anon instance
         /// </summary>
         /// <returns></returns>
-        public bool IsUserLoggedIn(out IUser_Internal CmsUser, out TokenValidationStatus tokenStatus)
+        public bool IsUserLoggedIn(out User CmsUser, out TokenValidationStatus tokenStatus)
         {
 
             if (!CoreFactory.Singleton.IsEnabled)
@@ -340,10 +340,10 @@ namespace UHub.CoreLib.Security.Authentication
 #if (!TESTING)
             var requestUser = HttpContext.Current.Items[AuthenticationManager.REQUEST_CURRENT_USER];
 
-            if (false && requestUser != null && requestUser is IUser_Internal currentUser)
+            if (false && requestUser != null && requestUser is User currentUser)
             {
                 CmsUser = currentUser;
-                if (currentUser.UserID == null)
+                if (currentUser.ID == null)
                 {
                     tokenStatus = TokenValidationStatus.AnonUser;
                     return false;
@@ -356,7 +356,7 @@ namespace UHub.CoreLib.Security.Authentication
                 //get user info from tkn (if it exists)
                 authWorker.ValidateAuthCookie(out CmsUser, out tokenStatus);
 
-                if (CmsUser == null || CmsUser.UserID == null)
+                if (CmsUser == null || CmsUser.ID == null)
                 {
                     CmsUser = UserReader.GetAnonymousUser();
                     HttpContext.Current.Items[AuthenticationManager.REQUEST_CURRENT_USER] = CmsUser;
@@ -366,7 +366,7 @@ namespace UHub.CoreLib.Security.Authentication
                 HttpContext.Current.Items[AuthenticationManager.REQUEST_CURRENT_USER] = CmsUser;
 
                 //check for real user vs Anon user
-                if (CmsUser.UserID == null)
+                if (CmsUser.ID == null)
                 {
                     if (tokenStatus == TokenValidationStatus.Success)
                     {
@@ -385,7 +385,7 @@ namespace UHub.CoreLib.Security.Authentication
         }
 
 
-        public IUser_Internal GetCurrentUser()
+        public User GetCurrentUser()
         {
             return GetCurrentUser(out _);
         }
@@ -393,7 +393,7 @@ namespace UHub.CoreLib.Security.Authentication
         /// Get the currently authenticated CMS user. If the user is not authenticated, then an anonymous user is returned (UID=null, class=Anon)
         /// </summary>
         /// <returns></returns>
-        public IUser_Internal GetCurrentUser(out TokenValidationStatus tokenStatus)
+        public User GetCurrentUser(out TokenValidationStatus tokenStatus)
         {
             if (!CoreFactory.Singleton.IsEnabled)
             {
@@ -402,7 +402,7 @@ namespace UHub.CoreLib.Security.Authentication
 #if (!TESTING)
 
             var requestUser = HttpContext.Current.Items[AuthenticationManager.REQUEST_CURRENT_USER];
-            if (requestUser != null && requestUser is IUser_Internal currentUser)
+            if (requestUser != null && requestUser is User currentUser)
             {
                 tokenStatus = TokenValidationStatus.Success;
                 return currentUser;
@@ -410,9 +410,9 @@ namespace UHub.CoreLib.Security.Authentication
             else
             {
                 //get user info from tkt (if it exists)
-                authWorker.ValidateAuthCookie(out IUser_Internal cmsUser, out tokenStatus);
+                authWorker.ValidateAuthCookie(out User cmsUser, out tokenStatus);
 
-                if (cmsUser == null || cmsUser.UserID == null)
+                if (cmsUser == null || cmsUser.ID == null)
                 {
                     cmsUser = UserReader.GetAnonymousUser();
                     HttpContext.Current.Items[AuthenticationManager.REQUEST_CURRENT_USER] = cmsUser;
@@ -437,7 +437,7 @@ namespace UHub.CoreLib.Security.Authentication
         public void LogoutOfAllDevices(long UserID, bool ExcludeCurrent = false)
         {
             var modUser = UserReader.GetUser(UserID);
-            if (modUser == null || modUser.UserID == null)
+            if (modUser == null || modUser.ID == null)
             {
                 return;
             }
@@ -464,7 +464,7 @@ namespace UHub.CoreLib.Security.Authentication
         public void LogoutOfAllDevices(string UserRef, UserRefType RefType, bool ExcludeCurrent = false)
         {
             var modUser = UserReader.GetUser(UserRef, RefType);
-            if (modUser == null || modUser.UserID == null)
+            if (modUser == null || modUser.ID == null)
             {
                 return;
             }

@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using UHub.CoreLib.Users;
-using UHub.CoreLib.Users.Interfaces;
+using UHub.CoreLib.Entities.Users;
+using UHub.CoreLib.Entities.Users.Interfaces;
 
 namespace UHub.CoreLib.Security.Authentication.Interfaces
 {
@@ -94,7 +94,7 @@ namespace UHub.CoreLib.Security.Authentication.Interfaces
         /// <param name="CmsUser">User encapsulated by auth token (if valid)</param>
         /// <param name="tokenStatus">Returns token validation status</param>
         /// <returns></returns>
-        bool ValidateAuthToken(string tokenStr, out IUser_Internal CmsUser, out TokenValidationStatus tokenStatus);
+        bool ValidateAuthToken(string tokenStr, out User CmsUser, out TokenValidationStatus tokenStatus);
 
         /// <summary>
         /// Check if user is logged in
@@ -108,7 +108,7 @@ namespace UHub.CoreLib.Security.Authentication.Interfaces
         /// Returns the authenticated user or a reference to Anon instance
         /// </summary>
         /// <returns></returns>
-        bool IsUserLoggedIn(out IUser_Internal CmsUser);
+        bool IsUserLoggedIn(out User CmsUser);
 
         /// <summary>
         /// Determine if there is a user logged in
@@ -116,19 +116,19 @@ namespace UHub.CoreLib.Security.Authentication.Interfaces
         /// Returns the authenticated user or a reference to Anon instance
         /// </summary>
         /// <returns></returns>
-        bool IsUserLoggedIn(out IUser_Internal CmsUser, out TokenValidationStatus tokenStatus);
+        bool IsUserLoggedIn(out User CmsUser, out TokenValidationStatus tokenStatus);
 
         /// <summary>
         /// Get the currently authenticated CMS user. If the user is not authenticated, then an anonymous user is returned (UID=null, class=Anon)
         /// </summary>
         /// <returns></returns>
-        IUser_Internal GetCurrentUser();
+        User GetCurrentUser();
 
         /// <summary>
         /// Get the currently authenticated CMS user. If the user is not authenticated, then an anonymous user is returned (UID=null, class=Anon)
         /// </summary>
         /// <returns></returns>
-        IUser_Internal GetCurrentUser(out TokenValidationStatus tokenStatus);
+        User GetCurrentUser(out TokenValidationStatus tokenStatus);
 
 
 

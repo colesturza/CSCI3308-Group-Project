@@ -34,8 +34,6 @@ using System.Data.SqlClient;
 using UHub.CoreLib.Extensions;
 using UHub.CoreLib.DataInterop;
 using UHub.CoreLib.Attributes;
-using UHub.CoreLib.Users;
-using UHub.CoreLib.Users.Interfaces;
 
 
 
@@ -91,7 +89,7 @@ using UHub.CoreLib.Users.Interfaces;
 						/// Convert DataRow to <#=iType.Name#>
 						/// </summary>
 						/// <param name="row">The DataRow that will be converted into an object</param>
-						public static explicit operator <#=iType.Name#>(DataRow row)
+						public static explicit operator <#=iType#>(DataRow row)
 						{
 							var columnSet = row.Table.Columns;
 							var obj = new <#=iType.Name#>();
@@ -142,7 +140,7 @@ using UHub.CoreLib.Users.Interfaces;
 						///Convert SqlDataReader to <#=iType.Name#>
 						///</summary>
 						/// <param name="reader">The SqlDataReader that is streaming the dataset to be converted.  With convert the row at the current iterator position</param>
-						public static explicit operator <#=iType.Name#>(SqlDataReader reader)
+						public static explicit operator <#=iType#>(SqlDataReader reader)
 						{
 							var columnSet = reader.GetSchemaTable().Columns;
 							var obj = new <#=iType.Name#>();

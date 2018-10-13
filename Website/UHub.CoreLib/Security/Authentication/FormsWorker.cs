@@ -8,9 +8,9 @@ using UHub.CoreLib.Extensions;
 using UHub.CoreLib.Logging;
 using UHub.CoreLib.Management;
 using UHub.CoreLib.Tools;
-using UHub.CoreLib.Users;
-using UHub.CoreLib.Users.Interfaces;
-using UHub.CoreLib.Users.Management;
+using UHub.CoreLib.Entities.Users;
+using UHub.CoreLib.Entities.Users.Interfaces;
+using UHub.CoreLib.Entities.Users.Management;
 
 namespace UHub.CoreLib.Security.Authentication
 {
@@ -40,7 +40,7 @@ namespace UHub.CoreLib.Security.Authentication
             string UserPassword,
             Action<AuthResultCode> ResultHandler = null,
             Action<Guid> GeneralFailHandler = null,
-            Func<IUser_Internal, bool> UserTokenHandler = null)
+            Func<User, bool> UserTokenHandler = null)
         {
 
             if (!CoreFactory.Singleton.IsEnabled)
@@ -150,7 +150,7 @@ namespace UHub.CoreLib.Security.Authentication
 
 
             //try to get the real user from CMS DB
-            IUser_Internal cmsUser;
+            User cmsUser;
             try
             {
                 cmsUser = UserReader.GetUser(userAuthInfo.UserID);
@@ -164,7 +164,7 @@ namespace UHub.CoreLib.Security.Authentication
 
 
             //validate CMS specific user
-            if (cmsUser == null || cmsUser.UserID == null)
+            if (cmsUser == null || cmsUser.ID == null)
             {
                 ResultHandler?.Invoke(AuthResultCode.UserInvalid);
                 return false;

@@ -121,6 +121,7 @@
     <Compile Include="APIControllers\HttpActionResult.cs" />
     <Compile Include="Attributes\DataClassAttribute.cs" />
     <Compile Include="Attributes\DataPropertyAttribute.cs" />
+    <Compile Include="Attributes\DtoClassAttribute.cs" />
     <Compile Include="ClientFriendly\ResponseStrings.cs" />
     <Compile Include="Common.cs" />
     <Compile Include="Config\CmsConfiguration_Grouped.cs" />
@@ -134,15 +135,33 @@
     <Compile Include="Config\CmsConfig_Security.cs" />
     <Compile Include="Config\CmsConfig_Storage.cs" />
     <Compile Include="Config\SchemaVersion.cs" />
-    <Compile Include="DataInterop\DBEntityBase.cs" />
     <Compile Include="DataInterop\DataConverterGenerator.cs">
+      <DependentUpon>DataConverterGenerator.tt</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+    <Compile Include="DataInterop\DBEntityBase.cs" />
+    <Content Include="DataInterop\DataConverterGenerator.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>DataConverterGenerator.cs</LastGenOutput>
+    </Content>
+    <Content Include="DataInterop\DtoConverterGenerator.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>DtoConverterGenerator.cs</LastGenOutput>
+    </Content>
+    <Compile Include="DataInterop\DtoConverterGenerator.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>DataConverterGenerator.tt</DependentUpon>
+      <DependentUpon>DtoConverterGenerator.tt</DependentUpon>
     </Compile>
+    <Compile Include="DataInterop\DtoEntityBase.cs" />
     <Compile Include="DataInterop\SqlConfig.cs" />
     <Compile Include="DataInterop\SqlConverters.cs" />
     <Compile Include="DataInterop\SqlWorker.cs" />
+    <Compile Include="Entities\Schools\APIControllers\SchoolController.cs" />
+    <Compile Include="Entities\Schools\DTOs\School_R_PublicDTO.cs" />
+    <Compile Include="Entities\Schools\Interfaces\ISchool_R_Public.cs" />
+    <Compile Include="Entities\Schools\School.cs" />
     <Compile Include="ErrorHandling\Exceptions\AccessForbiddenException.cs" />
     <Compile Include="ErrorHandling\Exceptions\ConfigurationException.cs" />
     <Compile Include="ErrorHandling\Exceptions\EntityGoneException.cs" />
@@ -178,6 +197,7 @@
     <Compile Include="Management\CoreProperties.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Security\Accounts\AccountManager.cs" />
+    <Compile Include="Security\Accounts\APIControllers\AccountController.cs" />
     <Compile Include="Security\Accounts\Enums\AccountResultCode.cs" />
     <Compile Include="Security\Authentication\APIControllers\AuthenticationController.cs" />
     <Compile Include="Security\Authentication\AuthenticationManager.cs" />
@@ -213,20 +233,22 @@
     <Compile Include="Tools\HighResolutionDateTime.cs" />
     <Compile Include="Tools\MachineKeyHelper.cs" />
     <Compile Include="Tools\RgxPatterns.cs" />
-    <Compile Include="Users\Enums\UserReferenceType.cs" />
-    <Compile Include="Users\Interfaces\IUser_Create_Internal.cs" />
-    <Compile Include="Users\Interfaces\IUser_Update_Private.cs" />
-    <Compile Include="Users\Interfaces\IUser_Create_Public.cs" />
-    <Compile Include="Users\Interfaces\IUser_Public.cs" />
-    <Compile Include="Users\Interfaces\IUserRecoveryContext.cs" />
-    <Compile Include="Users\Interfaces\IUser_Internal.cs" />
-    <Compile Include="Users\Interfaces\IUser_Private.cs" />
-    <Compile Include="Users\Management\UserReader_RecoveryContext.cs" />
-    <Compile Include="Users\Management\UserReader_Core.cs" />
-    <Compile Include="Users\Management\UserRead_Anon.cs" />
-    <Compile Include="Users\Management\UserWriter.cs" />
-    <Compile Include="Users\User.cs" />
-    <Compile Include="Users\UserRecoveryContext.cs" />
+    <Compile Include="Entities\Users\DTOs\User_R_PrivateDTO.cs" />
+    <Compile Include="Entities\Users\DTOs\User_R_PublicDTO.cs" />
+    <Compile Include="Entities\Users\Enums\UserReferenceType.cs" />
+    <Compile Include="Entities\Users\DTOs\User_U_PrivateDTO.cs" />
+    <Compile Include="Entities\Users\DTOs\User_C_PublicDTO.cs" />
+    <Compile Include="Entities\Users\Interfaces\IUser_C_Public.cs" />
+    <Compile Include="Entities\Users\Interfaces\IUser_R_Public.cs" />
+    <Compile Include="Entities\Users\Interfaces\IUserRecoveryContext.cs" />
+    <Compile Include="Entities\Users\Interfaces\IUser_R_Private.cs" />
+    <Compile Include="Entities\Users\Interfaces\IUser_U_Private.cs" />
+    <Compile Include="Entities\Users\Management\UserReader_RecoveryContext.cs" />
+    <Compile Include="Entities\Users\Management\UserReader_Core.cs" />
+    <Compile Include="Entities\Users\Management\UserRead_Anon.cs" />
+    <Compile Include="Entities\Users\Management\UserWriter.cs" />
+    <Compile Include="Entities\Users\User.cs" />
+    <Compile Include="Entities\Users\UserRecoveryContext.cs" />
     <Compile Include="Util\APIControllers\FileUpload\FileUploadChunkMetaData.cs" />
     <Compile Include="Util\APIControllers\FileUpload\FileUploadController.cs" />
     <Compile Include="Util\APIControllers\FileUpload\FileUploadHelper.cs" />
@@ -238,21 +260,50 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="DataInterop\DataConverterGenerator.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>DataConverterGenerator.cs</LastGenOutput>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="APIControllers\Enums\" />
-    <Folder Include="Entities\SchoolMajor\" />
-    <Folder Include="Entities\School\" />
+    <Folder Include="Entities\Comments\APIControllers\" />
+    <Folder Include="Entities\Comments\DTOs\" />
+    <Folder Include="Entities\Comments\Enums\" />
+    <Folder Include="Entities\Comments\Interfaces\" />
+    <Folder Include="Entities\Comments\Management\" />
+    <Folder Include="Entities\Files\APIControllers\" />
+    <Folder Include="Entities\Files\DTOs\" />
+    <Folder Include="Entities\Files\Enums\" />
+    <Folder Include="Entities\Files\Interfaces\" />
+    <Folder Include="Entities\Files\Management\" />
+    <Folder Include="Entities\Images\APIControllers\" />
+    <Folder Include="Entities\Images\DTOs\" />
+    <Folder Include="Entities\Images\Enums\" />
+    <Folder Include="Entities\Images\Interfaces\" />
+    <Folder Include="Entities\Images\Management\" />
+    <Folder Include="Entities\Posts\APIControllers\" />
+    <Folder Include="Entities\Posts\DTOs\" />
+    <Folder Include="Entities\Posts\Enums\" />
+    <Folder Include="Entities\Posts\Interfaces\" />
+    <Folder Include="Entities\Posts\Management\" />
+    <Folder Include="Entities\SchoolClubModerators\APIControllers\" />
+    <Folder Include="Entities\SchoolClubModerators\DTOs\" />
+    <Folder Include="Entities\SchoolClubModerators\Enums\" />
+    <Folder Include="Entities\SchoolClubModerators\Interfaces\" />
+    <Folder Include="Entities\SchoolClubModerators\Management\" />
+    <Folder Include="Entities\SchoolClubs\APIControllers\" />
+    <Folder Include="Entities\SchoolClubs\DTOs\" />
+    <Folder Include="Entities\SchoolClubs\Enums\" />
+    <Folder Include="Entities\SchoolClubs\Interfaces\" />
+    <Folder Include="Entities\SchoolClubs\Management\" />
+    <Folder Include="Entities\SchoolMajors\APIControllers\" />
+    <Folder Include="Entities\SchoolMajors\DTOs\" />
+    <Folder Include="Entities\SchoolMajors\Enums\" />
+    <Folder Include="Entities\SchoolMajors\Interfaces\" />
+    <Folder Include="Entities\SchoolMajors\Management\" />
+    <Folder Include="Entities\Schools\Enums\" />
+    <Folder Include="Entities\Schools\Management\" />
+    <Folder Include="Entities\Users\APIControllers\" />
     <Folder Include="Logging\APIControllers\" />
     <Folder Include="Logging\Interfaces\" />
-    <Folder Include="Users\APIControllers\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -16,6 +16,9 @@ namespace UHub.CoreLib.DataInterop
     /// </summary>
     public abstract class DBEntityBase
     {
-
+        public T_OUT ToDto<T_OUT>() where T_OUT : DtoEntityBase
+        {
+            return (T_OUT)(dynamic)this;
+        }
     }
 }

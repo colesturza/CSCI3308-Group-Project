@@ -18,9 +18,6 @@ namespace UHub.CoreLib.Security.Authentication.APIControllers
     public sealed class AuthenticationController : APIController
     {
 
-        internal AuthenticationController() : base() { }
-
-
         private protected override bool ValidateSystemState(out string status, out HttpStatusCode statCode)
         {
             if (!base.ValidateSystemState(out status, out statCode))

@@ -79,7 +79,7 @@ namespace UHub.CoreLib.Logging
 
                 return true;
             }
-            catch (Exception ex)
+            catch
             {
                 return false;
             }

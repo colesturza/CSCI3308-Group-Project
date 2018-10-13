@@ -10,9 +10,9 @@ using UHub.CoreLib.Extensions;
 using UHub.CoreLib.Logging;
 using UHub.CoreLib.Management;
 using UHub.CoreLib.Tools;
-using UHub.CoreLib.Users;
-using UHub.CoreLib.Users.Interfaces;
-using UHub.CoreLib.Users.Management;
+using UHub.CoreLib.Entities.Users;
+using UHub.CoreLib.Entities.Users.Interfaces;
+using UHub.CoreLib.Entities.Users.Management;
 
 namespace UHub.CoreLib.Security.Authentication
 {
@@ -45,13 +45,13 @@ namespace UHub.CoreLib.Security.Authentication
         abstract internal bool TryAuthenticateUser(string userEmail, string userPassword,
             Action<AuthResultCode> ResultHandler = null,
             Action<Guid> generalFailHandler = null,
-            Func<IUser_Internal, bool> userTokenHandler = null);
+            Func<User, bool> userTokenHandler = null);
 
         /// <summary>
         /// Set current request user for caching
         /// </summary>
         /// <param name="CmsUser"></param>
-        internal void SetCurrentUser_Local(IUser_Internal CmsUser)
+        internal void SetCurrentUser_Local(User CmsUser)
         {
             //set identity
             HttpContext.Current.Items[AuthenticationManager.REQUEST_CURRENT_USER] = CmsUser;
@@ -66,7 +66,7 @@ namespace UHub.CoreLib.Security.Authentication
         /// <param name="SystemVersion">Specify an Auth Tkn version number. Defaults to <see cref="CmsProperties.CurrentAuthTknVersion"/> </param>
         /// <exception cref="SqlException"></exception>
         /// /// <exception cref="Exception"></exception>
-        internal void SetCurrentUser_ClientToken(bool IsPersistentent, IUser_Internal CmsUser)
+        internal void SetCurrentUser_ClientToken(bool IsPersistentent, User CmsUser)
         {
             var token = GenerateAuthToken(IsPersistentent, CmsUser);
             SetCurrentUser_ClientToken(token);
@@ -103,7 +103,7 @@ namespace UHub.CoreLib.Security.Authentication
         /// <summary>
         /// Get user auth data from cookie and load as the CurrentUser identity
         /// </summary>
-        internal void ValidateAuthCookie(out IUser_Internal CmsUser, out TokenValidationStatus TokenStatus, Action ErrorHandler = null)
+        internal void ValidateAuthCookie(out User CmsUser, out TokenValidationStatus TokenStatus, Action ErrorHandler = null)
         {
             var authTknCookieName = CoreFactory.Singleton.Properties.AuthTknCookieName;
 
@@ -164,7 +164,7 @@ namespace UHub.CoreLib.Security.Authentication
         /// <returns></returns>
         internal bool ValidateAuthToken(
             string tokenStr,
-            out IUser_Internal CmsUser,
+            out User CmsUser,
             out TokenValidationStatus tokenStatus,
             Action errorHandler = null,
             Action<AuthenticationToken> SuccessHandler = null)
@@ -206,7 +206,7 @@ namespace UHub.CoreLib.Security.Authentication
         /// <returns></returns>
         private protected bool ValidateAuthToken(
             AuthenticationToken token,
-            out IUser_Internal CmsUser,
+            out User CmsUser,
             out TokenValidationStatus tokenStatus,
             Action errorHandler = null,
             Action<AuthenticationToken> SuccessHandler = null)
@@ -250,7 +250,7 @@ namespace UHub.CoreLib.Security.Authentication
             //Validate CMS User
             ////////////////////////////////////////////////////////////////////////////////////////////////////
             //try to get the real user from CMS DB
-            IUser_Internal cmsUser_local;
+            User cmsUser_local;
             try
             {
                 cmsUser_local = UserReader.GetUser(userID);
@@ -265,7 +265,7 @@ namespace UHub.CoreLib.Security.Authentication
             }
 
             //validate CMS specific user
-            if (cmsUser_local == null || cmsUser_local.UserID == null)
+            if (cmsUser_local == null || cmsUser_local.ID == null)
             {
                 errorHandler?.Invoke();
                 CmsUser = UserReader.GetAnonymousUser();
@@ -418,9 +418,9 @@ namespace UHub.CoreLib.Security.Authentication
         /// <exception cref="SqlException"></exception>
         /// <exception cref="Exception"></exception>
         /// <returns></returns>
-        internal AuthenticationToken GenerateAuthToken(bool IsPersistent, IUser_Internal cmsUser)
+        internal AuthenticationToken GenerateAuthToken(bool IsPersistent, User cmsUser)
         {
-            if (cmsUser.UserID == null)
+            if (cmsUser.ID == null)
             {
                 throw new InvalidOperationException("User not valid");
             }
@@ -430,7 +430,7 @@ namespace UHub.CoreLib.Security.Authentication
 
 
             var issue = FailoverDateTimeOffset.UtcNow;
-            var ID = cmsUser.UserID.Value;
+            var ID = cmsUser.ID.Value;
             var sysVersion = CoreFactory.Singleton.Properties.CurrentAuthTknVersion;
             string userVersion = cmsUser.Version;
             string sessionID = GetAdjustedSessionID(isPersistent);
