@@ -18,11 +18,15 @@ namespace UHub.CoreLib.Config
         /// </summary>
         public bool RegisterAPIRoutes { get; set; } = false;
         /// <summary>
-        /// Allow login pages to display detailed error messages regarding failures
+        /// Allow API to display detailed error messages regarding failures
         /// <para></para>
         /// Default: false
         /// </summary>
         public bool EnableDetailedAPIErrors { get; set; } = false;
+        /// <summary>
+        /// Allow API to display GUID codes regarding failuresS
+        /// </summary>
+        public bool EnableInternalAPIErrors { get; set; } = false;
         /// <summary>
         /// Allow clients to obtain auth tokens through the REST API
         /// <para></para>

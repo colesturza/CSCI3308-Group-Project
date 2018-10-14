@@ -123,6 +123,7 @@ namespace UHub.CoreLib.Management
             Properties.EnableCustomErrorCodes = cmsConfig.Errors.EnableCustomErrorCodes;
             //API
             Properties.EnableDetailedAPIErrors = cmsConfig.API.EnableDetailedAPIErrors;
+            Properties.EnableInternalAPIErrors = cmsConfig.API.EnableInternalAPIErrors;
             Properties.EnableAPIFileUploads = cmsConfig.API.EnableAPIFileUploads;
             Properties.MaxFileUploadSize = new FileSize(FileSizeUnit.Bytes, cmsConfig.API.MaxFileUploadSize.GetAsBytes());
             Properties.AllowedFileUploadTypes = cmsConfig.API.AllowedFileUploadTypes.ToList().ToHashSet();
@@ -385,6 +386,10 @@ namespace UHub.CoreLib.Management
         /// Allow API calls to display detailed error messages regarding failures
         /// </summary>
         public bool EnableDetailedAPIErrors { get; private set; }
+        /// <summary>
+        /// Allow API calls to display GUID error messages regarding failures
+        /// </summary>
+        public bool EnableInternalAPIErrors { get; private set; }
         /// <summary>
         /// Allow users to upload files via API
         /// </summary>

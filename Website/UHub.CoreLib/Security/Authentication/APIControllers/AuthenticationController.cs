@@ -46,6 +46,7 @@ namespace UHub.CoreLib.Security.Authentication.APIControllers
 
 
             var enableDetail = CoreFactory.Singleton.Properties.EnableDetailedAPIErrors;
+            var enableFailCode = CoreFactory.Singleton.Properties.EnableInternalAPIErrors;
             status = "Login Failed";
             statCode = HttpStatusCode.BadRequest;
 
@@ -81,7 +82,7 @@ namespace UHub.CoreLib.Security.Authentication.APIControllers
                         //this looks strange, but is relevant for a very specific edge case
                         //if the auth worker emits a "Success" code without a populated token
                         //then this will properly alert the user that some unknown internal error has occured
-                        if(authCode == AuthResultCode.Success)
+                        if (authCode == AuthResultCode.Success)
                         {
                             statCode = HttpStatusCode.InternalServerError;
                         }
@@ -89,10 +90,10 @@ namespace UHub.CoreLib.Security.Authentication.APIControllers
                     },
                     GeneralFailHandler: (code) =>
                     {
-                        if(enableDetail)
+                        statCode = HttpStatusCode.InternalServerError;
+                        if (enableFailCode)
                         {
                             status = code.ToString();
-                            statCode = HttpStatusCode.InternalServerError;
                         }
                     });
             }
