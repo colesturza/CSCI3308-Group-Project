@@ -163,6 +163,7 @@
     <Compile Include="Entities\Images\Image.cs" />
     <Compile Include="Entities\Posts\Post.cs" />
     <Compile Include="Entities\SchoolClubModerators\SchoolClubModerator.cs" />
+    <Compile Include="Entities\SchoolClubs\Management\SchoolClub_Core.cs" />
     <Compile Include="Entities\SchoolClubs\SchoolClub.cs" />
     <Compile Include="Entities\SchoolMajors\Management\SchoolMajor_Core.cs" />
     <Compile Include="Entities\SchoolMajors\SchoolMajor.cs" />
@@ -301,7 +302,6 @@
     <Folder Include="Entities\SchoolClubs\DTOs\" />
     <Folder Include="Entities\SchoolClubs\Enums\" />
     <Folder Include="Entities\SchoolClubs\Interfaces\" />
-    <Folder Include="Entities\SchoolClubs\Management\" />
     <Folder Include="Entities\SchoolMajors\APIControllers\" />
     <Folder Include="Entities\SchoolMajors\DTOs\" />
     <Folder Include="Entities\SchoolMajors\Enums\" />
