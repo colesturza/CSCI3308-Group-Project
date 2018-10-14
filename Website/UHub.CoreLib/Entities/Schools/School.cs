@@ -34,12 +34,19 @@ namespace UHub.CoreLib.Entities.Schools
         public string Description { get; set; }
 
         [DataProperty(EnableDBColumnValidation: false)]
+        public string DomainValidator { get; private set; }
+
+        [DataProperty(EnableDBColumnValidation: false)]
+        public long CreatedBy { get; set; }
+
+        [DataProperty(EnableDBColumnValidation: false)]
         public DateTimeOffset CreatedDate { get; set; }
 
         [DataProperty(EnableDBColumnValidation: false)]
-        public DateTimeOffset ModifiedDate { get; set; }
+        public long? ModifiedBy { get; set; }
 
         [DataProperty(EnableDBColumnValidation: false)]
-        public string DomainValidator { get; private set; }
+        public DateTimeOffset? ModifiedDate { get; set; }
+
     }
 }

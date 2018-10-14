@@ -44,15 +44,15 @@ namespace UHub.CoreLib.Entities.Posts
         public bool IsDeleted { get; set; }
 
         [DataProperty(EnableDBColumnValidation: false)]
-        public bool CreatedBy { get; set; }
+        public long CreatedBy { get; set; }
 
         [DataProperty(EnableDBColumnValidation: false)]
         public DateTimeOffset CreatedDate { get; set; }
 
         [DataProperty(EnableDBColumnValidation: false)]
-        public bool ModifiedBy { get; set; }
+        public long ModifiedBy { get; set; }
 
         [DataProperty(EnableDBColumnValidation: false)]
-        public DateTimeOffset ModifiedDate { get; set; }
+        public DateTimeOffset? ModifiedDate { get; set; }
     }
 }
