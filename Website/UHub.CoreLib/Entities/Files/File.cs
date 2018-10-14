@@ -4,11 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UHub.CoreLib.Attributes;
+using UHub.CoreLib.DataInterop;
 
 namespace UHub.CoreLib.Entities.Files
 {
     [DataClass]
-    public sealed partial class File
+    public sealed partial class File : DBEntityBase
     {
         [DataProperty(EnableDBColumnValidation: false)]
         public long? ID { get; set; }

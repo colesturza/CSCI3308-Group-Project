@@ -4,11 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UHub.CoreLib.Attributes;
+using UHub.CoreLib.DataInterop;
 
 namespace UHub.CoreLib.Entities.Posts
 {
     [DataClass]
-    public sealed partial class Post
+    public sealed partial class Post : DBEntityBase
     {
         [DataProperty(EnableDBColumnValidation: false)]
         public long? ID { get; set; }

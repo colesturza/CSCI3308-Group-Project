@@ -4,11 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UHub.CoreLib.Attributes;
+using UHub.CoreLib.DataInterop;
 
 namespace UHub.CoreLib.Entities.SchoolClubModerators
 {
     [DataClass]
-    public sealed partial class SchoolClubModerator
+    public sealed partial class SchoolClubModerator : DBEntityBase
     {
         [DataProperty(EnableDBColumnValidation: false)]
         public long? ID { get; set; }
