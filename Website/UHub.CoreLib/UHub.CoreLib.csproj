@@ -164,6 +164,7 @@
     <Compile Include="Entities\Posts\Post.cs" />
     <Compile Include="Entities\SchoolClubModerators\SchoolClubModerator.cs" />
     <Compile Include="Entities\SchoolClubs\SchoolClub.cs" />
+    <Compile Include="Entities\SchoolMajors\Management\SchoolMajor_Core.cs" />
     <Compile Include="Entities\SchoolMajors\SchoolMajor.cs" />
     <Compile Include="Entities\Schools\APIControllers\SchoolController.cs" />
     <Compile Include="Entities\Schools\DTOs\School_R_PublicDTO.cs" />
@@ -305,7 +306,6 @@
     <Folder Include="Entities\SchoolMajors\DTOs\" />
     <Folder Include="Entities\SchoolMajors\Enums\" />
     <Folder Include="Entities\SchoolMajors\Interfaces\" />
-    <Folder Include="Entities\SchoolMajors\Management\" />
     <Folder Include="Entities\Schools\Enums\" />
     <Folder Include="Entities\Schools\Management\" />
     <Folder Include="Entities\Users\APIControllers\" />
