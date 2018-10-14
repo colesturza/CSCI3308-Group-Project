@@ -168,7 +168,6 @@
     <Build Include="dbo\Stored Procedures\SchoolMajors_GetAll.sql" />
     <Build Include="dbo\Stored Procedures\SchoolMajor_GetByID.sql" />
     <Build Include="dbo\Stored Procedures\SchoolMajors_GetBySchool.sql" />
-    <Build Include="dbo\Stored Procedures\r_IsCastValid.sql" />
     <Build Include="dbo\Stored Procedures\SchoolClubs_GetBySchool.sql" />
     <Build Include="dbo\Stored Procedures\SchoolClubs_GetAll.sql" />
     <Build Include="dbo\Stored Procedures\SchoolClub_GetByID.sql" />
@@ -182,5 +181,7 @@
     <Build Include="dbo\Stored Procedures\Image_Create.sql" />
     <Build Include="dbo\Stored Procedures\File_Create.sql" />
     <Build Include="dbo\Stored Procedures\Comment_Create.sql" />
+    <Build Include="dbo\Stored Procedures\SchoolClub_Create.sql" />
+    <Build Include="dbo\Stored Procedures\_IsCastValid.sql" />
   </ItemGroup>
 </Project>

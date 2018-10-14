@@ -1,6 +1,6 @@
 ﻿
 
-CREATE proc dbo.Posts_GetByPage
+CREATE proc [dbo].[Posts_GetByPage]
 
 	@StartID bigint null,
 	@PageNum int null,
@@ -22,7 +22,8 @@ begin
 		order by
 			CreatedDate desc
 	end
-	select @StartID
+	--START ID CAN BE DERIVED AT CLIENT
+	--STARTID = MAX(ID) WHEN PAGE=0
 
 
 	--return all items if count is -1
@@ -58,17 +59,50 @@ begin
 	(
 
 		select
-			vp.*
-			,ROW_NUMBER() over (order by CreatedDate desc) as RowNum
-		from dbo.vPosts vp
+			vu.ID,
+			vu.IsEnabled,
+			vu.IsReadonly,
+			vu.[Name],
+			vu.[Content],
+			vu.[IsModified],
+			vu.[ViewCount],
+			vu.[IsLocked],
+			vu.[CanComment],
+			vu.[IsPublic],
+			vu.[IsDeleted],
+			vu.[CreatedBy],
+			vu.[CreatedDate],
+			vu.[ModifiedBy],
+			vu.[ModifiedDate],
+			vu.[DeletedBy],
+			vu.[DeletedDate]
+			,ROW_NUMBER() over (order by vu.CreatedDate desc) as RowNum
+		from dbo.vPosts vu
 		where 
 			ID <= @StartID
 
 	)
 
+
 	select
-		*
-	from postSet
+		ps.ID,
+		ps.IsEnabled,
+		ps.IsReadonly,
+		ps.[Name],
+		ps.[Content],
+		ps.[IsModified],
+		ps.[ViewCount],
+		ps.[IsLocked],
+		ps.[CanComment],
+		ps.[IsPublic],
+		ps.[IsDeleted],
+		ps.[CreatedBy],
+		ps.[CreatedDate],
+		ps.[ModifiedBy],
+		ps.[ModifiedDate],
+		ps.[DeletedBy],
+		ps.[DeletedDate]
+	from postSet ps
 	where
 		RowNum >= @adjStartIdx
 		and RowNum < @adjEndIdx

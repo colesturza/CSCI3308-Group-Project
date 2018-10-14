@@ -16,7 +16,7 @@ namespace UHub.CoreLib.Entities.Schools.Interfaces
         bool IsReadOnly { get; set; }
         string Description { get; set; }
         DateTimeOffset CreatedDate { get; set; }
-        DateTimeOffset ModifiedDate { get; set; }
+        DateTimeOffset? ModifiedDate { get; set; }
 
     }
 }

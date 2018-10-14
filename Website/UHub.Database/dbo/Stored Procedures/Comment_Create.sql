@@ -140,7 +140,7 @@ begin
 			@EntTypeID = @_entTypeID,
 			@PropID = 2,
 			@PropValue = @Name,
-			@ModifiedBy = @_entID,
+			@ModifiedBy = @CreatedBy,
 			@IsNewRecord = @_isNew
 
 		--Content [12]
@@ -149,7 +149,7 @@ begin
 			@EntTypeID = @_entTypeID,
 			@PropID = 12,
 			@PropValue = @Content,
-			@ModifiedBy = @_entID,
+			@ModifiedBy = @CreatedBy,
 			@IsNewRecord = @_isNew
 
 		--IsModified [13]
@@ -158,7 +158,7 @@ begin
 			@EntTypeID = @_entTypeID,
 			@PropID = 13,
 			@PropValue = @IsModified,
-			@ModifiedBy = @_entID,
+			@ModifiedBy = @CreatedBy,
 			@IsNewRecord = @_isNew
 
 		--ViewCount [14]
@@ -167,7 +167,7 @@ begin
 			@EntTypeID = @_entTypeID,
 			@PropID = 14,
 			@PropValue = @ViweCount,
-			@ModifiedBy = @_entID,
+			@ModifiedBy = @CreatedBy,
 			@IsNewRecord = @_isNew
 
 		select @_entID

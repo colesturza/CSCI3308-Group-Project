@@ -20,6 +20,6 @@ namespace UHub.CoreLib.Entities.Schools.DTOs
         public bool IsReadOnly { get; set; }
         public string Description { get; set; }
         public DateTimeOffset CreatedDate { get; set; }
-        public DateTimeOffset ModifiedDate { get; set; }
+        public DateTimeOffset? ModifiedDate { get; set; }
     }
 }

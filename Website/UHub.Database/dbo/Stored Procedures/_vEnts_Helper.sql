@@ -25,24 +25,37 @@ begin
 
 		declare @_errorMsg nvarchar(500)
 
+		--ensure property exists
+		if((select top(1) ID from dbo.EntProperties where ID = @PropID) is null)
+		begin
+			;throw 51000, '400: Specified property ID does not exist', 1;
+		end
+
+
 		--get info about current modified data property
+		--CONSTRAINED to the current entity type
 		select epm.*, ep.PropFriendlyName into #EntProp_Current from dbo.EntPropertyMap epm
 		left join dbo.EntProperties ep
 		on
 			ep.ID = @PropID
 		where
 			epm.EntTypeID = @EntTypeID
-			AND epm.PropID = @PropID
+			and epm.PropID = @PropID
 
 
-		--ensure that the sepcified entity can have the specified property
-		if(not exists (select EntTypeID from dbo.EntPropertyMap where EntTypeID = @EntTypeID AND PropID = @PropID))
+
+		--ensure that the specified entity can have the specified property
+		--#EntProp_Current will have no records if the prop is not valid
+		if((select count(*) from #EntProp_Current) = 0)
 		begin
+			--get prop friendly ID from table
 			select @_errorMsg = '400: ''' + [PropFriendlyName] + ''' is invalid for the specified entity type'
-			from #EntProp_Current
+			from dbo.EntProperties
+			where
+				ID = @PropID
+
 
 			;throw 51000, @_errorMsg, 1;
-
 		end
 
 
@@ -53,7 +66,7 @@ begin
 		declare @_out bit
 		declare @_dataType nvarchar(100)
 		select @_dataType = Datatype from dbo.EntProperties where ID = @PropID
-		exec @_out = dbo.r_IsCastValid @PropValue, @_dataType
+		exec @_out = dbo._IsCastValid @PropValue, @_dataType
 		if(@_out = 0)
 		begin
 				

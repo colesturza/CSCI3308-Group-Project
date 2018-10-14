@@ -1,18 +1,14 @@
 ﻿
 
 
-CREATE proc [dbo].[File_Create]
+
+CREATE proc [dbo].[SchoolClub_Create]
 
 	--CREATE PARAMETERS
 	
 	--DYNAMIC
 	@Name nvarchar(200),
-	@FilePath nvarchar(250),
-	@Description nvarchar(500),
-	@FileHash_SHA256 nvarchar(100),
-	@SourceName nvarchar(200),
-	@SourceType nvarchar(50),
-	@DownloadName nvarchar(200),
+	@Description nvarchar(max),
 
 	--HIERARCHY
 	@ParentID bigint,
@@ -28,10 +24,10 @@ begin
 	begin try
 		BEGIN TRAN
 
-		--POST ENT ID => 8
+		--POST ENT ID => 4
 		--use variable to manage ent type easier
 		declare @_entTypeID smallint
-		set @_entTypeID = 8
+		set @_entTypeID = 4
 		declare @_entID bigint
 		declare @_isNew bit = 1
 
@@ -72,7 +68,7 @@ begin
 		--validate parent enabled flag
 		if(@_prnt_IsEnabled = 0)
 		begin
-			;throw 51000, '403: This Parent cannot be modified', 1;
+			;throw 51000, '403: This School cannot be modified', 1;
 		end
 		--validate parent readonly flag
 		--ensure that parent entity does not have the readonly flag set
@@ -146,57 +142,12 @@ begin
 			@ModifiedBy = @CreatedBy,
 			@IsNewRecord = @_isNew
 
-		--FilePath [23]
+		--Discription [11]
 		exec [dbo].[_vEnts_Helper]
 			@EntID = @_entID,
 			@EntTypeID = @_entTypeID,
-			@PropID = 12,
-			@PropValue = @FilePath,
-			@ModifiedBy = @CreatedBy,
-			@IsNewRecord = @_isNew
-
-		--Description [24]
-		exec [dbo].[_vEnts_Helper]
-			@EntID = @_entID,
-			@EntTypeID = @_entTypeID,
-			@PropID = 24,
+			@PropID = 11,
 			@PropValue = @Description,
-			@ModifiedBy = @CreatedBy,
-			@IsNewRecord = @_isNew
-
-		--FileHash_SHA256 [25]
-		exec [dbo].[_vEnts_Helper]
-			@EntID = @_entID,
-			@EntTypeID = @_entTypeID,
-			@PropID = 25,
-			@PropValue = @FileHash_SHA256,
-			@ModifiedBy = @CreatedBy,
-			@IsNewRecord = @_isNew
-
-		--SourceName [26]
-		exec [dbo].[_vEnts_Helper]
-			@EntID = @_entID,
-			@EntTypeID = @_entTypeID,
-			@PropID = 26,
-			@PropValue = @SourceName,
-			@ModifiedBy = @CreatedBy,
-			@IsNewRecord = @_isNew
-
-		--SourceType [28]
-		exec [dbo].[_vEnts_Helper]
-			@EntID = @_entID,
-			@EntTypeID = @_entTypeID,
-			@PropID = 28,
-			@PropValue = @SourceType,
-			@ModifiedBy = @CreatedBy,
-			@IsNewRecord = @_isNew
-
-		--DownloadName [29]
-		exec [dbo].[_vEnts_Helper]
-			@EntID = @_entID,
-			@EntTypeID = @_entTypeID,
-			@PropID = 29,
-			@PropValue = @DownloadName,
 			@ModifiedBy = @CreatedBy,
 			@IsNewRecord = @_isNew
 

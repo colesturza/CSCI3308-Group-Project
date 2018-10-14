@@ -1,5 +1,5 @@
 ﻿
-CREATE proc [dbo].[r_IsCastValid]
+CREATE proc [dbo].[_IsCastValid]
 
 	@Value nvarchar(max),
 	@Type nvarchar(100)

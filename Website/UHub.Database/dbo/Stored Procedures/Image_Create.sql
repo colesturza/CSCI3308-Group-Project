@@ -144,7 +144,7 @@ begin
 			@EntTypeID = @_entTypeID,
 			@PropID = 2,
 			@PropValue = @Name,
-			@ModifiedBy = @_entID,
+			@ModifiedBy = @CreatedBy,
 			@IsNewRecord = @_isNew
 
 		--FilePath [23]
@@ -153,7 +153,7 @@ begin
 			@EntTypeID = @_entTypeID,
 			@PropID = 12,
 			@PropValue = @FilePath,
-			@ModifiedBy = @_entID,
+			@ModifiedBy = @CreatedBy,
 			@IsNewRecord = @_isNew
 
 		--Description [24]
@@ -162,7 +162,7 @@ begin
 			@EntTypeID = @_entTypeID,
 			@PropID = 24,
 			@PropValue = @Description,
-			@ModifiedBy = @_entID,
+			@ModifiedBy = @CreatedBy,
 			@IsNewRecord = @_isNew
 
 		--FileHash_SHA256 [25]
@@ -171,7 +171,7 @@ begin
 			@EntTypeID = @_entTypeID,
 			@PropID = 25,
 			@PropValue = @FileHash_SHA256,
-			@ModifiedBy = @_entID,
+			@ModifiedBy = @CreatedBy,
 			@IsNewRecord = @_isNew
 
 		--SourceName [26]
@@ -180,7 +180,7 @@ begin
 			@EntTypeID = @_entTypeID,
 			@PropID = 26,
 			@PropValue = @SourceName,
-			@ModifiedBy = @_entID,
+			@ModifiedBy = @CreatedBy,
 			@IsNewRecord = @_isNew
 
 		--SourceType [28]
@@ -189,7 +189,7 @@ begin
 			@EntTypeID = @_entTypeID,
 			@PropID = 28,
 			@PropValue = @SourceType,
-			@ModifiedBy = @_entID,
+			@ModifiedBy = @CreatedBy,
 			@IsNewRecord = @_isNew
 
 		--DownloadName [29]
@@ -198,7 +198,7 @@ begin
 			@EntTypeID = @_entTypeID,
 			@PropID = 29,
 			@PropValue = @DownloadName,
-			@ModifiedBy = @_entID,
+			@ModifiedBy = @CreatedBy,
 			@IsNewRecord = @_isNew
 
 		select @_entID
