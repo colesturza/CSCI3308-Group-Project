@@ -5,11 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using UHub.CoreLib.Attributes;
 using UHub.CoreLib.DataInterop;
+using UHub.CoreLib.Entities.SchoolClubs.Interfaces;
 
 namespace UHub.CoreLib.Entities.SchoolClubs
 {
     [DataClass]
-    public sealed partial class SchoolClub : DBEntityBase
+    public sealed partial class SchoolClub : DBEntityBase, ISchoolClub_R_Public, ISchoolClub_C_Public
     {
         [DataProperty(EnableDBColumnValidation: false)]
         public long? ID { get; set; }

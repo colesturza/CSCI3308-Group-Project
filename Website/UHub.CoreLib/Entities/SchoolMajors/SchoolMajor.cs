@@ -5,11 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using UHub.CoreLib.Attributes;
 using UHub.CoreLib.DataInterop;
+using UHub.CoreLib.Entities.SchoolMajors.Interfaces;
 
 namespace UHub.CoreLib.Entities.SchoolMajors
 {
     [DataClass]
-    public sealed partial class SchoolMajor : DBEntityBase
+    public sealed partial class SchoolMajor : DBEntityBase, ISchoolMajor_R_Public
     {
         [DataProperty(EnableDBColumnValidation: false)]
         public long? ID { get; set; }

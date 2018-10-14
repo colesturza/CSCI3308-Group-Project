@@ -5,12 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using UHub.CoreLib.Attributes;
 using UHub.CoreLib.DataInterop;
-using UHub.CoreLib.Entities.Posts.Interfaces;
+using UHub.CoreLib.Entities.ClubModerators.Interfaces;
 
-namespace UHub.CoreLib.Entities.Posts
+namespace UHub.CoreLib.Entities.ClubModerators
 {
     [DataClass]
-    public sealed partial class Post : DBEntityBase, IPost_R_Public, IPost_C_Public
+    public sealed partial class ClubModerator : DBEntityBase, IClubModerator_R_Public
     {
         [DataProperty(EnableDBColumnValidation: false)]
         public long? ID { get; set; }
@@ -22,28 +22,13 @@ namespace UHub.CoreLib.Entities.Posts
         public bool IsReadOnly { get; set; }
 
         [DataProperty(EnableDBColumnValidation: false)]
-        public string Name { get; set; }
+        public long UserID { get; set; }
 
         [DataProperty(EnableDBColumnValidation: false)]
-        public string Content { get; set; }
+        public bool IsOwner { get; set; }
 
         [DataProperty(EnableDBColumnValidation: false)]
-        public bool IsModified { get; set; }
-
-        [DataProperty(EnableDBColumnValidation: false)]
-        public long ViewCount { get; set; }
-
-        [DataProperty(EnableDBColumnValidation: false)]
-        public bool IsLocked { get; set; }
-
-        [DataProperty(EnableDBColumnValidation: false)]
-        public bool CanComment { get; set; }
-
-        [DataProperty(EnableDBColumnValidation: false)]
-        public bool IsPublic { get; set; }
-
-        [DataProperty(EnableDBColumnValidation: false)]
-        public long ParentID { get; set; }
+        public bool IsValid { get; set; }
 
         [DataProperty(EnableDBColumnValidation: false)]
         public bool IsDeleted { get; set; }

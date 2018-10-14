@@ -45,6 +45,9 @@ namespace UHub.CoreLib.Entities.Files
         public string DownloadName { get; set; }
 
         [DataProperty(EnableDBColumnValidation: false)]
+        public string ParentID { get; set; }
+
+        [DataProperty(EnableDBColumnValidation: false)]
         public bool IsDeleted { get; set; }
 
         [DataProperty(EnableDBColumnValidation: false)]

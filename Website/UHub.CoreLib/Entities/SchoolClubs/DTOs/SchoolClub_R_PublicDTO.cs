@@ -5,11 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using UHub.CoreLib.Attributes;
 using UHub.CoreLib.DataInterop;
+using UHub.CoreLib.Entities.SchoolClubs.Interfaces;
 
-namespace UHub.CoreLib.Entities.SchoolClubModerators
+namespace UHub.CoreLib.Entities.SchoolClubs.DTOs
 {
-    [DataClass]
-    public sealed partial class SchoolClubModerator : DBEntityBase
+    [DtoClass(typeof(SchoolClub))]
+    public sealed partial class SchoolClub_R_PublicDTO : DtoEntityBase, ISchoolClub_R_Public
     {
         [DataProperty(EnableDBColumnValidation: false)]
         public long? ID { get; set; }
@@ -21,25 +22,13 @@ namespace UHub.CoreLib.Entities.SchoolClubModerators
         public bool IsReadOnly { get; set; }
 
         [DataProperty(EnableDBColumnValidation: false)]
-        public long UserID { get; set; }
+        public string Name { get; set; }
 
         [DataProperty(EnableDBColumnValidation: false)]
-        public bool IsOwner { get; set; }
-
-        [DataProperty(EnableDBColumnValidation: false)]
-        public bool IsValid { get; set; }
-
-        [DataProperty(EnableDBColumnValidation: false)]
-        public bool IsDeleted { get; set; }
-
-        [DataProperty(EnableDBColumnValidation: false)]
-        public long CreatedBy { get; set; }
+        public string Description { get; set; }
 
         [DataProperty(EnableDBColumnValidation: false)]
         public DateTimeOffset CreatedDate { get; set; }
-
-        [DataProperty(EnableDBColumnValidation: false)]
-        public long? ModifiedBy { get; set; }
 
         [DataProperty(EnableDBColumnValidation: false)]
         public DateTimeOffset? ModifiedDate { get; set; }
