@@ -162,6 +162,7 @@
     <Compile Include="Entities\Files\File.cs" />
     <Compile Include="Entities\Images\Image.cs" />
     <Compile Include="Entities\Posts\Post.cs" />
+    <Compile Include="Entities\SchoolClubModerators\Management\SchoolClubModerator_Core.cs" />
     <Compile Include="Entities\SchoolClubModerators\SchoolClubModerator.cs" />
     <Compile Include="Entities\SchoolClubs\Management\SchoolClub_Core.cs" />
     <Compile Include="Entities\SchoolClubs\SchoolClub.cs" />
@@ -297,7 +298,6 @@
     <Folder Include="Entities\SchoolClubModerators\DTOs\" />
     <Folder Include="Entities\SchoolClubModerators\Enums\" />
     <Folder Include="Entities\SchoolClubModerators\Interfaces\" />
-    <Folder Include="Entities\SchoolClubModerators\Management\" />
     <Folder Include="Entities\SchoolClubs\APIControllers\" />
     <Folder Include="Entities\SchoolClubs\DTOs\" />
     <Folder Include="Entities\SchoolClubs\Enums\" />
