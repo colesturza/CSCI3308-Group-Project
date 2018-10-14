@@ -127,7 +127,9 @@ namespace UHub.CoreLib.Entities.Posts.Management
         /// <summary>
         /// Get all the posts in the DB by page
         /// </summary>
-        /// <param name="StartID, PageNum, ItemCount"></param>
+        /// <param name="StartID"></param>
+        /// <param name="PageNum"></param>
+        /// <param name="ItemCount"></param>
         /// <returns></returns>
         public static IEnumerable<Post> GetPostsByPage(long StartID, int PageNum, short ItemCount)
         {

@@ -170,6 +170,7 @@
     <Compile Include="Entities\SchoolClubModerators\SchoolClubModerator.cs" />
     <Compile Include="Entities\SchoolClubs\Management\SchoolClub_Core.cs" />
     <Compile Include="Entities\SchoolClubs\SchoolClub.cs" />
+    <Compile Include="Entities\SchoolMajors\Management\SchoolMajorWriter.cs" />
     <Compile Include="Entities\SchoolMajors\Management\SchoolMajor_Core.cs" />
     <Compile Include="Entities\SchoolMajors\SchoolMajor.cs" />
     <Compile Include="Entities\Schools\APIControllers\SchoolController.cs" />

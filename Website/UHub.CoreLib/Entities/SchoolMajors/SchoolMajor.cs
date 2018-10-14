@@ -21,7 +21,7 @@ namespace UHub.CoreLib.Entities.SchoolMajors
         public bool IsEnabled { get; set; }
 
         [DataProperty(EnableDBColumnValidation: false)]
-        public bool IsReadOnly { get; set; }
+        public bool IsReadonly { get; set; }
 
         [DataProperty(EnableDBColumnValidation: false)]
         public string Description { get; set; }
