@@ -64,7 +64,7 @@ begin
 			@EntTypeID = @_entTypeID,
 			@PropID = 2,
 			@PropValue = @Name,
-			@ModifiedBy = @_entID,
+			@ModifiedBy = @CreatedBy,
 			@IsNewRecord = @_isNew
 
 		--State [15]
@@ -73,7 +73,7 @@ begin
 			@EntTypeID = @_entTypeID,
 			@PropID = 15,
 			@PropValue = @State,
-			@ModifiedBy = @_entID,
+			@ModifiedBy = @CreatedBy,
 			@IsNewRecord = @_isNew
 
 		--City [16]
@@ -82,7 +82,7 @@ begin
 			@EntTypeID = @_entTypeID,
 			@PropID = 16,
 			@PropValue = @City,
-			@ModifiedBy = @_entID,
+			@ModifiedBy = @CreatedBy,
 			@IsNewRecord = @_isNew
 
 		--DomainValidator [17]
@@ -91,7 +91,7 @@ begin
 			@EntTypeID = @_entTypeID,
 			@PropID = 17,
 			@PropValue = @DomainValidator,
-			@ModifiedBy = @_entID,
+			@ModifiedBy = @CreatedBy,
 			@IsNewRecord = @_isNew
 
 		--Description [11]
@@ -100,7 +100,7 @@ begin
 			@EntTypeID = @_entTypeID,
 			@PropID = 11,
 			@PropValue = @Description,
-			@ModifiedBy = @_entID,
+			@ModifiedBy = @CreatedBy,
 			@IsNewRecord = @_isNew
 
 		select @_entID
