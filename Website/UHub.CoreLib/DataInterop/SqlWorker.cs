@@ -390,7 +390,7 @@ namespace UHub.CoreLib.DataInterop
         /// <exception cref="System.IO.IOException"/>
         /// <exception cref="SqlException"/>
         /// <exception cref="ObjectDisposedException"/>
-        private static void DBCallWrapper<T>(string SqlConn, string CmdName, Action<SqlCommand> SetParams, Dictionary<int, Func<DataRow, T>> ReturnValParseFunc, bool AllowDBMultithreading)
+        public static void ExecAdvancedQuery<T>(string SqlConn, string CmdName, Action<SqlCommand> SetParams, Dictionary<int, Func<DataRow, T>> ReturnValParseFunc, bool AllowDBMultithreading, bool AllowMultithreading = false)
         {
             var lockObject = new object();
 
