@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UHub.CoreLib.Entities.SchoolClubModerators.Management
+namespace UHub.CoreLib.Entities.Files.Management
 {
-    public static partial class SchoolClubModeratorReader
+    public static partial class FileReader
     {
     }
 }

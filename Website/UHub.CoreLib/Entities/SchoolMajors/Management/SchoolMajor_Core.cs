@@ -73,8 +73,9 @@ namespace UHub.CoreLib.Entities.SchoolMajors.Management
         }
 
         /// <summary>
-        /// Get all the school majors in the DB
+        /// Get all the school majors in the DB by school
         /// </summary>
+        /// <param name="SchoolID"></param>
         /// <returns></returns>
         public static IEnumerable<SchoolMajor> GetSchoolMajorsBySchool(long SchoolID)
         {
