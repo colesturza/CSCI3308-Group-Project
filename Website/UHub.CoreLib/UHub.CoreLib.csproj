@@ -142,11 +142,11 @@
     </Compile>
     <Compile Include="DataInterop\DBEntityBase.cs" />
     <Content Include="DataInterop\DataConverterGenerator.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
+      <!-- <Generator>TextTemplatingFileGenerator</Generator> -->
       <LastGenOutput>DataConverterGenerator.cs</LastGenOutput>
     </Content>
     <Content Include="DataInterop\DtoConverterGenerator.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
+      <!-- <Generator>TextTemplatingFileGenerator</Generator> -->
       <LastGenOutput>DtoConverterGenerator.cs</LastGenOutput>
     </Content>
     <Compile Include="DataInterop\DtoConverterGenerator.cs">
@@ -319,4 +319,8 @@
     <Folder Include="Logging\Interfaces\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>cd "$(ProjectDir)"
+call T4AutoGen.bat</PostBuildEvent>
+  </PropertyGroup>
 </Project>

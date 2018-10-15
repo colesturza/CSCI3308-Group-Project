@@ -14,7 +14,7 @@
 <#@ import namespace="System.Collections.Generic" #>  
 <#@ import namespace="System.Reflection" #>
 
-<#@ assembly name="$(ProjectDir)\bin\Release\UHub.CoreLib.dll" #>
+<#@ assembly name="bin\Release\UHub.CoreLib.dll" #>
 <#@ import namespace="UHub.CoreLib" #>
 <#@ import namespace="UHub.CoreLib.Attributes" #>
 <#@ import namespace="UHub.CoreLib.Extensions" #>

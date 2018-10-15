@@ -1,0 +1,2 @@
+T:\SchoolRepo\3308_GroupProj\Website\UHub.CoreLib\DataInterop\DataConverterGenerator.tt
+T:\SchoolRepo\3308_GroupProj\Website\UHub.CoreLib\DataInterop\DtoConverterGenerator.tt
