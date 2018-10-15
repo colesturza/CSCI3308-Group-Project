@@ -28,7 +28,7 @@ steps:
 
 #real build
 #prodces final product now that augen code has executed
-- task: VSBuild@2
+- task: VSBuild@1
   inputs:
     solution: '$(solution)'
     msbuildArgs: '/t:UHub /p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:EnableUpdateable=false /p:PrecompileBeforePublish=true /p:UseMerge=true /p:PackageLocation="$(build.stagingDirectory)"'
@@ -36,7 +36,7 @@ steps:
     configuration: '$(buildConfiguration)'
 
 
-- task: VSTest@3
+- task: VSTest@2
   inputs:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
