@@ -48,6 +48,7 @@ namespace UHub.CoreLib.Entities.SchoolMajors.Management
         }
         #endregion Individual
 
+
         #region Group
         /// <summary>
         /// Get all the school majors in the DB

@@ -40,7 +40,7 @@ namespace UHub
 
 
             //FILES
-            var fileStoreDir = WebConfigurationManager.AppSettings["FileStoreDir"];
+            var fileStoreDir = WebConfigurationManager.AppSettings["FileStoreDirectory"];
             var imgStoreDir = WebConfigurationManager.AppSettings["ImageStoreDirectory"];
             var tempCacheDir = WebConfigurationManager.AppSettings["TempCacheDirectory"];
             var logStoreDir = WebConfigurationManager.AppSettings["LogStoreDirectory"];

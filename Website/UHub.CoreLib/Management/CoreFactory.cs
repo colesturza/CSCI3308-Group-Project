@@ -39,7 +39,12 @@ namespace UHub.CoreLib.Management
             _singleton = new CoreManager(config);
             isInstantiated = true;
 
+        }
 
+
+        public static bool IsInitialized()
+        {
+            return isInstantiated;
         }
 
 
