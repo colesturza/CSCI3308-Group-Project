@@ -18,7 +18,7 @@ namespace UHub.CoreLib.Entities.SchoolClubs.Management.Tests
             TestGlobal.TestInit();
 
 
-            SchoolClubReader.GetSchoolClubs().ToList();
+            SchoolClubReader.GetAllClubs().ToList();
         }
     }
 }

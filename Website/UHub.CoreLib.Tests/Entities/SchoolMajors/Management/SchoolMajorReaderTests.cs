@@ -19,7 +19,7 @@ namespace UHub.CoreLib.Entities.SchoolMajors.Management.Tests
             TestGlobal.TestInit();
 
 
-            SchoolMajorReader.GetSchoolMajors().ToList();
+            SchoolMajorReader.GetAllMajors().ToList();
 
         }
     }

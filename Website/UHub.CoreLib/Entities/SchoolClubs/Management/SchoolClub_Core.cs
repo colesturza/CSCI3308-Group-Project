@@ -77,7 +77,7 @@ namespace UHub.CoreLib.Entities.SchoolClubs.Management
         /// </summary>
         /// <param name="SchoolID"></param>
         /// <returns></returns>
-        public static IEnumerable<SchoolClub> GetAllClubsBySchool(long SchoolID)
+        public static IEnumerable<SchoolClub> GetClubsBySchool(long SchoolID)
         {
 
             if (!CoreFactory.Singleton.IsEnabled)
@@ -91,6 +91,32 @@ namespace UHub.CoreLib.Entities.SchoolClubs.Management
                 "[dbo].[SchoolClubs_GetBySchool]",
                 (cmd) => {
                     cmd.Parameters.Add("@SchoolID", SqlDbType.BigInt).Value = SchoolID;
+                },
+                (row) =>
+                {
+                    return row.ToCustomDBType<SchoolClub>();
+                });
+        }
+
+        /// <summary>
+        /// Get all the school clubs in the DB for a school using the email addr of a user
+        /// </summary>
+        /// <param name="Email"></param>
+        /// <returns></returns>
+        public static IEnumerable<SchoolClub> GetClubsByEmail(string Email)
+        {
+
+            if (!CoreFactory.Singleton.IsEnabled)
+            {
+                throw new SystemDisabledException();
+            }
+
+
+            return SqlWorker.ExecBasicQuery(
+                _dbConn,
+                "[dbo].[SchoolClubs_GetByEmail]",
+                (cmd) => {
+                    cmd.Parameters.Add("@Email", SqlDbType.NVarChar).Value = Email;
                 },
                 (row) =>
                 {

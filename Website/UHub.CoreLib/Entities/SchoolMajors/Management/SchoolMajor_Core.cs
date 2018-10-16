@@ -97,6 +97,34 @@ namespace UHub.CoreLib.Entities.SchoolMajors.Management
                     return row.ToCustomDBType<SchoolMajor>();
                 });
         }
+
+
+        /// <summary>
+        /// Get all the school majors in the DB for a school using the email addr of a user
+        /// </summary>
+        /// <param name="Email"></param>
+        /// <returns></returns>
+        public static IEnumerable<SchoolMajor> GetMajorsByEmail(string Email)
+        {
+
+            if (!CoreFactory.Singleton.IsEnabled)
+            {
+                throw new SystemDisabledException();
+            }
+
+
+            return SqlWorker.ExecBasicQuery(
+                _dbConn,
+                "[dbo].[SchoolMajors_GetByEmail]",
+                (cmd) => {
+                    cmd.Parameters.Add("@Email", SqlDbType.NVarChar).Value = Email;
+                },
+                (row) =>
+                {
+                    return row.ToCustomDBType<SchoolMajor>();
+                });
+        }
+
         #endregion Group
     }
 }

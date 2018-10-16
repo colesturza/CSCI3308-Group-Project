@@ -185,5 +185,7 @@
     <Build Include="dbo\Stored Procedures\School_GetByEmail.sql" />
     <Build Include="dbo\Stored Procedures\Posts_GetBySchoolPage.sql" />
     <Build Include="dbo\Stored Procedures\Posts_GetByClubPage.sql" />
+    <Build Include="dbo\Stored Procedures\SchoolMajors_GetByEmail.sql" />
+    <Build Include="dbo\Stored Procedures\SchoolClubs_GetByEmail.sql" />
   </ItemGroup>
 </Project>

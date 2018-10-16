@@ -18,7 +18,7 @@ namespace UHub.CoreLib.Entities.Posts.Management.Tests
             TestGlobal.TestInit();
 
 
-            PostReader.GetPosts().ToList();
+            PostReader.GetAllPosts().ToList();
         }
     }
 }
