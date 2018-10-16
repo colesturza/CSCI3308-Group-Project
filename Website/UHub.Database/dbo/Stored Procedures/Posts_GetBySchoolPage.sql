@@ -1,7 +1,8 @@
 ﻿
 
-CREATE proc [dbo].[Posts_GetByPage]
+CREATE proc [dbo].[Posts_GetBySchoolPage]
 
+	@SchoolID bigint,
 	@StartID bigint null,
 	@PageNum int null,
 	@ItemCount smallint
@@ -54,6 +55,21 @@ begin
 	set @adjEndIdx = @adjStartIdx + @ItemCount;
 
 
+	--get list of clubs that are children of the specified school
+	select
+		xr.ChildEntID
+	into #ParentSet
+	from
+		dbo.EntChildXRef xr
+	where
+		ParentEntID = @SchoolID
+		and ChildEntType = 4;		--SCHOOL CLUB TYPE ID [4]
+
+	--include school in possible-parent set
+	insert into #ParentSet
+	values (@SchoolID);
+
+
 	--get set of posts starting at the 
 	with postSet as
 	(
@@ -69,6 +85,7 @@ begin
 			vu.[IsLocked],
 			vu.[CanComment],
 			vu.[IsPublic],
+			vu.ParentID,
 			vu.[IsDeleted],
 			vu.[CreatedBy],
 			vu.[CreatedDate],
@@ -78,6 +95,12 @@ begin
 			vu.[DeletedDate]
 			,ROW_NUMBER() over (order by vu.CreatedDate desc) as RowNum
 		from dbo.vPosts vu
+		
+		--join results onto parent set
+		inner join #ParentSet ps
+		on
+			ps.ChildEntID = vu.ParentID
+
 		where 
 			ID <= @StartID
 
@@ -95,6 +118,7 @@ begin
 		ps.[IsLocked],
 		ps.[CanComment],
 		ps.[IsPublic],
+		ps.ParentID,
 		ps.[IsDeleted],
 		ps.[CreatedBy],
 		ps.[CreatedDate],
@@ -107,5 +131,9 @@ begin
 		RowNum >= @adjStartIdx
 		and RowNum < @adjEndIdx
 
+
+
+
+	drop table #ParentSet
 
 end

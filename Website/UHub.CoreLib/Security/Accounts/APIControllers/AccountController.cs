@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
 using UHub.CoreLib.APIControllers;
+using UHub.CoreLib.Entities.Schools.Management;
 using UHub.CoreLib.Entities.Users;
 using UHub.CoreLib.Entities.Users.DTOs;
 using UHub.CoreLib.Management;
@@ -44,6 +45,17 @@ namespace UHub.CoreLib.Security.Accounts.APIControllers
 
 
             var tmpUser = user.ToInternal<User>();
+
+            var tmpSchool = SchoolReader.GetSchoolByEmail(tmpUser.Email);
+            if (tmpSchool == null)
+            {
+                status = "Email Invalid - School Not Supported";
+                statCode = HttpStatusCode.BadRequest;
+                return Content(statCode, status);
+            }
+
+
+            tmpUser.SchoolID = tmpSchool.ID;
 
             var enableDetail = CoreFactory.Singleton.Properties.EnableDetailedAPIErrors;
             var enableFailCode = CoreFactory.Singleton.Properties.EnableInternalAPIErrors;

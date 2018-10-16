@@ -25,6 +25,7 @@ select
 	vu.[IsLocked],
 	vu.[CanComment],
 	vu.[IsPublic],
+	vu.ParentID,
 	vu.[IsDeleted],
 	vu.[CreatedBy],
 	vu.[CreatedDate],

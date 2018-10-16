@@ -8,6 +8,7 @@ using UHub.CoreLib.DataInterop;
 using UHub.CoreLib.ErrorHandling.Exceptions;
 using UHub.CoreLib.Extensions;
 using UHub.CoreLib.Management;
+using static UHub.CoreLib.DataInterop.SqlConverters;
 
 namespace UHub.CoreLib.Entities.Posts.Management
 {
@@ -22,7 +23,7 @@ namespace UHub.CoreLib.Entities.Posts.Management
 
         #region Individual
         /// <summary>
-        /// Get DB post full detail by GUID UID
+        /// Get DB post full detail by LONG ID
         /// </summary>
         /// <param name="PostID"></param>
         /// <returns></returns>
@@ -53,7 +54,7 @@ namespace UHub.CoreLib.Entities.Posts.Management
         /// Get all the posts in the DB
         /// </summary>
         /// <returns></returns>
-        public static IEnumerable<Post> GetPosts()
+        public static IEnumerable<Post> GetAllPosts()
         {
 
             if (!CoreFactory.Singleton.IsEnabled)
@@ -125,13 +126,14 @@ namespace UHub.CoreLib.Entities.Posts.Management
         }
 
         /// <summary>
-        /// Get all the posts in the DB by page
+        /// Get all the posts in the DB by school page
         /// </summary>
+        /// <param name="SchoolID"></param>
         /// <param name="StartID"></param>
         /// <param name="PageNum"></param>
         /// <param name="ItemCount"></param>
         /// <returns></returns>
-        public static IEnumerable<Post> GetPostsByPage(long StartID, int PageNum, short ItemCount)
+        public static IEnumerable<Post> GetPostsBySchoolPage(long SchoolID, long? StartID, int? PageNum, short? ItemCount)
         {
 
             if (!CoreFactory.Singleton.IsEnabled)
@@ -142,10 +144,11 @@ namespace UHub.CoreLib.Entities.Posts.Management
 
             return SqlWorker.ExecBasicQuery(
                 _dbConn,
-                "[dbo].[Posts_GetByPage]",
+                "[dbo].[Posts_GetBySchoolPage]",
                 (cmd) => {
-                    cmd.Parameters.Add("@StartID", SqlDbType.BigInt).Value = StartID;
-                    cmd.Parameters.Add("@PageNum", SqlDbType.Int).Value = PageNum;
+                    cmd.Parameters.Add("@SchoolID", SqlDbType.BigInt).Value = SchoolID;
+                    cmd.Parameters.Add("@StartID", SqlDbType.BigInt).Value = HandleDBNull(StartID);
+                    cmd.Parameters.Add("@PageNum", SqlDbType.Int).Value = HandleDBNull(PageNum);
                     cmd.Parameters.Add("@ItemCount", SqlDbType.SmallInt).Value = ItemCount;
                 },
                 (row) =>
@@ -153,6 +156,41 @@ namespace UHub.CoreLib.Entities.Posts.Management
                     return row.ToCustomDBType<Post>();
                 });
         }
+
+
+        /// <summary>
+        /// Get all the posts in the DB by club page
+        /// </summary>
+        /// <param name="ClubID"></param>
+        /// <param name="StartID"></param>
+        /// <param name="PageNum"></param>
+        /// <param name="ItemCount"></param>
+        /// <returns></returns>
+        public static IEnumerable<Post> GetPostsByClubPage(long ClubID, long? StartID, int? PageNum, short? ItemCount)
+        {
+
+            if (!CoreFactory.Singleton.IsEnabled)
+            {
+                throw new SystemDisabledException();
+            }
+
+
+            return SqlWorker.ExecBasicQuery(
+                _dbConn,
+                "[dbo].[Posts_GetByClubPage]",
+                (cmd) => {
+                    cmd.Parameters.Add("@ClubID", SqlDbType.BigInt).Value = ClubID;
+                    cmd.Parameters.Add("@StartID", SqlDbType.BigInt).Value = HandleDBNull(StartID);
+                    cmd.Parameters.Add("@PageNum", SqlDbType.Int).Value = HandleDBNull(PageNum);
+                    cmd.Parameters.Add("@ItemCount", SqlDbType.SmallInt).Value = ItemCount;
+                },
+                (row) =>
+                {
+                    return row.ToCustomDBType<Post>();
+                });
+        }
+
+
         #endregion Group
     }
 }

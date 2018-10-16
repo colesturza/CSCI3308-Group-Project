@@ -14,3 +14,15 @@
     CONSTRAINT [FK_EntPropertyXRef_Users1] FOREIGN KEY ([ModifiedBy]) REFERENCES [dbo].[Users] ([EntID])
 );
 
+
+
+
+GO
+CREATE NONCLUSTERED INDEX [IX_EntPropertyXRef_PropID]
+    ON [dbo].[EntPropertyXRef]([PropID] ASC);
+
+
+GO
+CREATE NONCLUSTERED INDEX [IX_EntPropertyXRef_EntType]
+    ON [dbo].[EntPropertyXRef]([EntTypeID] ASC);
+

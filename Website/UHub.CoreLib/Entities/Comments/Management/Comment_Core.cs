@@ -53,7 +53,7 @@ namespace UHub.CoreLib.Entities.Comments.Management
         /// </summary>
         /// /// <param name="ParentID"></param>
         /// <returns></returns>
-        public static IEnumerable<Comment> GetPostsBySchool(long ParentID)
+        public static IEnumerable<Comment> GetCommentsByParent(long ParentID)
         {
 
             if (!CoreFactory.Singleton.IsEnabled)

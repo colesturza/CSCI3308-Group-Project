@@ -22,11 +22,11 @@ namespace UHub.CoreLib.Entities.SchoolMajors.Management
 
         #region Individual
         /// <summary>
-        /// Get DB school major full detail by GUID UID
+        /// Get DB school major full detail by LONG ID
         /// </summary>
         /// <param name="SchoolMajorID"></param>
         /// <returns></returns>
-        public static SchoolMajor GetSchoolMajor(long SchoolMajorID)
+        public static SchoolMajor GetMajor(long SchoolMajorID)
         {
             if (!CoreFactory.Singleton.IsEnabled)
             {
@@ -48,13 +48,12 @@ namespace UHub.CoreLib.Entities.SchoolMajors.Management
         }
         #endregion Individual
 
-
         #region Group
         /// <summary>
         /// Get all the school majors in the DB
         /// </summary>
         /// <returns></returns>
-        public static IEnumerable<SchoolMajor> GetSchoolMajors()
+        public static IEnumerable<SchoolMajor> GetAllMajors()
         {
 
             if (!CoreFactory.Singleton.IsEnabled)
@@ -78,7 +77,7 @@ namespace UHub.CoreLib.Entities.SchoolMajors.Management
         /// </summary>
         /// <param name="SchoolID"></param>
         /// <returns></returns>
-        public static IEnumerable<SchoolMajor> GetSchoolMajorsBySchool(long SchoolID)
+        public static IEnumerable<SchoolMajor> GetMajorsBySchool(long SchoolID)
         {
 
             if (!CoreFactory.Singleton.IsEnabled)

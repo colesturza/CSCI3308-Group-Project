@@ -27,6 +27,7 @@ select
 	vu.[Content],
 	vu.[IsModified],
 	vu.[ViewCount],
+	vu.ParentID,
 	vu.[IsDeleted],
 	vu.[CreatedBy],
 	vu.[CreatedDate],

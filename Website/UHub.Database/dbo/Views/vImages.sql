@@ -2,6 +2,7 @@
 
 
 
+
 CREATE view [dbo].[vImages]
 as
 
@@ -18,6 +19,7 @@ select
 	xref_SourceName.PropValue					as [SourceName],
 	xref_SourceType.PropValue					as [SourceType],
 	xref_DownloadName.PropValue					as [DownloadName],
+	xref_Parent.ParentEntID						as [ParentID],
 	ent.IsDeleted,
 	ent.CreatedBy,
 	ent.CreatedDate,
@@ -75,6 +77,11 @@ inner join dbo.EntPropertyXRef xref_DownloadName
 on 
 	xref_DownloadName.EntID = ent.ID
 	and xref_DownloadName.PropID = 29
+
+
+inner join dbo.EntChildXRef xref_Parent
+on
+	xref_Parent.ChildEntID = ent.ID
 
 
 where ent.EntTypeID = 9

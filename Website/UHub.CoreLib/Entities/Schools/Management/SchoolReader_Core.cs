@@ -9,94 +9,96 @@ using UHub.CoreLib.ErrorHandling.Exceptions;
 using UHub.CoreLib.Extensions;
 using UHub.CoreLib.Management;
 
-namespace UHub.CoreLib.Entities.SchoolClubs.Management
+namespace UHub.CoreLib.Entities.Schools.Management
 {
-    public static partial class SchoolClubReader
+    public static partial class SchoolReader
     {
         private static string _dbConn = null;
 
-        static SchoolClubReader()
+        static SchoolReader()
         {
             _dbConn = CoreFactory.Singleton.Properties.CmsDBConfig;
         }
 
-        #region Individual
+
         /// <summary>
-        /// Get DB school club full detail by LONG ID
+        /// Get Db school full detail by ID
         /// </summary>
-        /// <param name="SchoolClubID"></param>
+        /// <param name="ID">School ID</param>
         /// <returns></returns>
-        public static SchoolClub GetClub(long SchoolClubID)
+        public static School GetSchool(long SchoolID)
         {
             if (!CoreFactory.Singleton.IsEnabled)
             {
                 throw new SystemDisabledException();
             }
 
-
             return SqlWorker.ExecBasicQuery(
                 _dbConn,
-                "[dbo].[SchoolClub_GetByID]",
+                "[dbo].[School_GetByID]",
                 (cmd) =>
                 {
-                    cmd.Parameters.Add("@SchoolClubID", SqlDbType.BigInt).Value = SchoolClubID;
+                    cmd.Parameters.Add("@SchoolID", SqlDbType.BigInt).Value = SchoolID;
                 },
                 (reader) =>
                 {
-                    return reader.ToCustomDBType<SchoolClub>();
+                    return reader.ToCustomDBType<School>();
                 }).SingleOrDefault();
         }
-        #endregion Individual
 
-        #region Group
+
         /// <summary>
-        /// Get all the school clubs in the DB
+        /// Get Db school full detail by Name
         /// </summary>
+        /// <param name="ID">School ID</param>
         /// <returns></returns>
-        public static IEnumerable<SchoolClub> GetAllClubs()
+        public static School GetSchoolByName(string SchoolName)
         {
-
             if (!CoreFactory.Singleton.IsEnabled)
             {
                 throw new SystemDisabledException();
             }
 
-
             return SqlWorker.ExecBasicQuery(
                 _dbConn,
-                "[dbo].[SchoolClubs_GetAll]",
-                (cmd) => { },
-                (row) =>
+                "[dbo].[School_GetByName]",
+                (cmd) =>
                 {
-                    return row.ToCustomDBType<SchoolClub>();
-                });
-        }
-
-        /// <summary>
-        /// Get all the school clubs in the DB
-        /// </summary>
-        /// <param name="SchoolID"></param>
-        /// <returns></returns>
-        public static IEnumerable<SchoolClub> GetAllClubsBySchool(long SchoolID)
-        {
-
-            if (!CoreFactory.Singleton.IsEnabled)
-            {
-                throw new SystemDisabledException();
-            }
-
-
-            return SqlWorker.ExecBasicQuery(
-                _dbConn,
-                "[dbo].[SchoolClubs_GetBySchool]",
-                (cmd) => {
-                    cmd.Parameters.Add("@SchoolID", SqlDbType.BigInt).Value = SchoolID;
+                    cmd.Parameters.Add("@SchoolName", SqlDbType.NVarChar).Value = @SchoolName;
                 },
-                (row) =>
+                (reader) =>
                 {
-                    return row.ToCustomDBType<SchoolClub>();
-                });
+                    return reader.ToCustomDBType<School>();
+                }).SingleOrDefault();
         }
-        #endregion Group
+
+
+
+        /// <summary>
+        /// Get Db school full detail by user email. Used to get a user's school at account creation
+        /// </summary>
+        /// <param name="Email"></param>
+        /// <returns></returns>
+        public static School GetSchoolByEmail(string Email)
+        {
+            if (!CoreFactory.Singleton.IsEnabled)
+            {
+                throw new SystemDisabledException();
+            }
+
+
+            return SqlWorker.ExecBasicQuery(
+                _dbConn,
+                "[dbo].[School_GetByEmail]",
+                (cmd) =>
+                {
+                    cmd.Parameters.Add("@Email", SqlDbType.NVarChar).Value = Email;
+                },
+                (reader) =>
+                {
+                    return reader.ToCustomDBType<School>();
+                }).SingleOrDefault();
+        }
+
     }
 }

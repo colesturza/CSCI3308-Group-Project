@@ -177,11 +177,13 @@
     <Build Include="dbo\Stored Procedures\SchoolClubModerator_Create.sql" />
     <Build Include="dbo\Stored Procedures\SchoolClub_Create.sql" />
     <Build Include="dbo\Stored Procedures\School_Create.sql" />
-    <Build Include="dbo\Stored Procedures\Posts_GetByPage.sql" />
     <Build Include="dbo\Stored Procedures\Image_Create.sql" />
     <Build Include="dbo\Stored Procedures\File_Create.sql" />
     <Build Include="dbo\Stored Procedures\Comment_Create.sql" />
     <Build Include="dbo\Stored Procedures\SchoolClub_Create.sql" />
     <Build Include="dbo\Stored Procedures\_IsCastValid.sql" />
+    <Build Include="dbo\Stored Procedures\School_GetByEmail.sql" />
+    <Build Include="dbo\Stored Procedures\Posts_GetBySchoolPage.sql" />
+    <Build Include="dbo\Stored Procedures\Posts_GetByClubPage.sql" />
   </ItemGroup>
 </Project>

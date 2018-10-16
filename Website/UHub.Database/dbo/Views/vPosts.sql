@@ -5,6 +5,7 @@
 
 
 
+
 CREATE view [dbo].[vPosts]
 as
 
@@ -21,6 +22,7 @@ select
 	cast(xref_IsLocked.PropValue as bit)		as [IsLocked],
 	cast(xref_CanComment.PropValue as bit)		as [CanComment],
 	cast(xref_IsPublic.PropValue as bit)		as [IsPublic],
+	xref_Parent.ParentEntID						as [ParentID],
 	ent.IsDeleted,
 	ent.CreatedBy,
 	ent.CreatedDate,
@@ -73,6 +75,11 @@ inner join dbo.EntPropertyXRef xref_IsPublic
 on 
 	xref_IsPublic.EntID = ent.ID
 	and xref_IsPublic.PropID = 35
+
+
+inner join dbo.EntChildXRef xref_Parent
+on
+	xref_Parent.ChildEntID = ent.ID
 
 
 where ent.EntTypeID = 6

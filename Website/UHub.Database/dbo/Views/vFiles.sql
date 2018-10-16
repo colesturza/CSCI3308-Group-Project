@@ -1,6 +1,7 @@
 ﻿
 
 
+
 CREATE view [dbo].[vFiles]
 as
 
@@ -9,13 +10,15 @@ select
 	ent.EntTypeID,
 	ent.IsEnabled,
 	ent.IsReadonly,
-	xref_Name.PropValue as [Name],
-	xref_FilePath.PropValue as [FilePath],
-	xref_Description.PropValue as [Description],
-	xref_FileHash_SHA256.PropValue as [FileHash_SHA256],
-	xref_SourceName.PropValue as [SourceName],
-	xref_SourceType.PropValue as [SourceType],
-	xref_DownloadName.PropValue as [DownloadName],
+	xref_Name.PropValue							as [Name],
+	cast(xref_ViewCount.PropValue as bigint)	as [ViewCount],
+	xref_FilePath.PropValue						as [FilePath],
+	xref_Description.PropValue					as [Description],
+	xref_FileHash_SHA256.PropValue				as [FileHash_SHA256],
+	xref_SourceName.PropValue					as [SourceName],
+	xref_SourceType.PropValue					as [SourceType],
+	xref_DownloadName.PropValue					as [DownloadName],
+	xref_Parent.ParentEntID						as [ParentID],
 	ent.IsDeleted,
 	ent.CreatedBy,
 	ent.CreatedDate,
@@ -32,6 +35,12 @@ inner join dbo.EntPropertyXRef xref_Name
 on 
 	xref_Name.EntID = ent.ID
 	and xref_Name.PropID = 2
+
+
+inner join dbo.EntPropertyXRef xref_ViewCount
+on 
+	xref_ViewCount.EntID = ent.ID
+	and xref_ViewCount.PropID = 14
 
 
 inner join dbo.EntPropertyXRef xref_FilePath
@@ -67,6 +76,11 @@ inner join dbo.EntPropertyXRef xref_DownloadName
 on 
 	xref_DownloadName.EntID = ent.ID
 	and xref_DownloadName.PropID = 29
+
+
+inner join dbo.EntChildXRef xref_Parent
+on
+	xref_Parent.ChildEntID = ent.ID
 
 
 where ent.EntTypeID = 8
