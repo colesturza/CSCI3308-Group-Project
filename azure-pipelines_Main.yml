@@ -22,7 +22,7 @@ steps:
 - task: VSBuild@1
   inputs:
     solution: '$(solution)'
-    msbuildArgs: '/t:UHub.CoreLib /p:DeployOnBuild=false /p:SkipInvalidConfigurations=true /p:EnableUpdateable=false /p:UseMerge=true /p:PackageLocation="$(build.stagingDirectory)"'
+    msbuildArgs: '/t:UHub_CoreLib /p:DeployOnBuild=false /p:SkipInvalidConfigurations=true /p:EnableUpdateable=false /p:UseMerge=true /p:PackageLocation="$(build.stagingDirectory)"'
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
@@ -31,7 +31,7 @@ steps:
 - task: VSBuild@1
   inputs:
     solution: '$(solution)'
-    msbuildArgs: '/t:UHub.CoreLib /p:DeployOnBuild=false /p:SkipInvalidConfigurations=true /p:EnableUpdateable=false /p:UseMerge=true /p:PackageLocation="$(build.stagingDirectory)"'
+    msbuildArgs: '/t:UHub_CoreLib /p:DeployOnBuild=false /p:SkipInvalidConfigurations=true /p:EnableUpdateable=false /p:UseMerge=true /p:PackageLocation="$(build.stagingDirectory)"'
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
@@ -39,7 +39,7 @@ steps:
 - task: VSBuild@1
   inputs:
     solution: '$(solution)'
-    msbuildArgs: '/t:UHub.Tests /p:DeployOnBuild=false /p:SkipInvalidConfigurations=true /p:EnableUpdateable=false /p:UseMerge=true /p:PackageLocation="$(build.stagingDirectory)"'
+    msbuildArgs: '/t:UHub_Tests /p:DeployOnBuild=false /p:SkipInvalidConfigurations=true /p:EnableUpdateable=false /p:UseMerge=true /p:PackageLocation="$(build.stagingDirectory)"'
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
