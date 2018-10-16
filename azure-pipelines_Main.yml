@@ -26,14 +26,24 @@ steps:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
-#pseudo build
-#used to execute file autogen
+#real build
+#prodces final product now that autogen code has executed
 - task: VSBuild@1
   inputs:
     solution: '$(solution)'
     msbuildArgs: '/t:UHub_CoreLib /p:DeployOnBuild=false /p:SkipInvalidConfigurations=true /p:EnableUpdateable=false /p:UseMerge=true /p:PackageLocation="$(build.stagingDirectory)"'
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
+
+
+#full build
+- task: VSBuild@1
+  inputs:
+    solution: '$(solution)'
+    msbuildArgs: '/t:UHub /p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:EnableUpdateable=false /p:PrecompileBeforePublish=true /p:UseMerge=true /p:PackageLocation="$(build.stagingDirectory)"'
+    platform: '$(buildPlatform)'
+    configuration: '$(buildConfiguration)'
+
 
 #build tests
 - task: VSBuild@1
@@ -43,12 +53,11 @@ steps:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
-#real build
-#prodces final product now that augen code has executed
+#build tests
 - task: VSBuild@1
   inputs:
     solution: '$(solution)'
-    msbuildArgs: '/t:UHub /p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:EnableUpdateable=false /p:PrecompileBeforePublish=true /p:UseMerge=true /p:PackageLocation="$(build.stagingDirectory)"'
+    msbuildArgs: '/t:UHub_CoreLib_Tests /p:DeployOnBuild=false /p:SkipInvalidConfigurations=true /p:EnableUpdateable=false /p:UseMerge=true /p:PackageLocation="$(build.stagingDirectory)"'
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
