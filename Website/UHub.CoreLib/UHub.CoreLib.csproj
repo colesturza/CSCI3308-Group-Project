@@ -187,6 +187,7 @@
     <Compile Include="Entities\SchoolClubs\SchoolClub.cs" />
     <Compile Include="Entities\SchoolMajors\DTOs\SchoolMajor_R_PublicDTO.cs" />
     <Compile Include="Entities\SchoolMajors\Interfaces\ISchoolMajor_R_Public.cs" />
+    <Compile Include="Entities\SchoolMajors\Management\SchoolMajorWriter.cs" />
     <Compile Include="Entities\SchoolMajors\Management\SchoolMajor_Core.cs" />
     <Compile Include="Entities\SchoolMajors\SchoolMajor.cs" />
     <Compile Include="Entities\Schools\APIControllers\SchoolController.cs" />
