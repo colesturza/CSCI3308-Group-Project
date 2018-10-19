@@ -195,6 +195,7 @@
     <Compile Include="Entities\Schools\Interfaces\ISchool_R_Public.cs" />
     <Compile Include="Entities\Schools\Management\SchoolReader_Core.cs" />
     <Compile Include="Entities\Schools\School.cs" />
+    <Compile Include="Entities\Users\Management\UserReader_EntPosts.cs" />
     <Compile Include="ErrorHandling\Exceptions\AccessForbiddenException.cs" />
     <Compile Include="ErrorHandling\Exceptions\ConfigurationException.cs" />
     <Compile Include="ErrorHandling\Exceptions\EntityGoneException.cs" />
@@ -278,7 +279,7 @@
     <Compile Include="Entities\Users\Interfaces\IUser_U_Private.cs" />
     <Compile Include="Entities\Users\Management\UserReader_RecoveryContext.cs" />
     <Compile Include="Entities\Users\Management\UserReader_Core.cs" />
-    <Compile Include="Entities\Users\Management\UserRead_Anon.cs" />
+    <Compile Include="Entities\Users\Management\UserReader_Anon.cs" />
     <Compile Include="Entities\Users\Management\UserWriter.cs" />
     <Compile Include="Entities\Users\User.cs" />
     <Compile Include="Entities\Users\UserRecoveryContext.cs" />
