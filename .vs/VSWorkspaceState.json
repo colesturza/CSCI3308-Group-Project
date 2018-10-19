@@ -1,8 +1,9 @@
 {
   "ExpandedNodes": [
     "",
-    "\\Website"
+    "\\Website",
+    "\\Website\\UHub.CoreLib"
   ],
-  "SelectedNode": "\\Website",
+  "SelectedNode": "\\Website\\UHub.sln",
   "PreviewInSolutionExplorer": false
 }

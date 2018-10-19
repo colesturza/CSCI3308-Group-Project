@@ -1,0 +1,6 @@
+﻿CREATE TABLE [dbo].[DataTypes] (
+    [ID]   SMALLINT      IDENTITY (1, 1) NOT NULL,
+    [Name] VARCHAR (100) NOT NULL,
+    CONSTRAINT [PK_DataTypes] PRIMARY KEY CLUSTERED ([Name] ASC)
+);
+

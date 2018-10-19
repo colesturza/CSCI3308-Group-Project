@@ -57,6 +57,8 @@ TestResults/
 ######################
 *.log
 *.sqlite
+*.dbmdl
+*.jfm
 # OS generated files #
 ######################
 .DS_Store?
@@ -91,3 +93,4 @@ _[Ss]cripts
 *.config
 *.config.release
 *.config.debug
+/Website/UHub.Database

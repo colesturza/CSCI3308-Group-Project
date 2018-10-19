@@ -16,7 +16,7 @@ namespace UHub
 
             config.Routes.MapHttpRoute(
                 name: "DefaultApi",
-                routeTemplate: "api/{controller}/{id}",
+                routeTemplate: "uhubapi/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional }
             );
         }
