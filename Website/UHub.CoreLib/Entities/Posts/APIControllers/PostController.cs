@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using UHub.CoreLib.APIControllers;
 using UHub.CoreLib.Entities.Posts.DTOs;
+using UHub.CoreLib.Entities.Posts.Management;
 using UHub.CoreLib.Entities.Users.Management;
 using UHub.CoreLib.Management;
 
