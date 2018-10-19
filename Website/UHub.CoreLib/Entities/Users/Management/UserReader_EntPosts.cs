@@ -25,7 +25,7 @@ namespace UHub.CoreLib.Entities.Users.Management
                 (cmd) =>
                 {
                     cmd.Parameters.Add("@UserID", SqlDbType.BigInt).Value = UserID;
-                    cmd.Parameters.Add("@ParentID", SqlDbType.BigInt).Value = UserID;
+                    cmd.Parameters.Add("@ParentID", SqlDbType.BigInt).Value = ParentID;
                 });
 
         }
