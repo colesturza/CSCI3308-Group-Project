@@ -15,6 +15,7 @@
 *.dll.config
 *.cache
 *.suo
+*.csproj.user
 
 
 ####################
