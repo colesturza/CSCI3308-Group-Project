@@ -7,18 +7,16 @@ CREATE proc [dbo].[Post_Create]
 	--DYNAMIC
 	@Name nvarchar(200),
 	@Content nvarchar(max),
-	@IsModified bit,
-	@ViweCount bigint,
-	@IsLocked bit,
-	@CanComment bit,
-	@IsPublic bit,
+	@IsLocked bit null = null,
+	@CanComment bit null = null,
+	@IsPublic bit null = null,
 
 	--HIERARCHY
 	@ParentID bigint,
 
 	--CONST ENT FIELDS
-	@CreatedBy bigint,
-	@IsReadonly bit
+	@CreatedBy bigint null = null,
+	@IsReadonly bit null = null
 
 as
 begin
@@ -151,24 +149,6 @@ begin
 			@EntTypeID = @_entTypeID,
 			@PropID = 12,
 			@PropValue = @Content,
-			@ModifiedBy = @CreatedBy,
-			@IsNewRecord = @_isNew
-
-		--IsModified [13]
-		exec [dbo].[_vEnts_Helper]
-			@EntID = @_entID,
-			@EntTypeID = @_entTypeID,
-			@PropID = 13,
-			@PropValue = @IsModified,
-			@ModifiedBy = @CreatedBy,
-			@IsNewRecord = @_isNew
-
-		--ViewCount [14]
-		exec [dbo].[_vEnts_Helper]
-			@EntID = @_entID,
-			@EntTypeID = @_entTypeID,
-			@PropID = 14,
-			@PropValue = @ViweCount,
 			@ModifiedBy = @CreatedBy,
 			@IsNewRecord = @_isNew
 

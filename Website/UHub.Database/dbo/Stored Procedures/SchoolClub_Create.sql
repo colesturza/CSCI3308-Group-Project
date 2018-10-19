@@ -15,7 +15,7 @@ CREATE proc [dbo].[SchoolClub_Create]
 
 	--CONST ENT FIELDS
 	@CreatedBy bigint,
-	@IsReadonly bit
+	@IsReadonly bit = 0
 
 as
 begin

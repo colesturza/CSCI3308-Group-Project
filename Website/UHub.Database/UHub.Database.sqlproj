@@ -187,5 +187,7 @@
     <Build Include="dbo\Stored Procedures\Posts_GetByClubPage.sql" />
     <Build Include="dbo\Stored Procedures\SchoolMajors_GetByEmail.sql" />
     <Build Include="dbo\Stored Procedures\SchoolClubs_GetByEmail.sql" />
+    <Build Include="dbo\Stored Procedures\User_ValidatePostParent.sql" />
+    <Build Include="dbo\Stored Procedures\User_ValidateCommentParent.sql" />
   </ItemGroup>
 </Project>

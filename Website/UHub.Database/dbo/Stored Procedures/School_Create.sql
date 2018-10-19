@@ -13,8 +13,8 @@ CREATE proc [dbo].[School_Create]
 	@Description nvarchar(500),
 
 	--CONST ENT FIELDS
-	@CreatedBy bigint,
-	@IsReadonly bit
+	@CreatedBy bigint null = null,
+	@IsReadonly bit = 0
 
 as
 begin

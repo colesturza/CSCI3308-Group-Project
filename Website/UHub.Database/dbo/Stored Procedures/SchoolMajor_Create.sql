@@ -13,8 +13,8 @@ CREATE proc [dbo].[SchoolMajor_Create]
 	@ParentID bigint,
 
 	--CONST ENT FIELDS
-	@CreatedBy bigint,
-	@IsReadonly bit
+	@CreatedBy bigint null = null,
+	@IsReadonly bit = 0
 
 as
 begin

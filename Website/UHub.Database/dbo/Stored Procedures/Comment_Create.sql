@@ -6,17 +6,14 @@ CREATE proc [dbo].[Comment_Create]
 	--CREATE PARAMETERS
 	
 	--DYNAMIC
-	@Name nvarchar(200),
 	@Content nvarchar(max),
-	@IsModified bit,
-	@ViweCount bigint,
 
 	--HIERARCHY
 	@ParentID bigint,
 
 	--CONST ENT FIELDS
-	@CreatedBy bigint,
-	@IsReadonly bit
+	@CreatedBy bigint null = null,
+	@IsReadonly bit = 0
 
 as
 begin
@@ -134,14 +131,6 @@ begin
 		--set properties
 		--if any insert fails, it will throw an error and invalidate the entire entity
 
-		--Name [2]
-		exec [dbo].[_vEnts_Helper]
-			@EntID = @_entID,
-			@EntTypeID = @_entTypeID,
-			@PropID = 2,
-			@PropValue = @Name,
-			@ModifiedBy = @CreatedBy,
-			@IsNewRecord = @_isNew
 
 		--Content [12]
 		exec [dbo].[_vEnts_Helper]
@@ -149,24 +138,6 @@ begin
 			@EntTypeID = @_entTypeID,
 			@PropID = 12,
 			@PropValue = @Content,
-			@ModifiedBy = @CreatedBy,
-			@IsNewRecord = @_isNew
-
-		--IsModified [13]
-		exec [dbo].[_vEnts_Helper]
-			@EntID = @_entID,
-			@EntTypeID = @_entTypeID,
-			@PropID = 13,
-			@PropValue = @IsModified,
-			@ModifiedBy = @CreatedBy,
-			@IsNewRecord = @_isNew
-
-		--ViewCount [14]
-		exec [dbo].[_vEnts_Helper]
-			@EntID = @_entID,
-			@EntTypeID = @_entTypeID,
-			@PropID = 14,
-			@PropValue = @ViweCount,
 			@ModifiedBy = @CreatedBy,
 			@IsNewRecord = @_isNew
 
