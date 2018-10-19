@@ -9,6 +9,7 @@ using UHub.CoreLib.APIControllers;
 using UHub.CoreLib.Entities.Posts.DTOs;
 using UHub.CoreLib.Entities.Posts.Management;
 using UHub.CoreLib.Entities.Users.Management;
+using UHub.CoreLib.Extensions;
 using UHub.CoreLib.Management;
 
 namespace UHub.CoreLib.Entities.Posts.APIControllers
@@ -66,6 +67,8 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
 
             try
             {
+                tmpPost.Content = tmpPost.Content.HtmlEncode();
+
                 long? PostID = PostWriter.TryCreatePost(tmpPost, tmpPost.ParentID);
 
                 if(PostID != null)
