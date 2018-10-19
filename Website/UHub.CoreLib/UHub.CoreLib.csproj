@@ -169,10 +169,12 @@
     <Compile Include="Entities\Files\Management\File_Core.cs" />
     <Compile Include="Entities\Images\Image.cs" />
     <Compile Include="Entities\Images\Management\Image_Core.cs" />
+    <Compile Include="Entities\Posts\APIControllers\PostController.cs" />
     <Compile Include="Entities\Posts\DTOs\Post_C_PublicDTO.cs" />
     <Compile Include="Entities\Posts\DTOs\Post_R_PublicDTO.cs" />
     <Compile Include="Entities\Posts\Interfaces\IPost_C_Public.cs" />
     <Compile Include="Entities\Posts\Interfaces\IPost_R_Public.cs" />
+    <Compile Include="Entities\Posts\Management\PostWriter.cs" />
     <Compile Include="Entities\Posts\Management\Post_Core.cs" />
     <Compile Include="Entities\Posts\Post.cs" />
     <Compile Include="Entities\ClubModerators\DTOs\ClubModerator_R_PublicDTO.cs" />
@@ -311,7 +313,6 @@
     <Folder Include="Entities\Images\DTOs\" />
     <Folder Include="Entities\Images\Enums\" />
     <Folder Include="Entities\Images\Interfaces\" />
-    <Folder Include="Entities\Posts\APIControllers\" />
     <Folder Include="Entities\Posts\Enums\" />
     <Folder Include="Entities\SchoolClubs\APIControllers\" />
     <Folder Include="Entities\SchoolClubs\Enums\" />

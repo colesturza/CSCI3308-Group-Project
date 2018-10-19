@@ -20,7 +20,7 @@ namespace UHub.CoreLib.Entities.SchoolMajors.Management
         /// <param name="cmsSchoolMajor"></param>
         /// <param name="ParentID"></param>
         /// <returns></returns>
-        internal static long? TryCreateUser(SchoolMajor cmsSchoolMajor, long ParentID)
+        internal static long? TryCreateSchoolMajor(SchoolMajor cmsSchoolMajor, long ParentID)
         {
             return TryCreateSchoolMajor(cmsSchoolMajor, ParentID, out _);
         }
