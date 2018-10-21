@@ -159,11 +159,13 @@
     <Compile Include="DataInterop\SqlConfig.cs" />
     <Compile Include="DataInterop\SqlConverters.cs" />
     <Compile Include="DataInterop\SqlWorker.cs" />
+    <Compile Include="Entities\Comments\APIControllers\CommentController.cs" />
     <Compile Include="Entities\Comments\Comment.cs" />
     <Compile Include="Entities\Comments\DTOs\Comment_C_PublicDTO.cs" />
     <Compile Include="Entities\Comments\DTOs\Comment_R_PublicDTO.cs" />
     <Compile Include="Entities\Comments\Interfaces\IComment_C_Public.cs" />
     <Compile Include="Entities\Comments\Interfaces\IComment_R_Public.cs" />
+    <Compile Include="Entities\Comments\Management\CommentWriter.cs" />
     <Compile Include="Entities\Comments\Management\Comment_Core.cs" />
     <Compile Include="Entities\Files\File.cs" />
     <Compile Include="Entities\Files\Management\File_Core.cs" />
@@ -303,7 +305,6 @@
     <Folder Include="APIControllers\Enums\" />
     <Folder Include="Entities\ClubModerators\APIControllers\" />
     <Folder Include="Entities\ClubModerators\Enums\" />
-    <Folder Include="Entities\Comments\APIControllers\" />
     <Folder Include="Entities\Comments\Enums\" />
     <Folder Include="Entities\Files\APIControllers\" />
     <Folder Include="Entities\Files\DTOs\" />

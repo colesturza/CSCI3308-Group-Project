@@ -15,7 +15,7 @@ namespace UHub.CoreLib.Entities.Posts.Management
     internal static partial class PostWriter
     {
         /// <summary>
-        /// Attempts to create a new CMS post in the database and returns the PsotID if successful
+        /// Attempts to create a new CMS post in the database and returns the PostID if successful
         /// </summary>
         /// <param name="cmsPost"></param>
         /// <param name="ParentID"></param>
@@ -26,7 +26,7 @@ namespace UHub.CoreLib.Entities.Posts.Management
         }
 
         /// <summary>
-        /// Attempts to create a new CMS post in the database and returns the PsotID if successful
+        /// Attempts to create a new CMS post in the database and returns the PostID if successful
         /// </summary>
         /// <param name="cmsPost"></param>
         /// <param name="ParentID"></param>
