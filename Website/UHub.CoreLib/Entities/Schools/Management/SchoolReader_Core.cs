@@ -20,6 +20,25 @@ namespace UHub.CoreLib.Entities.Schools.Management
             _dbConn = CoreFactory.Singleton.Properties.CmsDBConfig;
         }
 
+        public static IEnumerable<School> GetAllSchools()
+        {
+            if (!CoreFactory.Singleton.IsEnabled)
+            {
+                throw new SystemDisabledException();
+            }
+
+
+            return SqlWorker.ExecBasicQuery(
+                _dbConn,
+                "[dbo].[School_GetAll]",
+                (cmd) => { },
+                (reader) =>
+                {
+                    return reader.ToCustomDBType<School>();
+                });
+
+        }
+
 
         /// <summary>
         /// Get Db school full detail by ID

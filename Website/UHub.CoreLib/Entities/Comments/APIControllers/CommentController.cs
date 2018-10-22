@@ -78,7 +78,7 @@ namespace UHub.CoreLib.Entities.Comments.APIControllers
             }
             catch (Exception ex)
             {
-                var errCode = "100d1257-b74c-461d-a389-b90298895e5d";
+                var errCode = "8b9255a4-070b-427c-91a9-4755199aaded";
                 Exception ex_outer = new Exception(errCode, ex);
                 CoreFactory.Singleton.Logging.CreateErrorLog(ex_outer);
 

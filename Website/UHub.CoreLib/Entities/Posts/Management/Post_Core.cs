@@ -90,7 +90,8 @@ namespace UHub.CoreLib.Entities.Posts.Management
             return SqlWorker.ExecBasicQuery(
                 _dbConn,
                 "[dbo].[Posts_GetBySchool]",
-                (cmd) => {
+                (cmd) =>
+                {
                     cmd.Parameters.Add("@SchoolID", SqlDbType.BigInt).Value = SchoolID;
                 },
                 (row) =>
@@ -116,7 +117,8 @@ namespace UHub.CoreLib.Entities.Posts.Management
             return SqlWorker.ExecBasicQuery(
                 _dbConn,
                 "[dbo].[Posts_GetBySchoolClub]",
-                (cmd) => {
+                (cmd) =>
+                {
                     cmd.Parameters.Add("@SchoolClubID", SqlDbType.BigInt).Value = SchoolClubID;
                 },
                 (row) =>
@@ -145,7 +147,8 @@ namespace UHub.CoreLib.Entities.Posts.Management
             return SqlWorker.ExecBasicQuery(
                 _dbConn,
                 "[dbo].[Posts_GetBySchoolPage]",
-                (cmd) => {
+                (cmd) =>
+                {
                     cmd.Parameters.Add("@SchoolID", SqlDbType.BigInt).Value = SchoolID;
                     cmd.Parameters.Add("@StartID", SqlDbType.BigInt).Value = HandleDBNull(StartID);
                     cmd.Parameters.Add("@PageNum", SqlDbType.Int).Value = HandleDBNull(PageNum);
@@ -155,6 +158,54 @@ namespace UHub.CoreLib.Entities.Posts.Management
                 {
                     return row.ToCustomDBType<Post>();
                 });
+        }
+
+
+        /// <summary>
+        /// Get all the posts in the DB by school page.  Uses default StartID/PageNum of 0
+        /// </summary>
+        /// <param name="SchoolID"></param>
+        /// <param name="StartID"></param>
+        /// <param name="PageNum"></param>
+        /// <param name="ItemCount"></param>
+        /// <returns></returns>
+        public static List<Post> GetPostsBySchoolPage(long SchoolID, short? ItemCount, out long StartID)
+        {
+
+            if (!CoreFactory.Singleton.IsEnabled)
+            {
+                throw new SystemDisabledException();
+            }
+
+
+            var postSet = SqlWorker.ExecBasicQuery(
+                _dbConn,
+                "[dbo].[Posts_GetBySchoolPage]",
+                (cmd) =>
+                {
+                    cmd.Parameters.Add("@SchoolID", SqlDbType.BigInt).Value = SchoolID;
+                    cmd.Parameters.Add("@StartID", SqlDbType.BigInt).Value = HandleDBNull(null);
+                    cmd.Parameters.Add("@PageNum", SqlDbType.Int).Value = HandleDBNull(null);
+                    cmd.Parameters.Add("@ItemCount", SqlDbType.SmallInt).Value = ItemCount;
+                },
+                (row) =>
+                {
+                    return row.ToCustomDBType<Post>();
+                }).ToList();
+
+
+            long maxID = -1;
+            for (int i = 0; i < postSet.Count; i++)
+            {
+                if ((postSet[i]?.ID ?? -1) > maxID)
+                {
+                    maxID = postSet[i].ID.Value;
+                }
+            }
+            StartID = maxID;
+
+
+            return postSet;
         }
 
 
@@ -178,7 +229,8 @@ namespace UHub.CoreLib.Entities.Posts.Management
             return SqlWorker.ExecBasicQuery(
                 _dbConn,
                 "[dbo].[Posts_GetByClubPage]",
-                (cmd) => {
+                (cmd) =>
+                {
                     cmd.Parameters.Add("@ClubID", SqlDbType.BigInt).Value = ClubID;
                     cmd.Parameters.Add("@StartID", SqlDbType.BigInt).Value = HandleDBNull(StartID);
                     cmd.Parameters.Add("@PageNum", SqlDbType.Int).Value = HandleDBNull(PageNum);
@@ -188,6 +240,57 @@ namespace UHub.CoreLib.Entities.Posts.Management
                 {
                     return row.ToCustomDBType<Post>();
                 });
+        }
+
+
+        /// <summary>
+        /// Get all the posts in the DB by club page.  Uses default StartID/PageNum of 0
+        /// </summary>
+        /// <param name="ClubID"></param>
+        /// <param name="StartID"></param>
+        /// <param name="PageNum"></param>
+        /// <param name="ItemCount"></param>
+        /// <returns></returns>
+        public static List<Post> GetPostsByClubPage(long ClubID, short? ItemCount, out long StartID)
+        {
+
+            if (!CoreFactory.Singleton.IsEnabled)
+            {
+                throw new SystemDisabledException();
+            }
+
+
+            var postSet = SqlWorker.ExecBasicQuery(
+                _dbConn,
+                "[dbo].[Posts_GetByClubPage]",
+                (cmd) =>
+                {
+                    cmd.Parameters.Add("@ClubID", SqlDbType.BigInt).Value = ClubID;
+                    cmd.Parameters.Add("@StartID", SqlDbType.BigInt).Value = HandleDBNull(null);
+                    cmd.Parameters.Add("@PageNum", SqlDbType.Int).Value = HandleDBNull(null);
+                    cmd.Parameters.Add("@ItemCount", SqlDbType.SmallInt).Value = ItemCount;
+                },
+                (row) =>
+                {
+                    return row.ToCustomDBType<Post>();
+                }).ToList();
+
+
+
+            long maxID = -1;
+            for (int i = 0; i < postSet.Count; i++)
+            {
+                if ((postSet[i]?.ID ?? -1) > maxID)
+                {
+                    maxID = postSet[i].ID.Value;
+                }
+            }
+            StartID = maxID;
+
+
+            return postSet;
+
+
         }
 
 
