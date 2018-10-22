@@ -69,8 +69,8 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
 
             try
             {
-                tmpPost.Name = tmpPost.Name.HtmlEncode();
-                tmpPost.Content = tmpPost.Content.HtmlEncode();
+                tmpPost.Content = tmpPost.Content.SanitizeHtml();
+
 
                 long? PostID = PostWriter.TryCreatePost(tmpPost, tmpPost.ParentID);
 

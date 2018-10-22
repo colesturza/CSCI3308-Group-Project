@@ -17,6 +17,8 @@ namespace UHub.CoreLib.Entities.Users
     [DataClass]
     public sealed partial class User : DBEntityBase, IUser_C_Public, IUser_R_Private, IUser_U_Private
     {
+
+
         [DataProperty(EnableDBColumnValidation: false)]
         public long? ID { get; set; }
 

@@ -65,7 +65,7 @@ namespace UHub.CoreLib.Entities.Comments.APIControllers
 
             try
             {
-                tmpComment.Content = tmpComment.Content.HtmlEncode();
+                tmpComment.Content = tmpComment.Content.SanitizeHtml();
 
                 long? PostID = CommentWriter.TryCreateComment(tmpComment, tmpComment.ParentID);
 

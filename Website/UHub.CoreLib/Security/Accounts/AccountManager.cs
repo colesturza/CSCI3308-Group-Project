@@ -27,6 +27,8 @@ namespace UHub.CoreLib.Security.Accounts
         private const short minEmailLen = 3;
         private const short maxEmailLen = 250;
         private const short SALT_LENGTH = 50;
+        private const short VERSION_LENGTH = 20;
+        private const short R_KEY_LENGTH = 20;
 
 
         /// <summary>
@@ -95,7 +97,7 @@ namespace UHub.CoreLib.Security.Accounts
 
             bool isConfirmed = CoreFactory.Singleton.Properties.AutoConfirmNewAccounts;
             bool isApproved = CoreFactory.Singleton.Properties.AutoApproveNewAccounts;
-            string version = SysSec.Membership.GeneratePassword(20, 0);
+            string version = SysSec.Membership.GeneratePassword(VERSION_LENGTH, 0);
 
             NewUser.IsConfirmed = isConfirmed;
             NewUser.IsApproved = isApproved;
@@ -710,7 +712,7 @@ namespace UHub.CoreLib.Security.Accounts
                     return;
                 }
 
-                string recoveryKey = SysSec.Membership.GeneratePassword(20, 5);
+                string recoveryKey = SysSec.Membership.GeneratePassword(R_KEY_LENGTH, 5);
                 string hashedKey = recoveryKey.GetCryptoHash(CoreFactory.Singleton.Properties.PswdHashType);
 
 
