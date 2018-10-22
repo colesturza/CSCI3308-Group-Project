@@ -30,7 +30,7 @@ namespace UHub.CoreLib.Entities.Schools.Management
 
             return SqlWorker.ExecBasicQuery(
                 _dbConn,
-                "[dbo].[School_GetAll]",
+                "[dbo].[Schools_GetAll]",
                 (cmd) => { },
                 (reader) =>
                 {

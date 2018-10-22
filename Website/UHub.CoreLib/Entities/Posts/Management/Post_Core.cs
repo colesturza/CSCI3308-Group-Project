@@ -12,8 +12,12 @@ using static UHub.CoreLib.DataInterop.SqlConverters;
 
 namespace UHub.CoreLib.Entities.Posts.Management
 {
+
     public static partial class PostReader
     {
+        //TODO: abstract to config file
+        private const short DEFAULT_PAGE_SIZE = 20;
+
         private static string _dbConn = null;
 
         static PostReader()
@@ -142,6 +146,7 @@ namespace UHub.CoreLib.Entities.Posts.Management
             {
                 throw new SystemDisabledException();
             }
+            ItemCount = ItemCount ?? DEFAULT_PAGE_SIZE;
 
 
             return SqlWorker.ExecBasicQuery(
@@ -150,8 +155,8 @@ namespace UHub.CoreLib.Entities.Posts.Management
                 (cmd) =>
                 {
                     cmd.Parameters.Add("@SchoolID", SqlDbType.BigInt).Value = SchoolID;
-                    cmd.Parameters.Add("@StartID", SqlDbType.BigInt).Value = HandleDBNull(StartID);
-                    cmd.Parameters.Add("@PageNum", SqlDbType.Int).Value = HandleDBNull(PageNum);
+                    cmd.Parameters.Add("@StartID", SqlDbType.BigInt).Value = HandleParamEmpty(StartID);
+                    cmd.Parameters.Add("@PageNum", SqlDbType.Int).Value = HandleParamEmpty(PageNum);
                     cmd.Parameters.Add("@ItemCount", SqlDbType.SmallInt).Value = ItemCount;
                 },
                 (row) =>
@@ -176,6 +181,7 @@ namespace UHub.CoreLib.Entities.Posts.Management
             {
                 throw new SystemDisabledException();
             }
+            ItemCount = ItemCount ?? DEFAULT_PAGE_SIZE;
 
 
             var postSet = SqlWorker.ExecBasicQuery(
@@ -184,8 +190,8 @@ namespace UHub.CoreLib.Entities.Posts.Management
                 (cmd) =>
                 {
                     cmd.Parameters.Add("@SchoolID", SqlDbType.BigInt).Value = SchoolID;
-                    cmd.Parameters.Add("@StartID", SqlDbType.BigInt).Value = HandleDBNull(null);
-                    cmd.Parameters.Add("@PageNum", SqlDbType.Int).Value = HandleDBNull(null);
+                    cmd.Parameters.Add("@StartID", SqlDbType.BigInt).Value = HandleParamEmpty(null);
+                    cmd.Parameters.Add("@PageNum", SqlDbType.Int).Value = HandleParamEmpty(null);
                     cmd.Parameters.Add("@ItemCount", SqlDbType.SmallInt).Value = ItemCount;
                 },
                 (row) =>
@@ -224,6 +230,7 @@ namespace UHub.CoreLib.Entities.Posts.Management
             {
                 throw new SystemDisabledException();
             }
+            ItemCount = ItemCount ?? DEFAULT_PAGE_SIZE;
 
 
             return SqlWorker.ExecBasicQuery(
@@ -232,8 +239,8 @@ namespace UHub.CoreLib.Entities.Posts.Management
                 (cmd) =>
                 {
                     cmd.Parameters.Add("@ClubID", SqlDbType.BigInt).Value = ClubID;
-                    cmd.Parameters.Add("@StartID", SqlDbType.BigInt).Value = HandleDBNull(StartID);
-                    cmd.Parameters.Add("@PageNum", SqlDbType.Int).Value = HandleDBNull(PageNum);
+                    cmd.Parameters.Add("@StartID", SqlDbType.BigInt).Value = HandleParamEmpty(StartID);
+                    cmd.Parameters.Add("@PageNum", SqlDbType.Int).Value = HandleParamEmpty(PageNum);
                     cmd.Parameters.Add("@ItemCount", SqlDbType.SmallInt).Value = ItemCount;
                 },
                 (row) =>
@@ -258,6 +265,7 @@ namespace UHub.CoreLib.Entities.Posts.Management
             {
                 throw new SystemDisabledException();
             }
+            ItemCount = ItemCount ?? DEFAULT_PAGE_SIZE;
 
 
             var postSet = SqlWorker.ExecBasicQuery(
@@ -266,8 +274,8 @@ namespace UHub.CoreLib.Entities.Posts.Management
                 (cmd) =>
                 {
                     cmd.Parameters.Add("@ClubID", SqlDbType.BigInt).Value = ClubID;
-                    cmd.Parameters.Add("@StartID", SqlDbType.BigInt).Value = HandleDBNull(null);
-                    cmd.Parameters.Add("@PageNum", SqlDbType.Int).Value = HandleDBNull(null);
+                    cmd.Parameters.Add("@StartID", SqlDbType.BigInt).Value = HandleParamEmpty(null);
+                    cmd.Parameters.Add("@PageNum", SqlDbType.Int).Value = HandleParamEmpty(null);
                     cmd.Parameters.Add("@ItemCount", SqlDbType.SmallInt).Value = ItemCount;
                 },
                 (row) =>
