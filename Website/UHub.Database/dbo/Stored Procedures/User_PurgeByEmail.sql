@@ -1,12 +1,22 @@
-﻿CREATE proc [dbo].[User_PurgeByID]
+﻿create proc [dbo].[User_PurgeByEmail]
 
 	
-	@UserID bigint
+	@Email nvarchar(250)
 
 as
 begin
 
-	if(@UserID = 0)
+	declare @_userID bigint
+
+	select
+		@_userID = EntID
+	from dbo.Users
+	where
+		Email = @Email
+
+
+
+	if(@_userID = 0)
 	begin
 		return -1
 	end
@@ -24,7 +34,7 @@ begin
 	
 	begin try
 
-		if(@UserID is NULL)
+		if(@_userID is NULL)
 		begin
 			;throw 51000, '410: Unable to delete specified user', 1
 		end
@@ -36,42 +46,42 @@ begin
 			delete from
 				dbo.EntChildXRef
 			where
-				ChildEntID = @UserID
+				ChildEntID = @_userID
 
 
 			--delete user properties
 			delete from
 				dbo.EntPropertyXRef
 			where
-				EntID = @UserID
+				EntID = @_userID
 
 
 			--delete user property history
 			delete from
 				dbo.EntPropertyRevisionXRef
 			where
-				EntID = @UserID
+				EntID = @_userID
 
 
 			--delete user psd info
 			delete from
 				dbo.UserAuthentication
 			where
-				UserID = @UserID
+				UserID = @_userID
 
 
 			--delete user
 			delete from
 				dbo.Users
 			where
-				EntID = @UserID
+				EntID = @_userID
 
 
 			--delete ent
 			delete from
 				dbo.Entities
 			where
-				ID = @UserID
+				ID = @_userID
 
 			
 

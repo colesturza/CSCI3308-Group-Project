@@ -2,6 +2,7 @@
     [EntID]       BIGINT         NOT NULL,
     [RefUID]      NVARCHAR (100) CONSTRAINT [DF_Users_RefUID] DEFAULT (replace(concat(newid(),newid(),newid()),'-','')) NOT NULL,
     [Email]       NVARCHAR (250) NOT NULL,
+    [Domain]      NVARCHAR (250) NULL,
     [Username]    NVARCHAR (100) NOT NULL,
     [IsConfirmed] BIT            CONSTRAINT [DF_Users_IsConfirmed] DEFAULT ((0)) NOT NULL,
     [IsApproved]  BIT            CONSTRAINT [DF_Users_IsApproved] DEFAULT ((0)) NOT NULL,
@@ -14,14 +15,18 @@
 
 
 
+
+
 GO
 CREATE UNIQUE NONCLUSTERED INDEX [IX_Users_Email]
     ON [dbo].[Users]([Email] ASC);
 
 
 GO
-CREATE UNIQUE NONCLUSTERED INDEX [IX_Users_Username]
+CREATE NONCLUSTERED INDEX [IX_Users_Username]
     ON [dbo].[Users]([Username] ASC);
+
+
 
 
 
@@ -29,4 +34,9 @@ CREATE UNIQUE NONCLUSTERED INDEX [IX_Users_Username]
 GO
 CREATE NONCLUSTERED INDEX [IX_Users_RefUID]
     ON [dbo].[Users]([RefUID] ASC);
+
+
+GO
+CREATE UNIQUE NONCLUSTERED INDEX [IX_Users_Uname_Domain]
+    ON [dbo].[Users]([Username] ASC, [Domain] ASC);
 

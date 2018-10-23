@@ -8,6 +8,7 @@
 
 
 
+
 CREATE view [dbo].[vUsers]
 as
 
@@ -21,6 +22,7 @@ select
 	ent.IsReadOnly,
 	u.RefUID,
 	u.Email,
+	u.Domain,
 	u.Username,
 	u.IsConfirmed,
 	u.IsApproved,

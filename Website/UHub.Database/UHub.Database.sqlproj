@@ -191,5 +191,9 @@
     <Build Include="dbo\Stored Procedures\User_ValidateCommentParent.sql" />
     <Build Include="dbo\Stored Procedures\SchoolMajors_GetByDomain.sql" />
     <Build Include="dbo\Stored Procedures\SchoolClubs_GetByDomain.sql" />
+    <Build Include="dbo\Stored Procedures\User_PurgeByEmail.sql" />
+    <Build Include="dbo\Stored Procedures\School_IsEmailValid.sql" />
+    <Build Include="dbo\Stored Procedures\School_IsDomainValid.sql" />
+    <Build Include="dbo\Stored Procedures\School_GetByDomain.sql" />
   </ItemGroup>
 </Project>

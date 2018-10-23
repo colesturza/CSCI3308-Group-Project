@@ -1,6 +1,7 @@
 ﻿
-create proc [dbo].[User_GetAuthInfoByUsername]
-	@Username nvarchar(100)
+CREATE proc [dbo].[User_GetAuthInfoByUsername]
+	@Username nvarchar(100),
+	@Domain nvarchar(250)
 as
 begin
 
@@ -16,5 +17,6 @@ begin
 
 	where
 		u.Username = @Username
+		AND Domain = @Domain
 	
 end

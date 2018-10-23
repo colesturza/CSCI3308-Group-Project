@@ -95,12 +95,17 @@ begin
 		select @_entID = SCOPE_IDENTITY()
 
 
+		declare @domain nvarchar(250)
+		set @domain = SUBSTRING(@email, CHARINDEX('@', @email), 250)
+
+
 		--insert item into user table
 		begin try
 			insert into dbo.Users
 			(
 				EntID,
 				Email,
+				Domain,
 				Username,
 				[Version],
 				IsApproved,
@@ -110,6 +115,7 @@ begin
 			(
 				@_entID,
 				@Email,
+				@domain,
 				@Username,
 				@Version,
 				@IsApproved,

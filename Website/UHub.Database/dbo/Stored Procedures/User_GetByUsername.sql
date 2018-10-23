@@ -2,7 +2,8 @@
 
 CREATE proc [dbo].[User_GetByUsername]
 
-	@Username nvarchar(100)
+	@Username nvarchar(100),
+	@Domain nvarchar(250)
 
 as
 begin
@@ -44,7 +45,7 @@ from dbo.vUsers vu
 
 where
 	vu.Username = @Username 
-
+	AND vu.Domain = @Domain
 
 end
 
