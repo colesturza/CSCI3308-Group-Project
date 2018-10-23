@@ -55,7 +55,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
                 return Content(statCode, status);
             }
 
-            if(!UserReader.ValidatePostParent((long)tmpUser.ID, tmpPost.ParentID))
+            if (!UserReader.ValidatePostParent((long)tmpUser.ID, tmpPost.ParentID))
             {
                 status = "User is forbidden.";
                 statCode = HttpStatusCode.Forbidden;
@@ -71,16 +71,16 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
 
                 long? PostID = PostWriter.TryCreatePost(tmpPost, tmpPost.ParentID);
 
-                if(PostID != null)
+                if (PostID != null)
                 {
                     status = "Post created.";
                     statCode = HttpStatusCode.OK;
                 }
-                
+
             }
             catch (Exception ex)
             {
-                var errCode = "100d1257-b74c-461d-a389-b90298895e5d";
+                var errCode = "dbdb7b89-af35-488a-9343-eaba09d62d41";
                 Exception ex_outer = new Exception(errCode, ex);
                 CoreFactory.Singleton.Logging.CreateErrorLog(ex_outer);
 
@@ -91,6 +91,5 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             return Content(statCode, status);
 
         }
-
     }
 }
