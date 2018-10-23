@@ -154,7 +154,7 @@ namespace UHub.CoreLib.Entities.Schools.Management
                 return false;
             }
 
-            var domain = Email.Substring(Email.IndexOf("@"));
+            var domain = Email.GetEmailDomain();
 
             return SqlWorker.ExecScalar<bool>(
                 _dbConn,

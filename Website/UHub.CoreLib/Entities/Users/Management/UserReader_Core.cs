@@ -9,6 +9,7 @@ using UHub.CoreLib.ErrorHandling.Exceptions;
 using UHub.CoreLib.Extensions;
 using UHub.CoreLib.Management;
 using UHub.CoreLib.Entities.Users.Interfaces;
+using static UHub.CoreLib.DataInterop.SqlConverters;
 
 namespace UHub.CoreLib.Entities.Users.Management
 {
@@ -21,6 +22,8 @@ namespace UHub.CoreLib.Entities.Users.Management
             _dbConn = CoreFactory.Singleton.Properties.CmsDBConfig;
         }
 
+
+        #region Individual
         public static bool DoesUserExist(long UserID)
         {
             return SqlWorker.ExecScalar<bool>(
@@ -32,66 +35,69 @@ namespace UHub.CoreLib.Entities.Users.Management
                 });
         }
 
-        public static bool DoesUserExist(string UserRef, UserRefType RefType)
+        public static bool DoesUserExist(string Email)
         {
-            string sprocName = null;
-            string paramName = null;
-
-            if (RefType == UserRefType.Email)
-            {
-                sprocName = "[dbo].[User_DoesExistByEmail]";
-                paramName = "@Email";
-            }
-            else if (RefType == UserRefType.Username)
-            {
-                sprocName = "[dbo].[User_DoesExistByUsername]";
-                paramName = "@Username";
-            }
 
             return SqlWorker.ExecScalar<bool>(
                 _dbConn,
-                sprocName,
+                "[dbo].[User_DoesExistByEmail]",
                 (cmd) =>
                 {
-                    cmd.Parameters.Add(paramName, SqlDbType.NVarChar).Value = SqlConverters.HandleParamEmpty(UserRef);
+                    cmd.Parameters.Add("@Email", SqlDbType.NVarChar).Value = HandleParamEmpty(Email);
+                });
+        }
+
+        public static bool DoesUserExist(string Username, string Domain)
+        {
+
+            return SqlWorker.ExecScalar<bool>(
+                _dbConn,
+                "[dbo].[User_DoesExistByUsername]",
+                (cmd) =>
+                {
+                    cmd.Parameters.Add("@Username", SqlDbType.NVarChar).Value = HandleParamEmpty(Username);
+                    cmd.Parameters.Add("@Domain", SqlDbType.NVarChar).Value = HandleParamEmpty(Domain);
                 });
         }
 
 
-        #region Individual
+
         /// <summary>
         /// Get user ID from email
         /// </summary>
         /// <param name="Email"></param>
         /// <returns></returns>
-        public static long? GetUserID(string UserRef, UserRefType RefType)
+        public static long? GetUserID(string Email)
         {
-            string sprocName = null;
-            string paramName = null;
-
-            if (RefType == UserRefType.Email)
-            {
-                sprocName = "[dbo].[User_GetIDByEmail]";
-                paramName = "@Email";
-            }
-            else if (RefType == UserRefType.Username)
-            {
-                sprocName = "[dbo].[User_GetIDByUsername]";
-                paramName = "@Username";
-            }
-
-
             return SqlWorker.ExecScalar<long>(
                 _dbConn,
-                sprocName,
+                "[dbo].[User_GetIDByEmail]",
                 (cmd) =>
                 {
-                    cmd.Parameters.Add(paramName, SqlDbType.NVarChar).Value = UserRef;
+                    cmd.Parameters.Add("@Email", SqlDbType.NVarChar).Value = HandleParamEmpty(Email);
                 });
         }
 
         /// <summary>
-        /// Get DB User full detail by GUID UID
+        /// Get user ID from username and domain
+        /// </summary>
+        /// <param name="Username"></param>
+        /// <returns></returns>
+        public static long? GetUserID(string Username, string Domain)
+        {
+
+            return SqlWorker.ExecScalar<long>(
+                _dbConn,
+                "[dbo].[User_GetIDByUsername]",
+                (cmd) =>
+                {
+                    cmd.Parameters.Add("@Username", SqlDbType.NVarChar).Value = HandleParamEmpty(Username);
+                    cmd.Parameters.Add("@Domain", SqlDbType.NVarChar).Value = HandleParamEmpty(Domain);
+                });
+        }
+
+        /// <summary>
+        /// Get DB User full detail by ID
         /// </summary>
         /// <param name="UserUID"></param>
         /// <returns></returns>
@@ -117,11 +123,11 @@ namespace UHub.CoreLib.Entities.Users.Management
         }
 
         /// <summary>
-        /// Get DB User full detail by GUID UID
+        /// Get DB User full detail by email
         /// </summary>
-        /// <param name="UserUID"></param>
+        ///<param name="Email"
         /// <returns></returns>
-        public static User GetUser(string UserRef, UserRefType RefType)
+        public static User GetUser(string Email)
         {
             if (!CoreFactory.Singleton.IsEnabled)
             {
@@ -129,26 +135,38 @@ namespace UHub.CoreLib.Entities.Users.Management
             }
 
 
-            string sprocName = null;
-            string paramName = null;
-            if (RefType == UserRefType.Email)
-            {
-                sprocName = "[dbo].[User_GetByEmail]";
-                paramName = "@Email";
-            }
-            else if (RefType == UserRefType.Username)
-            {
-                sprocName = "[dbo].[User_GetByUsername]";
-                paramName = "@Username";
-            }
+            return SqlWorker.ExecBasicQuery(
+                _dbConn,
+                "[dbo].[User_GetByEmail]",
+                (cmd) =>
+                {
+                    cmd.Parameters.Add("@Email", SqlDbType.NVarChar).Value = HandleParamEmpty(Email);
+                },
+                (reader) =>
+                {
+                    return reader.ToCustomDBType<User>();
+                }).SingleOrDefault();
+        }
 
+        /// <summary>
+        /// Get DB User full detail by username and domain
+        /// </summary>
+        ///<param name="Username"
+        /// <returns></returns>
+        public static User GetUser(string Username, string Domain)
+        {
+            if (!CoreFactory.Singleton.IsEnabled)
+            {
+                throw new SystemDisabledException();
+            }
 
             return SqlWorker.ExecBasicQuery(
                 _dbConn,
-                sprocName,
+                "[dbo].[User_GetByUsername]",
                 (cmd) =>
                 {
-                    cmd.Parameters.Add(paramName, SqlDbType.NVarChar).Value = UserRef;
+                    cmd.Parameters.Add("@Username", SqlDbType.NVarChar).Value = HandleParamEmpty(Username);
+                    cmd.Parameters.Add("@Domain", SqlDbType.NVarChar).Value = HandleParamEmpty(Domain);
                 },
                 (reader) =>
                 {

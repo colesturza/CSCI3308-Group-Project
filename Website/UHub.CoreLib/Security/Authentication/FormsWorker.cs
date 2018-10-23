@@ -76,7 +76,7 @@ namespace UHub.CoreLib.Security.Authentication
             UserAuthInfo userAuthInfo = null;
             try
             {
-                userAuthInfo = GetUserAuthInfo_DB(UserEmail, UserRefType.Email);
+                userAuthInfo = GetUserAuthInfo_DB(UserEmail);
             }
             catch (Exception ex)
             {
@@ -213,7 +213,7 @@ namespace UHub.CoreLib.Security.Authentication
 
         private PasswordValidationStatus ValidatePassword(string UserEmail, string Password)
         {
-            var userAuthInfo = GetUserAuthInfo_DB(UserEmail, UserRefType.Email);
+            var userAuthInfo = GetUserAuthInfo_DB(UserEmail);
 
 
             if (userAuthInfo == null)

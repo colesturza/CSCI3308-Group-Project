@@ -90,22 +90,14 @@ namespace UHub.CoreLib.Security.Accounts
             }
 
             //check for duplicate email
-            if (UserReader.DoesUserExist(NewUser.Email, UserRefType.Email))
+            if (UserReader.DoesUserExist(NewUser.Email))
             {
                 ArgFailHandler?.Invoke(AccountResultCode.EmailDuplicate);
                 return false;
             }
 
-            //check for duplicate username
-            if (UserReader.DoesUserExist(NewUser.Username, UserRefType.Username))
-            {
-                ArgFailHandler?.Invoke(AccountResultCode.UsernameDuplicate);
-                return false;
-            }
-
-
             //Validate user domain and school
-            var domain = NewUser.Email.Substring(NewUser.Email.IndexOf("@"));
+            var domain = NewUser.Email.GetEmailDomain();
 
             var tmpSchool = SchoolReader.GetSchoolByDomain(domain);
             if (tmpSchool == null || tmpSchool.ID == null)
@@ -114,6 +106,14 @@ namespace UHub.CoreLib.Security.Accounts
                 return false;
             }
             NewUser.SchoolID = tmpSchool.ID;
+
+
+            //check for duplicate username
+            if (UserReader.DoesUserExist(NewUser.Username, domain))
+            {
+                ArgFailHandler?.Invoke(AccountResultCode.UsernameDuplicate);
+                return false;
+            }
 
 
             //check for valid major (chosen via dropdown)
@@ -329,7 +329,7 @@ namespace UHub.CoreLib.Security.Accounts
 
             UserEmail = UserEmail.Trim();
 
-            var ID = UserReader.GetUserID(UserEmail, UserRefType.Email);
+            var ID = UserReader.GetUserID(UserEmail);
             if (ID == null)
             {
                 ResultHandler?.Invoke(AccountResultCode.UserInvalid);
@@ -526,7 +526,7 @@ namespace UHub.CoreLib.Security.Accounts
 
             UserEmail = UserEmail.Trim();
 
-            var ID = UserReader.GetUserID(UserEmail, UserRefType.Email);
+            var ID = UserReader.GetUserID(UserEmail);
             if (ID == null)
             {
                 ResultHandler?.Invoke(AccountResultCode.UserInvalid);
@@ -661,13 +661,22 @@ namespace UHub.CoreLib.Security.Accounts
         }
 
         /// <summary>
-        /// Delete user by UserRef
+        /// Delete user by Email
         /// </summary>
-        /// <param name="RequestedBy"></param>
-        /// <param name="UserFriendlyID"></param>
-        public static void DeleteUser(string UserRef, UserRefType UserRefType)
+        /// <param name="Email"></param>
+        public static void DeleteUser(string Email)
         {
-            var modUser = UserReader.GetUser(UserRef, UserRefType);
+            var modUser = UserReader.GetUser(Email);
+            _deleteUser(modUser);
+        }
+
+        /// <summary>
+        /// Delete user by Username and Domain
+        /// </summary>
+        /// <param name="Username"></param>
+        public static void DeleteUser(string Username, string Domain)
+        {
+            var modUser = UserReader.GetUser(Username, Domain);
             _deleteUser(modUser);
         }
 
@@ -722,7 +731,7 @@ namespace UHub.CoreLib.Security.Accounts
             }
 
 
-            long? id = UserReader.GetUserID(UserEmail, UserRefType.Email);
+            long? id = UserReader.GetUserID(UserEmail);
 
             if (id == null)
             {
@@ -801,7 +810,7 @@ namespace UHub.CoreLib.Security.Accounts
                 throw new SystemDisabledException();
             }
 
-            if (!UserReader.DoesUserExist(UserEmail, UserRefType.Email))
+            if (!UserReader.DoesUserExist(UserEmail))
             {
                 throw new InvalidOperationException("User does not exist");
             }

@@ -201,6 +201,7 @@
     <Compile Include="Entities\Schools\Interfaces\ISchool_R_Public.cs" />
     <Compile Include="Entities\Schools\Management\SchoolReader_Core.cs" />
     <Compile Include="Entities\Schools\School.cs" />
+    <Compile Include="Entities\Users\APIControllers\UserController.cs" />
     <Compile Include="Entities\Users\Management\UserReader_EntComments.cs" />
     <Compile Include="Entities\Users\Management\UserReader_EntPosts.cs" />
     <Compile Include="ErrorHandling\Exceptions\AccessForbiddenException.cs" />
@@ -322,7 +323,6 @@
     <Folder Include="Entities\SchoolMajors\APIControllers\" />
     <Folder Include="Entities\SchoolMajors\Enums\" />
     <Folder Include="Entities\Schools\Enums\" />
-    <Folder Include="Entities\Users\APIControllers\" />
     <Folder Include="Logging\APIControllers\" />
     <Folder Include="Logging\Interfaces\" />
   </ItemGroup>

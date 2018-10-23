@@ -63,7 +63,6 @@
     <Folder Include="dbo\Tables\" />
     <Folder Include="dbo\Views\" />
     <Folder Include="dbo\Stored Procedures\" />
-    <Folder Include="Security\" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="dbo\Tables\EntPropertyXRef.sql" />
@@ -190,12 +189,6 @@
     <Build Include="dbo\Stored Procedures\SchoolClubs_GetByEmail.sql" />
     <Build Include="dbo\Stored Procedures\User_ValidatePostParent.sql" />
     <Build Include="dbo\Stored Procedures\User_ValidateCommentParent.sql" />
-    <Build Include="Security\wmccurdy_sql.sql" />
-    <Build Include="Security\UHubHelper.sql" />
-    <Build Include="Security\tipconsulting_3308_ProjectTeam.sql" />
-    <Build Include="Security\jreiss_sql.sql" />
-    <Build Include="Security\csturza_sql.sql" />
-    <Build Include="Security\RoleMemberships.sql" />
     <Build Include="dbo\Stored Procedures\SchoolMajors_GetByDomain.sql" />
     <Build Include="dbo\Stored Procedures\SchoolClubs_GetByDomain.sql" />
   </ItemGroup>

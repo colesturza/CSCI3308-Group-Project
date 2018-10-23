@@ -49,18 +49,10 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
 
 
             var tmpPost = post.ToInternal<Post>();
-            var tmpUser = CoreFactory.Singleton.Auth.GetCurrentUser();
+            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser();
 
 
-            if (tmpUser == null || tmpUser.ID == null)
-            {
-                status = "User not authenticated.";
-                statCode = HttpStatusCode.Unauthorized;
-                return Content(statCode, status);
-            }
-
-
-            if(!UserReader.ValidatePostParent((long)tmpUser.ID, tmpPost.ParentID))
+            if(!UserReader.ValidatePostParent((long)cmsUser.ID, tmpPost.ParentID))
             {
                 status = "User is forbidden.";
                 statCode = HttpStatusCode.Forbidden;

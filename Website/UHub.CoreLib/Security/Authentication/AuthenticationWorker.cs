@@ -611,29 +611,34 @@ namespace UHub.CoreLib.Security.Authentication
                 }).SingleOrDefault();
         }
 
-        private protected UserAuthInfo GetUserAuthInfo_DB(string UserRef, UserRefType RefType)
-        {
-            string sprocName = null;
-            string paramName = null;
-
-            if (RefType == UserRefType.Email)
-            {
-                sprocName = "[dbo].[User_GetAuthInfoByEmail]";
-                paramName = "@Email";
-            }
-            else if (RefType == UserRefType.Username)
-            {
-                sprocName = "[dbo].[User_GetAuthInfoByUsername]";
-                paramName = "@Username";
-            }
-            
+        private protected UserAuthInfo GetUserAuthInfo_DB(string Email)
+        {           
 
             return SqlWorker.ExecBasicQuery(
                 CoreFactory.Singleton.Properties.CmsDBConfig,
-                sprocName,
+                "[dbo].[User_GetAuthInfoByEmail]",
                 (cmd) =>
                 {
-                    cmd.Parameters.Add(paramName, SqlDbType.NVarChar).Value = UserRef;
+                    cmd.Parameters.Add("@Email", SqlDbType.NVarChar).Value = Email;
+                },
+                (reader) =>
+                {
+                    return reader.ToCustomDBType<UserAuthInfo>();
+
+                }).SingleOrDefault();
+        }
+
+
+        private protected UserAuthInfo GetUserAuthInfo_DB(string Username, string Domain)
+        {
+
+            return SqlWorker.ExecBasicQuery(
+                CoreFactory.Singleton.Properties.CmsDBConfig,
+                "[dbo].[User_GetAuthInfoByUsername]",
+                (cmd) =>
+                {
+                    cmd.Parameters.Add("@Username", SqlDbType.NVarChar).Value = Username;
+                    cmd.Parameters.Add("@Domain", SqlDbType.NVarChar).Value = Domain;
                 },
                 (reader) =>
                 {

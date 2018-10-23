@@ -461,9 +461,35 @@ namespace UHub.CoreLib.Security.Authentication
         /// <summary>
         /// Logout of all devices by incrementing user version
         /// </summary>
-        public void LogoutOfAllDevices(string UserRef, UserRefType RefType, bool ExcludeCurrent = false)
+        public void LogoutOfAllDevices(string Email, bool ExcludeCurrent = false)
         {
-            var modUser = UserReader.GetUser(UserRef, RefType);
+            var modUser = UserReader.GetUser(Email);
+            if (modUser == null || modUser.ID == null)
+            {
+                return;
+            }
+
+            modUser.UpdateVersion();
+            if (ExcludeCurrent)
+            {
+                try
+                {
+                    authWorker.SetCurrentUser_ClientToken(false, modUser);
+                }
+                catch
+                {
+                    //might throw SqlException for unique key violation
+                    //no need to to process error
+                    //user will simply be logged out
+                }
+            }
+        }
+        /// <summary>
+        /// Logout of all devices by incrementing user version
+        /// </summary>
+        public void LogoutOfAllDevices(string Username, string Domain, bool ExcludeCurrent = false)
+        {
+            var modUser = UserReader.GetUser(Username, Domain);
             if (modUser == null || modUser.ID == null)
             {
                 return;

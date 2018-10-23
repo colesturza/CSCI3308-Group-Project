@@ -71,6 +71,35 @@ namespace UHub.CoreLib.Extensions
             }
         }
         /// <summary>
+        /// Get domain portion from email
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns></returns>
+        public static string GetEmailDomain(this string email)
+        {
+            if (email.IsEmpty())
+            {
+                return "";
+            }
+
+            var idx = email.IndexOf("@");
+            if (idx == -1)
+            {
+                return "";
+            }
+
+
+            try
+            {
+                return email.Substring(idx);
+            }
+            catch
+            {
+                return "";
+            }
+        }
+
+        /// <summary>
         /// Checks if a string is a valid URL
         /// </summary>
         /// <param name="url"></param>
