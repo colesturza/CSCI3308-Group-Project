@@ -45,8 +45,8 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
 
 
             var tmpPost = post.ToInternal<Post>();
-
             var tmpUser = CoreFactory.Singleton.Auth.GetCurrentUser();
+
 
             if (tmpUser == null || tmpUser.ID == null)
             {
@@ -55,6 +55,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
                 return Content(statCode, status);
             }
 
+
             if(!UserReader.ValidatePostParent((long)tmpUser.ID, tmpPost.ParentID))
             {
                 status = "User is forbidden.";
@@ -62,14 +63,16 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
                 return Content(statCode, status);
             }
 
+
             status = "Failed to create post.";
             statCode = HttpStatusCode.BadRequest;
 
             try
             {
-                tmpPost.Content = tmpPost.Content.HtmlEncode();
+                tmpPost.Content = tmpPost.Content.SanitizeHtml();
 
-                long? PostID = PostWriter.TryCreatePost(tmpPost, tmpPost.ParentID);
+
+                long? PostID = PostWriter.TryCreatePost(tmpPost);
 
                 if(PostID != null)
                 {
@@ -80,7 +83,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             }
             catch (Exception ex)
             {
-                var errCode = "100d1257-b74c-461d-a389-b90298895e5d";
+                var errCode = "d4bcfc43-5247-45a3-b448-5baeea96058e";
                 Exception ex_outer = new Exception(errCode, ex);
                 CoreFactory.Singleton.Logging.CreateErrorLog(ex_outer);
 

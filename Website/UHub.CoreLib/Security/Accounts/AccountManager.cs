@@ -16,6 +16,8 @@ using UHub.CoreLib.SmtpInterop;
 using UHub.CoreLib.Tools;
 using UHub.CoreLib.Entities.Users.Management;
 using UHub.CoreLib.Entities.Users;
+using UHub.CoreLib.Entities.SchoolMajors.Management;
+using UHub.CoreLib.Entities.Schools.Management;
 
 namespace UHub.CoreLib.Security.Accounts
 {
@@ -27,6 +29,8 @@ namespace UHub.CoreLib.Security.Accounts
         private const short minEmailLen = 3;
         private const short maxEmailLen = 250;
         private const short SALT_LENGTH = 50;
+        private const short VERSION_LENGTH = 20;
+        private const short R_KEY_LENGTH = 20;
 
 
         /// <summary>
@@ -44,8 +48,7 @@ namespace UHub.CoreLib.Security.Accounts
         public static bool TryCreateUser(User NewUser, bool AttemptAutoLogin,
             Action<AccountResultCode> ArgFailHandler = null,
             Action<Guid> GeneralFailHandler = null,
-            Action<User, bool> SuccessHandler = null
-            )
+            Action<User, bool> SuccessHandler = null)
         {
             if (!CoreFactory.Singleton.IsEnabled)
             {
@@ -93,9 +96,45 @@ namespace UHub.CoreLib.Security.Accounts
                 return false;
             }
 
+            //check for duplicate username
+            if (UserReader.DoesUserExist(NewUser.Username, UserRefType.Username))
+            {
+                ArgFailHandler?.Invoke(AccountResultCode.UsernameDuplicate);
+                return false;
+            }
+
+
+            //Validate user domain and school
+            var domain = NewUser.Email.Substring(NewUser.Email.IndexOf("@"));
+
+            var tmpSchool = SchoolReader.GetSchoolByDomain(domain);
+            if (tmpSchool == null || tmpSchool.ID == null)
+            {
+                ArgFailHandler?.Invoke(AccountResultCode.EmailDomainInvalid);
+                return false;
+            }
+            NewUser.SchoolID = tmpSchool.ID;
+
+
+            //check for valid major (chosen via dropdown)
+            var major = NewUser.Major;
+            var majorValidationSet = SchoolMajorReader
+                                            .GetMajorsBySchool(NewUser.SchoolID.Value)
+                                            .Select(x => x.Name)
+                                            .ToHashSet();
+
+            if (!majorValidationSet.Contains(major))
+            {
+                ArgFailHandler?.Invoke(AccountResultCode.MajorInvalid);
+                return false;
+            }
+
+
+
+            //set property constants
             bool isConfirmed = CoreFactory.Singleton.Properties.AutoConfirmNewAccounts;
             bool isApproved = CoreFactory.Singleton.Properties.AutoApproveNewAccounts;
-            string version = SysSec.Membership.GeneratePassword(20, 0);
+            string version = SysSec.Membership.GeneratePassword(VERSION_LENGTH, 0);
 
             NewUser.IsConfirmed = isConfirmed;
             NewUser.IsApproved = isApproved;
@@ -152,18 +191,31 @@ namespace UHub.CoreLib.Security.Accounts
                 //get cms user
                 var cmsUser = UserReader.GetUser(userID.Value);
 
+
                 //attempt autologin
                 //autoconfirm user -> auto login
                 bool canLogin = AttemptAutoLogin && CoreFactory.Singleton.Properties.AutoConfirmNewAccounts && CoreFactory.Singleton.Properties.AutoApproveNewAccounts;
 
+
                 if (canLogin)
                 {
-                    //TODO
-                    //log to DB
-                    //CoreFactory.Singleton.Logging.CreateDBActivityLog(ActivityLogTypes.UserLogin);
+                    try
+                    {
+                        //set login
+                        CoreFactory.Singleton.Auth.TrySetClientAuthToken(NewUser.Email, NewUser.Password, false);
 
-                    //set login
-                    CoreFactory.Singleton.Auth.TrySetClientAuthToken(NewUser.Email, NewUser.Password, false);
+                        //TODO: log to DB
+                        //CoreFactory.Singleton.Logging.CreateDBActivityLog(ActivityLogTypes.UserLogin);
+                    }
+                    catch
+                    {
+                        //account creating, but auto login failed
+                        var errCode = "A275649B-AD89-43E3-8DE2-B81B6F47FE6A";
+                        CoreFactory.Singleton.Logging.CreateErrorLog(errCode);
+
+                        SuccessHandler?.Invoke(cmsUser, false);
+                        return true;
+                    }
                 }
                 else if (!CoreFactory.Singleton.Properties.AutoConfirmNewAccounts)
                 {
@@ -174,8 +226,17 @@ namespace UHub.CoreLib.Security.Accounts
                         ConfirmationURL = cmsUser.GetConfirmationURL()
                     };
 
-                    SmtpManager.TrySendMessage(msg);
+                    if (!SmtpManager.TrySendMessage(msg))
+                    {
+                        var errCode = "AEBDE62B-31D5-4B48-8D26-3123AA5219A3";
+                        CoreFactory.Singleton.Logging.CreateErrorLog(errCode);
+                        GeneralFailHandler?.Invoke(new Guid(errCode));
+
+                        return false;
+                    }
                 }
+
+
 
                 SuccessHandler?.Invoke(cmsUser, canLogin);
                 return true;
@@ -271,7 +332,7 @@ namespace UHub.CoreLib.Security.Accounts
             var ID = UserReader.GetUserID(UserEmail, UserRefType.Email);
             if (ID == null)
             {
-                ResultHandler?.Invoke(AccountResultCode.InvalidUser);
+                ResultHandler?.Invoke(AccountResultCode.UserInvalid);
                 return false;
             }
 
@@ -315,7 +376,7 @@ namespace UHub.CoreLib.Security.Accounts
             //check for valid OLD password
             var pswdStrength = CoreFactory.Singleton.Properties.PswdStrengthRegex;
 
-            if(OldPassword.IsEmpty())
+            if (OldPassword.IsEmpty())
             {
                 ResultHandler?.Invoke(AccountResultCode.PswdEmpty);
                 return false;
@@ -353,14 +414,14 @@ namespace UHub.CoreLib.Security.Accounts
             {
                 if (!UserReader.DoesUserExist(UserID))
                 {
-                    ResultHandler?.Invoke(AccountResultCode.InvalidUser);
+                    ResultHandler?.Invoke(AccountResultCode.UserInvalid);
                     return false;
                 }
 
                 var modUser = UserReader.GetUser(UserID);
                 if (modUser == null || modUser.ID == null)
                 {
-                    ResultHandler?.Invoke(AccountResultCode.InvalidUser);
+                    ResultHandler?.Invoke(AccountResultCode.UserInvalid);
                     return false;
                 }
 
@@ -468,7 +529,7 @@ namespace UHub.CoreLib.Security.Accounts
             var ID = UserReader.GetUserID(UserEmail, UserRefType.Email);
             if (ID == null)
             {
-                ResultHandler?.Invoke(AccountResultCode.InvalidUser);
+                ResultHandler?.Invoke(AccountResultCode.UserInvalid);
                 return false;
             }
 
@@ -519,14 +580,14 @@ namespace UHub.CoreLib.Security.Accounts
             {
                 if (!UserReader.DoesUserExist(UserID))
                 {
-                    ResultHandler?.Invoke(AccountResultCode.InvalidUser);
+                    ResultHandler?.Invoke(AccountResultCode.UserInvalid);
                     return false;
                 }
 
                 var modUser = UserReader.GetUser(UserID);
                 if (modUser == null || modUser.ID == null)
                 {
-                    ResultHandler?.Invoke(AccountResultCode.InvalidUser);
+                    ResultHandler?.Invoke(AccountResultCode.UserInvalid);
                     return false;
                 }
 
@@ -665,7 +726,7 @@ namespace UHub.CoreLib.Security.Accounts
 
             if (id == null)
             {
-                ArgFailHandler?.Invoke(AccountResultCode.InvalidUser);
+                ArgFailHandler?.Invoke(AccountResultCode.UserInvalid);
                 return;
             }
 
@@ -696,7 +757,7 @@ namespace UHub.CoreLib.Security.Accounts
 
                 if (cmsUser == null || cmsUser.ID == null)
                 {
-                    ArgFailHandler?.Invoke(AccountResultCode.InvalidUser);
+                    ArgFailHandler?.Invoke(AccountResultCode.UserInvalid);
                     return;
                 }
 
@@ -706,11 +767,11 @@ namespace UHub.CoreLib.Security.Accounts
                 var recoveryContext = cmsUser.GetRecoveryContext();
                 if (recoveryContext != null && !recoveryContext.IsOptional)
                 {
-                    ArgFailHandler?.Invoke(AccountResultCode.InvalidUser);
+                    ArgFailHandler?.Invoke(AccountResultCode.UserInvalid);
                     return;
                 }
 
-                string recoveryKey = SysSec.Membership.GeneratePassword(20, 5);
+                string recoveryKey = SysSec.Membership.GeneratePassword(R_KEY_LENGTH, 5);
                 string hashedKey = recoveryKey.GetCryptoHash(CoreFactory.Singleton.Properties.PswdHashType);
 
 
@@ -726,7 +787,7 @@ namespace UHub.CoreLib.Security.Accounts
             }
             catch
             {
-                ArgFailHandler?.Invoke(AccountResultCode.InvalidUser);
+                ArgFailHandler?.Invoke(AccountResultCode.UserInvalid);
                 return;
             }
 

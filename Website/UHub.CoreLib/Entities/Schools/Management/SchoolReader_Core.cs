@@ -20,6 +20,25 @@ namespace UHub.CoreLib.Entities.Schools.Management
             _dbConn = CoreFactory.Singleton.Properties.CmsDBConfig;
         }
 
+        public static IEnumerable<School> GetAllSchools()
+        {
+            if (!CoreFactory.Singleton.IsEnabled)
+            {
+                throw new SystemDisabledException();
+            }
+
+
+            return SqlWorker.ExecBasicQuery(
+                _dbConn,
+                "[dbo].[Schools_GetAll]",
+                (cmd) => { },
+                (reader) =>
+                {
+                    return reader.ToCustomDBType<School>();
+                });
+
+        }
+
 
         /// <summary>
         /// Get Db school full detail by ID
@@ -93,6 +112,33 @@ namespace UHub.CoreLib.Entities.Schools.Management
                 (cmd) =>
                 {
                     cmd.Parameters.Add("@Email", SqlDbType.NVarChar).Value = Email;
+                },
+                (reader) =>
+                {
+                    return reader.ToCustomDBType<School>();
+                }).SingleOrDefault();
+        }
+
+
+        /// <summary>
+        /// Get Db school full detail by email domain. Used to get a user's school at account creation
+        /// </summary>
+        /// <param name="Email"></param>
+        /// <returns></returns>
+        public static School GetSchoolByDomain(string Domain)
+        {
+            if (!CoreFactory.Singleton.IsEnabled)
+            {
+                throw new SystemDisabledException();
+            }
+
+
+            return SqlWorker.ExecBasicQuery(
+                _dbConn,
+                "[dbo].[School_GetByDomain]",
+                (cmd) =>
+                {
+                    cmd.Parameters.Add("@Domain", SqlDbType.NVarChar).Value = Domain;
                 },
                 (reader) =>
                 {

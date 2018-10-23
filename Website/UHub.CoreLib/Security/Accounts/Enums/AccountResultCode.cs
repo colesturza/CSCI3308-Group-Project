@@ -10,11 +10,15 @@ namespace UHub.CoreLib.Security.Accounts
     {
         Success,
 
-        InvalidUser,
+        UserInvalid,
+        UsernameDuplicate,
 
         EmailInvalid,
         EmailEmpty,
         EmailDuplicate,
+        EmailDomainInvalid,
+
+        MajorInvalid,
 
         PswdInvalid,
         PswdEmpty,

@@ -26,7 +26,7 @@ namespace UHub.CoreLib
         /// <summary>
         /// Header used to supply client auth token
         /// </summary>
-        internal const string AUTH_HEADER_TOKEN = "client-uhub-auth-token";
+        internal const string AUTH_HEADER_TOKEN = "uhub-auth-token";
 
         /// <summary>
         /// ID of the primary system level user in the DB

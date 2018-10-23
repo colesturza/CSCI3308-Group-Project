@@ -125,6 +125,32 @@ namespace UHub.CoreLib.Entities.SchoolMajors.Management
                 });
         }
 
+        /// <summary>
+        /// Get all the school majors in the DB for a school using the school domain
+        /// </summary>
+        /// <param name="Email"></param>
+        /// <returns></returns>
+        public static IEnumerable<SchoolMajor> GetMajorsByDomain(string Domain)
+        {
+
+            if (!CoreFactory.Singleton.IsEnabled)
+            {
+                throw new SystemDisabledException();
+            }
+
+
+            return SqlWorker.ExecBasicQuery(
+                _dbConn,
+                "[dbo].[SchoolMajors_GetByDomain]",
+                (cmd) => {
+                    cmd.Parameters.Add("@Domain", SqlDbType.NVarChar).Value = Domain;
+                },
+                (row) =>
+                {
+                    return row.ToCustomDBType<SchoolMajor>();
+                });
+        }
+
         #endregion Group
     }
 }

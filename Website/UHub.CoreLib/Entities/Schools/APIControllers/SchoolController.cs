@@ -11,6 +11,8 @@ using System.Web.Http;
 using System.Web.Http.Filters;
 using UHub.CoreLib.APIControllers;
 using UHub.CoreLib.Entities.Schools.Interfaces;
+using UHub.CoreLib.Entities.Schools.Management;
+using UHub.CoreLib.Entities.Schools.DTOs;
 using UHub.CoreLib.Extensions;
 using UHub.CoreLib.Entities.Users;
 using UHub.CoreLib.Entities.Users.DTOs;
@@ -26,16 +28,16 @@ namespace UHub.CoreLib.Entities.Schools.APIControllers
     public class SchoolController : APIController
     {
 
-
-
-
         [HttpGet()]
-        [Route("GetSchool")]
-        public IHttpActionResult getSchool()
+        [Route("GetSchools")]
+        public IHttpActionResult GetSchools()
         {
-          
 
-            return Ok("test");
+            var schoolSet = SchoolReader.GetAllSchools();
+
+
+            return Ok(schoolSet.Select(x => x.ToDto<School_R_PublicDTO>()));
+
         }
 
 

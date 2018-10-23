@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
 using UHub.CoreLib.APIControllers;
+using UHub.CoreLib.Entities.SchoolMajors.Management;
 using UHub.CoreLib.Entities.Schools.Management;
 using UHub.CoreLib.Entities.Users;
 using UHub.CoreLib.Entities.Users.DTOs;
@@ -46,20 +47,10 @@ namespace UHub.CoreLib.Security.Accounts.APIControllers
 
             var tmpUser = user.ToInternal<User>();
 
-            var tmpSchool = SchoolReader.GetSchoolByEmail(tmpUser.Email);
-            if (tmpSchool == null)
-            {
-                status = "Email Invalid - School Not Supported";
-                statCode = HttpStatusCode.BadRequest;
-                return Content(statCode, status);
-            }
-
-
-            tmpUser.SchoolID = tmpSchool.ID;
 
             var enableDetail = CoreFactory.Singleton.Properties.EnableDetailedAPIErrors;
             var enableFailCode = CoreFactory.Singleton.Properties.EnableInternalAPIErrors;
-            status = "Login Failed";
+            status = "Account Creation Failed";
             statCode = HttpStatusCode.BadRequest;
 
             try
@@ -74,6 +65,9 @@ namespace UHub.CoreLib.Security.Accounts.APIControllers
                                 case AccountResultCode.EmailEmpty: { status = "Email Empty"; break; }
                                 case AccountResultCode.EmailInvalid: { status = "Email Invalid"; break; }
                                 case AccountResultCode.EmailDuplicate: { status = "Email Duplicate"; break; }
+                                case AccountResultCode.EmailDomainInvalid: { status = "Email Domain Not Supported"; break; }
+                                case AccountResultCode.UsernameDuplicate: { status = "Username Duplicate"; break; }
+                                case AccountResultCode.MajorInvalid: { status = "Major Invalid"; break; }
                                 case AccountResultCode.PswdEmpty: { status = "Password Empty"; break; }
                                 case AccountResultCode.PswdInvalid: { status = "Password Invalid"; break; }
                             }

@@ -39,6 +39,15 @@
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Testing|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Testing\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;TESTING</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.VisualStudio.TestPlatform.TestFramework, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\MSTest.TestFramework.1.3.2\lib\net45\Microsoft.VisualStudio.TestPlatform.TestFramework.dll</HintPath>
@@ -63,9 +72,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Entities\Comments\Management\CommentWriterTests.cs" />
     <Compile Include="Entities\Posts\Management\PostReaderTests.cs" />
+    <Compile Include="Entities\Posts\Management\PostWriterTests.cs" />
     <Compile Include="Entities\SchoolClubs\Management\SchoolClubReaderTests.cs" />
     <Compile Include="Entities\SchoolMajors\Management\SchoolMajorReaderTests.cs" />
+    <Compile Include="Security\Accounts\APIControllers\AccountControllerTests.cs" />
     <Compile Include="Security\Authentication\APIControllers\AuthenticationControllerTests.cs" />
     <Compile Include="TestGlobal.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
