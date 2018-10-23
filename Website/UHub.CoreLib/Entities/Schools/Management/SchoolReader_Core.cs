@@ -119,5 +119,32 @@ namespace UHub.CoreLib.Entities.Schools.Management
                 }).SingleOrDefault();
         }
 
+
+        /// <summary>
+        /// Get Db school full detail by email domain. Used to get a user's school at account creation
+        /// </summary>
+        /// <param name="Email"></param>
+        /// <returns></returns>
+        public static School GetSchoolByDomain(string Domain)
+        {
+            if (!CoreFactory.Singleton.IsEnabled)
+            {
+                throw new SystemDisabledException();
+            }
+
+
+            return SqlWorker.ExecBasicQuery(
+                _dbConn,
+                "[dbo].[School_GetByDomain]",
+                (cmd) =>
+                {
+                    cmd.Parameters.Add("@Domain", SqlDbType.NVarChar).Value = Domain;
+                },
+                (reader) =>
+                {
+                    return reader.ToCustomDBType<School>();
+                }).SingleOrDefault();
+        }
+
     }
 }

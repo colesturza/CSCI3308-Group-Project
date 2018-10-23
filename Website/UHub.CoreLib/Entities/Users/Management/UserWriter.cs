@@ -240,8 +240,7 @@ namespace UHub.CoreLib.Entities.Users.Management
         /// <summary>
         /// Attempt to purge a user from the DB
         /// </summary>
-        /// <param name="RequestedBy"></param>
-        /// <param name="UserUID"></param>
+        /// <param name="UserID"></param>
         /// <returns></returns>
         internal static bool TryPurgeUser(long UserID)
         {
@@ -253,6 +252,31 @@ namespace UHub.CoreLib.Entities.Users.Management
                 (cmd) =>
                 {
                     cmd.Parameters.Add("@UserID", SqlDbType.BigInt).Value = UserID;
+                });
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                CoreFactory.Singleton.Logging.CreateErrorLog(ex);
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Attempt to purge a user from the DB
+        /// </summary>
+        /// <returns></returns>
+        internal static bool TryPurgeUser(string Email)
+        {
+            try
+            {
+                SqlWorker.ExecNonQuery
+                (CoreFactory.Singleton.Properties.CmsDBConfig,
+                "[dbo].[User_PurgeByEmail]",
+                (cmd) =>
+                {
+                    cmd.Parameters.Add("@Email", SqlDbType.NVarChar).Value = Email;
                 });
 
                 return true;
