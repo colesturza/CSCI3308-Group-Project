@@ -51,7 +51,15 @@ namespace UHub.CoreLib.Extensions
         public static bool IsValidEmail(this string email)
         {
             if (email.IsEmpty())
+            {
                 return false;
+            }
+
+            if(!RgxIsMatch(email, $"^{RgxPatterns.User.EMAIL}$"))
+            {
+                return false;
+            }
+
             try
             {
                 var addr = new System.Net.Mail.MailAddress(email);

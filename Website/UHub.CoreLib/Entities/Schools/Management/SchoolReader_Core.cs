@@ -146,5 +146,45 @@ namespace UHub.CoreLib.Entities.Schools.Management
                 }).SingleOrDefault();
         }
 
+
+        public static bool IsEmailValid(string Email)
+        {
+            if(!Email.IsValidEmail())
+            {
+                return false;
+            }
+
+            var domain = Email.Substring(Email.IndexOf("@"));
+
+            return SqlWorker.ExecScalar<bool>(
+                _dbConn,
+                "[dbo].[School_IsDomainValid]",
+                (cmd) =>
+                {
+                    cmd.Parameters.Add("@Domain", SqlDbType.NVarChar).Value = domain;
+                });
+        }
+
+        public static bool IsDomainValid(string Domain)
+        {
+
+            if(Domain.IsEmpty())
+            {
+                return false;
+            }
+            if(!Domain.StartsWith("@"))
+            {
+                return false;
+            }
+
+
+            return SqlWorker.ExecScalar<bool>(
+                _dbConn,
+                "[dbo].[School_IsDomainValid]",
+                (cmd) =>
+                {
+                    cmd.Parameters.Add("@Domain", SqlDbType.NVarChar).Value = Domain;
+                });
+        }
     }
 }

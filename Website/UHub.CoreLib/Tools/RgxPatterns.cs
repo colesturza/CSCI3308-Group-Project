@@ -28,6 +28,7 @@ namespace UHub.CoreLib.Tools
         internal static class User
         {
             internal const string USERNAME = @"\S{3,50}";
+            internal const string EMAIL = @".{3,250}";
             internal const string NAME = @"(([ \u00c0-\u01ffA-z'\-])+){2,200}";
             internal const string REF_UID = @"[a-f0-9]{64}";
             internal const string PHONE = @"([0-1][ .-])?((\([0-9]{3}\)[ .-]?)|([0-9]{3}[ .-]?))([0-9]{3}[ .-]?)([0-9]{4})";
