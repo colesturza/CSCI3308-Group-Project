@@ -8,13 +8,23 @@
 
 
 
+CREATE proc [dbo].[SchoolClubs_GetByDomain]
 
-CREATE proc [dbo].[SchoolClubs_GetBySchool]
-
-	@SchoolID bigint
+	@Domain nvarchar(250)
 
 as
 begin
+
+
+	declare @_schoolID bigint
+
+	select 
+		@_schoolID = xr.EntID
+	from dbo.EntPropertyXRef xr
+	where
+		xr.PropID = 17		--DomainValidator
+		and @Domain = xr.PropValue
+
 
 
 	select
@@ -35,11 +45,9 @@ begin
 
 	INNER JOIN dbo.EntChildXRef
 	ON 
-		ParentEntID = @SchoolID
+		ParentEntID = @_schoolID
 		AND ChildEntID = vu.ID
 
+
+
 end
-
-
-
-

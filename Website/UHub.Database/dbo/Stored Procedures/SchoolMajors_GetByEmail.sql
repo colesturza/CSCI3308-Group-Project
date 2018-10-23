@@ -8,7 +8,7 @@
 
 
 
-create proc [dbo].[SchoolMajors_GetByEmail]
+CREATE proc [dbo].[SchoolMajors_GetByEmail]
 
 	@Email nvarchar(250)
 
@@ -43,10 +43,10 @@ begin
 
 	from dbo.vSchoolMajors vu
 
-	JOIN dbo.EntChildXRef 
+	INNER JOIN dbo.EntChildXRef
 	ON 
-		ParentEntID = @_schoolID 
-		AND ChildEntType = 3		--SCHOOL MAJOR [3]
+		ParentEntID = @_schoolID
+		AND ChildEntID = vu.ID
 
 
 
