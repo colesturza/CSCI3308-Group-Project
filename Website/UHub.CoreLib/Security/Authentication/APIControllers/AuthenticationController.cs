@@ -10,7 +10,7 @@ using UHub.CoreLib.APIControllers;
 using UHub.CoreLib.Extensions;
 using UHub.CoreLib.Management;
 using System.Net;
-
+using UHub.CoreLib.Attributes;
 
 namespace UHub.CoreLib.Security.Authentication.APIControllers
 {

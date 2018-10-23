@@ -17,7 +17,7 @@ using UHub.CoreLib.Extensions;
 using UHub.CoreLib.Entities.Users;
 using UHub.CoreLib.Entities.Users.DTOs;
 using UHub.CoreLib.Entities.Users.Interfaces;
-
+using UHub.CoreLib.Attributes;
 
 namespace UHub.CoreLib.Entities.Schools.APIControllers
 {
@@ -30,16 +30,51 @@ namespace UHub.CoreLib.Entities.Schools.APIControllers
 
         [HttpGet()]
         [Route("GetSchools")]
-        public IHttpActionResult GetSchools()
+        [ApiCacheControl(12 * 3600)]
+        public IHttpActionResult GetAllSchools()
         {
 
             var schoolSet = SchoolReader.GetAllSchools();
 
-
+            
             return Ok(schoolSet.Select(x => x.ToDto<School_R_PublicDTO>()));
 
         }
 
+
+        [HttpGet()]
+        [Route("IsEmailValid")]
+        [ApiCacheControl(1 * 3600)]
+        public IHttpActionResult IsEmailValid(string email)
+        {
+            if (SchoolReader.IsEmailValid(email))
+            {
+                return BadRequest();
+            }
+            else
+            {
+                return Ok();
+            }
+
+        }
+
+
+        [HttpGet()]
+        [Route("IsDomainValid")]
+        [ApiCacheControl(1 * 3600)]
+        public IHttpActionResult IsDomainValid(string domain)
+        {
+
+            if (SchoolReader.IsDomainValid(domain))
+            {
+                return BadRequest();
+            }
+            else
+            {
+                return Ok();
+            }
+
+        }
 
     }
 }

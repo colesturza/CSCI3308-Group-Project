@@ -120,6 +120,8 @@
   <ItemGroup>
     <Compile Include="APIControllers\APIController.cs" />
     <Compile Include="APIControllers\HttpActionResult.cs" />
+    <Compile Include="Attributes\ApiAuthControlAttribute.cs" />
+    <Compile Include="Attributes\ApiCacheControlAttribute.cs" />
     <Compile Include="Attributes\DataClassAttribute.cs" />
     <Compile Include="Attributes\DataPropertyAttribute.cs" />
     <Compile Include="Attributes\DtoClassAttribute.cs" />

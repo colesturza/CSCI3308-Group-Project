@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 using System.Web.Http;
 using UHub.CoreLib.APIControllers;
+using UHub.CoreLib.Attributes;
 using UHub.CoreLib.Entities.Posts.DTOs;
 using UHub.CoreLib.Entities.Posts.Management;
 using UHub.CoreLib.Entities.Users.Management;
@@ -23,12 +26,13 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             {
                 return false;
             }
-
             return true;
         }
 
+
         [HttpPost()]
         [Route("CreatePost")]
+        [ApiAuthControl]
         public IHttpActionResult CreatePost([FromBody] Post_C_PublicDTO post)
         {
             string status = "";
