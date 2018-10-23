@@ -93,4 +93,14 @@ _[Ss]cripts
 *.config
 *.config.release
 *.config.debug
-/Website/UHub.Database
+
+######################
+#      DATABASE      #
+######################
+/Website/UHub.Database/UHub.Database.jfm
+/Website/UHub.Database/UHub.Database.dbmdl
+/Website/UHub.Database/UHub.Database.sqlproj.user
+/Website/UHub.Database/obj
+/Website/UHub.Database/bin
+/Website/UHub.Database/Security
+/Website/.vs/UHub/lut

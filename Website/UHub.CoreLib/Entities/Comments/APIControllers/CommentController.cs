@@ -67,7 +67,7 @@ namespace UHub.CoreLib.Entities.Comments.APIControllers
             {
                 tmpComment.Content = tmpComment.Content.SanitizeHtml();
 
-                long? PostID = CommentWriter.TryCreateComment(tmpComment, tmpComment.ParentID);
+                long? PostID = CommentWriter.TryCreateComment(tmpComment);
 
                 if (PostID != null)
                 {

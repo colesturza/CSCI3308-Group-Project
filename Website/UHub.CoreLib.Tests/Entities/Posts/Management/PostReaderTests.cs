@@ -5,9 +5,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UHub.CoreLib.Extensions;
 using UHub.CoreLib.Tests;
 using UHub.CoreLib.Entities.Schools.Management;
 using UHub.CoreLib.Entities.SchoolClubs.Management;
+using UHub.CoreLib.Entities.Posts.DTOs;
 
 namespace UHub.CoreLib.Entities.Posts.Management.Tests
 {
@@ -22,6 +24,21 @@ namespace UHub.CoreLib.Entities.Posts.Management.Tests
             PostReader.GetAllPosts().ToList();
         }
 
+        [TestMethod()]
+        public void GetAllPostsDTOTest()
+        {
+            TestGlobal.TestInit();
+
+            var postSet = PostReader.GetAllPosts().ToList();
+
+
+            var dtoSet = postSet.Select(x => x.ToDto<Post_R_PublicDTO>()).ToList();
+
+
+            postSet = dtoSet.Select(x => x.ToInternal<Post>()).ToList();
+
+        }
+
 
         [TestMethod()]
         public void GetPostTest()
@@ -31,7 +48,7 @@ namespace UHub.CoreLib.Entities.Posts.Management.Tests
 
             var postSet = PostReader.GetAllPosts().ToList();
 
-            if(postSet.Count == 0)
+            if (postSet.Count == 0)
             {
                 return;
             }
@@ -51,7 +68,7 @@ namespace UHub.CoreLib.Entities.Posts.Management.Tests
 
             var schoolSet = SchoolReader.GetAllSchools().ToList();
 
-            if(schoolSet.Count == 0)
+            if (schoolSet.Count == 0)
             {
                 return;
             }

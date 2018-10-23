@@ -72,7 +72,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
                 tmpPost.Content = tmpPost.Content.SanitizeHtml();
 
 
-                long? PostID = PostWriter.TryCreatePost(tmpPost, tmpPost.ParentID);
+                long? PostID = PostWriter.TryCreatePost(tmpPost);
 
                 if(PostID != null)
                 {

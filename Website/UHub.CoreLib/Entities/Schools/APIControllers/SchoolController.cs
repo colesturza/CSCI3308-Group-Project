@@ -41,9 +41,5 @@ namespace UHub.CoreLib.Entities.Schools.APIControllers
         }
 
 
-
-
-
-
     }
 }

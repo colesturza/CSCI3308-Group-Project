@@ -123,6 +123,33 @@ namespace UHub.CoreLib.Entities.SchoolClubs.Management
                     return row.ToCustomDBType<SchoolClub>();
                 });
         }
+
+
+        /// <summary>
+        /// Get all the school clubs in the DB for a school using the school domain
+        /// </summary>
+        /// <param name="Email"></param>
+        /// <returns></returns>
+        public static IEnumerable<SchoolClub> GetClubsByDomain(string Domain)
+        {
+
+            if (!CoreFactory.Singleton.IsEnabled)
+            {
+                throw new SystemDisabledException();
+            }
+
+
+            return SqlWorker.ExecBasicQuery(
+                _dbConn,
+                "[dbo].[SchoolClubs_GetByDomain]",
+                (cmd) => {
+                    cmd.Parameters.Add("@Domain", SqlDbType.NVarChar).Value = Domain;
+                },
+                (row) =>
+                {
+                    return row.ToCustomDBType<SchoolClub>();
+                });
+        }
         #endregion Group
     }
 }

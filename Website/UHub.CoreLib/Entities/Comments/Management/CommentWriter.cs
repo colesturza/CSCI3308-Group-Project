@@ -20,10 +20,7 @@ namespace UHub.CoreLib.Entities.Comments.Management
         /// <param name="cmsComment"></param>
         /// <param name="ParentID"></param>
         /// <returns></returns>
-        internal static long? TryCreateComment(Comment cmsComment, long ParentID)
-        {
-            return TryCreateComment(cmsComment, ParentID, out _);
-        }
+        internal static long? TryCreateComment(Comment cmsComment) => TryCreateComment(cmsComment, out _);
 
         /// <summary>
         /// Attempts to create a new CMS comment in the database and returns the CommentID if successful
@@ -31,7 +28,7 @@ namespace UHub.CoreLib.Entities.Comments.Management
         /// <param name="cmsComment"></param>
         /// <param name="ParentID"></param>
         /// <returns></returns>
-        internal static long? TryCreateComment(Comment cmsComment, long ParentID, out string ErrorMsg)
+        internal static long? TryCreateComment(Comment cmsComment, out string ErrorMsg)
         {
             if (!CoreFactory.Singleton.IsEnabled)
             {
@@ -47,7 +44,7 @@ namespace UHub.CoreLib.Entities.Comments.Management
                     (cmd) =>
                     {
                         cmd.Parameters.Add("@Content", SqlDbType.NVarChar).Value = HandleParamEmpty(cmsComment.Content);
-                        cmd.Parameters.Add("@ParentID", SqlDbType.BigInt).Value = ParentID;
+                        cmd.Parameters.Add("@ParentID", SqlDbType.BigInt).Value = HandleParamEmpty(cmsComment.ParentID);
                         cmd.Parameters.Add("@CreatedBy", SqlDbType.BigInt).Value = HandleParamEmpty(cmsComment.CreatedBy);
                         cmd.Parameters.Add("@IsReadonly", SqlDbType.Bit).Value = HandleParamEmpty(cmsComment.IsReadOnly);
                     });

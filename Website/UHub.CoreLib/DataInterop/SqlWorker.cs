@@ -58,13 +58,8 @@ namespace UHub.CoreLib.DataInterop
 
                         SetParams?.Invoke(cmd);
 
-                        //TODO: TEST THIS
-                        /*/
-                        return (T)cmd.ExecuteScalar();
-                        /*/
+                        
                         return (T)(dynamic)cmd.ExecuteScalar();
-                        //*/
-
 
                     }
                 }
