@@ -48,7 +48,10 @@ namespace UHub.CoreLib.Attributes
                     isLoggedIn = CoreFactory.Singleton.Auth.TrySetRequestUser(authToken, out _);
                 }
 
-                return isLoggedIn;
+                var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser();
+
+                
+                return isLoggedIn && cmsUser.IsEnabled;
             }
             catch (Exception ex)
             {

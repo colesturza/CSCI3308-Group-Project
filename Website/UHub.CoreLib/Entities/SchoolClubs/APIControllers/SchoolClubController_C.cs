@@ -1,29 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 using System.Web.Http;
 using UHub.CoreLib.APIControllers;
 using UHub.CoreLib.Attributes;
-using UHub.CoreLib.Entities.Comments.DTOs;
-using UHub.CoreLib.Entities.Comments.Management;
+using UHub.CoreLib.Entities.Posts.DTOs;
+using UHub.CoreLib.Entities.Posts.Management;
+using UHub.CoreLib.Entities.SchoolClubs;
+using UHub.CoreLib.Entities.SchoolClubs.DTOs;
 using UHub.CoreLib.Entities.SchoolClubs.Management;
 using UHub.CoreLib.Entities.Users.Management;
 using UHub.CoreLib.Extensions;
 using UHub.CoreLib.Management;
 using UHub.CoreLib.Tools;
 
-namespace UHub.CoreLib.Entities.Comments.APIControllers
+namespace UHub.CoreLib.Entities.SchoolClubs.APIControllers
 {
-    
-    public sealed partial class CommentController
+    public sealed partial class SchoolClubController
     {
-        [HttpPost()]
+
+        [HttpPost]
         [Route("Create")]
         [ApiAuthControl]
-        public IHttpActionResult CreateComment([FromBody] Comment_C_PublicDTO comment)
+        public IHttpActionResult Create([FromBody] SchoolClub_C_PublicDTO club)
         {
             string status = "";
             HttpStatusCode statCode = HttpStatusCode.BadRequest;
@@ -36,39 +40,28 @@ namespace UHub.CoreLib.Entities.Comments.APIControllers
                 return Content(statCode, status);
             }
 
-            var tmpComment = comment.ToInternal<Comment>();
 
+            var tmpClub = club.ToInternal<SchoolClub>();
             var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser();
 
 
 
-            if (!UserReader.ValidateCommentParent((long)cmsUser.ID, tmpComment.ParentID))
-            {
-                status = "User is forbidden.";
-                statCode = HttpStatusCode.Forbidden;
-                return Content(statCode, status);
-            }
-
-            status = "Failed to create comment.";
-            statCode = HttpStatusCode.BadRequest;
 
             try
             {
-                tmpComment.Content = tmpComment.Content.SanitizeHtml();
-                tmpComment.CreatedBy = cmsUser.ID.Value;
+                tmpClub.SchoolID = cmsUser.SchoolID.Value;
+                tmpClub.CreatedBy = cmsUser.ID.Value;
 
-                long? PostID = CommentWriter.TryCreateComment(tmpComment);
+                var clubID = SchoolClubWriter.TryCreateClub(tmpClub);
 
-                if (PostID != null)
+                if (clubID == null)
                 {
-                    status = "Comment created.";
-                    statCode = HttpStatusCode.OK;
+                    return BadRequest();
                 }
-
             }
             catch (Exception ex)
             {
-                var errCode = "8b9255a4-070b-427c-91a9-4755199aaded";
+                var errCode = "d4bcfc43-5247-45a3-b448-5baeea96058e";
                 Exception ex_outer = new Exception(errCode, ex);
                 CoreFactory.Singleton.Logging.CreateErrorLog(ex_outer);
 
@@ -76,7 +69,7 @@ namespace UHub.CoreLib.Entities.Comments.APIControllers
             }
 
 
-            return Content(statCode, status);
+            return Ok();
 
         }
 

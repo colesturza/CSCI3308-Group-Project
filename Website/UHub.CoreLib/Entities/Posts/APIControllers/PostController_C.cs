@@ -44,6 +44,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             var tmpPost = post.ToInternal<Post>();
             var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser();
 
+
             bool isValidParent = false;
             bool isUserBanned = true;
 
@@ -74,6 +75,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             try
             {
                 tmpPost.Content = tmpPost.Content.SanitizeHtml();
+                tmpPost.CreatedBy = cmsUser.ID.Value;
 
 
                 long? PostID = PostWriter.TryCreatePost(tmpPost);

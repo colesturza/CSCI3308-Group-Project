@@ -18,7 +18,6 @@ namespace UHub.CoreLib.Entities.Posts.Management
         /// Attempts to create a new CMS post in the database and returns the PostID if successful
         /// </summary>
         /// <param name="cmsPost"></param>
-        /// <param name="ParentID"></param>
         /// <returns></returns>
         internal static long? TryCreatePost(Post cmsPost) => TryCreatePost(cmsPost, out _);
 
@@ -28,7 +27,6 @@ namespace UHub.CoreLib.Entities.Posts.Management
         /// Attempts to create a new CMS post in the database and returns the PostID if successful
         /// </summary>
         /// <param name="cmsPost"></param>
-        /// <param name="ParentID"></param>
         /// <returns></returns>
         internal static long? TryCreatePost(Post cmsPost, out string ErrorMsg)
         {
@@ -57,7 +55,8 @@ namespace UHub.CoreLib.Entities.Posts.Management
 
                 if (PostID == null)
                 {
-                    throw new Exception(ResponseStrings.DBError.WRITE_UNKNOWN);
+                    ErrorMsg = ResponseStrings.DBError.WRITE_UNKNOWN;
+                    return null;
                 }
 
                 ErrorMsg = null;
@@ -65,7 +64,10 @@ namespace UHub.CoreLib.Entities.Posts.Management
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex);
+                var errCode = "2F8CCEB7-DAE1-485E-A43A-E4F52E87E945";
+                Exception ex_outer = new Exception(errCode, ex);
+                CoreFactory.Singleton.Logging.CreateErrorLog(ex_outer);
+
                 ErrorMsg = ex.Message;
                 return null;
             }
