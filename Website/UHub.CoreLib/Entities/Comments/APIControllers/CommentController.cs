@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
 using UHub.CoreLib.APIControllers;
+using UHub.CoreLib.Attributes;
 using UHub.CoreLib.Entities.Comments.DTOs;
 using UHub.CoreLib.Entities.Comments.Management;
 using UHub.CoreLib.Entities.Users.Management;
@@ -14,7 +15,7 @@ using UHub.CoreLib.Management;
 
 namespace UHub.CoreLib.Entities.Comments.APIControllers
 {
-    [RoutePrefix(Common.API_ROUTE_PREFIX + "/comment")]
+    [RoutePrefix(Common.API_ROUTE_PREFIX + "/comments")]
     public sealed class CommentController : APIController
     {
         private protected override bool ValidateSystemState(out string status, out HttpStatusCode statCode)
@@ -28,7 +29,8 @@ namespace UHub.CoreLib.Entities.Comments.APIControllers
         }
 
         [HttpPost()]
-        [Route("CreatePost")]
+        [Route("Create")]
+        [ApiAuthControl]
         public IHttpActionResult CreateComment([FromBody] Comment_C_PublicDTO comment)
         {
             string status = "";
@@ -46,12 +48,7 @@ namespace UHub.CoreLib.Entities.Comments.APIControllers
 
             var tmpUser = CoreFactory.Singleton.Auth.GetCurrentUser();
 
-            if (tmpUser == null || tmpUser.ID == null)
-            {
-                status = "User not authenticated.";
-                statCode = HttpStatusCode.Unauthorized;
-                return Content(statCode, status);
-            }
+            
 
             if (!UserReader.ValidateCommentParent((long)tmpUser.ID, tmpComment.ParentID))
             {

@@ -151,5 +151,6 @@ namespace UHub.CoreLib.Entities.SchoolClubs.Management
                 });
         }
         #endregion Group
+
     }
 }

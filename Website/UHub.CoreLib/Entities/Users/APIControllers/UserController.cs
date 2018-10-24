@@ -14,7 +14,7 @@ using UHub.CoreLib.Management;
 
 namespace UHub.CoreLib.Entities.Users.APIControllers
 {
-    [RoutePrefix(Common.API_ROUTE_PREFIX + "/user")]
+    [RoutePrefix(Common.API_ROUTE_PREFIX + "/users")]
     public sealed class UserController : APIController
     {
         private protected override bool ValidateSystemState(out string status, out HttpStatusCode statCode)
@@ -63,29 +63,34 @@ namespace UHub.CoreLib.Entities.Users.APIControllers
             var domain = cmsUser.Email.GetEmailDomain();
 
 
+            //search for user
             var targetUser = UserReader.GetUser(username, domain);
 
+            //ensure user is found
             if (targetUser == null)
             {
                 return NotFound();
             }
+            //ensure user is tied to a school
             if (targetUser.SchoolID == null)
             {
                 return NotFound();
             }
 
-
+            //Return full detail if user requests self
             if (targetUser.ID == cmsUser.ID)
             {
                 return Ok(cmsUser.ToDto<User_R_PrivateDTO>());
             }
             
-
+            //only allow users to see users from same school
             if(targetUser.SchoolID != cmsUser.SchoolID)
             {
                 return NotFound();
             }
 
+
+            //return partial detail
             return Ok(cmsUser.ToDto<User_R_PublicDTO>());
 
         }
@@ -106,27 +111,33 @@ namespace UHub.CoreLib.Entities.Users.APIControllers
             var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser();
 
 
+            //search for user
             var targetUser = UserReader.GetUser(UserID);
 
+            //ensure user is found
             if (targetUser == null)
             {
                 return NotFound();
             }
+            //ensure user is tied to a school
             if (targetUser.SchoolID == null)
             {
                 return NotFound();
             }
 
+            //Return full detail if user requests self
             if (targetUser.ID == cmsUser.ID)
             {
                 return Ok(cmsUser.ToDto<User_R_PrivateDTO>());
             }
 
+            //only allow users to see users from same school
             if (targetUser.SchoolID != cmsUser.SchoolID)
             {
                 return NotFound();
             }
 
+            //return partial detail
             return Ok(cmsUser.ToDto<User_R_PublicDTO>());
 
         }

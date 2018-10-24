@@ -29,9 +29,9 @@ namespace UHub.CoreLib.Entities.Schools.APIControllers
     {
 
         [HttpGet()]
-        [Route("GetSchools")]
+        [Route("GetAll")]
         [ApiCacheControl(12 * 3600)]
-        public IHttpActionResult GetAllSchools()
+        public IHttpActionResult GetAll()
         {
 
             var schoolSet = SchoolReader.GetAllSchools();

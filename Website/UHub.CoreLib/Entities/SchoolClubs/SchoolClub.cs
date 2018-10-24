@@ -28,6 +28,9 @@ namespace UHub.CoreLib.Entities.SchoolClubs
         public string Description { get; set; }
 
         [DataProperty(EnableDBColumnValidation: false)]
+        public long SchoolID { get; set; }
+
+        [DataProperty(EnableDBColumnValidation: false)]
         public bool IsDeleted { get; set; }
 
         [DataProperty(EnableDBColumnValidation: false)]

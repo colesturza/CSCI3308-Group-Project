@@ -173,11 +173,12 @@
     <Compile Include="Entities\Files\Management\FileReader_Core.cs" />
     <Compile Include="Entities\Images\Image.cs" />
     <Compile Include="Entities\Images\Management\ImageReader_Core.cs" />
-    <Compile Include="Entities\Posts\APIControllers\PostController.cs" />
+    <Compile Include="Entities\Posts\APIControllers\PostController_R_BySchool.cs" />
     <Compile Include="Entities\Posts\DTOs\Post_C_PublicDTO.cs" />
     <Compile Include="Entities\Posts\DTOs\Post_R_PublicDTO.cs" />
     <Compile Include="Entities\Posts\Interfaces\IPost_C_Public.cs" />
     <Compile Include="Entities\Posts\Interfaces\IPost_R_Public.cs" />
+    <Compile Include="Entities\Posts\Management\PostReader_Pages.cs" />
     <Compile Include="Entities\Posts\Management\PostWriter.cs" />
     <Compile Include="Entities\Posts\Management\PostReader_Core.cs" />
     <Compile Include="Entities\Posts\Post.cs" />
@@ -189,6 +190,7 @@
     <Compile Include="Entities\SchoolClubs\Interfaces\ISchoolClub_R_Public.cs" />
     <Compile Include="Entities\SchoolClubs\DTOs\SchoolClub_R_PublicDTO.cs" />
     <Compile Include="Entities\SchoolClubs\Interfaces\ISchoolClub_C_Public.cs" />
+    <Compile Include="Entities\SchoolClubs\Management\SchoolClubReader_AuthZ.cs" />
     <Compile Include="Entities\SchoolClubs\Management\SchoolClubReader_Core.cs" />
     <Compile Include="Entities\SchoolClubs\SchoolClub.cs" />
     <Compile Include="Entities\SchoolMajors\DTOs\SchoolMajor_R_PublicDTO.cs" />
@@ -291,6 +293,7 @@
     <Compile Include="Entities\Users\Management\UserWriter.cs" />
     <Compile Include="Entities\Users\User.cs" />
     <Compile Include="Entities\Users\UserRecoveryContext.cs" />
+    <Compile Include="Tools\TaskList.cs" />
     <Compile Include="Util\APIControllers\FileUpload\FileUploadChunkMetaData.cs" />
     <Compile Include="Util\APIControllers\FileUpload\FileUploadController.cs" />
     <Compile Include="Util\APIControllers\FileUpload\FileUploadHelper.cs" />

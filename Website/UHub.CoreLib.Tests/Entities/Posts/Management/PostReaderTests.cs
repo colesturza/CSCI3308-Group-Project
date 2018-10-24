@@ -96,7 +96,8 @@ namespace UHub.CoreLib.Entities.Posts.Management.Tests
             var clubId = clubSet.First().ID.Value;
 
 
-            PostReader.GetPostsBySchoolClub(clubId);
+            var id = PostReader.GetPostsByClub(clubId);
+            Assert.IsNotNull(id);
 
         }
 
