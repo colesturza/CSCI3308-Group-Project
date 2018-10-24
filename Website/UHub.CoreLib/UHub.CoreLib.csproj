@@ -173,6 +173,9 @@
     <Compile Include="Entities\Files\Management\FileReader_Core.cs" />
     <Compile Include="Entities\Images\Image.cs" />
     <Compile Include="Entities\Images\Management\ImageReader_Core.cs" />
+    <Compile Include="Entities\Posts\APIControllers\PostController_C.cs" />
+    <Compile Include="Entities\Posts\APIControllers\PostController_Core.cs" />
+    <Compile Include="Entities\Posts\APIControllers\PostController_R_ByClub.cs" />
     <Compile Include="Entities\Posts\APIControllers\PostController_R_BySchool.cs" />
     <Compile Include="Entities\Posts\DTOs\Post_C_PublicDTO.cs" />
     <Compile Include="Entities\Posts\DTOs\Post_R_PublicDTO.cs" />
