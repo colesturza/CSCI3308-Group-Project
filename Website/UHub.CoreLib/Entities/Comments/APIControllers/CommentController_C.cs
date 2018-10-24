@@ -13,21 +13,12 @@ using UHub.CoreLib.Entities.Users.Management;
 using UHub.CoreLib.Extensions;
 using UHub.CoreLib.Management;
 
+
 namespace UHub.CoreLib.Entities.Comments.APIControllers
 {
-    [RoutePrefix(Common.API_ROUTE_PREFIX + "/comments")]
-    public sealed class CommentController : APIController
+    
+    public sealed partial class CommentController
     {
-        private protected override bool ValidateSystemState(out string status, out HttpStatusCode statCode)
-        {
-            if (!base.ValidateSystemState(out status, out statCode))
-            {
-                return false;
-            }
-
-            return true;
-        }
-
         [HttpPost()]
         [Route("Create")]
         [ApiAuthControl]
@@ -48,7 +39,7 @@ namespace UHub.CoreLib.Entities.Comments.APIControllers
 
             var tmpUser = CoreFactory.Singleton.Auth.GetCurrentUser();
 
-            
+
 
             if (!UserReader.ValidateCommentParent((long)tmpUser.ID, tmpComment.ParentID))
             {
@@ -86,5 +77,6 @@ namespace UHub.CoreLib.Entities.Comments.APIControllers
             return Content(statCode, status);
 
         }
+
     }
 }

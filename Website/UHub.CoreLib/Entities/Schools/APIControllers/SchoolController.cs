@@ -43,6 +43,25 @@ namespace UHub.CoreLib.Entities.Schools.APIControllers
 
 
         [HttpGet()]
+        [Route("GetByID")]
+        [ApiCacheControl(12 * 3600)]
+        public IHttpActionResult GetByID(long SchoolID)
+        {
+
+            var school = SchoolReader.GetSchool(SchoolID);
+
+            if(school == null)
+            {
+                return NotFound();
+            }
+
+
+            return Ok(school.ToDto<School_R_PublicDTO>());
+
+        }
+
+
+        [HttpGet()]
         [Route("IsEmailValid")]
         [ApiCacheControl(1 * 3600)]
         public IHttpActionResult IsEmailValid(string email)
