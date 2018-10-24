@@ -61,7 +61,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
         [HttpPost()]
         [Route("GetPageCountByClub")]
         [ApiAuthControl]
-        public IHttpActionResult GetPageCountByClub(long ClubID, short PageSize)
+        public IHttpActionResult GetPageCountByClub(long ClubID, short PageSize = DEFAULT_PAGE_SIZE)
         {
             string status = "";
             HttpStatusCode statCode = HttpStatusCode.BadRequest;
@@ -90,6 +90,10 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
 
 
             var count = PostReader.GetPostCountByClub(ClubID);
+            if (count == 0)
+            {
+                return Ok(0);
+            }
             if (PageSize == -1)
             {
                 return Ok(1);

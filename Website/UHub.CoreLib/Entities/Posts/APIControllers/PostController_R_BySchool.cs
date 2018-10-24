@@ -21,10 +21,10 @@ using UHub.CoreLib.Tools;
 
 namespace UHub.CoreLib.Entities.Posts.APIControllers
 {
-    
+
     public sealed partial class PostController
     {
-        
+
 
         [HttpPost()]
         [Route("GetPostCountBySchool")]
@@ -55,7 +55,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
         [HttpPost()]
         [Route("GetPageCountBySchool")]
         [ApiAuthControl]
-        public IHttpActionResult GetPageCountBySchool(short PageSize)
+        public IHttpActionResult GetPageCountBySchool(short PageSize = DEFAULT_PAGE_SIZE)
         {
             string status = "";
             HttpStatusCode statCode = HttpStatusCode.BadRequest;
@@ -74,6 +74,11 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
 
 
             var count = PostReader.GetPostCountBySchool(schoolID);
+            if (count == 0)
+            {
+                return Ok(0);
+            }
+
             if (PageSize == -1)
             {
                 return Ok(1);
@@ -121,7 +126,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
         }
 
         [HttpPost()]
-        [Route("GetAllBySchool")]
+        [Route("GetPageBySchool")]
         [ApiAuthControl]
         public IHttpActionResult GetPageBySchool(long? StartID = null, int? PageNum = null, short PageSize = DEFAULT_PAGE_SIZE)
         {
@@ -149,11 +154,11 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
         }
 
 
-        
 
 
 
-        
+
+
 
 
     }
