@@ -121,16 +121,20 @@ namespace UHub.CoreLib.Security.Authentication
                     token = tkn.Encrypt();
                     return true;
                 }
-                catch (CryptographicException)
+                catch (CryptographicException ex)
                 {
                     token = "ERROR";
-                    GeneralFailHandler(new Guid("88CB24F0-139D-42BE-82D5-56666580323D"));
+                    GeneralFailHandler(new Guid("B51AD0A9-1E02-4911-AA67-FC60A0E19E90"));
+                    CoreFactory.Singleton.Logging.CreateErrorLog(ex);
+
                     return false;
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     token = "ERROR";
                     GeneralFailHandler(new Guid("88CB24F0-139D-42BE-82D5-56666580323D"));
+                    CoreFactory.Singleton.Logging.CreateErrorLog(ex);
+
                     return false;
                 }
             }

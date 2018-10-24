@@ -8,10 +8,10 @@ using System.Threading.Tasks;
 using UHub.CoreLib.Management;
 using UHub.CoreLib.Tests;
 
-namespace UHub.CoreLib.Security.Authentication.APIControllers.Tests
+namespace UHub.CoreLib.Security.Authentication.Tests
 {
     [TestClass()]
-    public class AuthenticationControllerTests
+    public class AuthenticationManagerTests
     {
         [TestMethod()]
         public void GetTokenTest()

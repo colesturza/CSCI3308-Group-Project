@@ -332,7 +332,7 @@ namespace UHub.CoreLib.Security.Authentication
         {
 
             string sessionID;
-            var clientKey = HttpContext.Current.Request.Headers[Common.AUTH_HEADER_MACHINE_KEY] ?? "";
+            var clientKey = HttpContext.Current?.Request?.Headers[Common.AUTH_HEADER_MACHINE_KEY] ?? "";
             //session ID must be ignored for persistent connections
             //otherwise token will not work if user comes back to site at later date
             if (isPersistent)

@@ -6,6 +6,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UHub.CoreLib.Tests;
+using UHub.CoreLib.Entities.Users.Management;
+using UHub.CoreLib.Entities.SchoolClubs.DTOs;
 
 namespace UHub.CoreLib.Entities.SchoolClubs.Management.Tests
 {
@@ -81,6 +83,68 @@ namespace UHub.CoreLib.Entities.SchoolClubs.Management.Tests
 
             var clubSet = SchoolClubReader.GetClubsByDomain(domain).ToList();
             clubSet.ForEach(x => Console.WriteLine(x.Name));
+        }
+
+
+        [TestMethod()]
+        public void ValidateMembershipTest()
+        {
+
+            var userID = UserReader.GetUserID("aual1780@colorado.edu");
+
+            if(userID == null)
+            {
+                return;
+            }
+
+            var clubDto = new SchoolClub_C_PublicDTO()
+            {
+                Name = "TEST CLUB",
+                Description = "TEST CLUB"
+            };
+
+            var club = clubDto.ToInternal<SchoolClub>();
+            var clubID = SchoolClubWriter.TryCreateClub(club);
+
+            if(clubID == null)
+            {
+                return;
+            }
+
+
+            SchoolClubReader.ValidateMembership(clubID.Value, userID.Value);
+
+        }
+
+
+        [TestMethod()]
+        public void IsUserBannedTest()
+        {
+
+            var userID = UserReader.GetUserID("aual1780@colorado.edu");
+
+            if (userID == null)
+            {
+                return;
+            }
+
+            var clubDto = new SchoolClub_C_PublicDTO()
+            {
+                Name = "TEST CLUB",
+                Description = "TEST CLUB"
+            };
+
+            var club = clubDto.ToInternal<SchoolClub>();
+            var clubID = SchoolClubWriter.TryCreateClub(club);
+
+            if (clubID == null)
+            {
+                return;
+            }
+
+
+            SchoolClubReader.IsUserBanned(clubID.Value, userID.Value);
+
         }
     }
 }

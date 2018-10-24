@@ -625,7 +625,14 @@ namespace UHub.CoreLib.Security.Accounts
                 modUser.UpdateVersion();
 
                 //re auth current user to prevent lapse in service
-                CoreFactory.Singleton.Auth.TrySetClientAuthToken(modUser.Email, NewPassword, false);
+                try
+                {
+                    CoreFactory.Singleton.Auth.TrySetClientAuthToken(modUser.Email, NewPassword, false);
+                }
+                catch
+                {
+                    CoreFactory.Singleton.Logging.CreateErrorLog("6B11B5D6-6B8D-419C-B45D-0444EE23EA32");
+                }
 
                 //remove any recovery contexts
                 modUser.GetRecoveryContext()?.Delete();
