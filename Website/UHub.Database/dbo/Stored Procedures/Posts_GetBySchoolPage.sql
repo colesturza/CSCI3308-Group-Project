@@ -23,6 +23,7 @@ begin
 		order by
 			CreatedDate desc
 	end
+
 	--START ID CAN BE DERIVED AT CLIENT
 	--STARTID = MAX(ID) WHEN PAGE=0
 
@@ -43,22 +44,22 @@ begin
 
 
 	--set default page number
-	if(@PageNum is null)
+	if(@PageNum is null or @PageNum < 0)
 	begin
 		set @PageNum = 0
 
 	end
 
+
 	
-	
-	set @adjStartIdx = @StartID + @PageNum * @ItemCount;
+	set @adjStartIdx = 1 + @PageNum * @ItemCount
 	set @adjEndIdx = @adjStartIdx + @ItemCount;
 
 
 	--get list of clubs that are children of the specified school
 	select
 		xr.ChildEntID
-	into #ParentSet
+	into #tmpParentSet
 	from
 		dbo.EntChildXRef xr
 	where
@@ -66,12 +67,12 @@ begin
 		and ChildEntType = 4;		--SCHOOL CLUB TYPE ID [4]
 
 	--include school in possible-parent set
-	insert into #ParentSet
+	insert into #tmpParentSet
 	values (@SchoolID);
 
 
 	--get set of posts starting at the 
-	with postSet as
+	with postCTE as
 	(
 
 		select
@@ -93,11 +94,11 @@ begin
 			vu.[ModifiedDate],
 			vu.[DeletedBy],
 			vu.[DeletedDate]
-			,ROW_NUMBER() over (order by vu.CreatedDate desc) as RowNum
+			,ROW_NUMBER() over (order by vu.ID desc) as RowNum
 		from dbo.vPosts vu
 		
 		--join results onto parent set
-		inner join #ParentSet ps
+		inner join #tmpParentSet ps
 		on
 			ps.ChildEntID = vu.ParentID
 
@@ -105,8 +106,6 @@ begin
 			ID <= @StartID
 
 	)
-
-
 	select
 		ps.ID,
 		ps.IsEnabled,
@@ -126,14 +125,15 @@ begin
 		ps.[ModifiedDate],
 		ps.[DeletedBy],
 		ps.[DeletedDate]
-	from postSet ps
+	from postCTE ps
 	where
 		RowNum >= @adjStartIdx
 		and RowNum < @adjEndIdx
+	
 
 
-
-
-	drop table #ParentSet
+	
+	drop table #tmpParentSet
+	
 
 end

@@ -1,4 +1,4 @@
-﻿create proc [dbo].[User_ValidateCommentParent]
+﻿CREATE proc [dbo].[User_ValidateCommentParent]
 	@UserID bigint,
 	@ParentID bigint
 
@@ -165,6 +165,27 @@ begin
 		return;
 	end
 
+
+	declare @post_Parent bigint
+	select
+		@post_Parent = ParentEntID
+	from dbo.EntChildXRef
+	where
+		ChildEntID = @postID
+
+
+	declare @isUserBanned bit
+
+	exec @isUserBanned = [dbo].[SchoolClub_IsUserBanned] 
+		@ClubID = @post_Parent,
+		@UserID = @UserID
+
+
+	if(@isUserBanned = 1)
+	begin
+		select cast (0 as bit)
+		return;
+	end
 
 
 	declare @post_IsLocked bit

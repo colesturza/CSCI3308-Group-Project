@@ -195,5 +195,9 @@
     <Build Include="dbo\Stored Procedures\School_IsEmailValid.sql" />
     <Build Include="dbo\Stored Procedures\School_IsDomainValid.sql" />
     <Build Include="dbo\Stored Procedures\School_GetByDomain.sql" />
+    <Build Include="dbo\Stored Procedures\SchoolClub_ValidateMembership.sql" />
+    <Build Include="dbo\Stored Procedures\SchoolClub_IsUserBanned.sql" />
+    <Build Include="dbo\Stored Procedures\Posts_GetCountBySchool.sql" />
+    <Build Include="dbo\Stored Procedures\Posts_GetCountByClub.sql" />
   </ItemGroup>
 </Project>

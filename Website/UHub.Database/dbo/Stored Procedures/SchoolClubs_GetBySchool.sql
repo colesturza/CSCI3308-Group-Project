@@ -23,6 +23,7 @@ begin
 		vu.IsReadonly,
 		vu.[Name],
 		vu.[Description],
+		vu.[SchoolID],
 		vu.[IsDeleted],
 		vu.[CreatedBy],
 		vu.[CreatedDate],

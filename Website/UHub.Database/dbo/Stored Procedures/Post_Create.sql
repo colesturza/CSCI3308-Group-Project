@@ -152,6 +152,24 @@ begin
 			@ModifiedBy = @CreatedBy,
 			@IsNewRecord = @_isNew
 
+		--IsModified [13]
+		exec [dbo].[_vEnts_Helper]
+			@EntID = @_entID,
+			@EntTypeID = @_entTypeID,
+			@PropID = 13,
+			@PropValue = NULL,
+			@ModifiedBy = @CreatedBy,
+			@IsNewRecord = @_isNew
+
+		--ViewCount [14]
+		exec [dbo].[_vEnts_Helper]
+			@EntID = @_entID,
+			@EntTypeID = @_entTypeID,
+			@PropID = 14,
+			@PropValue = NULL,
+			@ModifiedBy = @CreatedBy,
+			@IsNewRecord = @_isNew
+
 		--IsLocked [33]
 		exec [dbo].[_vEnts_Helper]
 			@EntID = @_entID,

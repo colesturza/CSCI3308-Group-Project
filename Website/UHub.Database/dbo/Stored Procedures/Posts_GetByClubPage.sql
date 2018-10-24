@@ -1,6 +1,6 @@
 ﻿
 
-create proc [dbo].[Posts_GetByClubPage]
+CREATE proc [dbo].[Posts_GetByClubPage]
 
 	@ClubID bigint,
 	@StartID bigint null,
@@ -43,15 +43,14 @@ begin
 
 
 	--set default page number
-	if(@PageNum is null)
+	if(@PageNum is null or @PageNum < 0)
 	begin
 		set @PageNum = 0
-
 	end
 
 	
 	
-	set @adjStartIdx = @StartID + @PageNum * @ItemCount;
+	set @adjStartIdx = 1 + @PageNum * @ItemCount;
 	set @adjEndIdx = @adjStartIdx + @ItemCount;
 
 
