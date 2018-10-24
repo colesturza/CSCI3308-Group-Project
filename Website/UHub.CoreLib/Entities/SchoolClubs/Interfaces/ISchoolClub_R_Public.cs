@@ -10,6 +10,8 @@ namespace UHub.CoreLib.Entities.SchoolClubs.Interfaces
     {
         long? ID { get; set; }
 
+        long SchoolID { get; set; }
+
         bool IsEnabled { get; set; }
 
         bool IsReadOnly { get; set; }
