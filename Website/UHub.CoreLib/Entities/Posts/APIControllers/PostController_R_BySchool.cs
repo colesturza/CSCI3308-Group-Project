@@ -37,10 +37,6 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             {
                 return Content(statCode, status);
             }
-            if (!HandleRecaptcha(out status))
-            {
-                return Content(statCode, status);
-            }
 
 
             var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser();
@@ -60,10 +56,6 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             string status = "";
             HttpStatusCode statCode = HttpStatusCode.BadRequest;
             if (!this.ValidateSystemState(out status, out statCode))
-            {
-                return Content(statCode, status);
-            }
-            if (!HandleRecaptcha(out status))
             {
                 return Content(statCode, status);
             }
@@ -108,10 +100,6 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             {
                 return Content(statCode, status);
             }
-            if (!HandleRecaptcha(out status))
-            {
-                return Content(statCode, status);
-            }
 
 
             var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser();
@@ -120,7 +108,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
 
             var posts = PostReader.GetPostsBySchool(schoolID);
 
-            var outSet = posts.Select(x => x.ToDto<Post_R_PublicDTO>()).ToList();
+            var outSet = posts.Select(x => x.ToDto<Post_R_PublicDTO>());
             return Ok(outSet);
 
         }
@@ -136,10 +124,6 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             {
                 return Content(statCode, status);
             }
-            if (!HandleRecaptcha(out status))
-            {
-                return Content(statCode, status);
-            }
 
 
             var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser();
@@ -148,7 +132,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
 
             var posts = PostReader.GetPostsBySchoolPage(schoolID, StartID, PageNum, PageSize);
 
-            var outSet = posts.Select(x => x.ToDto<Post_R_PublicDTO>()).ToList();
+            var outSet = posts.Select(x => x.ToDto<Post_R_PublicDTO>());
             return Ok(outSet);
 
         }
