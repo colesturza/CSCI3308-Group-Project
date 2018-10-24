@@ -21,7 +21,7 @@ using UHub.CoreLib.Tools;
 namespace UHub.CoreLib.Entities.SchoolClubs.APIControllers
 {
 
-    [RoutePrefix(Common.API_ROUTE_PREFIX + "/posts")]
+    [RoutePrefix(Common.API_ROUTE_PREFIX + "/schoolclubs")]
     public sealed partial class SchoolClubController : APIController
     {
         private const short DEFAULT_PAGE_SIZE = 20;
