@@ -25,15 +25,12 @@ namespace UHub.CoreLib.Attributes
             {
                 bool isLoggedIn = false;
                 var isValid = actionContext.Request.Headers.TryGetValues(Common.AUTH_HEADER_TOKEN, out var valueSet);
-                if (!isValid || valueSet == null)
-                {
-                    return false;
-                }
 
-                var authToken = valueSet.FirstOrDefault();
-                if (authToken == null)
+
+                string authToken = "";
+                if (isValid && valueSet != null)
                 {
-                    return false;
+                    authToken = valueSet.FirstOrDefault();
                 }
 
 

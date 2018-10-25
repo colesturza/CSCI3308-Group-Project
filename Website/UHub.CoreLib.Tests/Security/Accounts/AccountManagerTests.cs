@@ -12,7 +12,7 @@ using UHub.CoreLib.Management;
 using UHub.CoreLib.Tests;
 using UHub.CoreLib.Entities.Users.Management;
 
-namespace UHub.CoreLib.Security.Accounts.APIControllers.Tests
+namespace UHub.CoreLib.Security.Accounts.Tests
 {
     [TestClass()]
     public class AccountControllerTests

@@ -121,7 +121,8 @@ namespace UHub.CoreLib.Security.Authentication.APIControllers
 
         [Route("ExtendToken")]
         [HttpPost()]
-        public IHttpActionResult ExtendToken(string token)
+        [ApiAuthControl]
+        public IHttpActionResult ExtendToken()
         {
             string result = "";
             HttpStatusCode statCode = HttpStatusCode.BadRequest;
@@ -130,23 +131,30 @@ namespace UHub.CoreLib.Security.Authentication.APIControllers
                 return Content(statCode, result);
             }
 
+            var token = GetRawAuthToken();
 
 
             //in case of any error, fail silent and return the original token
-            string newToken = token;
             try
             {
-                newToken = CoreFactory.Singleton.Auth.TrySlideAuthTokenExpiration(token);
+                string newToken = CoreFactory.Singleton.Auth.TrySlideAuthTokenExpiration(token);
+
+
+                return Ok(newToken);
             }
             catch (Exception ex)
             {
                 var errCode = "7D136E21-6F6C-436B-89E3-9F57E6C0861D";
                 Exception ex_outer = new Exception(errCode, ex);
                 CoreFactory.Singleton.Logging.CreateErrorLog(ex_outer);
+
+
+                //return original token
+                return BadRequest(token);
             }
 
 
-            return Ok(newToken);
+            
         }
 
 

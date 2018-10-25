@@ -20,16 +20,7 @@ namespace UHub.CoreLib.Tests.Security.Authentication.APIControllers.Tests
         {
             TestGlobal.TestInit();
 
-
-
-            var controller = new AuthenticationController();
-            var controllerContext = new HttpControllerContext();
-            var request = new HttpRequestMessage();
-            request.RequestUri = new Uri("https://dev.u-hub.life");
-
-            controllerContext.Request = request;
-
-            controller.ControllerContext = controllerContext;
+            var controller = TestGlobal.GetStdRequest(new AuthenticationController());
             
 
             var email = "aual1780@colorado.edu";
@@ -43,8 +34,42 @@ namespace UHub.CoreLib.Tests.Security.Authentication.APIControllers.Tests
             Assert.IsNotNull(result);
 
 
-            Console.WriteLine(result.Content);
+        }
 
+        [TestMethod]
+        public void ExtendTokenTest()
+        {
+            //USE TOKEN AUTH
+
+            TestGlobal.TestInit();
+
+
+            var controller = TestGlobal.GetAuthRequest(new AuthenticationController());
+
+            var response = controller.ExtendToken();
+            Assert.IsNotNull(response);
+
+            var result = response as OkNegotiatedContentResult<string>;
+            Assert.IsNotNull(result);
+
+        }
+
+
+        [TestMethod]
+        public void ExtendTokenTest2()
+        {
+            //USE COOKIE AUTH
+
+            TestGlobal.TestInit();
+
+
+            var controller = TestGlobal.GetAuthRequest(new AuthenticationController(), true);
+
+            var response = controller.ExtendToken();
+            Assert.IsNotNull(response);
+
+            var result = response as OkNegotiatedContentResult<string>;
+            Assert.IsNotNull(result);
 
         }
     }

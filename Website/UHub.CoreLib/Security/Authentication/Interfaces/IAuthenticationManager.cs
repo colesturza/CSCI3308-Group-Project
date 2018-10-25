@@ -157,7 +157,7 @@ namespace UHub.CoreLib.Security.Authentication.Interfaces
         /// <summary>
         /// Remove persistent cookies from request/response
         /// </summary>
-        void Logout();
+        void LogOut();
 
     }
 }

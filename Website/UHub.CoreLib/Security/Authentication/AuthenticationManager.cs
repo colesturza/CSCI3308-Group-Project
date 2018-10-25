@@ -42,8 +42,8 @@ namespace UHub.CoreLib.Security.Authentication
         /// <paramref name="ResultHandler">Result handler specifying process status</paramref>
         /// <param name="GeneralFailHandler">Error handler in case DB cannot be reached or there is other unknown error</param>
         public void TrySetClientAuthToken(
-            string UserEmail, 
-            string UserPassword, 
+            string UserEmail,
+            string UserPassword,
             bool IsPersistent,
             Action<AuthResultCode> ResultHandler = null,
             Action<Guid> GeneralFailHandler = null)
@@ -80,7 +80,7 @@ namespace UHub.CoreLib.Security.Authentication
 
 
             var success = authWorker.TryAuthenticateUser(
-                UserEmail, 
+                UserEmail,
                 UserPassword,
                 ResultHandler,
                 GeneralFailHandler,
@@ -98,8 +98,8 @@ namespace UHub.CoreLib.Security.Authentication
         /// <param name="GeneralFailHandler">Error handler in case DB cannot be reached or there is other unknown error</param>
         /// <returns></returns>
         public string TryGetClientAuthToken(
-            string UserEmail, 
-            string UserPassword, 
+            string UserEmail,
+            string UserPassword,
             bool IsPersistent,
             Action<AuthResultCode> ResultHandler = null,
             Action<Guid> GeneralFailHandler = null)
@@ -141,7 +141,7 @@ namespace UHub.CoreLib.Security.Authentication
 
 
             var success = authWorker.TryAuthenticateUser(
-                UserEmail, 
+                UserEmail,
                 UserPassword,
                 ResultHandler,
                 GeneralFailHandler,
@@ -151,11 +151,14 @@ namespace UHub.CoreLib.Security.Authentication
             return token;
         }
 
-        public string TrySlideAuthTokenExpiration(string token)
-        {
-            return TrySlideAuthTokenExpiration(token, out _);
-        }
 
+        /// <summary>
+        /// Slide the expiration date of a token and return a new encrypted client token
+        /// <para/> If token cannot be extend, then the original token is returned
+        /// </summary>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        public string TrySlideAuthTokenExpiration(string token) => TrySlideAuthTokenExpiration(token, out _);
 
         /// <summary>
         /// Slide the expiration date of a token and return a new encrypted client token
@@ -178,7 +181,7 @@ namespace UHub.CoreLib.Security.Authentication
                 newToken = authToken.Encrypt();
             }
 
-            authWorker.ValidateAuthToken(token, out _, out TokenStatus, Logout, succHandler);
+            authWorker.ValidateAuthToken(token, out _, out TokenStatus, () => { LogOut(5); }, succHandler);
 
             return newToken;
         }
@@ -192,7 +195,7 @@ namespace UHub.CoreLib.Security.Authentication
         /// <param name="GeneralFailHandler">Error handler in case DB cannot be reached or there is other unknown error</param>
         /// <returns></returns>
         public bool TryAuthenticateUser(
-            string UserEmail, 
+            string UserEmail,
             string UserPassword,
             Action<AuthResultCode> ResultHandler = null,
             Action<Guid> GeneralFailHandler = null)
@@ -203,7 +206,7 @@ namespace UHub.CoreLib.Security.Authentication
             }
 
             return authWorker.TryAuthenticateUser(
-                UserEmail, 
+                UserEmail,
                 UserPassword,
                 ResultHandler,
                 GeneralFailHandler,
@@ -389,10 +392,16 @@ namespace UHub.CoreLib.Security.Authentication
         }
 
 
+        /// <summary>
+        /// Get the currently authenticated CMS user. If the user is not authenticated, then an anonymous user is returned (UID=null, class=Anon)
+        /// </summary>
+        /// <returns></returns>
         public User GetCurrentUser()
         {
             return GetCurrentUser(out _);
         }
+
+
         /// <summary>
         /// Get the currently authenticated CMS user. If the user is not authenticated, then an anonymous user is returned (UID=null, class=Anon)
         /// </summary>
@@ -403,35 +412,46 @@ namespace UHub.CoreLib.Security.Authentication
             {
                 throw new SystemDisabledException();
             }
-#if (!TESTING)
 
-            var requestUser = HttpContext.Current.Items[AuthenticationManager.REQUEST_CURRENT_USER];
-            if (requestUser != null && requestUser is User currentUser)
+            try
             {
-                tokenStatus = TokenValidationStatus.Success;
-                return currentUser;
-            }
-            else
-            {
-                //get user info from tkt (if it exists)
-                authWorker.ValidateAuthCookie(out User cmsUser, out tokenStatus);
 
-                if (cmsUser == null || cmsUser.ID == null)
+                var requestUser = HttpContext.Current?.Items[AuthenticationManager.REQUEST_CURRENT_USER];
+
+
+                if (requestUser != null && requestUser is User currentUser)
                 {
-                    cmsUser = UserReader.GetAnonymousUser();
+                    tokenStatus = TokenValidationStatus.Success;
+                    return currentUser;
+                }
+                else
+                {
+                    //get user info from tkt (if it exists)
+                    authWorker.ValidateAuthCookie(out User cmsUser, out tokenStatus);
+                    Console.WriteLine(tokenStatus);
+                    Console.WriteLine(cmsUser.ToFormattedJSON());
+
+
+                    if (cmsUser == null || cmsUser.ID == null)
+                    {
+                        cmsUser = UserReader.GetAnonymousUser();
+                        HttpContext.Current.Items[AuthenticationManager.REQUEST_CURRENT_USER] = cmsUser;
+
+                        return cmsUser;
+                    }
                     HttpContext.Current.Items[AuthenticationManager.REQUEST_CURRENT_USER] = cmsUser;
+
+                    //check for real user vs Anon user
                     return cmsUser;
                 }
 
-                HttpContext.Current.Items[AuthenticationManager.REQUEST_CURRENT_USER] = cmsUser;
-
-                //check for real user vs Anon user
-                return cmsUser;
             }
-#else
-            return ParentManager.UserReader.GetAnonymousUser();
-#endif
-
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                tokenStatus = TokenValidationStatus.AnonUser;
+                return null;
+            }
         }
 
 
@@ -519,7 +539,7 @@ namespace UHub.CoreLib.Security.Authentication
         /// <summary>
         /// Remove persistent cookies from request/response
         /// </summary>
-        public void Logout()
+        public void LogOut()
         {
             LogOut(-1);
         }
@@ -528,12 +548,18 @@ namespace UHub.CoreLib.Security.Authentication
         /// </summary>
         internal void LogOut(int ErrorCode = -1, [CallerMemberName] string key = null)
         {
-            bool DEBUG = false;
+            bool DEBUG = true;
             if (ErrorCode != -1 && DEBUG)
             {
                 CoreFactory.Singleton.Logging.CreateMessageLog(ErrorCode.ToString());
             }
+            if (key != null && DEBUG)
+            {
+                CoreFactory.Singleton.Logging.CreateMessageLog(key.ToString());
+            }
 
+            //try
+            //{
 
             //get cookie
             var authCookieName = CoreFactory.Singleton.Properties.AuthTknCookieName;
@@ -571,6 +597,10 @@ namespace UHub.CoreLib.Security.Authentication
                 HttpContext.Current.Response.Cookies.Remove(authCookieName);
                 HttpContext.Current.Response.Cookies[authCookieName]?.Expire();
             }
+
+
+            //}
+            //catch { }
 
         }
 

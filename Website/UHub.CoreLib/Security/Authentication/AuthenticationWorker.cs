@@ -107,15 +107,13 @@ namespace UHub.CoreLib.Security.Authentication
         {
             var authTknCookieName = CoreFactory.Singleton.Properties.AuthTknCookieName;
 
-
             //get cookie
             HttpCookie authCookie =
-                HttpContext.Current.Request.Cookies.Get(authTknCookieName) ??
-                HttpContext.Current.Response.Cookies.Get(authTknCookieName);
+                    HttpContext.Current?.Request?.Cookies.Get(authTknCookieName) ??
+                    HttpContext.Current?.Response?.Cookies.Get(authTknCookieName);
 
             if (authCookie == null)
             {
-
                 ErrorHandler?.Invoke();
                 CmsUser = UserReader.GetAnonymousUser();
                 TokenStatus = TokenValidationStatus.TokenNotFound;
@@ -172,9 +170,13 @@ namespace UHub.CoreLib.Security.Authentication
 
             if (tokenStr.IsEmpty())
             {
-                errorHandler?.Invoke();
                 CmsUser = UserReader.GetAnonymousUser();
                 tokenStatus = TokenValidationStatus.TokenNotFound;
+                try
+                {
+                    errorHandler?.Invoke();
+                }
+                catch { }
                 return false;
             }
             //get token
@@ -185,10 +187,14 @@ namespace UHub.CoreLib.Security.Authentication
             }
             catch (Exception ex)
             {
-                errorHandler?.Invoke();
                 CoreFactory.Singleton.Logging.CreateErrorLog(ex);
                 CmsUser = UserReader.GetAnonymousUser();
                 tokenStatus = TokenValidationStatus.TokenAESFailure;
+                try
+                {
+                    errorHandler?.Invoke();
+                }
+                catch { }
                 return false;
             }
 
@@ -330,33 +336,35 @@ namespace UHub.CoreLib.Security.Authentication
         /// <returns></returns>
         private protected string GetAdjustedSessionID(bool isPersistent)
         {
+            string sessionID = "";
+            string clientKey = "";
+            clientKey = HttpContext.Current?.Request?.Headers[Common.AUTH_HEADER_MACHINE_KEY] ?? "";
 
-            string sessionID;
-            var clientKey = HttpContext.Current?.Request?.Headers[Common.AUTH_HEADER_MACHINE_KEY] ?? "";
             //session ID must be ignored for persistent connections
             //otherwise token will not work if user comes back to site at later date
             if (isPersistent)
             {
                 if (clientKey.IsNotEmpty())
                 {
-                    sessionID = clientKey;
+                    return clientKey;
                 }
                 else
                 {
-                    sessionID = "";
+                    return "";
                 }
+            }
+
+            //NOT PERSISTENT
+            if (clientKey.IsNotEmpty())
+            {
+                sessionID = clientKey;
             }
             else
             {
-                if (clientKey.IsNotEmpty())
-                {
-                    sessionID = clientKey;
-                }
-                else
-                {
-                    sessionID = HttpContext.Current?.Session?.SessionID ?? "";
-                }
+
+                sessionID = HttpContext.Current?.Session?.SessionID ?? "";
             }
+
 
             return sessionID;
         }
@@ -612,7 +620,7 @@ namespace UHub.CoreLib.Security.Authentication
         }
 
         private protected UserAuthInfo GetUserAuthInfo_DB(string Email)
-        {           
+        {
 
             return SqlWorker.ExecBasicQuery(
                 CoreFactory.Singleton.Properties.CmsDBConfig,

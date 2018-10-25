@@ -267,6 +267,36 @@ namespace UHub.CoreLib.Extensions
         }
 
         /// <summary>
+        /// Basic HTML decode that converts HTML safe characters to their standard form
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        public static string HtmlDecode(this string str)
+        {
+            return WebUtility.HtmlEncode(str);
+        }
+
+        /// <summary>
+        /// Basic URL escape that converts special characters to their URL safe equivalents
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        public static string UrlEncode(this string str)
+        {
+            return WebUtility.UrlEncode(str);
+        }
+
+        /// <summary>
+        /// Basic URL decode that converts URL safe characters to their standard form
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        public static string UrlDecode(this string str)
+        {
+            return WebUtility.UrlDecode(str);
+        }
+
+        /// <summary>
         /// Smart HTML sanitizer that can remove most dangerous elements without escaping the HTML
         /// </summary>
         /// <param name="str"></param>

@@ -14,6 +14,7 @@ using UHub.CoreLib.Entities.Users.Interfaces;
 using UHub.CoreLib.ClientFriendly;
 using UHub.CoreLib.Security.Authentication;
 using UHub.CoreLib.Entities.Users;
+using System.Web;
 
 namespace UHub.CoreLib.APIControllers
 {
@@ -67,7 +68,7 @@ namespace UHub.CoreLib.APIControllers
         {
 
             bool isLoggedIn = false;
-            string authToken = Request.Headers.Where(x => x.Key == Common.AUTH_HEADER_TOKEN).Single().Value.First();
+            string authToken = Request.Headers.Where(x => x.Key == Common.AUTH_HEADER_TOKEN).SingleOrDefault().Value?.First();
 
             if (authToken.IsEmpty())
             {
@@ -83,6 +84,32 @@ namespace UHub.CoreLib.APIControllers
             currentUser = CoreFactory.Singleton.Auth.GetCurrentUser();
 
             return isLoggedIn;
+        }
+
+
+        private protected string GetRawAuthToken()
+        {
+            //get header
+            var isValid = Request.Headers.TryGetValues(Common.AUTH_HEADER_TOKEN, out var valueSet);
+            string authToken = "";
+
+            if (isValid && valueSet != null)
+            {
+                authToken = valueSet.FirstOrDefault();
+                return authToken;
+            }
+
+
+            //get cookie
+            var authTknCookieName = CoreFactory.Singleton.Properties.AuthTknCookieName;
+            authToken = Request.Headers.GetCookies(authTknCookieName).FirstOrDefault()?.Cookies?.FirstOrDefault()?.Value;
+            if (authToken.IsEmpty())
+            {
+                return null;
+            }
+
+            return authToken;
+
         }
 
 

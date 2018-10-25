@@ -15,6 +15,17 @@ using UHub.CoreLib.Security;
 using UHub.CoreLib.SmtpInterop;
 using UHub.CoreLib.Tools;
 using UHub.CoreLib.Util;
+using UHub.CoreLib.Security.Authentication.APIControllers;
+using System.Web.Http.Controllers;
+using System.Net.Http;
+using System.Web.Http.Results;
+using System.Web;
+using UHub.CoreLib.Extensions;
+using System.Web.SessionState;
+using System.Reflection;
+using System.Web.Http.Routing;
+using System.Web.Http.Filters;
+using NSubstitute;
 
 namespace UHub.CoreLib.Tests
 {
@@ -158,5 +169,92 @@ namespace UHub.CoreLib.Tests
         }
 
 
+        public static T GetStdRequest<T>(T controllerArg) where T : ApiController
+        {
+            HttpContext.Current = FakeHttpContext();
+
+            var controller = controllerArg;
+            var controllerContext = new HttpControllerContext();
+            var request = new HttpRequestMessage();
+            request.RequestUri = new Uri("https://u-hub.life");
+
+            controllerContext.RequestContext = new HttpRequestContext();
+            controllerContext.Request = request;
+            controller.ControllerContext = controllerContext;
+
+            controller.ActionContext = new HttpActionContext(controllerContext, ContextUtil.CreateActionDescriptor());
+
+
+            return controller;
+        }
+
+
+        public static T GetAuthRequest<T>(T controllerArg, bool useCookie = false, string email = null, string password = null) where T : ApiController
+        {
+            var authController = GetStdRequest(new AuthenticationController());
+
+            email = email ?? "aual1780@colorado.edu";
+            password = password ?? "testtest";
+
+            var response = authController.GetToken(email, password);
+            Assert.IsNotNull(response);
+
+            var result = response as OkNegotiatedContentResult<string>;
+            Assert.IsNotNull(result);
+
+            var token = result.Content;
+
+
+
+            var controller = GetStdRequest(controllerArg);
+            if (useCookie)
+            {
+                var cookieName = CoreFactory.Singleton.Properties.AuthTknCookieName;
+
+                //add cookie
+                HttpCookie c = new HttpCookie(cookieName);
+                c.Value = token;
+                HttpContext.Current.Request.Cookies.Add(c);
+
+                //add cookie again
+                token = token.UrlEncode();
+                controller.Request.Headers.Add("Cookie", $"{cookieName}=\"{token}\"");
+
+                controller.Request.Properties.Add("Cookie1", "Version=1");
+            }
+            else
+            {
+                controller.Request.Headers.Add("uhub-auth-token", token);
+            }
+
+            return controller;
+        }
+
+
+
+        private static HttpContext FakeHttpContext()
+        {
+            var httpRequest = new HttpRequest("", "https://u-hub.life", "");
+            var stringWriter = new StringWriter();
+            var httpResponse = new HttpResponse(stringWriter);
+            var httpContext = new HttpContext(httpRequest, httpResponse);
+
+            var sessionContainer = new HttpSessionStateContainer("id", new SessionStateItemCollection(),
+                                                    new HttpStaticObjectsCollection(), 10, true,
+                                                    HttpCookieMode.AutoDetect,
+                                                    SessionStateMode.InProc, false);
+
+            httpContext.Items["AspSession"] = typeof(HttpSessionState).GetConstructor(
+                                        BindingFlags.NonPublic | BindingFlags.Instance,
+                                        null, CallingConventions.Standard,
+                                        new[] { typeof(HttpSessionStateContainer) },
+                                        null)
+                                .Invoke(new object[] { sessionContainer });
+
+            return httpContext;
+        }
+
+
+        
     }
 }

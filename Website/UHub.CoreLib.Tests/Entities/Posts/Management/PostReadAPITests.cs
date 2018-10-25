@@ -1,38 +1,66 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
+using System.Reflection;
+using System.Web.Http;
 using System.Web.Http.Controllers;
+using System.Web.Http.Results;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using UHub.CoreLib.Attributes;
+using UHub.CoreLib.Entities.Posts.APIControllers;
+using UHub.CoreLib.Entities.Posts.DTOs;
 
 namespace UHub.CoreLib.Tests.Entities.Posts.Management.Tests
 {
     [TestClass]
     public class PostReadAPITests
     {
-        //[TestMethod]
-        public void TestMethod1()
+        [TestMethod]
+        public void GetPageBySchoolTest()
         {
             TestGlobal.TestInit();
 
+            var controller = TestGlobal.GetAuthRequest(new PostController(), true);
+
+            var response = controller.GetPageBySchool();
+            Assert.IsNotNull(response);
 
 
-
-            //// Arrange
-            //var controller = new ConfigurationsController(null);
-            //var controllerContext = new HttpControllerContext();
-            //var request = new HttpRequestMessage();
-            //request.Headers.Add("uhub-auth-token", "");
-
-            //// Don't forget these lines, if you do then the request will be null.
-            //controllerContext.Request = request;
-            //controller.ControllerContext = controllerContext;
-
-            //// Act
-            //var result = controller.Get() as ;
-
-            //// Assert
-            //Assert.IsNotNull(result);
-            //Assert.AreEqual("Success!", result.Content);
+            var result = response as OkNegotiatedContentResult<IEnumerable<Post_R_PublicDTO>>;
+            Assert.IsNotNull(result);
 
         }
+
+        [TestMethod]
+        public void GetPageBySchoolTest2()
+        {
+            TestGlobal.TestInit();
+
+            try
+            {
+                Type sct = typeof(PostController);
+                MethodInfo mInfo = sct.GetMethod("GetPageBySchool");
+                var match = mInfo.GetCustomAttributes(typeof(ApiAuthControlAttribute), false);
+                Assert.AreEqual(match.Length, 1);
+
+
+                var controller = TestGlobal.GetStdRequest(new PostController());
+                var response = controller.GetPageBySchool();
+                Assert.IsNotNull(response);
+
+
+                var result = response as OkNegotiatedContentResult<IEnumerable<Post_R_PublicDTO>>;
+
+                //flow should not make it this far
+                Assert.Fail();
+
+            }
+            catch
+            {
+
+            }
+        }
+
+
     }
 }
