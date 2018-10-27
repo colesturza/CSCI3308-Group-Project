@@ -163,6 +163,8 @@
     <Compile Include="DataInterop\SqlWorker.cs" />
     <Compile Include="Entities\Comments\APIControllers\CommentController_C.cs" />
     <Compile Include="Entities\Comments\APIControllers\CommentController_Core.cs" />
+    <Compile Include="Entities\Comments\APIControllers\CommentController_R_ByParent.cs" />
+    <Compile Include="Entities\Comments\APIControllers\CommentController_R_ByPost.cs" />
     <Compile Include="Entities\Comments\Comment.cs" />
     <Compile Include="Entities\Comments\DTOs\Comment_C_PublicDTO.cs" />
     <Compile Include="Entities\Comments\DTOs\Comment_R_PublicDTO.cs" />
