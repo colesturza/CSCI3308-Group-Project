@@ -1,0 +1,22 @@
+﻿body {
+    margin:0;
+    padding:0;
+    top:0;
+    left:0;
+
+    div#pnl_left {
+        display: inline;
+        float: left;
+        width: 100px;
+        background: gray;
+        margin-right: 10px;
+    }
+
+
+    main {
+        display: inline;
+        float: left;
+        width: calc(100% - (100px + 10px));
+        background: gray;
+    }
+}
