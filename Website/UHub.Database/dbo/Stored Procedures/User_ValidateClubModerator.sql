@@ -9,8 +9,15 @@ begin
 
 	declare @user_IsAdmin bit
 	declare @user_IsDeleted bit
+	declare @user_IsEnabled bit
+	declare @user_IsApproved bit
+	declare @user_IsConfirmed bit
+
 	select
 		@user_IsAdmin = u.IsAdmin,
+		@user_IsEnabled = e.IsEnabled,
+		@user_IsConfirmed = u.IsConfirmed,
+		@user_IsApproved = u.IsApproved,
 		@user_IsDeleted = e.IsDeleted
 	from dbo.Users u
 	inner join dbo.Entities e
@@ -24,6 +31,9 @@ begin
 	--user deleted
 	if(
 		@user_IsAdmin is null
+		OR @user_IsEnabled = 0
+		OR @user_IsConfirmed = 0
+		OR @user_IsApproved = 0
 		OR @user_IsDeleted = 1
 	)
 	begin
@@ -56,9 +66,7 @@ begin
 
 	--club not found
 	--club deleted
-	if(
-		@club_IsDeleted = 1
-	)
+	if(@club_IsDeleted = 1)
 	begin
 		select cast (0 as bit)
 		return;

@@ -25,7 +25,7 @@ begin
 	begin try
 		BEGIN TRAN
 
-		--POST ENT ID => 5
+		--School Club Moderator ENT ID => 5
 		--use variable to manage ent type easier
 		declare @_entTypeID smallint
 		set @_entTypeID = 5
