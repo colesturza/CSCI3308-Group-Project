@@ -199,5 +199,6 @@
     <Build Include="dbo\Stored Procedures\SchoolClub_IsUserBanned.sql" />
     <Build Include="dbo\Stored Procedures\Posts_GetCountBySchool.sql" />
     <Build Include="dbo\Stored Procedures\Posts_GetCountByClub.sql" />
+    <Build Include="dbo\Stored Procedures\User_ValidateClubModerator.sql" />
   </ItemGroup>
 </Project>
