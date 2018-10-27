@@ -36,17 +36,17 @@ namespace UHub.CoreLib.Entities.ClubModerators.APIControllers
             var tmpClubModerator = clubModerator.ToInternal<ClubModerator>();
             var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser();
 
-            bool isUserOwner = false;
+            bool isCurrentUserOwner = false;
             bool isCurrentUserBanned = true;
             bool isUserBanned = true;
 
             TaskList tasks = new TaskList();
-            tasks.Add(() => { isUserOwner = UserReader.ValidateClubModerator((long)cmsUser.ID, clubID); });
-            tasks.Add(() => { isUserBanned = SchoolClubReader.IsUserBanned(clubID, tmpClubModerator.UserID); });
+            tasks.Add(() => { isCurrentUserOwner = UserReader.ValidateClubModerator(clubID, (long)cmsUser.ID); });
             tasks.Add(() => { isCurrentUserBanned = SchoolClubReader.IsUserBanned(clubID, (long)cmsUser.ID); });
+            tasks.Add(() => { isUserBanned = SchoolClubReader.IsUserBanned(clubID, tmpClubModerator.UserID); });
             tasks.ExecuteAll();
 
-            if (isCurrentUserBanned || !isUserOwner)
+            if (isCurrentUserBanned || !isCurrentUserOwner)
             {
                 status = "Access Denied";
                 statCode = HttpStatusCode.Forbidden;

@@ -16,7 +16,7 @@ namespace UHub.CoreLib.Entities.Users.Management
         /// <param name="UserID"></param>
         /// <param name="ParentID"></param>
         /// <returns></returns>
-        public static bool ValidateClubModerator(long UserID, long ClubID)
+        public static bool ValidateClubModerator(long ClubID, long UserID)
         {
 
             return SqlWorker.ExecScalar<bool>(
