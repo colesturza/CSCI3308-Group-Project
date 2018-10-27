@@ -161,6 +161,11 @@
     <Compile Include="DataInterop\SqlConfig.cs" />
     <Compile Include="DataInterop\SqlConverters.cs" />
     <Compile Include="DataInterop\SqlWorker.cs" />
+    <Compile Include="Entities\ClubModerators\APIControllers\ClubModeratorController_Core.cs" />
+    <Compile Include="Entities\ClubModerators\APIControllers\ClubModeratorController_C.cs" />
+    <Compile Include="Entities\ClubModerators\DTOs\ClubModerator_C_PublicDTO.cs" />
+    <Compile Include="Entities\ClubModerators\Interfaces\IClubModerator_C_Public.cs" />
+    <Compile Include="Entities\ClubModerators\Management\ClubModeratorWriter.cs" />
     <Compile Include="Entities\Comments\APIControllers\CommentController_C.cs" />
     <Compile Include="Entities\Comments\APIControllers\CommentController_Core.cs" />
     <Compile Include="Entities\Comments\APIControllers\CommentController_R_ByParent.cs" />
@@ -216,6 +221,7 @@
     <Compile Include="Entities\Schools\School.cs" />
     <Compile Include="Entities\Users\APIControllers\UserController.cs" />
     <Compile Include="Entities\Users\Management\UserReader_EntComments.cs" />
+    <Compile Include="Entities\Users\Management\UserReader_EntClubMods.cs" />
     <Compile Include="Entities\Users\Management\UserReader_EntPosts.cs" />
     <Compile Include="ErrorHandling\Exceptions\AccessForbiddenException.cs" />
     <Compile Include="ErrorHandling\Exceptions\ConfigurationException.cs" />
@@ -320,7 +326,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="APIControllers\Enums\" />
-    <Folder Include="Entities\ClubModerators\APIControllers\" />
     <Folder Include="Entities\ClubModerators\Enums\" />
     <Folder Include="Entities\Comments\Enums\" />
     <Folder Include="Entities\Files\APIControllers\" />
