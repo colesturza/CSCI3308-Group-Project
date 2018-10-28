@@ -11,16 +11,15 @@ variables:
 
 
 jobs:
-- job: Nuget
+
+- job: BuildMain
+  pool:
+    vmImage: 'Hosted VS2017'
   steps:
     - task: NuGetToolInstaller@0
     - task: NuGetCommand@2
       inputs:
         restoreSolution: '$(solution)'
-
-- job: MainBuild
-  dependsOn: Nuget
-  steps:
     - task: VSBuild@1
       inputs:
         solution: '$(solution)'
@@ -29,8 +28,13 @@ jobs:
         configuration: '$(buildConfiguration)'
 
 - job: BuildTest_Main
-  dependsOn: Nuget
+  pool:
+    vmImage: 'Hosted VS2017'
   steps:
+    - task: NuGetToolInstaller@0
+    - task: NuGetCommand@2
+      inputs:
+        restoreSolution: '$(solution)'
     - task: VSBuild@1
       inputs:
         solution: '$(solution)'
@@ -39,8 +43,13 @@ jobs:
         configuration: '$(buildConfiguration)'
 
 - job: BuildTest_CoreLib
-  dependsOn: Nuget
+  pool:
+    vmImage: 'Hosted VS2017'
   steps:
+    - task: NuGetToolInstaller@0
+    - task: NuGetCommand@2
+      inputs:
+        restoreSolution: '$(solution)'
     - task: VSBuild@1
       inputs:
         solution: '$(solution)'
@@ -49,11 +58,17 @@ jobs:
         configuration: '$(buildConfiguration)'
 
 - job: ExecUnitTests
+  pool:
+    vmImage: 'TIPC Local'
   dependsOn:
   - BuildTest_Main
   - BuildTest_CoreLib
   condition: and(succeeded('BuildTest_Main'), succeeded('BuildTest_CoreLib'))
   steps:
+    - task: NuGetToolInstaller@0
+    - task: NuGetCommand@2
+      inputs:
+        restoreSolution: '$(solution)'
     - task: VSTest@2
       inputs:
         solution: '$(solution)'
@@ -61,6 +76,8 @@ jobs:
         configuration: '$(buildConfiguration)'
 
 - job: PublishArtifacts
+  pool:
+    vmImage: 'TIPC Local'
   dependsOn:
   - ExecUnitTests
   - MainBuild
