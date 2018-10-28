@@ -89,6 +89,8 @@ namespace UHub.CoreLib.Entities.SchoolClubs.Management.Tests
         [TestMethod()]
         public void ValidateMembershipTest()
         {
+            TestGlobal.TestInit();
+
 
             var userID = UserReader.GetUserID("aual1780@colorado.edu");
 
@@ -120,6 +122,8 @@ namespace UHub.CoreLib.Entities.SchoolClubs.Management.Tests
         [TestMethod()]
         public void IsUserBannedTest()
         {
+            TestGlobal.TestInit();
+
 
             var userID = UserReader.GetUserID("aual1780@colorado.edu");
 
