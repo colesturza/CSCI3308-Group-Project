@@ -12,22 +12,7 @@ variables:
 
 jobs:
 
-- job: BuildMain
-  pool:
-    vmImage: 'vs2017-win2016'
-  steps:
-    - task: NuGetToolInstaller@0
-    - task: NuGetCommand@2
-      inputs:
-        restoreSolution: '$(solution)'
-    - task: VSBuild@1
-      inputs:
-        solution: '$(solution)'
-        msbuildArgs: '/t:UHub /p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:EnableUpdateable=false /p:PrecompileBeforePublish=true /p:UseMerge=true /p:PackageLocation="$(build.stagingDirectory)"'
-        platform: '$(buildPlatform)'
-        configuration: '$(buildConfiguration)'
-
-- job: BuildTest_Main
+- job: Build_TestMain
   pool:
     vmImage: 'vs2017-win2016'
   steps:
@@ -42,7 +27,8 @@ jobs:
         platform: '$(buildPlatform)'
         configuration: '$(buildConfiguration)'
 
-- job: BuildTest_CoreLib
+
+- job: Build_TestCoreLib
   pool:
     vmImage: 'vs2017-win2016'
   steps:
@@ -57,11 +43,12 @@ jobs:
         platform: '$(buildPlatform)'
         configuration: '$(buildConfiguration)'
 
+
 - job: ExecUnitTests
   dependsOn:
-  - BuildTest_Main
-  - BuildTest_CoreLib
-  condition: and(succeeded('BuildTest_Main'), succeeded('BuildTest_CoreLib'))
+  - Build_TestMain
+  - Build_TestCoreLib
+  condition: and(succeeded('Build_TestMain'), succeeded('Build_TestCoreLib'))
   steps:
     - task: NuGetToolInstaller@0
     - task: NuGetCommand@2
@@ -73,12 +60,21 @@ jobs:
         platform: '$(buildPlatform)'
         configuration: '$(buildConfiguration)'
 
-- job: PublishArtifacts
-  dependsOn:
-  - ExecUnitTests
-  - MainBuild
-  condition: and(succeeded('ExecUnitTests'), succeeded('MainBuild'))
+
+- job: Build_Main
+  pool:
+    vmImage: 'vs2017-win2016'
   steps:
+    - task: NuGetToolInstaller@0
+    - task: NuGetCommand@2
+      inputs:
+        restoreSolution: '$(solution)'
+    - task: VSBuild@1
+      inputs:
+        solution: '$(solution)'
+        msbuildArgs: '/t:UHub /p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:EnableUpdateable=false /p:PrecompileBeforePublish=true /p:UseMerge=true /p:PackageLocation="$(build.stagingDirectory)"'
+        platform: '$(buildPlatform)'
+        configuration: '$(buildConfiguration)'
     - task: PublishBuildArtifacts@1
       inputs:
         pathtoPublish: '$(Build.stagingDirectory)' 
