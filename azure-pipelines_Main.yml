@@ -14,7 +14,7 @@ jobs:
 
 - job: BuildMain
   pool:
-    vmImage: Hosted-VS2017
+    vmImage: 'vs2017-win2016'
   steps:
     - task: NuGetToolInstaller@0
     - task: NuGetCommand@2
@@ -29,7 +29,7 @@ jobs:
 
 - job: BuildTest_Main
   pool:
-    vmImage: Hosted-VS2017
+    vmImage: 'vs2017-win2016'
   steps:
     - task: NuGetToolInstaller@0
     - task: NuGetCommand@2
@@ -44,7 +44,7 @@ jobs:
 
 - job: BuildTest_CoreLib
   pool:
-    vmImage: Hosted-VS2017
+    vmImage: 'vs2017-win2016'
   steps:
     - task: NuGetToolInstaller@0
     - task: NuGetCommand@2
@@ -58,8 +58,6 @@ jobs:
         configuration: '$(buildConfiguration)'
 
 - job: ExecUnitTests
-  pool:
-    vmImage: TIPC-Local
   dependsOn:
   - BuildTest_Main
   - BuildTest_CoreLib
@@ -76,8 +74,6 @@ jobs:
         configuration: '$(buildConfiguration)'
 
 - job: PublishArtifacts
-  pool:
-    vmImage: TIPC-Local
   dependsOn:
   - ExecUnitTests
   - MainBuild
