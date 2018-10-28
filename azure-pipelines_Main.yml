@@ -49,8 +49,7 @@ jobs:
         configuration: '$(buildConfiguration)'
 
 - job: ExecUnitTests
-  dependsOn: BuildTest_Main
-  dependsOn: BuildTest_CoreLib
+  dependsOn: and(BuildTest_Main, BuildTest_CoreLib)
   condition: and(succeeded('BuildTest_Main'), succeeded('BuildTest_CoreLib'))
   steps:
     - task: VSTest@2
