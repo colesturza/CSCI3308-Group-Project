@@ -59,8 +59,7 @@ jobs:
         configuration: '$(buildConfiguration)'
 
 - job: PublishArtifacts
-  dependsOn: ExecUnitTests
-  depends: MainBuild
+  dependsOn: and(ExecUnitTests, MainBuild)
   condition: and(succeeded('ExecUnitTests'), succeeded('MainBuild'))
   steps:
     - task: PublishBuildArtifacts@1
