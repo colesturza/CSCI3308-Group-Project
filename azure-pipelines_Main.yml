@@ -27,7 +27,6 @@ steps:
 
 - task: VSTest@2
   inputs:
-    runInParallel: false
     solution: '$(solution)'
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
