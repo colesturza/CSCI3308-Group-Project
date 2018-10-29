@@ -27,10 +27,10 @@ steps:
 
 - task: VSTest@2
   inputs:
-    runInParallel: true
     solution: '$(solution)'
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
+    runInParallel: true
 
 
 #full build
