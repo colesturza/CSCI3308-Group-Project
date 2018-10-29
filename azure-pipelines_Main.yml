@@ -21,7 +21,7 @@ steps:
 - task: VSBuild@1
   inputs:
     solution: '$(solution)'
-    msbuildArgs: '/t:UHub_Tests;UHub_CoreLib_Tests /p:DeployOnBuild=false /p:SkipInvalidConfigurations=true /p:EnableUpdateable=false /p:UseMerge=true /p:PackageLocation="$(build.stagingDirectory)"'
+    msbuildArgs: '/t:UHub_Tests;UHub_CoreLib_Tests /p:DeployOnBuild=false /p:SkipInvalidConfigurations=true /p:EnableUpdateable=false /p:UseMerge=true /p:PackageLocation="$(build.stagingDirectory)" /maxcpucount:2'
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
