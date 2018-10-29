@@ -30,7 +30,6 @@ steps:
     solution: '$(solution)'
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
-    runInParallel: true
 
 
 #full build
