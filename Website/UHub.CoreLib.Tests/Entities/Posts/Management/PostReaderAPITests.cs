@@ -11,8 +11,9 @@ using UHub.CoreLib.Attributes;
 using UHub.CoreLib.Entities.Posts.APIControllers;
 using UHub.CoreLib.Entities.Posts.DTOs;
 using UHub.CoreLib.Entities.SchoolClubs.Management;
+using UHub.CoreLib.Tests;
 
-namespace UHub.CoreLib.Tests.Entities.Posts.Management.Tests
+namespace UHub.CoreLib.Entities.Posts.Management.Tests
 {
     [TestClass]
     public class PostReaderAPITests

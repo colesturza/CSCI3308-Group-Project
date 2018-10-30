@@ -1,10 +1,9 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using UHub.CoreLib.Entities.Posts;
 using UHub.CoreLib.Entities.Posts.DTOs;
-using UHub.CoreLib.Entities.Posts.Management;
+using UHub.CoreLib.Tests;
 
-namespace UHub.CoreLib.Tests.Entities.Posts.Management.Tests
+namespace UHub.CoreLib.Entities.Posts.Management.Tests
 {
     [TestClass]
     public class PostWriterTests

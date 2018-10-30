@@ -277,6 +277,7 @@
     <Compile Include="Security\Enums\CryptoHashType.cs" />
     <Compile Include="Security\Enums\HtmlSanitizerMode.cs" />
     <Compile Include="Security\RecaptchaManager.cs" />
+    <Compile Include="SmtpInterop\Enums\SmtpResultCode.cs" />
     <Compile Include="SmtpInterop\SmtpConfig.cs" />
     <Compile Include="SmtpInterop\SmtpManager.cs" />
     <Compile Include="SmtpInterop\SmtpMessage.cs" />

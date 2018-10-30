@@ -19,7 +19,6 @@ namespace UHub.CoreLib.Security.Authentication.Tests
             TestGlobal.TestInit();
 
 
-
             var enableDetail = CoreFactory.Singleton.Properties.EnableDetailedAPIErrors;
             var enableFailCode = CoreFactory.Singleton.Properties.EnableInternalAPIErrors;
             string status = "Login Failed";

@@ -8,9 +8,9 @@ using UHub.CoreLib.Security.Authentication.APIControllers;
 using UHub.CoreLib.Extensions;
 using System.Web.Http.Controllers;
 using System.Net.Http;
-using UHub.CoreLib.Security.Accounts;
+using UHub.CoreLib.Tests;
 
-namespace UHub.CoreLib.Tests.Security.Authentication.APIControllers.Tests
+namespace UHub.CoreLib.Security.Authentication.APIControllers.Tests
 {
     [TestClass]
     public class AuthenticationControllerTests
