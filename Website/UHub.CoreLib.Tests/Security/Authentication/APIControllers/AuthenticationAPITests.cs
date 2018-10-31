@@ -44,7 +44,7 @@ namespace UHub.CoreLib.Security.Authentication.APIControllers.Tests
             TestGlobal.TestInit();
 
 
-            var controller = TestGlobal.GetAuthRequest(new AuthenticationController());
+            var controller = TestGlobal.GetAuthRequest(new AuthenticationController(), true);
 
             var response = controller.ExtendToken();
             Assert.IsNotNull(response);

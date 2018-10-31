@@ -365,7 +365,8 @@ namespace UHub.CoreLib.Security.Authentication
                 sessionID = HttpContext.Current?.Session?.SessionID ?? "";
             }
 
-
+            //sterilize for token processing
+            sessionID.Replace('|', '0');
             return sessionID;
         }
 

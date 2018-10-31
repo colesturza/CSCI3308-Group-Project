@@ -31,18 +31,13 @@ namespace UHub.CoreLib.Tests
 {
     public class TestGlobal
     {
-        static bool isInit = false;
         static object lockObj = new object();
 
 
         public static void TestInit()
         {
-            lock (lockObj)
+            //lock (lockObj)
             {
-                if(isInit)
-                {
-                    return;
-                }
 
                 if (!CoreFactory.IsInitialized())
                 {
@@ -173,7 +168,6 @@ namespace UHub.CoreLib.Tests
 
 
                     CoreFactory.Initialize(cmsConfig);
-                    isInit = true;
 
                 }
             }
