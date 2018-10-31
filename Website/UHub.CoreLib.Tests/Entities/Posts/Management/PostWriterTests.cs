@@ -8,7 +8,7 @@ namespace UHub.CoreLib.Entities.Posts.Management.Tests
     [TestClass]
     public class PostWriterTests
     {
-        //[TestMethod]
+        [TestMethod]
         public void TryCreatePostTest()
         {
             var cub = 1;    //CU Boulder ID
@@ -44,32 +44,35 @@ namespace UHub.CoreLib.Entities.Posts.Management.Tests
         [TestMethod]
         public void TryCreatePostTest2()
         {
-            var club = 365;    //TEST CLUB
-
-
             TestGlobal.TestInit();
+            long? postID = null;
 
-            var testPost = new Post_C_PublicDTO()
+            //for (int i = 0; i < 5000; i++)
             {
-                Name = "POST TEST " + DateTimeOffset.UtcNow,
-                Content = "D8FBACBD-B069-4FC9-849C-2F1EEF2A938C",
-                ParentID = club,
-                CanComment = true,
-                IsPublic = true
-
-            };
-
-            var post = testPost.ToInternal<Post>();
+                var club = 365;    //TEST CLUB
 
 
-            var postId = PostWriter.TryCreatePost(post);
+                var testPost = new Post_C_PublicDTO()
+                {
+                    Name = "POST TEST " + DateTimeOffset.UtcNow,
+                    Content = "D8FBACBD-B069-4FC9-849C-2F1EEF2A938C",
+                    ParentID = club,
+                    CanComment = true,
+                    IsPublic = true
+
+                };
+
+                var post = testPost.ToInternal<Post>();
 
 
-            if (postId == null)
+                postID = PostWriter.TryCreatePost(post);
+            }
+
+            if (postID == null)
             {
                 throw new Exception();
             }
-            Console.WriteLine("New Post: " + postId);
+            Console.WriteLine("New Post: " + postID);
 
         }
 

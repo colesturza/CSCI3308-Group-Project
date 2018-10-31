@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UHub.CoreLib.Management;
 using UHub.CoreLib.Tests;
+using UHub.CoreLib.Extensions;
 
 namespace UHub.CoreLib.Security.Authentication.Tests
 {
@@ -23,6 +24,7 @@ namespace UHub.CoreLib.Security.Authentication.Tests
             var enableFailCode = CoreFactory.Singleton.Properties.EnableInternalAPIErrors;
             string status = "Login Failed";
 
+            //LOGIN INVALID
             var email = "aual1780@colorado.edu";
             var password = "TEST";
             var persistent = false;

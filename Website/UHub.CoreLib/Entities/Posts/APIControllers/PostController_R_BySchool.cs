@@ -127,7 +127,6 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
 
 
             var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser();
-            Console.WriteLine(cmsUser.ToFormattedJSON());
             var schoolID = cmsUser.SchoolID.Value;
 
 

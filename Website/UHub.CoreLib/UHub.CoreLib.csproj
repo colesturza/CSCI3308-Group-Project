@@ -138,6 +138,7 @@
     <Compile Include="Config\CmsConfig_Security.cs" />
     <Compile Include="Config\CmsConfig_Storage.cs" />
     <Compile Include="Config\SchemaVersion.cs" />
+    <Compile Include="DataInterop\DataReaderConverters_TEST.cs" />
     <Compile Include="DataInterop\DataConverterGenerator.cs">
       <DependentUpon>DataConverterGenerator.tt</DependentUpon>
       <DesignTime>True</DesignTime>
