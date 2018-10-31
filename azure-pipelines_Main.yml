@@ -27,7 +27,7 @@ steps:
 
 - task: VSTest@2
   inputs:
-    runSettingsFile: '.runsettings'
+    runSettingsFile: 'Website\UHub.CoreLib.Tests\.runsettings'
     solution: '$(solution)'
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
