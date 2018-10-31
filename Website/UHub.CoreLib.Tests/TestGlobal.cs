@@ -114,7 +114,7 @@ namespace UHub.CoreLib.Tests
                         },
                         Security = new CmsConfig_Security
                         {
-                            PswdHashType = CryptoHashType.HMACSHA512,
+                            PswdHashType = CryptoHashType.SHA512,
                             ForceHTTPS = true,
                             ForceSecureCookies = true,
                             CookieDomain = ".u-hub.life",
