@@ -27,7 +27,7 @@ steps:
 
 - task: VSTest@2
   inputs:
-    runSettingsFile: 'Website\UHub.CoreLib.Tests\.runsettings'
+    runInParallel: 'true'
     solution: '$(solution)'
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
