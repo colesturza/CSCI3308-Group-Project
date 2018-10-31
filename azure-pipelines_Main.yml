@@ -6,7 +6,7 @@
 
 variables:
   solution: '**/*.sln'
-  buildPlatform: 'x64'
+  buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
 
 steps:
