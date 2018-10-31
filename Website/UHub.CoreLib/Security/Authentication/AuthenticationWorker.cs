@@ -461,7 +461,7 @@ namespace UHub.CoreLib.Security.Authentication
 
 
             AuthenticationToken authToken = new AuthenticationToken(isPersistent, issue, expiration, ID, sysVersion, userVersion, sessionID);
-            var requestToken = authToken.RequestID;
+            
 
             try
             {

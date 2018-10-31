@@ -13,6 +13,10 @@ namespace UHub.CoreLib.Security.Authentication
     internal sealed class AuthenticationToken
     {
         private const string purpose = "AuthTokenEncryption";
+        private const short TOKEN_SPLIT_COUNT = 9;
+        private const short TOKEN_SALT_LENGTH = 8;
+
+
 
         public bool IsPersistent { get; private set; }
         public string TokenID { get; private set; }
@@ -22,7 +26,6 @@ namespace UHub.CoreLib.Security.Authentication
         public long UserID { get; private set; }
         public int SystemVersion { get; private set; }
         public string UserVersion { get; private set; }
-        public string RequestID { get; private set; }
         public string SessionID { get; private set; }
 
         public AuthenticationToken(bool IsPersistent, DateTimeOffset IssueDate, DateTimeOffset ExpirationDate, long UserID, int SystemVersion, string UserVersion, string SessionID)
@@ -37,7 +40,7 @@ namespace UHub.CoreLib.Security.Authentication
             this.TokenID = Base36.IntToString(rnd.Next(1296, 46655)).ToLower();
 
 
-            string salt = SysSec.Membership.GeneratePassword(10, 0);
+            string salt = SysSec.Membership.GeneratePassword(TOKEN_SALT_LENGTH, 0);
             salt = salt.RgxReplace(@"[^a-zA-Z0-9]", Base36.IntToString(rnd.Next(35)));
             this.TokenSalt = salt;
 
@@ -48,15 +51,9 @@ namespace UHub.CoreLib.Security.Authentication
             this.SystemVersion = SystemVersion;
             this.UserVersion = UserVersion;
             this.SessionID = SessionID ?? "";
-
-            //TODO: fully implement request token or get rid of it
-            //represents an extra layer of security, similar to SessionID
-            string tkn = SysSec.Membership.GeneratePassword(5, 0);
-            tkn = tkn.RgxReplace(@"[^a-zA-Z0-9]", Base36.IntToString(rnd.Next(35)));
-            this.RequestID = tkn;
         }
 
-        private AuthenticationToken(string TokenID, string TokenSalt, bool IsPersistent, DateTimeOffset IssueDate, DateTimeOffset ExpirationDate, long UserID, int SystemVersion, string UserVersion, string SessionID, string RequestToken)
+        private AuthenticationToken(string TokenID, string TokenSalt, bool IsPersistent, DateTimeOffset IssueDate, DateTimeOffset ExpirationDate, long UserID, int SystemVersion, string UserVersion, string SessionID)
         {
             this.TokenID = TokenID;
             this.TokenSalt = TokenSalt;
@@ -67,7 +64,6 @@ namespace UHub.CoreLib.Security.Authentication
             this.SystemVersion = SystemVersion;
             this.UserVersion = UserVersion;
             this.SessionID = SessionID ?? "";
-            this.RequestID = RequestToken;
         }
 
         internal void SlideExpiration(TimeSpan offset)
@@ -108,8 +104,6 @@ namespace UHub.CoreLib.Security.Authentication
             data.Append(UserVersion);
             data.Append("|");
             data.Append(SessionID);
-            data.Append("|");
-            data.Append(RequestID);
 
             return data.ToString();
         }
@@ -137,9 +131,9 @@ namespace UHub.CoreLib.Security.Authentication
             {
                 var plainData = data.Decrypt(purpose);
 
-                var parts = plainData.Split('|');
 
-                if (parts.Count() != 10)
+                var parts = plainData.Split('|');
+                if (parts.Count() != TOKEN_SPLIT_COUNT)
                 {
                     throw new Exception("Invalid token data");
                 }
@@ -166,10 +160,8 @@ namespace UHub.CoreLib.Security.Authentication
                 string userV = parts[7];
                 //SESSION ID
                 string sessionId = parts[8];
-                //REQUEST TKN
-                string requestTkn = parts[9];
 
-                return new AuthenticationToken(tokenId, tokenSalt, persist, issueDate, expirationDate, userID, systemV, userV, sessionId, requestTkn);
+                return new AuthenticationToken(tokenId, tokenSalt, persist, issueDate, expirationDate, userID, systemV, userV, sessionId);
             }
             catch
             {
@@ -201,8 +193,6 @@ namespace UHub.CoreLib.Security.Authentication
             data.Append(UserVersion);
             data.Append("|");
             data.Append(SessionID);
-            data.Append("|");
-            data.Append(RequestID);
 
 
             return data.ToString().GetHash(HashType);
