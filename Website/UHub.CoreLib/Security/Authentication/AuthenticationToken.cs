@@ -157,7 +157,7 @@ namespace UHub.CoreLib.Security.Authentication
                 //EXPIRE DATE
                 long expireTicks_Denorm = Base36.StringToLong(parts[4]);
                 long expireTicks_Norm = NormalizeTicks(expireTicks_Denorm, issueTicks_Norm);
-                DateTimeOffset expirationDate = new DateTimeOffset(expireTicks_Denorm, new TimeSpan(0));
+                DateTimeOffset expirationDate = new DateTimeOffset(expireTicks_Norm, new TimeSpan(0));
                 //USER ID
                 long userID = Base36.StringToLong(parts[5]);
                 //SYSTEM VERSION
