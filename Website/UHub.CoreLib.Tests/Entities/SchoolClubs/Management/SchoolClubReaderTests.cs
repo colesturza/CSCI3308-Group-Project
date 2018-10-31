@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using UHub.CoreLib.Tests;
 using UHub.CoreLib.Entities.Users.Management;
 using UHub.CoreLib.Entities.SchoolClubs.DTOs;
+using UHub.CoreLib.Management;
 
 namespace UHub.CoreLib.Entities.SchoolClubs.Management.Tests
 {
@@ -105,13 +106,14 @@ namespace UHub.CoreLib.Entities.SchoolClubs.Management.Tests
                 Description = "TEST CLUB"
             };
 
+            var cmsUser = UserReader.GetUser(userID.Value);
             var club = clubDto.ToInternal<SchoolClub>();
-            var clubID = SchoolClubWriter.TryCreateClub(club);
 
-            if(clubID == null)
-            {
-                return;
-            }
+            club.SchoolID = cmsUser.SchoolID.Value;
+            club.CreatedBy = cmsUser.ID.Value;
+
+            var clubID = SchoolClubWriter.TryCreateClub(club);
+            Assert.IsNotNull(clubID);
 
 
             SchoolClubReader.ValidateMembership(clubID.Value, userID.Value);
@@ -138,13 +140,15 @@ namespace UHub.CoreLib.Entities.SchoolClubs.Management.Tests
                 Description = "TEST CLUB"
             };
 
-            var club = clubDto.ToInternal<SchoolClub>();
-            var clubID = SchoolClubWriter.TryCreateClub(club);
 
-            if (clubID == null)
-            {
-                return;
-            }
+            var cmsUser = UserReader.GetUser(userID.Value);
+            var club = clubDto.ToInternal<SchoolClub>();
+
+            club.SchoolID = cmsUser.SchoolID.Value;
+            club.CreatedBy = cmsUser.ID.Value;
+
+            var clubID = SchoolClubWriter.TryCreateClub(club);
+            Assert.IsNotNull(clubID);
 
 
             SchoolClubReader.IsUserBanned(clubID.Value, userID.Value);

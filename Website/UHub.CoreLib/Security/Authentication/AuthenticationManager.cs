@@ -545,7 +545,7 @@ namespace UHub.CoreLib.Security.Authentication
         /// </summary>
         internal void TryLogOut(int ErrorCode = -1, [CallerMemberName] string key = null)
         {
-            bool DEBUG = true;
+            bool DEBUG = false;
             if (ErrorCode != -1 && DEBUG)
             {
                 CoreFactory.Singleton.Logging.CreateMessageLog(ErrorCode.ToString());
