@@ -115,7 +115,6 @@ namespace UHub.CoreLib.Security.Authentication
         /// <returns></returns>
         public string Encrypt()
         {
-
             return Serialize().Encrypt(purpose);
         }
 
