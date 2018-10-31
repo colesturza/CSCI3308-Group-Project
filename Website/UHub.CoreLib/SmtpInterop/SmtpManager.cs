@@ -13,7 +13,6 @@ namespace UHub.CoreLib.SmtpInterop
     /// </summary>
     public static class SmtpManager
     {
-
         /// <summary>
         /// Attempt to send an email using the system configuration
         /// </summary>
@@ -21,8 +20,20 @@ namespace UHub.CoreLib.SmtpInterop
         /// <returns></returns>
         public static bool TrySendMessage(SmtpMessage Message)
         {
-            if(!Message.Validate())
+            return TrySendMessage(Message, out _);
+        }
+
+
+        /// <summary>
+        /// Attempt to send an email using the system configuration
+        /// </summary>
+        /// <param name="Message"></param>
+        /// <returns></returns>
+        public static bool TrySendMessage(SmtpMessage Message, out SmtpResultCode result)
+        {
+            if (!Message.Validate())
             {
+                result = SmtpResultCode.ValidationError;
                 return false;
             }
 
@@ -32,6 +43,7 @@ namespace UHub.CoreLib.SmtpInterop
 
             using (SmtpClient client = CoreFactory.Singleton.Properties.NoReplyMailConfig.GetSmtpClient())
             {
+                client.EnableSsl = true;
 
                 using (MailMessage msgOut = new MailMessage(from, new MailAddress(to)))
                 {
@@ -42,10 +54,12 @@ namespace UHub.CoreLib.SmtpInterop
                     try
                     {
                         client.Send(msgOut);
+                        result = SmtpResultCode.Success;
                         return true;
                     }
-                    catch(Exception ex)
+                    catch (Exception ex)
                     {
+                        result = SmtpResultCode.SendError;
                         CoreFactory.Singleton.Logging.CreateErrorLog(ex);
                         return false;
                     }

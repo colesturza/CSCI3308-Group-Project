@@ -21,6 +21,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <LangVersion>latest</LangVersion>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -138,6 +139,7 @@
     <Compile Include="Config\CmsConfig_Security.cs" />
     <Compile Include="Config\CmsConfig_Storage.cs" />
     <Compile Include="Config\SchemaVersion.cs" />
+    <Compile Include="DataInterop\DataReaderConverters_TEST.cs" />
     <Compile Include="DataInterop\DataConverterGenerator.cs">
       <DependentUpon>DataConverterGenerator.tt</DependentUpon>
       <DesignTime>True</DesignTime>
@@ -277,6 +279,7 @@
     <Compile Include="Security\Enums\CryptoHashType.cs" />
     <Compile Include="Security\Enums\HtmlSanitizerMode.cs" />
     <Compile Include="Security\RecaptchaManager.cs" />
+    <Compile Include="SmtpInterop\Enums\SmtpResultCode.cs" />
     <Compile Include="SmtpInterop\SmtpConfig.cs" />
     <Compile Include="SmtpInterop\SmtpManager.cs" />
     <Compile Include="SmtpInterop\SmtpMessage.cs" />

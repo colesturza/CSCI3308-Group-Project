@@ -29,7 +29,7 @@ namespace UHub.CoreLib.Security.Accounts
         private const short minEmailLen = 3;
         private const short maxEmailLen = 250;
         private const short SALT_LENGTH = 50;
-        private const short VERSION_LENGTH = 20;
+        private const short USER_VERSION_LENGTH = 10;
         private const short R_KEY_LENGTH = 20;
 
 
@@ -134,11 +134,14 @@ namespace UHub.CoreLib.Security.Accounts
             //set property constants
             bool isConfirmed = CoreFactory.Singleton.Properties.AutoConfirmNewAccounts;
             bool isApproved = CoreFactory.Singleton.Properties.AutoApproveNewAccounts;
-            string version = SysSec.Membership.GeneratePassword(VERSION_LENGTH, 0);
+            string userVersion = SysSec.Membership.GeneratePassword(USER_VERSION_LENGTH, 0);
+            //sterilize for token processing
+            userVersion = userVersion.Replace('|', '0');
+
 
             NewUser.IsConfirmed = isConfirmed;
             NewUser.IsApproved = isApproved;
-            NewUser.Version = version;
+            NewUser.Version = userVersion;
 
             try
             {
