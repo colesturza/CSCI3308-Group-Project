@@ -215,19 +215,17 @@ namespace UHub.CoreLib.Security.Authentication
 
 
         /// <summary>
-        /// Forward user to originally requested page (if set) or default auth page
+        /// Get the url that the user should be redirected to after login
         /// </summary>
-        public void AuthUserPageForward()
+        public string GetAuthForwardUrl()
         {
             if (!CoreFactory.Singleton.IsEnabled)
             {
                 throw new SystemDisabledException();
             }
 
-            //forward to originally requested page
             var postAuthCookieName = CoreFactory.Singleton.Properties.PostAuthCookieName;
             var cookie = HttpContext.Current.Request.Cookies[postAuthCookieName];
-
 
 
             var loginUrl = CoreFactory.Singleton.Properties.LoginURL;
@@ -240,20 +238,43 @@ namespace UHub.CoreLib.Security.Authentication
                 if (cookie.Value.IsNotEmpty() && cookie.Value != loginUrl)
                 {
                     //go to requested page
-                    HttpContext.Current.Response.Redirect(cookie.Value);
-                    return;
+
+                    //if (Uri.TryCreate(cookie.Value, UriKind.Absolute, out var url))
+                    //{
+                    //    return url.AbsolutePath;
+                    //}
+
+                    //return defaultFwdUrl;
+
+                    return cookie.Value;
+
                 }
                 else
                 {
                     //go to default page
-                    HttpContext.Current.Response.Redirect(defaultFwdUrl);
+                    return defaultFwdUrl;
                 }
             }
             else
             {
-                //go to default page
-                HttpContext.Current.Response.Redirect(defaultFwdUrl);
+                return defaultFwdUrl;
             }
+        }
+
+        /// <summary>
+        /// Forward user to originally requested page (if set) or default auth page
+        /// </summary>
+        public void AuthUserPageForward()
+        {
+            if (!CoreFactory.Singleton.IsEnabled)
+            {
+                throw new SystemDisabledException();
+            }
+
+            //forward to originally requested page
+            var url = GetAuthForwardUrl();
+
+            HttpContext.Current.Response.Redirect(url);
         }
 
         /// <summary>

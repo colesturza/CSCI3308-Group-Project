@@ -1,0 +1,48 @@
+﻿@model UHub.Models.Account.ClientCreds
+@using UHub.CoreLib.Extensions
+
+@{
+    ViewBag.Title = "Login";
+}
+
+<h2>Login</h2>
+
+
+@{
+    Html.BeginForm();
+}
+
+@Html.LabelFor(x => x.Email)
+@Html.TextBoxFor(x => x.Email)
+<br />
+@Html.ValidationMessageFor(x => x.Email)
+@{Html.ValidateFor(x => x.Email);}
+<p></p>
+
+
+@Html.LabelFor(x => x.Password)
+@Html.PasswordFor(x => x.Password)
+<br />
+@Html.ValidationMessageFor(x => x.Password)
+@{Html.ValidateFor(x => x.Password);}
+
+
+@{
+    if (!string.IsNullOrWhiteSpace(ViewBag.ErrorMsg))
+    {
+        <p></p>
+        <label>@ViewBag.ErrorMsg</label>
+    }
+}
+
+
+<p></p>
+<input type="submit" name="btn_Submit" value="Click Me" formaction="~/Account/ProcessCredentials" />
+
+
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/jqueryval")
+
+@{
+    Html.EndForm();
+}

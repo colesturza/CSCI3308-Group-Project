@@ -67,7 +67,10 @@ namespace UHub.CoreLib.Security.Authentication.Tests
 
 
             Console.WriteLine(status);
-            Assert.AreEqual("Credentials Invalid", status);
+            if (token.Length > 50)
+            {
+                Assert.Fail();
+            }
         }
 
 

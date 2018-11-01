@@ -8,6 +8,7 @@ using System.Web.Http.Filters;
 
 namespace UHub.CoreLib.Attributes
 {
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
     public class ApiCacheControlAttribute : ActionFilterAttribute
     {
         /// <summary>

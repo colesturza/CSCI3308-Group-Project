@@ -74,6 +74,11 @@ namespace UHub.CoreLib.Security.Authentication.Interfaces
             Action<Guid> GeneralFailHandler = null);
 
         /// <summary>
+        /// Get the url that the user should be redirected to after login
+        /// </summary>
+        string GetAuthForwardUrl();
+
+        /// <summary>
         /// Forward user to originally requested page (if set) or default auth page
         /// </summary>
         void AuthUserPageForward();
