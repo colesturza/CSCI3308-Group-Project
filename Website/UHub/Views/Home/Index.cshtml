@@ -1,11 +1,64 @@
-﻿@{
-    Layout = "~/Views/Shared/_Layout.cshtml";
-}
-@section pnl_Left
+@section scripts
 {
-    <p>LEFT PANEL</p>
+    <script src="~/ClientResources/Scripts/Home.js"></script>
 }
 
-<p>
-    MAIN SECTION
-</p>
+<div id="mainNav" class="container-fullwidth">
+    <nav class="navbar navbar-expand navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">UHUB</a>
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Communities
+                    </a>
+                    <div id="communityDrop" class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <a class="dropdown-item" v-for="community in communities" v-bind=community.url> {{ community.name }} </a>
+                    </div>
+                </li>
+            </ul>
+            <form class="form-inline">
+                <input class="form-control mx-2 my-auto d-inline" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-secondary my-2 my-md-0" type="submit">Search</button>
+            </form>
+        </div>
+    </nav>
+</div>
+
+<div id="auxNav" class="container-fullwidth">
+    <ul class="nav navbar-expand-md bg-light justify-content-center">
+        <li class="nav-item navbar-brand pl-3 pr-0 pt-1">
+            <span class="align-middle">Sort</span>
+        </li>
+        <li class="nav-item px-3 py-2">
+            <div class="dropdown">
+                <button class="btn btn-sm dropdown-toggle" type="button" id="sortDropdownButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Select
+                </button>
+                <div class="dropdown-menu" aria-labelledby="sortDropdownButton">
+                    <a class="dropdown-item" href="#">Popular</a>
+                    <a class="dropdown-item" href="#">Date Posted</a>
+                </div>
+            </div>
+        </li>
+    </ul>
+</div>
+
+<div id="body-content" class="container mt-4">
+    <div>
+        <ul id="post-list" class="list-group list-group-flush w-70 float-md-left">
+            <li class="list-group-item mb-3"  v-for="post in posts">
+                <h4> {{ post.name }} </h4>
+                <p> {{ post.Content }} </p>
+            </li>
+        </ul>
+    </div>
+    <div id="community-block" class="border bg-white p-3 w-25 float-md-right">
+        <h5 class="mx-auto d-flex justify-content-center p-2">Home</h5>
+        <div class="container">
+            <span class="m-1">
+            You can find the most popular posts here.
+            </span>
+        </div>
+    </div>
+</div>
