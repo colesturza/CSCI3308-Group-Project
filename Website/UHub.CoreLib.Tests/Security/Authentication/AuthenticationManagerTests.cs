@@ -7,6 +7,8 @@ using System.Text;
 using System.Threading.Tasks;
 using UHub.CoreLib.Management;
 using UHub.CoreLib.Tests;
+using UHub.CoreLib.Extensions;
+using UHub.CoreLib.Security.Accounts;
 
 namespace UHub.CoreLib.Security.Authentication.Tests
 {
@@ -19,11 +21,11 @@ namespace UHub.CoreLib.Security.Authentication.Tests
             TestGlobal.TestInit();
 
 
-
             var enableDetail = CoreFactory.Singleton.Properties.EnableDetailedAPIErrors;
             var enableFailCode = CoreFactory.Singleton.Properties.EnableInternalAPIErrors;
             string status = "Login Failed";
 
+            //LOGIN INVALID
             var email = "aual1780@colorado.edu";
             var password = "TEST";
             var persistent = false;
@@ -65,7 +67,67 @@ namespace UHub.CoreLib.Security.Authentication.Tests
 
 
             Console.WriteLine(status);
-            Assert.AreEqual("Credentials Invalid", status);
+            if (token.Length > 50)
+            {
+                Assert.Fail();
+            }
+        }
+
+
+        [TestMethod()]
+        public void GetTokenTest2()
+        {
+            TestGlobal.TestInit();
+            
+
+
+            var enableDetail = CoreFactory.Singleton.Properties.EnableDetailedAPIErrors;
+            var enableFailCode = CoreFactory.Singleton.Properties.EnableInternalAPIErrors;
+            string status = "Login Failed";
+
+            //LOGIN VALID
+            var email = "aual1780@colorado.edu";
+            var password = "testtest";
+            var persistent = false;
+
+
+            var token = CoreFactory.Singleton.Auth.TryGetClientAuthToken(
+                    email,
+                    password,
+                    persistent,
+                    ResultHandler: (authCode) =>
+                    {
+                        if (enableDetail)
+                        {
+                            switch (authCode)
+                            {
+                                case AuthResultCode.EmailEmpty: { status = "Email Empty"; break; }
+                                case AuthResultCode.EmailInvalid: { status = "Email Invalid"; break; }
+                                case AuthResultCode.PswdEmpty: { status = "Password Empty"; break; }
+                                case AuthResultCode.UserInvalid: { status = "Account Invalid"; break; }
+                                case AuthResultCode.UserLocked: { status = "Account Locked"; break; }
+                                case AuthResultCode.PendingApproval: { status = "Account Pending Approval"; break; }
+                                case AuthResultCode.PendingConfirmation: { status = "Account Pending Confirmation"; break; }
+                                case AuthResultCode.UserDisabled: { status = "Account Disabled"; break; }
+                                case AuthResultCode.PswdExpired: { status = "Password Expired"; break; }
+                                case AuthResultCode.CredentialsInvalid: { status = "Credentials Invalid"; break; }
+                                case AuthResultCode.Success: { status = "Unknown Error"; break; }
+                            }
+                        }
+
+                    },
+                    GeneralFailHandler: (code) =>
+                    {
+                        Assert.Fail();
+                        if (enableFailCode)
+                        {
+                            status = code.ToString();
+                        }
+                    });
+
+
+            Console.WriteLine(status);
+            Assert.AreEqual("Unknown Error", status);
         }
     }
 }

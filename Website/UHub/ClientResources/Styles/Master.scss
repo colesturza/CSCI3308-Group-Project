@@ -3,6 +3,7 @@
     padding:0;
     top:0;
     left:0;
+    background-color: #dae0e6;
 
     div#pnl_left {
         display: inline;
@@ -12,11 +13,14 @@
         margin-right: 10px;
     }
 
-
     main {
         display: inline;
         float: left;
         width: calc(100% - (100px + 10px));
         background: gray;
     }
+}
+
+.w-70 {
+    width: 70%;
 }

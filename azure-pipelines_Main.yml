@@ -17,6 +17,22 @@ steps:
     restoreSolution: '$(solution)'
 
 
+#build tests
+- task: VSBuild@1
+  inputs:
+    solution: '$(solution)'
+    msbuildArgs: '/t:UHub;UHub_Tests;UHub_CoreLib_Tests /p:DeployOnBuild=false /p:SkipInvalidConfigurations=true /p:EnableUpdateable=false /p:UseMerge=true /p:PackageLocation="$(build.stagingDirectory)" /maxcpucount:3'
+    platform: '$(buildPlatform)'
+    configuration: '$(buildConfiguration)'
+
+#- task: VSTest@2
+#  inputs:
+#    #runInParallel: 'true'
+#    solution: '$(solution)'
+#    platform: '$(buildPlatform)'
+#    configuration: '$(buildConfiguration)'
+
+
 #full build
 - task: VSBuild@1
   inputs:
@@ -26,33 +42,10 @@ steps:
     configuration: '$(buildConfiguration)'
 
 
-#build tests
-- task: VSBuild@1
-  inputs:
-    solution: '$(solution)'
-    msbuildArgs: '/t:UHub_Tests /p:DeployOnBuild=false /p:SkipInvalidConfigurations=true /p:EnableUpdateable=false /p:UseMerge=true /p:PackageLocation="$(build.stagingDirectory)"'
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
-
-#build tests
-- task: VSBuild@1
-  inputs:
-    solution: '$(solution)'
-    msbuildArgs: '/t:UHub_CoreLib_Tests /p:DeployOnBuild=false /p:SkipInvalidConfigurations=true /p:EnableUpdateable=false /p:UseMerge=true /p:PackageLocation="$(build.stagingDirectory)"'
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
-
-
-- task: VSTest@2
-  inputs:
-    solution: '$(solution)'
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
-
 - task: PublishBuildArtifacts@1
   inputs:
-    pathtoPublish: '$(Build.stagingDirectory)' 
-    artifactName: 'drop' 
+    pathtoPublish: '$(Build.stagingDirectory)'
+    artifactName: 'drop'
     #publishLocation: 'Container' # Options: container, filePath
     #targetPath: # Required when publishLocation == FilePath
     parallel: false # Optional

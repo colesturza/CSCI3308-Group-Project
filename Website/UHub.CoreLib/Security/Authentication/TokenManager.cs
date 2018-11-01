@@ -73,8 +73,8 @@ namespace UHub.CoreLib.Security.Authentication
                     cmd.Parameters.Add("@TokenID", SqlDbType.NVarChar).Value = token.TokenID;
                     cmd.Parameters.Add("@IsPersistent", SqlDbType.Bit).Value = token.IsPersistent;
                     cmd.Parameters.Add("@TokenHash", SqlDbType.NVarChar).Value = token.GetTokenHash();
-                    cmd.Parameters.Add("@RequestID", SqlDbType.NVarChar).Value = token.RequestID;
                     cmd.Parameters.Add("@SessionID", SqlDbType.NVarChar).Value = token.SessionID ?? "";
+                    cmd.Parameters.Add("@RequestID", SqlDbType.NVarChar).Value = "";    //NOT USED
                 }
             );
         }
@@ -152,7 +152,7 @@ namespace UHub.CoreLib.Security.Authentication
             //sessionID
             //persistence
             //requestToken
-            if (token.GetTokenHash() != validator.TokenHash || token.SessionID != validator.SessionID || token.IsPersistent != validator.IsPersistent || token.RequestID != validator.RequestID)
+            if (token.GetTokenHash() != validator.TokenHash || token.SessionID != validator.SessionID || token.IsPersistent != validator.IsPersistent)
             {
                 tokenStatus = TokenValidationStatus.TokenValidatorMismatch;
                 return false;

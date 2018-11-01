@@ -181,7 +181,7 @@ namespace UHub.CoreLib.Security.Authentication
                 newToken = authToken.Encrypt();
             }
 
-            authWorker.ValidateAuthToken(token, out _, out TokenStatus, () => { LogOut(5); }, succHandler);
+            authWorker.ValidateAuthToken(token, out _, out TokenStatus, () => { TryLogOut(5); }, succHandler);
 
             return newToken;
         }
@@ -215,19 +215,17 @@ namespace UHub.CoreLib.Security.Authentication
 
 
         /// <summary>
-        /// Forward user to originally requested page (if set) or default auth page
+        /// Get the url that the user should be redirected to after login
         /// </summary>
-        public void AuthUserPageForward()
+        public string GetAuthForwardUrl()
         {
             if (!CoreFactory.Singleton.IsEnabled)
             {
                 throw new SystemDisabledException();
             }
 
-            //forward to originally requested page
             var postAuthCookieName = CoreFactory.Singleton.Properties.PostAuthCookieName;
             var cookie = HttpContext.Current.Request.Cookies[postAuthCookieName];
-
 
 
             var loginUrl = CoreFactory.Singleton.Properties.LoginURL;
@@ -240,20 +238,49 @@ namespace UHub.CoreLib.Security.Authentication
                 if (cookie.Value.IsNotEmpty() && cookie.Value != loginUrl)
                 {
                     //go to requested page
-                    HttpContext.Current.Response.Redirect(cookie.Value);
-                    return;
+
+                    //expire client cookie
+                    cookie.Expire();
+                    HttpContext.Current.Response.Cookies.Set(cookie);
+
+
+                    //if (Uri.TryCreate(cookie.Value, UriKind.Absolute, out var url))
+                    //{
+                    //    return url.AbsolutePath;
+                    //}
+
+                    //return defaultFwdUrl;
+
+
+                    return cookie.Value;
+
                 }
                 else
                 {
                     //go to default page
-                    HttpContext.Current.Response.Redirect(defaultFwdUrl);
+                    return defaultFwdUrl;
                 }
             }
             else
             {
-                //go to default page
-                HttpContext.Current.Response.Redirect(defaultFwdUrl);
+                return defaultFwdUrl;
             }
+        }
+
+        /// <summary>
+        /// Forward user to originally requested page (if set) or default auth page
+        /// </summary>
+        public void AuthUserPageForward()
+        {
+            if (!CoreFactory.Singleton.IsEnabled)
+            {
+                throw new SystemDisabledException();
+            }
+
+            //forward to originally requested page
+            var url = GetAuthForwardUrl();
+
+            HttpContext.Current.Response.Redirect(url);
         }
 
         /// <summary>
@@ -428,8 +455,6 @@ namespace UHub.CoreLib.Security.Authentication
                 {
                     //get user info from tkt (if it exists)
                     authWorker.ValidateAuthCookie(out User cmsUser, out tokenStatus);
-                    Console.WriteLine(tokenStatus);
-                    Console.WriteLine(cmsUser.ToFormattedJSON());
 
 
                     if (cmsUser == null || cmsUser.ID == null)
@@ -448,7 +473,6 @@ namespace UHub.CoreLib.Security.Authentication
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
                 tokenStatus = TokenValidationStatus.AnonUser;
                 return null;
             }
@@ -539,16 +563,16 @@ namespace UHub.CoreLib.Security.Authentication
         /// <summary>
         /// Remove persistent cookies from request/response
         /// </summary>
-        public void LogOut()
+        public void TryLogOut()
         {
-            LogOut(-1);
+            TryLogOut(-1);
         }
         /// <summary>
         /// Remove persistent cookies from request/response
         /// </summary>
-        internal void LogOut(int ErrorCode = -1, [CallerMemberName] string key = null)
+        internal void TryLogOut(int ErrorCode = -1, [CallerMemberName] string key = null)
         {
-            bool DEBUG = true;
+            bool DEBUG = false;
             if (ErrorCode != -1 && DEBUG)
             {
                 CoreFactory.Singleton.Logging.CreateMessageLog(ErrorCode.ToString());
@@ -558,49 +582,49 @@ namespace UHub.CoreLib.Security.Authentication
                 CoreFactory.Singleton.Logging.CreateMessageLog(key.ToString());
             }
 
-            //try
-            //{
-
-            //get cookie
-            var authCookieName = CoreFactory.Singleton.Properties.AuthTknCookieName;
-            HttpCookie authCookie = HttpContext.Current.Request.Cookies[authCookieName] ?? HttpContext.Current.Response.Cookies[authCookieName];
-
-
-            if (authCookie != null && authCookie.Value.IsNotEmpty())
+            try
             {
-                AuthenticationToken authToken = null;
-                try
+
+                //get cookie
+                var authCookieName = CoreFactory.Singleton.Properties.AuthTknCookieName;
+                HttpCookie authCookie = HttpContext.Current.Request.Cookies[authCookieName] ?? HttpContext.Current.Response.Cookies[authCookieName];
+
+
+                if (authCookie != null && authCookie.Value.IsNotEmpty())
                 {
-                    authToken = AuthenticationToken.Decrypt(authCookie.Value);
-                    if (authToken != null)
+                    AuthenticationToken authToken = null;
+                    try
                     {
-                        TokenManager.RevokeTokenValidator(authToken);
+                        authToken = AuthenticationToken.Decrypt(authCookie.Value);
+                        if (authToken != null)
+                        {
+                            TokenManager.RevokeTokenValidator(authToken);
+                        }
+                    }
+                    catch
+                    {
+
                     }
                 }
-                catch
+
+
+                HttpContext.Current.Items[AuthenticationManager.REQUEST_CURRENT_USER] = null;
+                if (HttpContext.Current.Request.Cookies[authCookieName] != null && HttpContext.Current.Request.Cookies[authCookieName].Value.IsNotEmpty())
                 {
-
+                    HttpContext.Current.Request.Cookies.Remove(authCookieName);
+                    HttpContext.Current.Response.Cookies.Remove(authCookieName);
+                    HttpContext.Current.Request.Cookies[authCookieName]?.Expire();
                 }
+                if (HttpContext.Current.Response.Cookies[authCookieName] != null && HttpContext.Current.Response.Cookies[authCookieName].Value.IsNotEmpty())
+                {
+                    HttpContext.Current.Request.Cookies.Remove(authCookieName);
+                    HttpContext.Current.Response.Cookies.Remove(authCookieName);
+                    HttpContext.Current.Response.Cookies[authCookieName]?.Expire();
+                }
+
+
             }
-
-
-            HttpContext.Current.Items[AuthenticationManager.REQUEST_CURRENT_USER] = null;
-            if (HttpContext.Current.Request.Cookies[authCookieName] != null && HttpContext.Current.Request.Cookies[authCookieName].Value.IsNotEmpty())
-            {
-                HttpContext.Current.Request.Cookies.Remove(authCookieName);
-                HttpContext.Current.Response.Cookies.Remove(authCookieName);
-                HttpContext.Current.Request.Cookies[authCookieName]?.Expire();
-            }
-            if (HttpContext.Current.Response.Cookies[authCookieName] != null && HttpContext.Current.Response.Cookies[authCookieName].Value.IsNotEmpty())
-            {
-                HttpContext.Current.Request.Cookies.Remove(authCookieName);
-                HttpContext.Current.Response.Cookies.Remove(authCookieName);
-                HttpContext.Current.Response.Cookies[authCookieName]?.Expire();
-            }
-
-
-            //}
-            //catch { }
+            catch { }
 
         }
 

@@ -58,7 +58,7 @@ namespace UHub.CoreLib.DataInterop
 
                         SetParams?.Invoke(cmd);
 
-                        
+
                         return (T)(dynamic)cmd.ExecuteScalar();
 
                     }
@@ -359,6 +359,8 @@ namespace UHub.CoreLib.DataInterop
 
 
         }
+
+
 
 
         /// <summary>

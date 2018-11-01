@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using UHub.CoreLib.Entities.Schools;
-using UHub.CoreLib.Entities.Schools.Management;
+using UHub.CoreLib.Tests;
 
-namespace UHub.CoreLib.Tests.Entities.Schools.Management.Tests
+namespace UHub.CoreLib.Entities.Schools.Management.Tests
 {
     [TestClass]
     public class SchoolReaderTests

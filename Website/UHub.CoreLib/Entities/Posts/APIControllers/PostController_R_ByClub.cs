@@ -174,7 +174,6 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
 
             var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser();
 
-
             SchoolClub targetClub = null;
             bool IsUserBanned = true;
             bool IsUserMember = false;

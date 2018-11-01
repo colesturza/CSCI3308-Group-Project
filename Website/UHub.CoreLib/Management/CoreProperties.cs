@@ -213,15 +213,16 @@ namespace UHub.CoreLib.Management
         /// <summary>
         /// Minimum length of user passwords
         /// </summary>
-        public int MinPswdLength => 8;
+        public const int MinPswdLength = 8;
         /// <summary>
         /// Maximum length of user passwords
         /// </summary>
-        public int MaxPswdLength => 150;
+        public const int MaxPswdLength = 150;
         /// <summary>
         /// Maximum age that a password is valid before expiration (0 is infinite)
         /// </summary>
         public TimeSpan MaxPswdAge { get; private set; }
+        //ASSOC: 5F6FC523-2852-4C5A-91A0-3A3F05556594
         /// <summary>
         /// Regular expression to validate password strength
         /// </summary>

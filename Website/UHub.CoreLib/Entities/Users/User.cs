@@ -17,6 +17,7 @@ namespace UHub.CoreLib.Entities.Users
     [DataClass]
     public sealed partial class User : DBEntityBase, IUser_C_Public, IUser_R_Private, IUser_U_Private
     {
+        private const short USER_VERSION_LENGTH = 10;
 
 
         [DataProperty(EnableDBColumnValidation: false)]
@@ -114,7 +115,10 @@ namespace UHub.CoreLib.Entities.Users
                 return;
             }
 
-            var version = Membership.GeneratePassword(20, 0);
+            var version = Membership.GeneratePassword(USER_VERSION_LENGTH, 0);
+            //sterilize for token processing
+            version = version.Replace('|', '0');
+
             UserWriter.UpdateUserVersion(this.ID.Value, version);
 
         }
