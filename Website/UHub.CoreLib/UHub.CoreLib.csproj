@@ -186,6 +186,7 @@
     <Compile Include="Entities\Images\Management\ImageReader_Core.cs" />
     <Compile Include="Entities\Posts\APIControllers\PostController_C.cs" />
     <Compile Include="Entities\Posts\APIControllers\PostController_Core.cs" />
+    <Compile Include="Entities\Posts\APIControllers\PostController_R.cs" />
     <Compile Include="Entities\Posts\APIControllers\PostController_R_ByClub.cs" />
     <Compile Include="Entities\Posts\APIControllers\PostController_R_BySchool.cs" />
     <Compile Include="Entities\Posts\DTOs\Post_C_PublicDTO.cs" />

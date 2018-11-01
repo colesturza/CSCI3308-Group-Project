@@ -244,15 +244,15 @@ namespace UHub.CoreLib.Security.Authentication
                     HttpContext.Current.Response.Cookies.Set(cookie);
 
 
-                    if (Uri.TryCreate(cookie.Value, UriKind.Absolute, out var url))
-                    {
-                        return url.AbsolutePath;
-                    }
+                    //if (Uri.TryCreate(cookie.Value, UriKind.Absolute, out var url))
+                    //{
+                    //    return url.AbsolutePath;
+                    //}
 
-                    return defaultFwdUrl;
+                    //return defaultFwdUrl;
 
 
-                    //return cookie.Value;
+                    return cookie.Value;
 
                 }
                 else
