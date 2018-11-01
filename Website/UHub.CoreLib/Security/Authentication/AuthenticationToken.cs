@@ -13,6 +13,10 @@ namespace UHub.CoreLib.Security.Authentication
     internal sealed class AuthenticationToken
     {
         private const string purpose = "AuthTokenEncryption";
+        private const short TOKEN_SPLIT_COUNT = 9;
+        private const short TOKEN_SALT_LENGTH = 8;
+
+
 
         public bool IsPersistent { get; private set; }
         public string TokenID { get; private set; }
@@ -22,7 +26,6 @@ namespace UHub.CoreLib.Security.Authentication
         public long UserID { get; private set; }
         public int SystemVersion { get; private set; }
         public string UserVersion { get; private set; }
-        public string RequestID { get; private set; }
         public string SessionID { get; private set; }
 
         public AuthenticationToken(bool IsPersistent, DateTimeOffset IssueDate, DateTimeOffset ExpirationDate, long UserID, int SystemVersion, string UserVersion, string SessionID)
@@ -37,7 +40,7 @@ namespace UHub.CoreLib.Security.Authentication
             this.TokenID = Base36.IntToString(rnd.Next(1296, 46655)).ToLower();
 
 
-            string salt = SysSec.Membership.GeneratePassword(10, 0);
+            string salt = SysSec.Membership.GeneratePassword(TOKEN_SALT_LENGTH, 0);
             salt = salt.RgxReplace(@"[^a-zA-Z0-9]", Base36.IntToString(rnd.Next(35)));
             this.TokenSalt = salt;
 
@@ -48,15 +51,9 @@ namespace UHub.CoreLib.Security.Authentication
             this.SystemVersion = SystemVersion;
             this.UserVersion = UserVersion;
             this.SessionID = SessionID ?? "";
-
-            //TODO: fully implement request token or get rid of it
-            //represents an extra layer of security, similar to SessionID
-            string tkn = SysSec.Membership.GeneratePassword(5, 0);
-            tkn = tkn.RgxReplace(@"[^a-zA-Z0-9]", Base36.IntToString(rnd.Next(35)));
-            this.RequestID = tkn;
         }
 
-        private AuthenticationToken(string TokenID, string TokenSalt, bool IsPersistent, DateTimeOffset IssueDate, DateTimeOffset ExpirationDate, long UserID, int SystemVersion, string UserVersion, string SessionID, string RequestToken)
+        private AuthenticationToken(string TokenID, string TokenSalt, bool IsPersistent, DateTimeOffset IssueDate, DateTimeOffset ExpirationDate, long UserID, int SystemVersion, string UserVersion, string SessionID)
         {
             this.TokenID = TokenID;
             this.TokenSalt = TokenSalt;
@@ -67,7 +64,6 @@ namespace UHub.CoreLib.Security.Authentication
             this.SystemVersion = SystemVersion;
             this.UserVersion = UserVersion;
             this.SessionID = SessionID ?? "";
-            this.RequestID = RequestToken;
         }
 
         internal void SlideExpiration(TimeSpan offset)
@@ -82,6 +78,13 @@ namespace UHub.CoreLib.Security.Authentication
 
         internal string Serialize()
         {
+            long issueTicks_Norm = IssueDate.UtcTicks;
+            long issueTicks_Denorm = DenormalizeTicks(issueTicks_Norm);
+
+            long expireTicks_Norm = ExpirationDate.UtcTicks;
+            long expireTicks_Denorm = DenormalizeTicks(expireTicks_Norm, issueTicks_Norm);
+
+
             StringBuilder data = new StringBuilder();
 
             data.Append(TokenID);
@@ -90,9 +93,9 @@ namespace UHub.CoreLib.Security.Authentication
             data.Append("|");
             data.Append(IsPersistent ? "1" : "0");
             data.Append("|");
-            data.Append(Base36.LongToString(IssueDate.UtcTicks));
+            data.Append(Base36.LongToString(issueTicks_Denorm));
             data.Append("|");
-            data.Append(Base36.LongToString(ExpirationDate.UtcTicks));
+            data.Append(Base36.LongToString(expireTicks_Denorm));
             data.Append("|");
             data.Append(Base36.LongToString(UserID));
             data.Append("|");
@@ -101,8 +104,6 @@ namespace UHub.CoreLib.Security.Authentication
             data.Append(UserVersion);
             data.Append("|");
             data.Append(SessionID);
-            data.Append("|");
-            data.Append(RequestID);
 
             return data.ToString();
         }
@@ -114,7 +115,6 @@ namespace UHub.CoreLib.Security.Authentication
         /// <returns></returns>
         public string Encrypt()
         {
-
             return Serialize().Encrypt(purpose);
         }
 
@@ -130,9 +130,9 @@ namespace UHub.CoreLib.Security.Authentication
             {
                 var plainData = data.Decrypt(purpose);
 
-                var parts = plainData.Split('|');
 
-                if (parts.Count() != 10)
+                var parts = plainData.Split('|');
+                if (parts.Count() != TOKEN_SPLIT_COUNT)
                 {
                     throw new Exception("Invalid token data");
                 }
@@ -144,11 +144,13 @@ namespace UHub.CoreLib.Security.Authentication
                 //PERSIST
                 bool persist = (parts[2] == "1");
                 //ISSUE DATE
-                var issueTicks = Base36.StringToLong(parts[3]);
-                DateTimeOffset issueDate = new DateTimeOffset(issueTicks, new TimeSpan(0));
+                long issueTicks_Denorm = Base36.StringToLong(parts[3]);
+                long issueTicks_Norm = NormalizeTicks(issueTicks_Denorm);
+                DateTimeOffset issueDate = new DateTimeOffset(issueTicks_Norm, new TimeSpan(0));
                 //EXPIRE DATE
-                var expireTicks = Base36.StringToLong(parts[4]);
-                DateTimeOffset expirationDate = new DateTimeOffset(expireTicks, new TimeSpan(0));
+                long expireTicks_Denorm = Base36.StringToLong(parts[4]);
+                long expireTicks_Norm = NormalizeTicks(expireTicks_Denorm, issueTicks_Norm);
+                DateTimeOffset expirationDate = new DateTimeOffset(expireTicks_Norm, new TimeSpan(0));
                 //USER ID
                 long userID = Base36.StringToLong(parts[5]);
                 //SYSTEM VERSION
@@ -157,10 +159,8 @@ namespace UHub.CoreLib.Security.Authentication
                 string userV = parts[7];
                 //SESSION ID
                 string sessionId = parts[8];
-                //REQUEST TKN
-                string requestTkn = parts[9];
 
-                return new AuthenticationToken(tokenId, tokenSalt, persist, issueDate, expirationDate, userID, systemV, userV, sessionId, requestTkn);
+                return new AuthenticationToken(tokenId, tokenSalt, persist, issueDate, expirationDate, userID, systemV, userV, sessionId);
             }
             catch
             {
@@ -192,11 +192,35 @@ namespace UHub.CoreLib.Security.Authentication
             data.Append(UserVersion);
             data.Append("|");
             data.Append(SessionID);
-            data.Append("|");
-            data.Append(RequestID);
 
 
             return data.ToString().GetHash(HashType);
+        }
+
+
+        //JAN 1 2018 UTC
+        private const long DATUM_TICKS = 636503616000000000L;
+        /// <summary>
+        /// Process token ticks for use as a delta from a given datum point.
+        /// Allows client token to be compressed more
+        /// </summary>
+        /// <param name="rawTicks">The raw date tick value to adjust</param>
+        /// <param name="datum">The datum used for delta generation </param>
+        /// <returns></returns>
+        private static long DenormalizeTicks(long rawTicks, long? datum = null)
+        {
+            return rawTicks - (datum ?? DATUM_TICKS);
+        }
+        /// <summary>
+        /// Process token ticks for trueDate given delta and a datum point
+        /// Allows client token to be compressed more
+        /// </summary>
+        /// <param name="deltaTicks">The date delta ticks</param>
+        /// <param name="datum">The datum used for trueDate generation</param>
+        /// <returns></returns>
+        private static long NormalizeTicks(long deltaTicks, long? datum = null)
+        {
+            return deltaTicks + (datum ?? DATUM_TICKS);
         }
 
 

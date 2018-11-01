@@ -8,9 +8,10 @@ using UHub.CoreLib.Security.Authentication.APIControllers;
 using UHub.CoreLib.Extensions;
 using System.Web.Http.Controllers;
 using System.Net.Http;
+using UHub.CoreLib.Tests;
 using UHub.CoreLib.Security.Accounts;
 
-namespace UHub.CoreLib.Tests.Security.Authentication.APIControllers.Tests
+namespace UHub.CoreLib.Security.Authentication.APIControllers.Tests
 {
     [TestClass]
     public class AuthenticationControllerTests
@@ -43,7 +44,7 @@ namespace UHub.CoreLib.Tests.Security.Authentication.APIControllers.Tests
 
             TestGlobal.TestInit();
 
-
+            
             var controller = TestGlobal.GetAuthRequest(new AuthenticationController());
 
             var response = controller.ExtendToken();

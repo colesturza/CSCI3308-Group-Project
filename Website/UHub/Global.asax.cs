@@ -26,6 +26,9 @@ namespace UHub
 
         protected void Application_Start()
         {
+            //ENV
+            var env = WebConfigurationManager.AppSettings["Environment"];
+
             //DB
             var dbConn = WebConfigurationManager.AppSettings["DB_CONN"];
 
@@ -76,13 +79,24 @@ namespace UHub
 
             var mailConfig = new SmtpConfig(new MailAddress(mailFromAddr, mailFromName), false, true, mailHost, mailPort, mailUsername, mailPswd);
 
+            var domain = "u-hub.life";
+            if (env == "DEV")
+            {
+                domain = "dev.u-hub.life";
+            }
+            else if (env == "PRD")
+            {
+                domain = "u-hub.life";
+            }
+
+
             var cmsConfig = new CmsConfiguration_Grouped()
             {
                 Instance = new CmsConfig_Instance
                 {
                     SiteFriendlyName = "UHUB",
-                    CmsPublicBaseURL = "https://u-hub.life",
-                    CmsStaticResourceURL = "https://static.u-hub.life",
+                    CmsPublicBaseURL = $"https://{domain}",
+                    CmsStaticResourceURL = $"https://{domain}",
                 },
                 DB = new CmsConfig_DB
                 {
@@ -110,6 +124,7 @@ namespace UHub
                     CookieDomain = ".u-hub.life",
                     ForceSecureResponseHeaders = true,
                     AuthTokenTimeout = new TimeSpan(0, 6, 0, 0),
+                    MaxAuthTokenLifespan = new TimeSpan(30, 0, 0, 0),
                     EnableAuthTokenSlidingExpiration = true,
                     LoginURL = "~/Account/Login",
                     DefaultAuthFwdURL = "~/Account",

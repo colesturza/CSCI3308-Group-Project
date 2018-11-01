@@ -11,6 +11,7 @@ using UHub.CoreLib.Tools;
 using UHub.CoreLib.Entities.Users;
 using UHub.CoreLib.Entities.Users.Interfaces;
 using UHub.CoreLib.Entities.Users.Management;
+using System.Text.RegularExpressions;
 
 namespace UHub.CoreLib.Security.Authentication
 {
@@ -71,6 +72,14 @@ namespace UHub.CoreLib.Security.Authentication
                 ResultHandler?.Invoke(AuthResultCode.PswdEmpty);
                 return false;
             }
+
+            //validate password
+            if (!Regex.IsMatch(UserPassword, CoreFactory.Singleton.Properties.PswdStrengthRegex))
+            {
+                ResultHandler?.Invoke(AuthResultCode.PswdInvalid);
+                return false;
+            }
+
 
             //get userAuth info (pswf info)
             UserAuthInfo userAuthInfo = null;

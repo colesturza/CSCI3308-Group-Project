@@ -1,13 +1,36 @@
 ﻿<!DOCTYPE html>
+
 <html>
 <head>
-
+    @Styles.Render("~/resources/css/master")
+    <link href=".." rel="stylesheet" />
+    <title>@ViewBag.Title</title>
 </head>
 
 <body>
-    Hello World!
 
-    @RenderBody()
+    <header></header>
 
+
+    <div id="pnl_left">
+        @RenderSection("pnl_Left")
+    </div>
+
+
+    <main>
+        @RenderBody()
+    </main>
+
+
+    <footer>
+        @{Html.RenderPartial("_Footer");}
+    </footer>
+
+
+
+    @Scripts.Render("~/resources/scripts/master")
+    @RenderSection("scripts", false)
 </body>
+
+
 </html>

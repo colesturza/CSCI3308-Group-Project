@@ -13,10 +13,10 @@ using System.Web;
 
 namespace UHub.CoreLib.Attributes
 {
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
     public class ApiAuthControlAttribute : AuthorizeAttribute
     {
-        bool RequireAdmin { get; set; }
-
+        public bool RequireAdmin { get; set; }
 
 
         protected override bool IsAuthorized(HttpActionContext actionContext)
@@ -37,7 +37,7 @@ namespace UHub.CoreLib.Attributes
                 if (authToken.IsEmpty())
                 {
                     //test for cookie auth
-                    isLoggedIn = !CoreFactory.Singleton.Auth.IsUserLoggedIn(out _, out _);
+                    isLoggedIn = CoreFactory.Singleton.Auth.IsUserLoggedIn(out _, out _);
                 }
                 else
                 {
@@ -45,10 +45,15 @@ namespace UHub.CoreLib.Attributes
                     isLoggedIn = CoreFactory.Singleton.Auth.TrySetRequestUser(authToken, out _);
                 }
 
-                var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser();
+                if(!isLoggedIn)
+                {
+                    return false;
+                }
 
+
+                var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser();
                 
-                return isLoggedIn && cmsUser.IsEnabled;
+                return cmsUser.ID != null && cmsUser.IsEnabled && (!RequireAdmin || cmsUser.IsAdmin);
             }
             catch (Exception ex)
             {

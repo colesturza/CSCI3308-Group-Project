@@ -14,6 +14,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UHub.Tests", "UHub.Tests\UHub.Tests.csproj", "{1A72497A-418E-4A79-A024-5248874E29F5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UHub.CoreLib.Tests", "UHub.CoreLib.Tests\UHub.CoreLib.Tests.csproj", "{E5BBC031-05AA-4435-AD98-AF941D0D2EE5}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A2F104A7-3DF2-49DE-A6F4-7B29457A5DA7} = {A2F104A7-3DF2-49DE-A6F4-7B29457A5DA7}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

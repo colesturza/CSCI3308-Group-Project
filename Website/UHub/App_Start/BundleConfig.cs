@@ -1,6 +1,12 @@
 ﻿using System.Web;
 using System.Web.Optimization;
 
+using BundleTransformer.Core.Builders;
+using BundleTransformer.Core.Bundles;
+using BundleTransformer.Core.Orderers;
+using BundleTransformer.Core.Resolvers;
+using BundleTransformer.Core.Transformers;
+
 namespace UHub
 {
     public class BundleConfig
@@ -22,9 +28,20 @@ namespace UHub
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
                       "~/Scripts/bootstrap.js"));
 
-            bundles.Add(new StyleBundle("~/Content/css").Include(
-                      "~/Content/bootstrap.css",
-                      "~/Content/site.css"));
+
+            bundles.Add(new ScriptBundle("~/resources/scripts/master").Include(
+                      "~/ClientResources/Scripts/Master.js"));
+
+
+
+            var scssBundle = new CustomStyleBundle("~/resources/css/master").Include(
+                "~/ClientResources/Styles/Master.scss",
+                "~/ClientResources/Styles/Master_Header.scss",
+                "~/ClientResources/Styles/Master_Footer.scss");
+            bundles.Add(scssBundle);
+
+
+            BundleTable.EnableOptimizations = true;
         }
     }
 }

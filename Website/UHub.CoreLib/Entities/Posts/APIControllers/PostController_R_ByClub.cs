@@ -93,13 +93,13 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             if (PageSize < 1)
             {
                 double divResult = (count * 1.0) / DEFAULT_PAGE_SIZE;
-                int ceil = (int)Math.Ceiling(divResult);
+                long ceil = (long)Math.Ceiling(divResult);
                 return Ok(ceil);
             }
 
 
             double divResult2 = (count * 1.0) / PageSize;
-            int ceil2 = (int)Math.Ceiling(divResult2);
+            long ceil2 = (long)Math.Ceiling(divResult2);
             return Ok(ceil2);
         }
 
@@ -173,7 +173,6 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
 
 
             var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser();
-
 
             SchoolClub targetClub = null;
             bool IsUserBanned = true;

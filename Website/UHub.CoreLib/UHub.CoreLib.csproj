@@ -21,6 +21,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <LangVersion>latest</LangVersion>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -125,6 +126,7 @@
     <Compile Include="Attributes\DataClassAttribute.cs" />
     <Compile Include="Attributes\DataPropertyAttribute.cs" />
     <Compile Include="Attributes\DtoClassAttribute.cs" />
+    <Compile Include="Attributes\MvcAuthControlAttribute.cs" />
     <Compile Include="ClientFriendly\ResponseStrings.cs" />
     <Compile Include="Common.cs" />
     <Compile Include="Config\CmsConfiguration_Grouped.cs" />
@@ -138,6 +140,7 @@
     <Compile Include="Config\CmsConfig_Security.cs" />
     <Compile Include="Config\CmsConfig_Storage.cs" />
     <Compile Include="Config\SchemaVersion.cs" />
+    <Compile Include="DataInterop\DataReaderConverters_TEST.cs" />
     <Compile Include="DataInterop\DataConverterGenerator.cs">
       <DependentUpon>DataConverterGenerator.tt</DependentUpon>
       <DesignTime>True</DesignTime>
@@ -161,8 +164,15 @@
     <Compile Include="DataInterop\SqlConfig.cs" />
     <Compile Include="DataInterop\SqlConverters.cs" />
     <Compile Include="DataInterop\SqlWorker.cs" />
+    <Compile Include="Entities\ClubModerators\APIControllers\ClubModeratorController_Core.cs" />
+    <Compile Include="Entities\ClubModerators\APIControllers\ClubModeratorController_C.cs" />
+    <Compile Include="Entities\ClubModerators\DTOs\ClubModerator_C_PublicDTO.cs" />
+    <Compile Include="Entities\ClubModerators\Interfaces\IClubModerator_C_Public.cs" />
+    <Compile Include="Entities\ClubModerators\Management\ClubModeratorWriter.cs" />
     <Compile Include="Entities\Comments\APIControllers\CommentController_C.cs" />
     <Compile Include="Entities\Comments\APIControllers\CommentController_Core.cs" />
+    <Compile Include="Entities\Comments\APIControllers\CommentController_R_ByParent.cs" />
+    <Compile Include="Entities\Comments\APIControllers\CommentController_R_ByPost.cs" />
     <Compile Include="Entities\Comments\Comment.cs" />
     <Compile Include="Entities\Comments\DTOs\Comment_C_PublicDTO.cs" />
     <Compile Include="Entities\Comments\DTOs\Comment_R_PublicDTO.cs" />
@@ -214,6 +224,7 @@
     <Compile Include="Entities\Schools\School.cs" />
     <Compile Include="Entities\Users\APIControllers\UserController.cs" />
     <Compile Include="Entities\Users\Management\UserReader_EntComments.cs" />
+    <Compile Include="Entities\Users\Management\UserReader_EntClubMods.cs" />
     <Compile Include="Entities\Users\Management\UserReader_EntPosts.cs" />
     <Compile Include="ErrorHandling\Exceptions\AccessForbiddenException.cs" />
     <Compile Include="ErrorHandling\Exceptions\ConfigurationException.cs" />
@@ -269,6 +280,7 @@
     <Compile Include="Security\Enums\CryptoHashType.cs" />
     <Compile Include="Security\Enums\HtmlSanitizerMode.cs" />
     <Compile Include="Security\RecaptchaManager.cs" />
+    <Compile Include="SmtpInterop\Enums\SmtpResultCode.cs" />
     <Compile Include="SmtpInterop\SmtpConfig.cs" />
     <Compile Include="SmtpInterop\SmtpManager.cs" />
     <Compile Include="SmtpInterop\SmtpMessage.cs" />
@@ -318,7 +330,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="APIControllers\Enums\" />
-    <Folder Include="Entities\ClubModerators\APIControllers\" />
     <Folder Include="Entities\ClubModerators\Enums\" />
     <Folder Include="Entities\Comments\Enums\" />
     <Folder Include="Entities\Files\APIControllers\" />

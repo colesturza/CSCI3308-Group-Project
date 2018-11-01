@@ -417,7 +417,7 @@ namespace UHub.CoreLib.Config
 
             if (!isValid)
             {
-                throw new ArgumentException(argName + $" is not valid.  Cannot connect to DB with connection string \"{ config.ToString() }\".");
+                throw new ArgumentException(argName + $" is not valid.  Cannot connect to DB with the specified connection string.");
             }
 
         }

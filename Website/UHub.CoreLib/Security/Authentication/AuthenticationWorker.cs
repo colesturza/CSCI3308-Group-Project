@@ -365,7 +365,8 @@ namespace UHub.CoreLib.Security.Authentication
                 sessionID = HttpContext.Current?.Session?.SessionID ?? "";
             }
 
-
+            //sterilize for token processing
+            sessionID.Replace('|', '0');
             return sessionID;
         }
 
@@ -460,7 +461,7 @@ namespace UHub.CoreLib.Security.Authentication
 
 
             AuthenticationToken authToken = new AuthenticationToken(isPersistent, issue, expiration, ID, sysVersion, userVersion, sessionID);
-            var requestToken = authToken.RequestID;
+            
 
             try
             {
