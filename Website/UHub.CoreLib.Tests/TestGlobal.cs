@@ -190,7 +190,7 @@ namespace UHub.CoreLib.Tests
         }
 
 
-        public static T GetAuthRequest<T>(T controllerArg, bool useCookie = false, string email = null, string password = null) where T : ApiController
+        public static T GetAuthRequest<T>(T controllerArg, bool useCookie = true, string email = null, string password = null) where T : ApiController
         {
             var authController = GetStdRequest(new AuthenticationController());
 
