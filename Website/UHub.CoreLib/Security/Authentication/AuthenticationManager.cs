@@ -239,14 +239,20 @@ namespace UHub.CoreLib.Security.Authentication
                 {
                     //go to requested page
 
-                    //if (Uri.TryCreate(cookie.Value, UriKind.Absolute, out var url))
-                    //{
-                    //    return url.AbsolutePath;
-                    //}
+                    //expire client cookie
+                    cookie.Expire();
+                    HttpContext.Current.Response.Cookies.Set(cookie);
 
-                    //return defaultFwdUrl;
 
-                    return cookie.Value;
+                    if (Uri.TryCreate(cookie.Value, UriKind.Absolute, out var url))
+                    {
+                        return url.AbsolutePath;
+                    }
+
+                    return defaultFwdUrl;
+
+
+                    //return cookie.Value;
 
                 }
                 else
