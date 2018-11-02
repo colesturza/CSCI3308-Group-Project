@@ -13,14 +13,14 @@ namespace UHub.Models.Account
         [DisplayName("Email")]
         [Required]
         [StringLength(250, MinimumLength=3, ErrorMessage = "Invalid email address")]
-        [RegularExpression(RgxPatterns.User.EMAIL)]
+        [RegularExpression(RgxPatterns.User.EMAIL_B, ErrorMessage ="Email address is not valid")]
         public string Email { get; set; }
 
 
         [DisplayName("Password")]
         [Required]
         [StringLength(150, MinimumLength = 8, ErrorMessage = "Password must be between 8 and 150 characters")]
-        [RegularExpression(RgxPatterns.User.PASSWORD)]
+        [RegularExpression(RgxPatterns.User.PASSWORD_B, ErrorMessage= "Password must be between 8 and 150 characters")]
         public string Password { get; set; }
 
 

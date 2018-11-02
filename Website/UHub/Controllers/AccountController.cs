@@ -30,16 +30,25 @@ namespace UHub.Controllers
 
         public ActionResult Login()
         {
+            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser();
+            if(cmsUser != null && cmsUser.ID != null)
+            {
+                var url = CoreFactory.Singleton.Properties.DefaultAuthFwdURL;
+                return Redirect(url);
+            }
+
 
             return View();
         }
 
 
+        [System.Web.Mvc.HttpPost]
         public ActionResult ProcessCredentials([FromBody] ClientCreds creds)
         {
+
             if (!ModelState.IsValid)
             {
-                return Login();
+                return View("Login");
             }
 
 
@@ -48,7 +57,7 @@ namespace UHub.Controllers
                 var captcha = CoreFactory.Singleton.Recaptcha.IsCaptchaValid();
                 if (!captcha)
                 {
-                    return Login();
+                    return View("Login");
                 }
             }
 
@@ -131,6 +140,11 @@ namespace UHub.Controllers
             if (status == "Success")
             {
                 var url = CoreFactory.Singleton.Auth.GetAuthForwardUrl();
+
+                var cookieName = CoreFactory.Singleton.Properties.PostAuthCookieName;
+                Request.Cookies[cookieName]?.Expire();
+                Response.Cookies[cookieName]?.Expire();
+
                 return Redirect(url);
             }
             else

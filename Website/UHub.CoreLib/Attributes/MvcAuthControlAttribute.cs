@@ -83,7 +83,7 @@ namespace UHub.CoreLib.Attributes
 
 
 
-            var targetAddr = filterContext.HttpContext.Request.RawUrl;
+            var targetAddr = filterContext.HttpContext.Request.Url.AbsoluteUri;
             var cookie = new HttpCookie(fwrdCookieName);
             cookie.Value = targetAddr;
             cookie.Domain = CoreFactory.Singleton.Properties.CookieDomain;

@@ -10,7 +10,9 @@
 
 @{
     Html.BeginForm();
+    Html.AntiForgeryToken();
 }
+
 
 @Html.LabelFor(x => x.Email)
 @Html.TextBoxFor(x => x.Email, new { @class = "CSS_CLASS" })

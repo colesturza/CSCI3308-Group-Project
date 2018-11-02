@@ -78,7 +78,6 @@ namespace UHub.CoreLib.Security.Authentication.Tests
         public void GetTokenTest2()
         {
             TestGlobal.TestInit();
-            
 
 
             var enableDetail = CoreFactory.Singleton.Properties.EnableDetailedAPIErrors;
