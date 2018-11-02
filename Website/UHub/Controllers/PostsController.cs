@@ -14,5 +14,11 @@ namespace UHub.Controllers
         {
             return View();
         }
+
+        [MvcAuthControl]
+        public ActionResult Create()
+        {
+            return View();
+        }
     }
 }
