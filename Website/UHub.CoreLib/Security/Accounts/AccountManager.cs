@@ -205,7 +205,10 @@ namespace UHub.CoreLib.Security.Accounts
 
                 //attempt autologin
                 //autoconfirm user -> auto login
-                bool canLogin = AttemptAutoLogin && CoreFactory.Singleton.Properties.AutoConfirmNewAccounts && CoreFactory.Singleton.Properties.AutoApproveNewAccounts;
+                bool canLogin = 
+                    AttemptAutoLogin 
+                    && CoreFactory.Singleton.Properties.AutoConfirmNewAccounts
+                    && CoreFactory.Singleton.Properties.AutoApproveNewAccounts;
 
 
                 if (canLogin)

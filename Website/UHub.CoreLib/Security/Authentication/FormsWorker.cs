@@ -20,26 +20,16 @@ namespace UHub.CoreLib.Security.Authentication
         /// <summary>
         /// Try to authenticate a user account using the supplied account credentials.  Includes internal logging
         /// </summary>
-        /// <param name="UserEmail">Email address associated with the user account</param>
-        /// <param name="UserPassword">Password associated with the user account</param>
-        /// <param name="EmailEmptyHandler">Error handler in case the user email is null or empty</param>
-        /// <param name="EmailInvalidHandler">Error handler in case email is not in valid format</param>
-        /// <param name="PswdEmptyHandler">Error handler in case the user password is null or empty</param>
-        /// <param name="AccountInvalidHandler">Error handler in case the user email does not map to an account</param>
-        /// <param name="LockoutHandler">Error handler in case the user account is locked out</param>
-        /// <param name="LoginForbiddenHandler">Error handler in case the user name or password is invalid and the system cannot authenticate</param>
-        /// <param name="PendingConfirmationHandler">Error handler in case user account has not yet been confirmed</param>
-        /// <param name="DisabledHandler">Error handler in case user account is disabled</param>
-        /// <param name="PswdExpiredHandler">Error handler in case user password has expired</param>
-        /// <param name="LoginFailHandler">Error handler in case login attempt is invalid</param>
+        /// <param name="userEmail">Email address associated with the user account</param>
+        /// <param name="userPassword">Password associated with the user account</param>
+        /// <param name="ResultCode">Result code to indicate process status</param>
         /// <param name="GeneralFailHandler">Error handler in case DB cannot be reached or there is other unknown error</param>
-        /// <param name="SuccessHandler">Success handler to trigger events after login</param>
         /// <param name="UserTokenHandler">Success handler to handle user token distribution</param>
-        /// <returns></returns>
+        /// <returns>Status Flag</returns>
         override internal bool TryAuthenticateUser(
             string UserEmail,
             string UserPassword,
-            Action<AuthResultCode> ResultHandler = null,
+            out AuthResultCode ResultCode,
             Action<Guid> GeneralFailHandler = null,
             Func<User, bool> UserTokenHandler = null)
         {
@@ -55,13 +45,13 @@ namespace UHub.CoreLib.Security.Authentication
             //validate user email
             if (UserEmail.IsEmpty())
             {
-                ResultHandler?.Invoke(AuthResultCode.EmailEmpty);
+                ResultCode = AuthResultCode.EmailEmpty;
                 return false;
             }
 
             if (!UserEmail.IsValidEmail())
             {
-                ResultHandler?.Invoke(AuthResultCode.EmailInvalid);
+                ResultCode = AuthResultCode.EmailInvalid;
                 return false;
             }
 
@@ -69,14 +59,14 @@ namespace UHub.CoreLib.Security.Authentication
             //validate password
             if (UserPassword.IsEmpty())
             {
-                ResultHandler?.Invoke(AuthResultCode.PswdEmpty);
+                ResultCode = AuthResultCode.PswdEmpty;
                 return false;
             }
 
             //validate password
             if (!Regex.IsMatch(UserPassword, CoreFactory.Singleton.Properties.PswdStrengthRegex))
             {
-                ResultHandler?.Invoke(AuthResultCode.PswdInvalid);
+                ResultCode = AuthResultCode.PswdInvalid;
                 return false;
             }
 
@@ -89,6 +79,7 @@ namespace UHub.CoreLib.Security.Authentication
             }
             catch (Exception ex)
             {
+                ResultCode = AuthResultCode.UnknownError;
                 CoreFactory.Singleton.Logging.CreateErrorLog(ex);
                 GeneralFailHandler?.Invoke(new Guid("B61DB416-F38E-495C-BFDF-317FDB7F8063"));
                 return false;
@@ -97,7 +88,7 @@ namespace UHub.CoreLib.Security.Authentication
             //ensure account exists
             if (userAuthInfo == null)
             {
-                ResultHandler?.Invoke(AuthResultCode.UserInvalid);
+                ResultCode = AuthResultCode.UserInvalid;
                 return false;
             }
 
@@ -115,7 +106,7 @@ namespace UHub.CoreLib.Security.Authentication
                 }
                 else
                 {
-                    ResultHandler?.Invoke(AuthResultCode.UserLocked);
+                    ResultCode = AuthResultCode.UserLocked;
                     return false;
                 }
             }
@@ -128,6 +119,7 @@ namespace UHub.CoreLib.Security.Authentication
             }
             catch (Exception ex)
             {
+                ResultCode = AuthResultCode.UnknownError;
                 CoreFactory.Singleton.Logging.CreateErrorLog(ex);
                 GeneralFailHandler?.Invoke(new Guid("EE2C6BB0-8E49-4B31-9CB1-8C246C3EFFD9"));
                 return false;
@@ -137,20 +129,22 @@ namespace UHub.CoreLib.Security.Authentication
 
                 if (validationStatus == PasswordValidationStatus.PswdExpired)
                 {
-                    ResultHandler?.Invoke(AuthResultCode.PswdExpired);
+                    ResultCode = AuthResultCode.PswdExpired;
                 }
                 else if (validationStatus == PasswordValidationStatus.InvalidUser)
                 {
-                    ResultHandler?.Invoke(AuthResultCode.UserInvalid);
+                    ResultCode = AuthResultCode.UserInvalid;
                 }
                 else if (validationStatus == PasswordValidationStatus.HashMismatch)
                 {
-                    ResultHandler?.Invoke(AuthResultCode.CredentialsInvalid);
+                    ResultCode = AuthResultCode.CredentialsInvalid;
                 }
                 else
                 {
+                    ResultCode = AuthResultCode.UnknownError;
                     GeneralFailHandler?.Invoke(new Guid("FC5D3DDB-A48B-49C9-922E-7A96CB53CA7E"));
                 }
+
 
                 return false;
             }
@@ -166,6 +160,8 @@ namespace UHub.CoreLib.Security.Authentication
             }
             catch (Exception ex)
             {
+                ResultCode = AuthResultCode.UnknownError;
+
                 CoreFactory.Singleton.Logging.CreateErrorLog(ex);
                 GeneralFailHandler?.Invoke(new Guid("EC7D4ACA-498F-49DA-994B-099292AA9BD8"));
                 return false;
@@ -175,7 +171,7 @@ namespace UHub.CoreLib.Security.Authentication
             //validate CMS specific user
             if (cmsUser == null || cmsUser.ID == null)
             {
-                ResultHandler?.Invoke(AuthResultCode.UserInvalid);
+                ResultCode = AuthResultCode.UserInvalid;
                 return false;
             }
 
@@ -183,14 +179,14 @@ namespace UHub.CoreLib.Security.Authentication
             //user not confirmed
             if (!cmsUser.IsConfirmed)
             {
-                ResultHandler?.Invoke(AuthResultCode.PendingConfirmation);
+                ResultCode = AuthResultCode.PendingConfirmation;
                 return false;
             }
 
             //user not approved
             if (!cmsUser.IsApproved)
             {
-                ResultHandler?.Invoke(AuthResultCode.PendingApproval);
+                ResultCode = AuthResultCode.PendingApproval;
                 return false;
             }
 
@@ -198,7 +194,7 @@ namespace UHub.CoreLib.Security.Authentication
             //could be disabled by admin
             if (!cmsUser.IsEnabled)
             {
-                ResultHandler?.Invoke(AuthResultCode.UserDisabled);
+                ResultCode = AuthResultCode.UserDisabled;
                 return false;
             }
 
@@ -208,11 +204,12 @@ namespace UHub.CoreLib.Security.Authentication
             if (status)
             {
                 //CoreFactory.Singleton.Logging.CreateDBActivityLog(ActivityLogType.UserLogin);
-                ResultHandler?.Invoke(AuthResultCode.Success);
+                ResultCode = AuthResultCode.Success;
                 return true;
             }
             else
             {
+                ResultCode = AuthResultCode.UnknownError;
                 return false;
             }
 

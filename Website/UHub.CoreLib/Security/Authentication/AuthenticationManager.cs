@@ -31,6 +31,18 @@ namespace UHub.CoreLib.Security.Authentication
             authWorker = new FormsWorker();
         }
 
+        /// <summary>
+        /// Validate user credentials then set authentication token via cookie
+        /// </summary>
+        /// <param name="UserEmail">Email address associated with the user account</param>
+        /// <param name="UserPassword">Password associated with the user account</param>
+        /// <param name="IsPersistent">Flag to set token persistence status
+        /// <param name="GeneralFailHandler">Error handler in case DB cannot be reached or there is other unknown error</param>
+        public bool TrySetClientAuthToken(
+            string UserEmail,
+            string UserPassword,
+            bool IsPersistent,
+            Action<Guid> GeneralFailHandler = null) => TrySetClientAuthToken(UserEmail, UserPassword, IsPersistent, out _, GeneralFailHandler);
 
 
         /// <summary>
@@ -39,13 +51,13 @@ namespace UHub.CoreLib.Security.Authentication
         /// <param name="UserEmail">Email address associated with the user account</param>
         /// <param name="UserPassword">Password associated with the user account</param>
         /// <param name="IsPersistent">Flag to set token persistence status
-        /// <paramref name="ResultHandler">Result handler specifying process status</paramref>
+        /// <paramref name="ResultCode">Result code to indicate process status</paramref>
         /// <param name="GeneralFailHandler">Error handler in case DB cannot be reached or there is other unknown error</param>
-        public void TrySetClientAuthToken(
+        public bool TrySetClientAuthToken(
             string UserEmail,
             string UserPassword,
             bool IsPersistent,
-            Action<AuthResultCode> ResultHandler = null,
+            out AuthResultCode ResultCode,
             Action<Guid> GeneralFailHandler = null)
         {
             if (!CoreFactory.Singleton.IsEnabled)
@@ -79,13 +91,14 @@ namespace UHub.CoreLib.Security.Authentication
             }
 
 
-            var success = authWorker.TryAuthenticateUser(
+            var status = authWorker.TryAuthenticateUser(
                 UserEmail,
                 UserPassword,
-                ResultHandler,
+                out ResultCode,
                 GeneralFailHandler,
                 userTokenHandler);
 
+            return status;
         }
 
         /// <summary>
@@ -94,14 +107,14 @@ namespace UHub.CoreLib.Security.Authentication
         /// <param name="UserEmail">Email address associated with the user account</param>
         /// <param name="UserPassword">Password associated with the user account</param>
         /// <param name="IsPersistent">Flag to set token persistence status</param>
-        /// <paramref name="ResultHandler">Result handler specifying process status</paramref>
+        /// <paramref name="ResultCode">Result code to indicate process status</paramref>
         /// <param name="GeneralFailHandler">Error handler in case DB cannot be reached or there is other unknown error</param>
         /// <returns></returns>
         public string TryGetClientAuthToken(
             string UserEmail,
             string UserPassword,
             bool IsPersistent,
-            Action<AuthResultCode> ResultHandler = null,
+            out AuthResultCode ResultCode,
             Action<Guid> GeneralFailHandler = null)
         {
             if (!CoreFactory.Singleton.IsEnabled)
@@ -143,7 +156,7 @@ namespace UHub.CoreLib.Security.Authentication
             var success = authWorker.TryAuthenticateUser(
                 UserEmail,
                 UserPassword,
-                ResultHandler,
+                out ResultCode,
                 GeneralFailHandler,
                 userTokenHandler);
 
@@ -186,18 +199,31 @@ namespace UHub.CoreLib.Security.Authentication
             return newToken;
         }
 
+
         /// <summary>
         /// Try to authenticate a user account using the supplied account credentials
         /// </summary>
         /// <param name="UserEmail">Email address associated with the user account</param>
         /// <param name="UserPassword">Password associated with the user account</param>
-        /// <paramref name="ResultHandler">Result handler specifying process status</paramref>
         /// <param name="GeneralFailHandler">Error handler in case DB cannot be reached or there is other unknown error</param>
         /// <returns></returns>
         public bool TryAuthenticateUser(
             string UserEmail,
             string UserPassword,
-            Action<AuthResultCode> ResultHandler = null,
+            Action<Guid> GeneralFailHandler = null) => TryAuthenticateUser(UserEmail, UserPassword, out _, GeneralFailHandler);
+
+        /// <summary>
+        /// Try to authenticate a user account using the supplied account credentials
+        /// </summary>
+        /// <param name="UserEmail">Email address associated with the user account</param>
+        /// <param name="UserPassword">Password associated with the user account</param>
+        /// <paramref name="ResultCode">Result code to indicate process status</paramref>
+        /// <param name="GeneralFailHandler">Error handler in case DB cannot be reached or there is other unknown error</param>
+        /// <returns></returns>
+        public bool TryAuthenticateUser(
+            string UserEmail,
+            string UserPassword,
+            out AuthResultCode ResultCode,
             Action<Guid> GeneralFailHandler = null)
         {
             if (!CoreFactory.Singleton.IsEnabled)
@@ -208,7 +234,7 @@ namespace UHub.CoreLib.Security.Authentication
             return authWorker.TryAuthenticateUser(
                 UserEmail,
                 UserPassword,
-                ResultHandler,
+                out ResultCode,
                 GeneralFailHandler,
                 null);
         }

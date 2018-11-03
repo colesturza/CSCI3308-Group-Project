@@ -28,24 +28,16 @@ namespace UHub.CoreLib.Security.Authentication
         /// </summary>
         /// <param name="userEmail">Email address associated with the user account</param>
         /// <param name="userPassword">Password associated with the user account</param>
-        /// <param name="emailEmptyHandler">Error handler in case the user email is null or empty</param>
-        /// <param name="emailInvalidHandler">Error handler in case email is not in valid format</param>
-        /// <param name="pswdEmptyHandler">Error handler in case the user password is null or empty</param>
-        /// <param name="accountInvalidHandler">Error handler in case the user email does not map to an account</param>
-        /// <param name="lockoutHandler">Error handler in case the user account is locked out</param>
-        /// <param name="loginForbiddenHandler">Error handler in case the user name or password is invalid and the system cannot authenticate</param>
-        /// <param name="pendingConfirmationHandler">Error handler in case user account has not yet been confirmed</param>
-        /// <param name="disabledHandler">Error handler in case user account is disabled</param>
-        /// <param name="pswdExpiredHandler">Error handler in case user password has expired</param>
-        /// <param name="loginFailHandler">Error handler in case login attempt is invalid</param>
-        /// <param name="generalFailHandler">Error handler in case DB cannot be reached or there is other unknown error</param>
-        /// <param name="successHandler">Success handler to trigger events after login</param>
-        /// <param name="userTokenHandler">Success handler to handle user token distribution</param>
-        /// <returns></returns>
-        abstract internal bool TryAuthenticateUser(string userEmail, string userPassword,
-            Action<AuthResultCode> ResultHandler = null,
-            Action<Guid> generalFailHandler = null,
-            Func<User, bool> userTokenHandler = null);
+        /// <param name="ResultCode">Result code to indicate process status</param>
+        /// <param name="GeneralFailHandler">Error handler in case DB cannot be reached or there is other unknown error</param>
+        /// <param name="UserTokenHandler">Success handler to handle user token distribution</param>
+        /// <returns>Status Flag</returns>
+        abstract internal bool TryAuthenticateUser(
+            string userEmail, 
+            string userPassword,
+            out AuthResultCode ResultCode,
+            Action<Guid> GeneralFailHandler = null,
+            Func<User, bool> UserTokenHandler = null);
 
         /// <summary>
         /// Set current request user for caching

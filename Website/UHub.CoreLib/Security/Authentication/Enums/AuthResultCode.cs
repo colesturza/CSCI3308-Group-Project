@@ -9,6 +9,7 @@ namespace UHub.CoreLib.Security.Authentication
     public enum AuthResultCode
     {
         Success,
+        UnknownError,
 
         UserInvalid,
         UserLocked,

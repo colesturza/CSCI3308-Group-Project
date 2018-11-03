@@ -19,30 +19,43 @@ namespace UHub.CoreLib.Security.Authentication.Interfaces
         /// <param name="UserEmail">Email address associated with the user account</param>
         /// <param name="UserPassword">Password associated with the user account</param>
         /// <param name="IsPersistent">Flag to set token persistence status</param>
-        /// <param name="ResultHandler">Result handler to indicate process status</param>
         /// <param name="GeneralFailHandler">Error handler in case DB cannot be reached or there is other unknown error</param>
-        void TrySetClientAuthToken(
-            string UserEmail, 
-            string UserPassword, 
+        bool TrySetClientAuthToken(
+            string UserEmail,
+            string UserPassword,
             bool IsPersistent,
-            Action<AuthResultCode> ResultHandler = null,
             Action<Guid> GeneralFailHandler = null);
-
+        /// <summary>
+        /// Validate user credentials then set authentication token via cookie
+        /// </summary>
+        /// <param name="UserEmail">Email address associated with the user account</param>
+        /// <param name="UserPassword">Password associated with the user account</param>
+        /// <param name="IsPersistent">Flag to set token persistence status</param>
+        /// <param name="ResultCode">Result code to indicate process status</param>
+        /// <param name="GeneralFailHandler">Error handler in case DB cannot be reached or there is other unknown error</param>
+        bool TrySetClientAuthToken(
+            string UserEmail,
+            string UserPassword,
+            bool IsPersistent,
+            out AuthResultCode ResultCode,
+            Action<Guid> GeneralFailHandler = null);
         /// <summary>
         /// Validate user credentials then return encrypted authentication token
         /// </summary>
         /// <param name="UserEmail">Email address associated with the user account</param>
         /// <param name="UserPassword">Password associated with the user account</param>
         /// <param name="IsPersistent">Flag to set token persistence status</param>
-        /// <param name="ResultHandler">Result handler to indicate process status</param>
+        /// <param name="ResultCode">Result code to indicate process status</param>
         /// <param name="GeneralFailHandler">Error handler in case DB cannot be reached or there is other unknown error</param>
         /// <returns></returns>
         string TryGetClientAuthToken(
-            string UserEmail, 
-            string UserPassword, 
+            string UserEmail,
+            string UserPassword,
             bool IsPersistent,
-            Action<AuthResultCode> ResultHandler = null,
+            out AuthResultCode ResultCode,
             Action<Guid> GeneralFailHandler = null);
+
+
 
         /// <summary>
         /// Slide the expiration date of a token and return a new encrypted client token
@@ -59,29 +72,45 @@ namespace UHub.CoreLib.Security.Authentication.Interfaces
         /// <returns></returns>
         string TrySlideAuthTokenExpiration(string token, out TokenValidationStatus TokenStatus);
 
+
+
         /// <summary>
         /// Try to authenticate a user account using the supplied account credentials
         /// </summary>
         /// <param name="UserEmail">Email address associated with the user account</param>
         /// <param name="UserPassword">Password associated with the user account</param>
-        /// <param name="ResultHandler">Result handler to indicate process status</param>
         /// <param name="GeneralFailHandler">Error handler in case DB cannot be reached or there is other unknown error</param>
         /// <returns></returns>
         bool TryAuthenticateUser(
-            string UserEmail, 
+            string UserEmail,
             string UserPassword,
-            Action<AuthResultCode> ResultHandler = null,
             Action<Guid> GeneralFailHandler = null);
+        /// <summary>
+        /// Try to authenticate a user account using the supplied account credentials
+        /// </summary>
+        /// <param name="UserEmail">Email address associated with the user account</param>
+        /// <param name="UserPassword">Password associated with the user account</param>
+        /// <param name="ResultCode">Result code to indicate process status</param>
+        /// <param name="GeneralFailHandler">Error handler in case DB cannot be reached or there is other unknown error</param>
+        /// <returns></returns>
+        bool TryAuthenticateUser(
+            string UserEmail,
+            string UserPassword,
+            out AuthResultCode ResultCode,
+            Action<Guid> GeneralFailHandler = null);
+
+
 
         /// <summary>
         /// Get the url that the user should be redirected to after login
         /// </summary>
         string GetAuthForwardUrl();
-
         /// <summary>
         /// Forward user to originally requested page (if set) or default auth page
         /// </summary>
         void AuthUserPageForward();
+
+
 
         /// <summary>
         /// Set the user for the current request using an Auth Token.  If the token is invalid, then the user will be set to ANON privs.
@@ -90,7 +119,9 @@ namespace UHub.CoreLib.Security.Authentication.Interfaces
         /// <param name="tokenStr">Auth token in string form</param>
         /// <param name="tokenStatus">Returns token validation status</param>
         /// <returns>Status flag</returns>
-        bool TrySetRequestUser(string tokenStr, out TokenValidationStatus tokenStatus);
+        bool TrySetRequestUser(
+            string tokenStr,
+            out TokenValidationStatus tokenStatus);
 
         /// <summary>
         /// Ensure that auth token is valid and user is logged in
@@ -99,14 +130,18 @@ namespace UHub.CoreLib.Security.Authentication.Interfaces
         /// <param name="CmsUser">User encapsulated by auth token (if valid)</param>
         /// <param name="tokenStatus">Returns token validation status</param>
         /// <returns></returns>
-        bool ValidateAuthToken(string tokenStr, out User CmsUser, out TokenValidationStatus tokenStatus);
+        bool ValidateAuthToken(
+            string tokenStr,
+            out User CmsUser,
+            out TokenValidationStatus tokenStatus);
+
+
 
         /// <summary>
         /// Check if user is logged in
         /// </summary>
         /// <returns></returns>
         bool IsUserLoggedIn();
-
         /// <summary>
         /// Determine if there is a user logged in
         /// Uses the auth cookie and various expiration timers
@@ -114,7 +149,6 @@ namespace UHub.CoreLib.Security.Authentication.Interfaces
         /// </summary>
         /// <returns></returns>
         bool IsUserLoggedIn(out User CmsUser);
-
         /// <summary>
         /// Determine if there is a user logged in
         /// Uses the auth cookie and various expiration timers
@@ -123,12 +157,13 @@ namespace UHub.CoreLib.Security.Authentication.Interfaces
         /// <returns></returns>
         bool IsUserLoggedIn(out User CmsUser, out TokenValidationStatus tokenStatus);
 
+
+
         /// <summary>
         /// Get the currently authenticated CMS user. If the user is not authenticated, then an anonymous user is returned (UID=null, class=Anon)
         /// </summary>
         /// <returns></returns>
         User GetCurrentUser();
-
         /// <summary>
         /// Get the currently authenticated CMS user. If the user is not authenticated, then an anonymous user is returned (UID=null, class=Anon)
         /// </summary>
@@ -143,14 +178,12 @@ namespace UHub.CoreLib.Security.Authentication.Interfaces
         /// <param name="UserID"></param>
         /// <param name="ExcludeCurrent"></param>
         void LogoutOfAllDevices(long UserID, bool ExcludeCurrent = false);
-
         /// <summary>
         /// Log out of all devices by changing user version
         /// </summary>
         /// <param name="Email"></param>
         /// <param name="ExcludeCurrent"></param>
         void LogoutOfAllDevices(string Email, bool ExcludeCurrent = false);
-
         /// <summary>
         /// Log out of all devices by changing user version
         /// </summary>
@@ -158,6 +191,8 @@ namespace UHub.CoreLib.Security.Authentication.Interfaces
         /// <param name="Domain"></param>
         /// <param name="ExcludeCurrent"></param>
         void LogoutOfAllDevices(string Username, string Domain, bool ExcludeCurrent = false);
+
+
 
         /// <summary>
         /// Remove persistent cookies from request/response

@@ -91,7 +91,7 @@ namespace UHub.CoreLib.Entities.Users
             {
                 return "/";
             }
-            return CoreFactory.Singleton.Properties.AcctConfirmURL + $"?ID={this.RefUID}";
+            return CoreFactory.Singleton.Properties.AcctConfirmURL + $"/{this.RefUID}";
         }
 
         public IUserRecoveryContext GetRecoveryContext()

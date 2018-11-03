@@ -91,80 +91,82 @@ namespace UHub.Controllers
             var email = creds.Email;
             var pswd = creds.Password;
 
-            var status = "An unknown authentication error has occured";
-            CoreFactory.Singleton.Auth.TrySetClientAuthToken(email, pswd, false,
-                ResultHandler: (ResultCode) =>
-                {
-                    switch (ResultCode)
-                    {
-                        case AuthResultCode.EmailEmpty:
-                            {
-                                status = "Email cannot be Empty";
-                                break;
-                            }
-                        case AuthResultCode.EmailInvalid:
-                            {
-                                status = "Email address is invalid";
-                                break;
-                            }
-                        case AuthResultCode.PswdEmpty:
-                            {
-                                status = "Password cannot be empty";
-                                break;
-                            }
-                        case AuthResultCode.PswdInvalid:
-                            {
-                                status = "Password is invalid";
-                                break;
-                            }
-                        case AuthResultCode.PswdExpired:
-                            {
-                                status = "Password has expired - please reset and try again";
-                                break;
-                            }
-                        case AuthResultCode.UserInvalid:
-                            {
-                                status = "User account is invalid";
-                                break;
-                            }
-                        case AuthResultCode.UserLocked:
-                            {
-                                status = "User account is currently locked - please try again later";
-                                break;
-                            }
-                        case AuthResultCode.UserDisabled:
-                            {
-                                status = "User account is disabled";
-                                break;
-                            }
-                        case AuthResultCode.PendingApproval:
-                            {
-                                status = "User account is pending admin approval";
-                                break;
-                            }
-                        case AuthResultCode.PendingConfirmation:
-                            {
-                                status = "User account is pending email confirmation";
-                                break;
-                            }
-                        case AuthResultCode.CredentialsInvalid:
-                            {
-                                status = "User credentials are invalid";
-                                break;
-                            }
-                        case AuthResultCode.Success:
-                            {
-                                status = "Success";
-                                break;
-                            }
-                    }
-
-                },
+            var statusMsg = "An unknown authentication error has occured";
+            var isValid =  CoreFactory.Singleton.Auth.TrySetClientAuthToken(
+                email, 
+                pswd, 
+                false,
+                out var ResultCode,
                 GeneralFailHandler: (id) => { });
 
 
+            switch (ResultCode)
+            {
+                case AuthResultCode.EmailEmpty:
+                    {
+                        statusMsg = "Email cannot be Empty";
+                        break;
+                    }
+                case AuthResultCode.EmailInvalid:
+                    {
+                        statusMsg = "Email address is invalid";
+                        break;
+                    }
+                case AuthResultCode.PswdEmpty:
+                    {
+                        statusMsg = "Password cannot be empty";
+                        break;
+                    }
+                case AuthResultCode.PswdInvalid:
+                    {
+                        statusMsg = "Password is invalid";
+                        break;
+                    }
+                case AuthResultCode.PswdExpired:
+                    {
+                        statusMsg = "Password has expired - please reset and try again";
+                        break;
+                    }
+                case AuthResultCode.UserInvalid:
+                    {
+                        statusMsg = "User account is invalid";
+                        break;
+                    }
+                case AuthResultCode.UserLocked:
+                    {
+                        statusMsg = "User account is currently locked - please try again later";
+                        break;
+                    }
+                case AuthResultCode.UserDisabled:
+                    {
+                        statusMsg = "User account is disabled";
+                        break;
+                    }
+                case AuthResultCode.PendingApproval:
+                    {
+                        statusMsg = "User account is pending admin approval";
+                        break;
+                    }
+                case AuthResultCode.PendingConfirmation:
+                    {
+                        statusMsg = "User account is pending email confirmation";
+                        break;
+                    }
+                case AuthResultCode.CredentialsInvalid:
+                    {
+                        statusMsg = "User credentials are invalid";
+                        break;
+                    }
+                case AuthResultCode.Success:
+                    {
+                        statusMsg = "Success";
+                        break;
+                    }
+            }
 
-            if (status == "Success")
+
+
+            if (isValid)
             {
                 var url = CoreFactory.Singleton.Auth.GetAuthForwardUrl();
 
@@ -176,7 +178,7 @@ namespace UHub.Controllers
             }
             else
             {
-                ViewBag.ErrorMsg = status;
+                ViewBag.ErrorMsg = statusMsg;
 
                 return View("Login");
             }

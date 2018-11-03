@@ -60,34 +60,7 @@ namespace UHub.CoreLib.Security.Authentication.APIControllers
                     email,
                     password,
                     persistent,
-                    ResultHandler: (authCode) =>
-                    {
-                        if (enableDetail)
-                        {
-                            switch (authCode)
-                            {
-                                case AuthResultCode.EmailEmpty: { status = "Email Empty"; break; }
-                                case AuthResultCode.EmailInvalid: { status = "Email Invalid"; break; }
-                                case AuthResultCode.PswdEmpty: { status = "Password Empty"; break; }
-                                case AuthResultCode.UserInvalid: { status = "Account Invalid"; break; }
-                                case AuthResultCode.UserLocked: { status = "Account Locked"; break; }
-                                case AuthResultCode.PendingApproval: { status = "Account Pending Approval"; break; }
-                                case AuthResultCode.PendingConfirmation: { status = "Account Pending Confirmation"; break; }
-                                case AuthResultCode.UserDisabled: { status = "Account Disabled"; break; }
-                                case AuthResultCode.PswdExpired: { status = "Password Expired"; break; }
-                                case AuthResultCode.CredentialsInvalid: { status = "Credentials Invalid"; break; }
-                                case AuthResultCode.Success: { status = "Unknown Error"; break; }
-                            }
-                        }
-                        //this looks strange, but is relevant for a very specific edge case
-                        //if the auth worker emits a "Success" code without a populated token
-                        //then this will properly alert the user that some unknown internal error has occured
-                        if (authCode == AuthResultCode.Success)
-                        {
-                            statCode = HttpStatusCode.InternalServerError;
-                        }
-
-                    },
+                    out var ResultCode,
                     GeneralFailHandler: (code) =>
                     {
                         statCode = HttpStatusCode.InternalServerError;
@@ -96,6 +69,34 @@ namespace UHub.CoreLib.Security.Authentication.APIControllers
                             status = code.ToString();
                         }
                     });
+
+
+                if (enableDetail)
+                {
+                    switch (ResultCode)
+                    {
+                        case AuthResultCode.EmailEmpty: { status = "Email Empty"; break; }
+                        case AuthResultCode.EmailInvalid: { status = "Email Invalid"; break; }
+                        case AuthResultCode.PswdEmpty: { status = "Password Empty"; break; }
+                        case AuthResultCode.UserInvalid: { status = "Account Invalid"; break; }
+                        case AuthResultCode.UserLocked: { status = "Account Locked"; break; }
+                        case AuthResultCode.PendingApproval: { status = "Account Pending Approval"; break; }
+                        case AuthResultCode.PendingConfirmation: { status = "Account Pending Confirmation"; break; }
+                        case AuthResultCode.UserDisabled: { status = "Account Disabled"; break; }
+                        case AuthResultCode.PswdExpired: { status = "Password Expired"; break; }
+                        case AuthResultCode.CredentialsInvalid: { status = "Credentials Invalid"; break; }
+                        case AuthResultCode.Success: { status = "Unknown Error"; break; }
+                    }
+                }
+                //this looks strange, but is relevant for a very specific edge case
+                //if the auth worker emits a "Success" code without a populated token
+                //then this will properly alert the user that some unknown internal error has occured
+                if (ResultCode == AuthResultCode.Success)
+                {
+                    statCode = HttpStatusCode.InternalServerError;
+                }
+
+
             }
             catch (Exception ex)
             {
@@ -154,7 +155,7 @@ namespace UHub.CoreLib.Security.Authentication.APIControllers
             }
 
 
-            
+
         }
 
 
