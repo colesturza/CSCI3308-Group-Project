@@ -36,8 +36,13 @@ namespace UHub.CoreLib.Entities.Comments.APIControllers
                 return Content(statCode, status);
             }
 
-            var tmpComment = comment.ToInternal<Comment>();
+            if (comment == null)
+            {
+                return BadRequest();
+            }
 
+
+            var tmpComment = comment.ToInternal<Comment>();
             var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser();
 
 

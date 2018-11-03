@@ -37,9 +37,36 @@ namespace UHub.Controllers
                 return Redirect(url);
             }
 
+            return View();
+        }
+
+
+        public ActionResult Confirm()
+        {
+            var idObj = Url.RequestContext.RouteData.Values["id"];
+            if(idObj == null)
+            {
+                ViewBag.Message = "Unable to complete operation - must provide confirmation key";
+                return View();
+            }
+
+
+            var idStr = idObj.ToString();
+
+            if(CoreFactory.Singleton.Accounts.TryConfirmUser(idStr))
+            {
+                ViewBag.Message = "User account has been successfully confirmed";
+            }
+            else
+            {
+                ViewBag.Message = "User confirmation key is not in a valid format";
+            }
 
             return View();
         }
+
+
+
 
 
         [System.Web.Mvc.HttpPost]

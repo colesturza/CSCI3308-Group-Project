@@ -39,6 +39,10 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
                 return Content(statCode, status);
             }
 
+            if(post == null)
+            {
+                return BadRequest();
+            }
 
 
             var tmpPost = post.ToInternal<Post>();

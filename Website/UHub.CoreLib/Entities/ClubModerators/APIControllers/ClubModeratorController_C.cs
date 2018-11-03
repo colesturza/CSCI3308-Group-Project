@@ -33,6 +33,13 @@ namespace UHub.CoreLib.Entities.ClubModerators.APIControllers
                 return Content(statCode, status);
             }
 
+            if(clubModerator == null)
+            {
+                return BadRequest();
+            }
+
+
+
             var tmpClubModerator = clubModerator.ToInternal<ClubModerator>();
             var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser();
 

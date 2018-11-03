@@ -9,6 +9,7 @@ namespace UHub.CoreLib.Security.Accounts
     public enum AccountResultCode
     {
         Success,
+        UnknownError,
 
         UserInvalid,
         UsernameDuplicate,

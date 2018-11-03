@@ -40,12 +40,14 @@ namespace UHub.CoreLib.Entities.SchoolClubs.APIControllers
                 return Content(statCode, status);
             }
 
+            if(club == null)
+            {
+                return BadRequest();
+            }
+
 
             var tmpClub = club.ToInternal<SchoolClub>();
             var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser();
-
-
-
 
             try
             {

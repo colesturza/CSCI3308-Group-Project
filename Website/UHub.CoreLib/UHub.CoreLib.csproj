@@ -265,6 +265,7 @@
     <Compile Include="Security\Accounts\AccountManager.cs" />
     <Compile Include="Security\Accounts\APIControllers\AccountController.cs" />
     <Compile Include="Security\Accounts\Enums\AccountResultCode.cs" />
+    <Compile Include="Security\Accounts\Interfaces\IAccountManager.cs" />
     <Compile Include="Security\Authentication\APIControllers\AuthenticationController.cs" />
     <Compile Include="Security\Authentication\AuthenticationManager.cs" />
     <Compile Include="Security\Authentication\AuthenticationToken.cs" />

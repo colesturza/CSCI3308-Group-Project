@@ -8,6 +8,7 @@ using UHub.CoreLib.Config;
 using UHub.CoreLib.Logging;
 using UHub.CoreLib.Security;
 using UHub.CoreLib.Security.Accounts;
+using UHub.CoreLib.Security.Accounts.Interfaces;
 using UHub.CoreLib.Security.Authentication;
 using UHub.CoreLib.Security.Authentication.Interfaces;
 
@@ -28,17 +29,17 @@ namespace UHub.CoreLib.Management
         //SECURITY
         private RecaptchaManager _recaptcha;
         public RecaptchaManager Recaptcha { get => _recaptcha; }
-
+        //auth
+        private IAuthenticationManager _auth;
+        public IAuthenticationManager Auth { get => _auth; }
+        //account
+        private IAccountManager _account;
+        public IAccountManager Accounts { get => _account; }
 
 
         //LOGGING
         private LoggingManager _logging;
         public LoggingManager Logging { get => _logging; }
-
-
-        //AUTHENTICATION
-        private IAuthenticationManager _auth;
-        public IAuthenticationManager Auth { get => _auth; }
 
 
         /// <summary>
@@ -76,6 +77,7 @@ namespace UHub.CoreLib.Management
 
 
             _auth = new AuthenticationManager();
+            _account = new AccountManager();
 
 
             System.Web.Http.GlobalConfiguration.Configure((config) =>
