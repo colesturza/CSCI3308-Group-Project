@@ -27,10 +27,12 @@ namespace UHub.Controllers
         public ActionResult Index()
         {
             //IMPORTANT
-            //POST-CONDITION
+            //POST-CONDITIONS
             //
             //"ViewBag.Title" must be set
             //"ViewBag.ErrorMessage" must be set
+            //"ViewBag.CatAddr" must be set
+
 
             Response.TrySkipIisCustomErrors = true;
 
@@ -81,6 +83,7 @@ namespace UHub.Controllers
                 ViewBag.ErrorMessage = CapturedCodes[400];
             }
 
+            ViewBag.CatAddr = $"https://http.cat/{id}.jpg";
             Response.StatusCode = id;
             return View();
         }
