@@ -6,32 +6,32 @@ using System.Threading.Tasks;
 
 namespace UHub.CoreLib
 {
-    internal static class Common
+    public static class Common
     {
         /// <summary>
         /// Name of the Web.Server Application variable name to be used when referencing the global TIPCCMS instance
         /// </summary>
-        internal const string APP_VAR_NAME = "UHUB_INSTANCE";
+        public const string APP_VAR_NAME = "UHUB_INSTANCE";
 
         /// <summary>
         /// Primary URL prefix for WebAPI Service endpoints
         /// </summary>
-        internal const string API_ROUTE_PREFIX = "uhubapi";
+        public const string API_ROUTE_PREFIX = "uhubapi";
 
         /// <summary>
         /// Header used to supply client machine key to authentication system
         /// </summary> 
-        internal const string AUTH_HEADER_MACHINE_KEY = "client-machine-key";
+        public const string AUTH_HEADER_MACHINE_KEY = "client-machine-key";
 
         /// <summary>
         /// Header used to supply client auth token
         /// </summary>
-        internal const string AUTH_HEADER_TOKEN = "uhub-auth-token";
+        public const string AUTH_HEADER_TOKEN = "uhub-auth-token";
 
         /// <summary>
         /// ID of the primary system level user in the DB
         /// </summary>
-        internal const long SYSTEM_USER_ID = 0;
+        public const long SYSTEM_USER_ID = 0L;
 
     }
 }
