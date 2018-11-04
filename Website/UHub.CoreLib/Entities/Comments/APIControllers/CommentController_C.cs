@@ -23,7 +23,7 @@ namespace UHub.CoreLib.Entities.Comments.APIControllers
         [HttpPost()]
         [Route("Create")]
         [ApiAuthControl]
-        public IHttpActionResult CreateComment([FromBody] Comment_C_PublicDTO comment)
+        public IHttpActionResult Create([FromBody] Comment_C_PublicDTO comment)
         {
             string status = "";
             HttpStatusCode statCode = HttpStatusCode.BadRequest;
