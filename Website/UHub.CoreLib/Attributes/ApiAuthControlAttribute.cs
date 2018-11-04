@@ -16,7 +16,7 @@ namespace UHub.CoreLib.Attributes
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
     public sealed class ApiAuthControlAttribute : AuthorizeAttribute
     {
-        public bool RequireAdmin { get; set; }
+        public bool RequireAdmin { get; set; } = false;
 
 
         protected override bool IsAuthorized(HttpActionContext actionContext)

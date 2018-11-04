@@ -13,7 +13,7 @@ using UHub.CoreLib.Management;
 namespace UHub.CoreLib.Attributes
 {
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
-    public sealed class ValidateRecaptchaAttribute : System.Web.Mvc.AuthorizeAttribute
+    public sealed class MvcValidateRecaptchaAttribute : System.Web.Mvc.AuthorizeAttribute
     {
         public string FailView { get; set; }
 

@@ -130,7 +130,8 @@
     <Compile Include="Attributes\DataPropertyAttribute.cs" />
     <Compile Include="Attributes\DtoClassAttribute.cs" />
     <Compile Include="Attributes\MvcAuthControlAttribute.cs" />
-    <Compile Include="Attributes\ValidateRecaptchaAttribute.cs" />
+    <Compile Include="Attributes\ApiValidateRecaptchaAttribute.cs" />
+    <Compile Include="Attributes\MvcValidateRecaptchaAttribute.cs" />
     <Compile Include="ClientFriendly\ResponseStrings.cs" />
     <Compile Include="Common.cs" />
     <Compile Include="Config\CmsConfiguration_Grouped.cs" />
