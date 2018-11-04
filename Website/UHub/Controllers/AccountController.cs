@@ -28,10 +28,12 @@ namespace UHub.Controllers
         }
 
 
+
+        [System.Web.Mvc.HttpGet]
         public ActionResult Login()
         {
             var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser();
-            if(cmsUser != null && cmsUser.ID != null)
+            if (cmsUser != null && cmsUser.ID != null)
             {
                 var url = CoreFactory.Singleton.Properties.DefaultAuthFwdURL;
                 return Redirect(url);
@@ -39,62 +41,35 @@ namespace UHub.Controllers
 
             return View();
         }
-
-
-        public ActionResult Confirm()
-        {
-            var idObj = Url.RequestContext.RouteData.Values["id"];
-            if(idObj == null)
-            {
-                ViewBag.Message = "Unable to complete operation - must provide confirmation key";
-                return View();
-            }
-
-
-            var idStr = idObj.ToString();
-
-            if(CoreFactory.Singleton.Accounts.TryConfirmUser(idStr))
-            {
-                ViewBag.Message = "User account has been successfully confirmed";
-            }
-            else
-            {
-                ViewBag.Message = "User confirmation key is not in a valid format";
-            }
-
-            return View();
-        }
-
-
-
-
-
         [System.Web.Mvc.HttpPost]
-        public ActionResult ProcessCredentials([FromBody] User_CredentialDTO creds)
+        public ActionResult Login([FromBody] User_CredentialDTO creds)
         {
 
             if (!ModelState.IsValid)
             {
-                return View("Login");
+                return View();
             }
 
 
             if (CoreFactory.Singleton.Properties.EnableRecaptcha)
             {
-                var captcha = CoreFactory.Singleton.Recaptcha.IsCaptchaValid();
-                if (!captcha)
+                var isCaptchaValid = CoreFactory.Singleton.Recaptcha.IsCaptchaValid();
+                if (!isCaptchaValid)
                 {
-                    return View("Login");
+                    ViewBag.ErrorMsg = "Captcha is not valid";
+                    return View();
                 }
             }
+
+
 
             var email = creds.Email;
             var pswd = creds.Password;
 
             var statusMsg = "An unknown authentication error has occured";
-            var isValid =  CoreFactory.Singleton.Auth.TrySetClientAuthToken(
-                email, 
-                pswd, 
+            var isValid = CoreFactory.Singleton.Auth.TrySetClientAuthToken(
+                email,
+                pswd,
                 false,
                 out var ResultCode,
                 GeneralFailHandler: (id) => { });
@@ -180,8 +155,34 @@ namespace UHub.Controllers
             {
                 ViewBag.ErrorMsg = statusMsg;
 
-                return View("Login");
+                return View();
             }
+        }
+
+
+
+        public ActionResult Confirm()
+        {
+            var idObj = Url.RequestContext.RouteData.Values["id"];
+            if (idObj == null)
+            {
+                ViewBag.Message = "Unable to complete operation - must provide confirmation key";
+                return View();
+            }
+
+
+            var idStr = idObj.ToString();
+
+            if (CoreFactory.Singleton.Accounts.TryConfirmUser(idStr))
+            {
+                ViewBag.Message = "User account has been successfully confirmed";
+            }
+            else
+            {
+                ViewBag.Message = "User confirmation key is not in a valid format";
+            }
+
+            return View();
         }
     }
 }

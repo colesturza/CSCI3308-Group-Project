@@ -31,10 +31,6 @@ namespace UHub.CoreLib.Entities.Comments.APIControllers
             {
                 return Content(statCode, status);
             }
-            if (!HandleRecaptcha(out status))
-            {
-                return Content(statCode, status);
-            }
 
             if (comment == null)
             {

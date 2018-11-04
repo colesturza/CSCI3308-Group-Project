@@ -38,7 +38,11 @@
 
 
 <p></p>
-<input type="submit" name="btn_Submit" value="Click Me" formaction="~/Account/ProcessCredentials" />
+@{
+    Html.RenderPartial("~/Views/Security/RecaptchaPartial.cshtml");
+}
+
+@*<input type="submit" name="btn_Submit" value="Click Me" formaction="~/Account/ProcessCredentials" />*@
 
 
 @Scripts.Render("~/bundles/jquery")

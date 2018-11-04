@@ -14,7 +14,7 @@ using System.Web;
 namespace UHub.CoreLib.Attributes
 {
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
-    public class ApiAuthControlAttribute : AuthorizeAttribute
+    public sealed class ApiAuthControlAttribute : AuthorizeAttribute
     {
         public bool RequireAdmin { get; set; }
 

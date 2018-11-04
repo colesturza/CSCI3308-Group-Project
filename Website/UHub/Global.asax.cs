@@ -132,7 +132,7 @@ namespace UHub
                     AcctPswdResetURL = "~/Account/ResetPassword",
                     AcctPswdUpdateURL = "~/Account/UpdatePassword",
                     AcctPswdResetExpiration = new TimeSpan(0, 0, 30, 0),
-                    EnableRecaptcha = false,                //CAPTCHA
+                    EnableRecaptcha = true,                //CAPTCHA
                     RecaptchaPublicKey = captchaPublicKey,
                     RecaptchaPrivateKey = captchaPrivateKey,
                     AutoConfirmNewAccounts = true,

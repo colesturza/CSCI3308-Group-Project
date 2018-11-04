@@ -12,7 +12,7 @@ using UHub.CoreLib.Tools;
 namespace UHub.CoreLib.Entities.Users.DTOs
 {
     [DtoClass(typeof(User))]
-    public class User_CredentialDTO : DtoEntityBase, IUserCredential
+    public sealed partial class User_CredentialDTO : DtoEntityBase, IUserCredential
     {
         [DisplayName("Email")]
         [Required]

@@ -34,10 +34,6 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             {
                 return Content(statCode, status);
             }
-            if (!HandleRecaptcha(out status))
-            {
-                return Content(statCode, status);
-            }
 
             if(post == null)
             {

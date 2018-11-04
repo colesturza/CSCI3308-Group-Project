@@ -1,2 +1,2 @@
-C:\Users\aalbert\Documents\_CODE\SchoolRepo\3308_GroupProj\Website\UHub.CoreLib\DataInterop\DataConverterGenerator.tt
-C:\Users\aalbert\Documents\_CODE\SchoolRepo\3308_GroupProj\Website\UHub.CoreLib\DataInterop\DtoConverterGenerator.tt
+C:\Users\aalbert\source\repos\3308_GroupProj\Website\UHub.CoreLib\DataInterop\DataConverterGenerator.tt
+C:\Users\aalbert\source\repos\3308_GroupProj\Website\UHub.CoreLib\DataInterop\DtoConverterGenerator.tt

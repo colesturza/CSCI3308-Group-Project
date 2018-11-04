@@ -17,7 +17,7 @@ using UHub.CoreLib.Management;
 namespace UHub.CoreLib.Attributes
 {
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
-    public class MvcAuthControlAttribute : System.Web.Mvc.AuthorizeAttribute
+    public sealed class MvcAuthControlAttribute : System.Web.Mvc.AuthorizeAttribute
     {
         public bool RequireAdmin { get; set; }
 
