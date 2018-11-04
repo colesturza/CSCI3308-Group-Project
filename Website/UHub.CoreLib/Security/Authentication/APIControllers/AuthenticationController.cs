@@ -11,6 +11,7 @@ using UHub.CoreLib.Extensions;
 using UHub.CoreLib.Management;
 using System.Net;
 using UHub.CoreLib.Attributes;
+using UHub.CoreLib.Entities.Users.DTOs;
 
 namespace UHub.CoreLib.Security.Authentication.APIControllers
 {
@@ -31,7 +32,7 @@ namespace UHub.CoreLib.Security.Authentication.APIControllers
 
         [Route("GetToken")]
         [HttpPost()]
-        public IHttpActionResult GetToken(string email, string password, bool persistent = false)
+        public IHttpActionResult GetToken([FromBody] User_CredentialDTO user, bool persistent = false)
         {
             string status = "";
             HttpStatusCode statCode = HttpStatusCode.BadRequest;
@@ -43,6 +44,13 @@ namespace UHub.CoreLib.Security.Authentication.APIControllers
             {
                 return Content(statCode, status);
             }
+
+            if(user == null)
+            {
+                return InternalServerError();
+            }
+            string email = user.Email;
+            string password = user.Password;
 
 
             var enableDetail = CoreFactory.Singleton.Properties.EnableDetailedAPIErrors;

@@ -53,6 +53,9 @@
       <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.ComponentModel.Composition.Registration" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.Entity" />
@@ -224,6 +227,8 @@
     <Compile Include="Entities\Schools\Management\SchoolReader_Core.cs" />
     <Compile Include="Entities\Schools\School.cs" />
     <Compile Include="Entities\Users\APIControllers\UserController.cs" />
+    <Compile Include="Entities\Users\DTOs\User_CredentialDTO.cs" />
+    <Compile Include="Entities\Users\Interfaces\IUserCredential.cs" />
     <Compile Include="Entities\Users\Management\UserReader_EntComments.cs" />
     <Compile Include="Entities\Users\Management\UserReader_EntClubMods.cs" />
     <Compile Include="Entities\Users\Management\UserReader_EntPosts.cs" />

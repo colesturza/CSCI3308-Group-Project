@@ -26,6 +26,7 @@ using System.Reflection;
 using System.Web.Http.Routing;
 using System.Web.Http.Filters;
 using NSubstitute;
+using UHub.CoreLib.Entities.Users.DTOs;
 
 namespace UHub.CoreLib.Tests
 {
@@ -197,7 +198,14 @@ namespace UHub.CoreLib.Tests
             email = email ?? "aual1780@colorado.edu";
             password = password ?? "testtest";
 
-            var response = authController.GetToken(email, password);
+
+            User_CredentialDTO cred = new User_CredentialDTO()
+            {
+                Email = email,
+                Password = password
+            };
+
+            var response = authController.GetToken(cred);
             Assert.IsNotNull(response);
 
             var result = response as OkNegotiatedContentResult<string>;

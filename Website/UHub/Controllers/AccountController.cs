@@ -4,8 +4,8 @@ using System.Linq;
 using System.Web;
 using System.Web.Http;
 using System.Web.Mvc;
-using UHub.Models.Account;
 using UHub.CoreLib.Attributes;
+using UHub.CoreLib.Entities.Users.DTOs;
 using UHub.CoreLib.Extensions;
 using UHub.CoreLib.Management;
 using UHub.CoreLib.Security;
@@ -70,7 +70,7 @@ namespace UHub.Controllers
 
 
         [System.Web.Mvc.HttpPost]
-        public ActionResult ProcessCredentials([FromBody] ClientCreds creds)
+        public ActionResult ProcessCredentials([FromBody] User_CredentialDTO creds)
         {
 
             if (!ModelState.IsValid)
