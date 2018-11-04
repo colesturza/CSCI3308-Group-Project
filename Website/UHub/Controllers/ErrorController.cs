@@ -15,11 +15,12 @@ namespace UHub.Controllers
             [401] = "User not authenticated",
             [403] = "User not authorized",
             [404] = "Requested resource not found",
+            [410] = "Requested resource has been removed",
+            [418] = "This is a teapot",
             [500] = "An unexpected server error has occured",
             [501] = "Requested resource is not implemented",
             [502] = "Bad Gateway",
             [503] = "Requested service is not currently available",
-            [510] = "Requested service has been removed"
         };
 
 
