@@ -64,11 +64,11 @@ namespace UHub.CoreLib.Entities.Posts.Management.Tests
 
             var controller = TestGlobal.GetAuthRequest(new PostController(), true);
 
-            var response = controller.GetPageBySchool();
+
+            dynamic response = controller.GetPageBySchool();
             Assert.IsNotNull(response);
 
-
-            var result = response as OkNegotiatedContentResult<IEnumerable<Post_R_PublicDTO>>;
+            dynamic result = response.Content;
             Assert.IsNotNull(result);
 
         }
@@ -143,12 +143,10 @@ namespace UHub.CoreLib.Entities.Posts.Management.Tests
 
             var controller = TestGlobal.GetAuthRequest(new PostController(), true);
 
-            var response = controller.GetPageByClub(clubID.Value);
+            dynamic response = controller.GetPageByClub(clubID.Value);
             Assert.IsNotNull(response);
 
-            
-
-            var result = response as OkNegotiatedContentResult<IEnumerable<Post_R_PublicDTO>>;
+            dynamic result = response.Content;
             Assert.IsNotNull(result);
 
         }
