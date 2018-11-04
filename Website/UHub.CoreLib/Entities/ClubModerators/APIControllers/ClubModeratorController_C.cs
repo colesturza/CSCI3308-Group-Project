@@ -15,6 +15,7 @@ using UHub.CoreLib.Tools;
 
 namespace UHub.CoreLib.Entities.ClubModerators.APIControllers
 {
+
     public sealed partial class ClubModeratorController
     {
         [HttpPost()]
