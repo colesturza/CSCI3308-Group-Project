@@ -59,7 +59,7 @@ namespace UHub.CoreLib.Entities.Comments.Management
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex);
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex);
                 ErrorMsg = ex.Message;
                 return null;
             }

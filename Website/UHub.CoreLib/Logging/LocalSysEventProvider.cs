@@ -5,11 +5,12 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UHub.CoreLib.Logging.Interfaces;
 using UHub.CoreLib.Management;
 
 namespace UHub.CoreLib.Logging
 {
-    internal class SysEventWorker : ILoggingWorker
+    internal sealed class LocalSysEventProvider : ILocalLogProvider
     {
         //EVENT FOLDER
         private const string uhubEventSource = "UHUB-CMS";
@@ -22,7 +23,7 @@ namespace UHub.CoreLib.Logging
         /// </summary>
         private string EventSourceAdj { get; }
 
-        internal SysEventWorker(LoggingSource LogSrc, string SiteFriendlyName)
+        internal LocalSysEventProvider(LoggingSource LogSrc, string SiteFriendlyName)
         {
 
             if (LogSrc == LoggingSource.Application)

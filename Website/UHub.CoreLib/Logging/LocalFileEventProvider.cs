@@ -5,15 +5,16 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UHub.CoreLib.Logging.Interfaces;
 using UHub.CoreLib.Management;
 
 namespace UHub.CoreLib.Logging
 {
-    internal class FileEventWorker : ILoggingWorker
+    internal sealed class LocalFileEventProvider : ILocalLogProvider
     {
         
 
-        internal FileEventWorker()
+        internal LocalFileEventProvider()
         {
 
         }

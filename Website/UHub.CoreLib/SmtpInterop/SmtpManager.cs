@@ -60,7 +60,7 @@ namespace UHub.CoreLib.SmtpInterop
                     catch (Exception ex)
                     {
                         result = SmtpResultCode.SendError;
-                        CoreFactory.Singleton.Logging.CreateErrorLog(ex);
+                        CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex);
                         return false;
                     }
                 }

@@ -68,7 +68,7 @@ namespace UHub.CoreLib.Attributes
             {
                 var errCode = "C39F81BF-E61D-4C55-AA0D-E8950549E74B";
                 Exception ex_outer = new Exception(errCode, ex);
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex_outer);
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
 
 
                 HandleLoginRedirect(ref filterContext);

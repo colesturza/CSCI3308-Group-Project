@@ -61,16 +61,27 @@ namespace UHub.CoreLib.Management
 
 
             //LOGGING
-            if (_properties.LoggingMode == LoggingMode.LocalFile)
+            _logging = new LoggingManager();
+            if ((_properties.LocalLogMode & LocalLoggingMode.LocalFile) != 0)
             {
-                _logging = new LoggingManager(new FileEventWorker());
+                var fileProvider = new LocalFileEventProvider();
+                _logging.AddProvider(fileProvider);
             }
-            else if (_properties.LoggingMode == LoggingMode.SystemEvents)
+            if ((_properties.LocalLogMode & LocalLoggingMode.SystemEvents) != 0)
             {
                 var logSrc = Properties.LoggingSource;
                 var fName = Properties.SiteFriendlyName;
-                _logging = new LoggingManager(new SysEventWorker(logSrc, fName));
+                var eventProvider = new LocalSysEventProvider(logSrc, fName);
+
+                _logging.AddProvider(eventProvider);
             }
+            if((_properties.UsageLogMode & UsageLoggingMode.GoogleAnalytics) != 0)
+            {
+                var googleProvider = new UsageGAnalyticsProvider();
+
+                _logging.AddProvider(googleProvider);
+            }
+
 
 
             _recaptcha = new RecaptchaManager();

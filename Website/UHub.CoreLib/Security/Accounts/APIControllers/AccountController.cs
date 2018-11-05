@@ -99,7 +99,7 @@ namespace UHub.CoreLib.Security.Accounts.APIControllers
             {
                 var errCode = "100d1257-b74c-461d-a389-b90298895e5d";
                 Exception ex_outer = new Exception(errCode, ex);
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex_outer);
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
 
                 return Content(HttpStatusCode.InternalServerError, status);
             }

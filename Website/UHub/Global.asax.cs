@@ -41,17 +41,19 @@ namespace UHub
             var mailUsername = WebConfigurationManager.AppSettings["MailUsername"];
             var mailPswd = WebConfigurationManager.AppSettings["MailPassword"];
 
-
             //FILES
             var fileStoreDir = WebConfigurationManager.AppSettings["FileStoreDirectory"];
             var imgStoreDir = WebConfigurationManager.AppSettings["ImageStoreDirectory"];
             var tempCacheDir = WebConfigurationManager.AppSettings["TempCacheDirectory"];
             var logStoreDir = WebConfigurationManager.AppSettings["LogStoreDirectory"];
 
-
             //CAPTCHA
             var captchaPublicKey = WebConfigurationManager.AppSettings["RecaptchaPublicKey"];
             var captchaPrivateKey = WebConfigurationManager.AppSettings["RecaptchaPrivateKey"];
+
+            //LOGGING
+            var googleAnalyticsKey = WebConfigurationManager.AppSettings["GoogleAnalyticsKey"];
+
 
             if (dbConn == "TEST")
             {
@@ -147,8 +149,9 @@ namespace UHub
                 {
                     //EnableUserSessionLogging = true,
                     //EnableUserActivityLogging = true,
-                    LoggingMode = LoggingMode.SystemEvents,
-                    LoggingSource = LoggingSource.UHUB_CMS
+                    LocalLogMode = LocalLoggingMode.SystemEvents,
+                    LoggingSource = LoggingSource.UHUB_CMS,
+                    GoogleAnalyticsKey = googleAnalyticsKey
                 },
                 Errors = new CmsConfig_Errors
                 {

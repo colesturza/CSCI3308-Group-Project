@@ -33,7 +33,7 @@ namespace UHub.CoreLib.Entities.Users.Management
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex);
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex);
                 throw new Exception();
             }
         }
@@ -57,7 +57,7 @@ namespace UHub.CoreLib.Entities.Users.Management
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex);
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex);
                 throw new Exception();
             }
         }

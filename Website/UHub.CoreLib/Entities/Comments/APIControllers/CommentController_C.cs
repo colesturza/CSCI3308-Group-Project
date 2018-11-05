@@ -71,7 +71,7 @@ namespace UHub.CoreLib.Entities.Comments.APIControllers
             {
                 var errCode = "8b9255a4-070b-427c-91a9-4755199aaded";
                 Exception ex_outer = new Exception(errCode, ex);
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex_outer);
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
 
                 return Content(HttpStatusCode.InternalServerError, status);
             }

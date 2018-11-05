@@ -25,10 +25,10 @@ namespace UHub.CoreLib.Security.Authentication
         internal const string REQUEST_CURRENT_USER = "Global_CurrentUser";
 
 
-        private AuthenticationWorker authWorker;
+        private AuthenticationProvider authWorker;
         internal AuthenticationManager()
         {
-            authWorker = new FormsWorker();
+            authWorker = new FormsAuthProvider();
         }
 
         /// <summary>
@@ -138,7 +138,7 @@ namespace UHub.CoreLib.Security.Authentication
                 {
                     token = "ERROR";
                     GeneralFailHandler(new Guid("B51AD0A9-1E02-4911-AA67-FC60A0E19E90"));
-                    CoreFactory.Singleton.Logging.CreateErrorLog(ex);
+                    CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex);
 
                     return false;
                 }
@@ -146,7 +146,7 @@ namespace UHub.CoreLib.Security.Authentication
                 {
                     token = "ERROR";
                     GeneralFailHandler(new Guid("88CB24F0-139D-42BE-82D5-56666580323D"));
-                    CoreFactory.Singleton.Logging.CreateErrorLog(ex);
+                    CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex);
 
                     return false;
                 }
@@ -592,11 +592,11 @@ namespace UHub.CoreLib.Security.Authentication
             bool DEBUG = false;
             if (ErrorCode != -1 && DEBUG)
             {
-                CoreFactory.Singleton.Logging.CreateMessageLog(ErrorCode.ToString());
+                CoreFactory.Singleton.Logging.CreateMessageLogAsync(ErrorCode.ToString());
             }
             if (key != null && DEBUG)
             {
-                CoreFactory.Singleton.Logging.CreateMessageLog(key.ToString());
+                CoreFactory.Singleton.Logging.CreateMessageLogAsync(key.ToString());
             }
 
             try

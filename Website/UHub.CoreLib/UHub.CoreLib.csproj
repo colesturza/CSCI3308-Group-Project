@@ -40,6 +40,12 @@
     <Reference Include="BCrypt.Net-Core, Version=1.5.0.0, Culture=neutral, PublicKeyToken=4d63bfbfdfd3c6e4, processorArchitecture=MSIL">
       <HintPath>..\packages\BCrypt.Net-Core.1.5.0\lib\net452\BCrypt.Net-Core.dll</HintPath>
     </Reference>
+    <Reference Include="GoogleAnalyticsTracker.Core, Version=4.6.7.0, Culture=neutral, PublicKeyToken=04ab204e84b117c0, processorArchitecture=MSIL">
+      <HintPath>..\packages\GoogleAnalyticsTracker.Core.4.6.7\lib\portable45-net45+win8+wpa81\GoogleAnalyticsTracker.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="GoogleAnalyticsTracker.WebAPI2, Version=4.6.7.0, Culture=neutral, PublicKeyToken=04ab204e84b117c0, processorArchitecture=MSIL">
+      <HintPath>..\packages\GoogleAnalyticsTracker.WebAPI2.4.6.7\lib\net45\GoogleAnalyticsTracker.WebAPI2.dll</HintPath>
+    </Reference>
     <Reference Include="HtmlSanitizer, Version=3.0.0.0, Culture=neutral, PublicKeyToken=61c49a1a9e79cc28, processorArchitecture=MSIL">
       <HintPath>..\packages\HtmlSanitizer.4.0.187\lib\net45\HtmlSanitizer.dll</HintPath>
     </Reference>
@@ -259,12 +265,19 @@
     <Compile Include="Extensions\TypeExtensions.cs" />
     <Compile Include="Logging\Enums\ActivityLogType.cs" />
     <Compile Include="Logging\Enums\LocationLogType.cs" />
-    <Compile Include="Logging\Enums\LoggingMode.cs" />
+    <Compile Include="Logging\Enums\LocalLoggingMode.cs" />
     <Compile Include="Logging\Enums\LoggingSource.cs" />
-    <Compile Include="Logging\FileEventWorker.cs" />
-    <Compile Include="Logging\ILoggingWorker.cs" />
+    <Compile Include="Logging\Enums\UsageLoggingMode.cs" />
+    <Compile Include="Logging\LocalFileEventProvider.cs" />
+    <Compile Include="Logging\Interfaces\ILocalLogProvider.cs" />
+    <Compile Include="Logging\Interfaces\IUsageLogProvider.cs" />
+    <Compile Include="Logging\LoggingHelpers.cs" />
+    <Compile Include="Logging\LoggingManager_Usage.cs" />
+    <Compile Include="Logging\LoggingManager_local.cs" />
     <Compile Include="Logging\LoggingManager.cs" />
-    <Compile Include="Logging\SysEventWorker.cs" />
+    <Compile Include="Logging\LocalSysEventProvider.cs" />
+    <Compile Include="Logging\UsageGAnalyticsProvider.cs" />
+    <Compile Include="Logging\UsageLogData.cs" />
     <Compile Include="Management\CoreFactory.cs" />
     <Compile Include="Management\CoreManager.cs" />
     <Compile Include="Management\CoreProperties.cs" />
@@ -276,12 +289,12 @@
     <Compile Include="Security\Authentication\APIControllers\AuthenticationController.cs" />
     <Compile Include="Security\Authentication\AuthenticationManager.cs" />
     <Compile Include="Security\Authentication\AuthenticationToken.cs" />
-    <Compile Include="Security\Authentication\AuthenticationWorker.cs" />
+    <Compile Include="Security\Authentication\AuthenticationProvider.cs" />
     <Compile Include="Security\Authentication\Enums\AuthResultCode.cs" />
     <Compile Include="Security\Authentication\Enums\PasswordValidationStatus.cs" />
     <Compile Include="Security\Authentication\Enums\TokenValidationStatus.cs" />
     <Compile Include="Security\Authentication\Enums\UserLoginScope.cs" />
-    <Compile Include="Security\Authentication\FormsWorker.cs" />
+    <Compile Include="Security\Authentication\FormsAuthProvider.cs" />
     <Compile Include="Security\Authentication\Interfaces\IAuthenticationManager.cs" />
     <Compile Include="Security\Authentication\TokenManager.cs" />
     <Compile Include="Security\Authentication\TokenValidator.cs" />
@@ -355,7 +368,6 @@
     <Folder Include="Entities\SchoolMajors\Enums\" />
     <Folder Include="Entities\Schools\Enums\" />
     <Folder Include="Logging\APIControllers\" />
-    <Folder Include="Logging\Interfaces\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

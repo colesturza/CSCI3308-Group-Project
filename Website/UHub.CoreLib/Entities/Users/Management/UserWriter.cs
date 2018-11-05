@@ -73,7 +73,7 @@ namespace UHub.CoreLib.Entities.Users.Management
             {
                 var errCode = "0E94B3A8-CBDA-4EA5-8DDB-1C50D8496763";
                 Exception ex_outer = new Exception(errCode, ex);
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex_outer);
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
 
                 ErrorMsg = ex.Message;
                 return null;
@@ -119,7 +119,7 @@ namespace UHub.CoreLib.Entities.Users.Management
             {
                 var errCode = "9E176176-3FE8-4739-B071-960647EA2193";
                 Exception ex_outer = new Exception(errCode, ex);
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex_outer);
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
 
                 throw new Exception();
             }
@@ -151,7 +151,7 @@ namespace UHub.CoreLib.Entities.Users.Management
             {
                 var errCode = "65F803F1-5C9E-41AD-84F3-B7CCF6C47873";
                 Exception ex_outer = new Exception(errCode, ex);
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex_outer);
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
 
                 return false;
             }
@@ -179,7 +179,7 @@ namespace UHub.CoreLib.Entities.Users.Management
             {
                 var errCode = "0EF7E744-5F24-4EB2-9CD5-CF8C604976D9";
                 Exception ex_outer = new Exception(errCode, ex);
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex_outer);
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
 
                 throw new Exception();
             }
@@ -208,7 +208,7 @@ namespace UHub.CoreLib.Entities.Users.Management
             {
                 var errCode = "78485CFC-5709-49EE-BBB4-91A3A9D4B625";
                 Exception ex_outer = new Exception(errCode, ex);
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex_outer);
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
 
                 throw new Exception();
             }
@@ -237,7 +237,7 @@ namespace UHub.CoreLib.Entities.Users.Management
             {
                 var errCode = "017BDF75-40BA-4F89-B15C-5EB2CEFFC7E5";
                 Exception ex_outer = new Exception(errCode, ex);
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex_outer);
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
 
                 throw new Exception();
             }
@@ -265,7 +265,7 @@ namespace UHub.CoreLib.Entities.Users.Management
             {
                 var errCode = "84986584-BD1D-4DDB-8DAA-475A3BB874C1";
                 Exception ex_outer = new Exception(errCode, ex);
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex_outer);
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
 
                 return false;
             }
@@ -293,7 +293,7 @@ namespace UHub.CoreLib.Entities.Users.Management
             {
                 var errCode = "CDFB440C-2271-4DB4-BDE8-FC198D1FDACC";
                 Exception ex_outer = new Exception(errCode, ex);
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex_outer);
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
 
                 return false;
             }
@@ -322,7 +322,7 @@ namespace UHub.CoreLib.Entities.Users.Management
             {
                 var errCode = "6FE73439-372D-4935-92C9-912B47822499";
                 Exception ex_outer = new Exception(errCode, ex);
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex_outer);
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
             }
         }
 
@@ -383,7 +383,7 @@ namespace UHub.CoreLib.Entities.Users.Management
             {
                 var errCode = "2CE3A9C1-DFC0-4AD0-B0F0-B893DAD61695";
                 Exception ex_outer = new Exception(errCode, ex);
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex_outer);
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
 
                 throw new Exception();
             }
@@ -406,7 +406,7 @@ namespace UHub.CoreLib.Entities.Users.Management
             {
                 var errCode = "7BF7BD80-7A27-4DEC-9AE1-46FEF34F93FD";
                 Exception ex_outer = new Exception(errCode, ex);
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex_outer);
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
 
                 throw new Exception();
             }
@@ -428,7 +428,7 @@ namespace UHub.CoreLib.Entities.Users.Management
             {
                 var errCode = "5A5DCF9F-2C25-4539-9F74-C7BC99EA192D";
                 Exception ex_outer = new Exception(errCode, ex);
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex_outer);
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
 
                 throw new Exception();
             }
@@ -450,7 +450,7 @@ namespace UHub.CoreLib.Entities.Users.Management
             {
                 var errCode = "8932F761-80E0-4960-99D9-B0995D6F2C3A";
                 Exception ex_outer = new Exception(errCode, ex);
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex_outer);
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
 
                 throw new Exception();
             }

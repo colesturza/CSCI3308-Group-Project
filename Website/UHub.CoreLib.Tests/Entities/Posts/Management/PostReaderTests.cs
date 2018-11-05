@@ -10,6 +10,9 @@ using UHub.CoreLib.Tests;
 using UHub.CoreLib.Entities.Schools.Management;
 using UHub.CoreLib.Entities.SchoolClubs.Management;
 using UHub.CoreLib.Entities.Posts.DTOs;
+using UHub.CoreLib.Tools;
+using UHub.CoreLib.DataInterop;
+using UHub.CoreLib.Management;
 
 namespace UHub.CoreLib.Entities.Posts.Management.Tests
 {
@@ -147,6 +150,51 @@ namespace UHub.CoreLib.Entities.Posts.Management.Tests
             PostReader.GetPostsByClubPage(schoolId, 3, null, 1);
 
 
+        }
+
+
+
+        [TestMethod]
+        public void GetPostStatTest()
+        {
+            TestGlobal.TestInit();
+
+            var iterCount = 50;
+            var samples1 = new List<double>();
+            var itmCount = 0;
+
+            var start_outer = FailoverDateTimeOffset.UtcNow;
+            for (int i = 0; i < iterCount; i++)
+            {
+                var start = FailoverDateTimeOffset.UtcNow;
+
+                var set = SqlWorker.ExecBasicQuery<Post>(
+                    CoreFactory.Singleton.Properties.CmsDBConfig,
+                    "[dbo].[Posts_GetAll]",
+                    (cmd) => { },
+                    (reader) =>
+                    {
+                        return reader.ToCustomDBType<Post>();
+                    }).ToList();
+
+                var end = FailoverDateTimeOffset.UtcNow;
+
+                itmCount = set.Count;
+                double sample = (end - start).TotalSeconds;
+                samples1.Add(sample);
+            }
+            var end_outer = FailoverDateTimeOffset.UtcNow;
+            var totalTime = (end_outer - start_outer).TotalMilliseconds;
+
+            Console.WriteLine($"Total Time: {totalTime}ms");
+            Console.WriteLine($"ItemCount: {itmCount}");
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine($"Iterations: {iterCount}");
+            Console.WriteLine($"Min: {samples1.Min()}ms");
+            Console.WriteLine($"Max: {samples1.Max()}ms");
+            Console.WriteLine($"Avg: {samples1.Average()}ms");
+            Console.WriteLine($"Median: {samples1.Median()}ms");
         }
 
     }

@@ -110,7 +110,7 @@ namespace UHub.CoreLib.Security.Authentication.APIControllers
             {
                 var errCode = "4717C1CF-7C2E-4596-9917-119FF7248B10";
                 Exception ex_outer = new Exception(errCode, ex);
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex_outer);
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
 
                 return Content(HttpStatusCode.InternalServerError, status);
             }
@@ -155,7 +155,7 @@ namespace UHub.CoreLib.Security.Authentication.APIControllers
             {
                 var errCode = "7D136E21-6F6C-436B-89E3-9F57E6C0861D";
                 Exception ex_outer = new Exception(errCode, ex);
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex_outer);
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
 
 
                 //return original token

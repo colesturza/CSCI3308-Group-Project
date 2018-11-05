@@ -225,7 +225,7 @@ namespace UHub.CoreLib.Security.Accounts
                     {
                         //account creating, but auto login failed
                         var errCode = "A275649B-AD89-43E3-8DE2-B81B6F47FE6A";
-                        CoreFactory.Singleton.Logging.CreateErrorLog(errCode);
+                        CoreFactory.Singleton.Logging.CreateErrorLogAsync(errCode);
 
                         ResultCode = AccountResultCode.Success;
                         SuccessHandler?.Invoke(cmsUser, false);
@@ -246,7 +246,7 @@ namespace UHub.CoreLib.Security.Accounts
                         ResultCode = AccountResultCode.UnknownError;
 
                         var errCode = "AEBDE62B-31D5-4B48-8D26-3123AA5219A3";
-                        CoreFactory.Singleton.Logging.CreateErrorLog(errCode);
+                        CoreFactory.Singleton.Logging.CreateErrorLogAsync(errCode);
                         GeneralFailHandler?.Invoke(new Guid(errCode));
 
                         return false;
@@ -270,7 +270,7 @@ namespace UHub.CoreLib.Security.Accounts
                 var errCode = "A983AFB8-920A-4850-9197-3DDE7F6E89CC";
                 Exception ex_outer = new Exception(errCode, ex);
 
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex_outer);
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
                 GeneralFailHandler?.Invoke(new Guid(errCode));
                 return false;
             }
@@ -547,7 +547,7 @@ namespace UHub.CoreLib.Security.Accounts
                 var errCode = "B9932471-7779-4710-A97E-BB1FA147A995";
                 Exception ex_outer = new Exception(errCode, ex);
 
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex_outer);
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
                 GeneralFailHandler?.Invoke(new Guid(errCode));
                 return false;
             }
@@ -662,7 +662,7 @@ namespace UHub.CoreLib.Security.Accounts
                 catch (Exception ex1)
                 {
                     ResultCode = AccountResultCode.UnknownError;
-                    CoreFactory.Singleton.Logging.CreateErrorLog(ex1);
+                    CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex1);
                     GeneralFailHandler?.Invoke(new Guid("AA3E2DB3-5CCF-400D-8046-1D982E723F58"));
                     return false;
                 }
@@ -693,7 +693,7 @@ namespace UHub.CoreLib.Security.Accounts
                 }
                 catch
                 {
-                    CoreFactory.Singleton.Logging.CreateErrorLog("6B11B5D6-6B8D-419C-B45D-0444EE23EA32");
+                    CoreFactory.Singleton.Logging.CreateErrorLogAsync("6B11B5D6-6B8D-419C-B45D-0444EE23EA32");
                 }
 
                 //remove any recovery contexts
@@ -711,7 +711,7 @@ namespace UHub.CoreLib.Security.Accounts
                 var errCode = "8641F1E3-B29B-4CC1-ABA5-90B8693625EE";
                 Exception ex_outer = new Exception(errCode, ex2);
 
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex_outer);
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
                 GeneralFailHandler?.Invoke(new Guid(errCode));
                 return false;
 
@@ -772,7 +772,7 @@ namespace UHub.CoreLib.Security.Accounts
                 var errCode = "54879964-C1BD-420C-B54D-BFBECFB71A52";
                 Exception ex_outer = new Exception(errCode, ex);
 
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex_outer);
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
                 throw new Exception();
             }
         }

@@ -63,7 +63,7 @@ namespace UHub.CoreLib.Entities.SchoolMajors.Management
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex);
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex);
                 ErrorMsg = ex.Message;
                 return null;
             }

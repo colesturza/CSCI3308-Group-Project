@@ -15,7 +15,7 @@ using System.Text.RegularExpressions;
 
 namespace UHub.CoreLib.Security.Authentication
 {
-    internal sealed class FormsWorker : AuthenticationWorker
+    internal sealed class FormsAuthProvider : AuthenticationProvider
     {
         /// <summary>
         /// Try to authenticate a user account using the supplied account credentials.  Includes internal logging
@@ -80,7 +80,7 @@ namespace UHub.CoreLib.Security.Authentication
             catch (Exception ex)
             {
                 ResultCode = AuthResultCode.UnknownError;
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex);
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex);
                 GeneralFailHandler?.Invoke(new Guid("B61DB416-F38E-495C-BFDF-317FDB7F8063"));
                 return false;
             }
@@ -120,7 +120,7 @@ namespace UHub.CoreLib.Security.Authentication
             catch (Exception ex)
             {
                 ResultCode = AuthResultCode.UnknownError;
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex);
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex);
                 GeneralFailHandler?.Invoke(new Guid("EE2C6BB0-8E49-4B31-9CB1-8C246C3EFFD9"));
                 return false;
             }
@@ -162,7 +162,7 @@ namespace UHub.CoreLib.Security.Authentication
             {
                 ResultCode = AuthResultCode.UnknownError;
 
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex);
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex);
                 GeneralFailHandler?.Invoke(new Guid("EC7D4ACA-498F-49DA-994B-099292AA9BD8"));
                 return false;
             }

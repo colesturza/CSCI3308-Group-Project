@@ -16,9 +16,9 @@ using UHub.CoreLib.Entities.Users.Management;
 
 namespace UHub.CoreLib.Security.Authentication
 {
-    internal abstract class AuthenticationWorker
+    internal abstract class AuthenticationProvider
     {
-        internal AuthenticationWorker()
+        internal AuthenticationProvider()
         {
 
         }
@@ -179,7 +179,7 @@ namespace UHub.CoreLib.Security.Authentication
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex);
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex);
                 CmsUser = UserReader.GetAnonymousUser();
                 tokenStatus = TokenValidationStatus.TokenAESFailure;
                 try
