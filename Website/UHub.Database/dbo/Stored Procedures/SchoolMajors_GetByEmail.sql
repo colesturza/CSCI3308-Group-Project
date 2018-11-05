@@ -18,12 +18,17 @@ begin
 
 	declare @_schoolID bigint
 
+	declare @domain nvarchar(250)
+	set @domain = SUBSTRING(@email, CHARINDEX('@', @email), 250)
+
+
+
 	select 
 		@_schoolID = xr.EntID
 	from dbo.EntPropertyXRef xr
 	where
 		xr.PropID = 17		--DomainValidator
-		and @Email like '%' + xr.PropValue
+		and @domain = xr.PropValue
 
 
 
