@@ -11,7 +11,7 @@
 
 
 
-CREATE proc [dbo].[Posts_GetBySchoolClub]
+CREATE proc [dbo].[Posts_GetByClub]
 
 	@SchoolClubID bigint
 
@@ -42,12 +42,11 @@ select
 
 from dbo.vPosts vu
 
-JOIN dbo.EntChildXRef ON ParentEntID = @SchoolClubID AND ChildEntType = 6
+inner join dbo.EntChildXRef ecx
+ON 
+	ecx.ChildEntID = vu.ID
+	and ecx.ChildEntType = 6		-- POST TYPE [6]
+	and ecx.ParentEntID = @SchoolClubID
+	and ecx.ParentEntType = 4		--SCHOOL CLUB TYPE [4]
 
 end
-
-
-
-
-
-

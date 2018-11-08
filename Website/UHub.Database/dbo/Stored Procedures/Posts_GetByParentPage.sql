@@ -1,8 +1,8 @@
 ﻿
 
-CREATE proc [dbo].[Posts_GetByClubPage]
+create proc [dbo].[Posts_GetByParentPage]
 
-	@ClubID bigint,
+	@ParentID bigint,
 	@StartID bigint null,
 	@PageNum int null,
 	@ItemCount smallint
@@ -33,12 +33,6 @@ begin
 		end
 	end
 
-
-	--kill if club id does not exist as a club
-	if((select EntTypeID from Entities where ID = @ClubID) != 4)	--SCHOOL CLUB TYPE [4]
-	begin
-		return;
-	end
 
 
 	--START ID CAN BE DERIVED AT CLIENT
@@ -99,9 +93,9 @@ begin
 			,ROW_NUMBER() over (order by vu.CreatedDate desc) as RowNum
 		from dbo.vPosts vu
 
-		where
+		where 
 			vu.ID <= @StartID
-			and vu.ParentID = @ClubID
+			and vu.ParentID = @ParentID
 
 	)
 

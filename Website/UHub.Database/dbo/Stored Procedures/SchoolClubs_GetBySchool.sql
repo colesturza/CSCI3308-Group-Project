@@ -33,11 +33,11 @@ begin
 		vu.[DeletedDate]
 
 	from dbo.vSchoolClubs vu
-
-	INNER JOIN dbo.EntChildXRef
+	
+	INNER JOIN dbo.EntChildXRef ecx
 	ON 
-		ParentEntID = @SchoolID
-		AND ChildEntID = vu.ID
+		ecx.ParentEntID = @SchoolID
+		AND ecx.ChildEntID = vu.ID
 
 end
 

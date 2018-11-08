@@ -107,7 +107,6 @@
     <Build Include="dbo\Views\vImages.sql" />
     <Build Include="dbo\Views\vEntPropertyMap.sql" />
     <Build Include="dbo\Stored Procedures\Posts_GetBySchool.sql" />
-    <Build Include="dbo\Stored Procedures\Posts_GetBySchoolClub.sql" />
     <Build Include="dbo\Stored Procedures\Post_GetByID.sql" />
     <Build Include="dbo\Stored Procedures\Comments_GetByPost.sql" />
     <Build Include="dbo\Stored Procedures\Comments_GetByParent.sql" />
@@ -200,5 +199,9 @@
     <Build Include="dbo\Stored Procedures\Posts_GetCountBySchool.sql" />
     <Build Include="dbo\Stored Procedures\Posts_GetCountByClub.sql" />
     <Build Include="dbo\Stored Procedures\User_ValidateClubModerator.sql" />
+    <Build Include="dbo\Stored Procedures\Posts_GetCountByParent.sql" />
+    <Build Include="dbo\Stored Procedures\Posts_GetByParentPage.sql" />
+    <Build Include="dbo\Stored Procedures\Posts_GetByParent.sql" />
+    <Build Include="dbo\Stored Procedures\Posts_GetByClub.sql" />
   </ItemGroup>
 </Project>
