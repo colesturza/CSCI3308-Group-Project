@@ -13,59 +13,55 @@ namespace UHub.CoreLib.SmtpInterop
     /// </summary>
     public static partial class SmtpManager
     {
-        /// <summary>
-        /// Attempt to send an email using the system configuration
-        /// </summary>
-        /// <param name="Message"></param>
-        /// <returns></returns>
-        public static bool TrySendMessage(SmtpMessage Message)
-        {
-            return TrySendMessage(Message, out _);
-        }
-
 
         /// <summary>
         /// Attempt to send an email using the system configuration
         /// </summary>
         /// <param name="Message"></param>
         /// <returns></returns>
-        public static bool TrySendMessage(SmtpMessage Message, out SmtpResultCode result)
+        public static async Task<SmtpResultCode> TrySendMessageAsync(SmtpMessage Message)
         {
             if (!Message.Validate())
             {
-                result = SmtpResultCode.ValidationError;
-                return false;
+                return SmtpResultCode.ValidationError;
             }
 
             var from = CoreFactory.Singleton.Properties.NoReplyMailConfig.FromAddress;
             var to = Message.Recipient;
             var subj = Message.Subject;
 
+
+
             using (SmtpClient client = CoreFactory.Singleton.Properties.NoReplyMailConfig.GetSmtpClient())
             {
+
                 client.EnableSsl = true;
+
 
                 using (MailMessage msgOut = new MailMessage(from, new MailAddress(to)))
                 {
+
+
                     msgOut.Subject = subj;
                     msgOut.IsBodyHtml = true;
                     msgOut.Body = Message.GetMessage();
 
                     try
                     {
-                        client.Send(msgOut);
-                        result = SmtpResultCode.Success;
-                        return true;
+                        await client.SendMailAsync(msgOut);
+
+                        return SmtpResultCode.Success;
                     }
                     catch (Exception ex)
                     {
-                        result = SmtpResultCode.SendError;
-                        CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex);
-                        return false;
-                    }
-                }
+                        await CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex);
 
+                        return SmtpResultCode.ValidationError;
+                    }
+
+                }
             }
+
         }
 
     }

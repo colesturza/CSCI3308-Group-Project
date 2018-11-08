@@ -14,22 +14,13 @@ namespace UHub.CoreLib.Entities.ClubModerators.Management
 {
     public sealed partial class ClubModeratorWriter
     {
-        /// <summary>
-        /// Attempts to create a new CMS club moderator in the database and returns the club moderators id if successful
-        /// </summary>
-        /// <param name="cmsClubModerator"></param>
-        /// <returns></returns>
-        internal static long? TryCreateClubModerator(ClubModerator cmsClubModerator, long parentID) 
-            => TryCreateClubModerator(cmsClubModerator, parentID, out _);
-
-
 
         /// <summary>
         /// Attempts to create a new CMS club moderator in the database and returns the club moderators id if successful
         /// </summary>
         /// <param name="cmsClubModerator"></param>
         /// <returns></returns>
-        internal static long? TryCreateClubModerator(ClubModerator cmsClubModerator, long parentID, out string ErrorMsg)
+        internal static async Task<long?> TryCreateClubModeratorAsync(ClubModerator cmsClubModerator, long parentID)
         {
             if (!CoreFactory.Singleton.IsEnabled)
             {
@@ -39,7 +30,7 @@ namespace UHub.CoreLib.Entities.ClubModerators.Management
             try
             {
 
-                long? ClubModeratorID = SqlWorker.ExecScalar<long?>
+                long? ClubModeratorID = await SqlWorker.ExecScalarAsync<long?>
                     (CoreFactory.Singleton.Properties.CmsDBConfig,
                     "[dbo].[SchoolClubModerator_Create]",
                     (cmd) =>
@@ -54,11 +45,9 @@ namespace UHub.CoreLib.Entities.ClubModerators.Management
 
                 if (ClubModeratorID == null)
                 {
-                    ErrorMsg = ResponseStrings.DBError.WRITE_UNKNOWN;
                     return null;
                 }
 
-                ErrorMsg = null;
                 return ClubModeratorID;
             }
             catch (Exception ex)
@@ -67,7 +56,6 @@ namespace UHub.CoreLib.Entities.ClubModerators.Management
                 Exception ex_outer = new Exception(errCode, ex);
                 CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
 
-                ErrorMsg = ex.Message;
                 return null;
             }
         }

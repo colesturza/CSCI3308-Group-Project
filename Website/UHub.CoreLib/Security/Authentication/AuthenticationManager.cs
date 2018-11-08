@@ -17,7 +17,7 @@ using UHub.CoreLib.Entities.Users.Management;
 namespace UHub.CoreLib.Security.Authentication
 {
 
-    internal sealed class AuthenticationManager : IAuthenticationManager
+    internal sealed partial class AuthenticationManager : IAuthenticationManager
     {
         /// <summary>
         /// Request variable to store the current user.  Used as temp caching to prevent extra lookups
@@ -36,7 +36,7 @@ namespace UHub.CoreLib.Security.Authentication
         /// </summary>
         /// <param name="UserEmail">Email address associated with the user account</param>
         /// <param name="UserPassword">Password associated with the user account</param>
-        /// <param name="IsPersistent">Flag to set token persistence status
+        /// <param name="IsPersistent">Flag to set token persistence status</param>
         /// <param name="GeneralFailHandler">Error handler in case DB cannot be reached or there is other unknown error</param>
         public bool TrySetClientAuthToken(
             string UserEmail,
@@ -50,7 +50,7 @@ namespace UHub.CoreLib.Security.Authentication
         /// </summary>
         /// <param name="UserEmail">Email address associated with the user account</param>
         /// <param name="UserPassword">Password associated with the user account</param>
-        /// <param name="IsPersistent">Flag to set token persistence status
+        /// <param name="IsPersistent">Flag to set token persistence status</param>
         /// <paramref name="ResultCode">Result code to indicate process status</paramref>
         /// <param name="GeneralFailHandler">Error handler in case DB cannot be reached or there is other unknown error</param>
         public bool TrySetClientAuthToken(
@@ -491,7 +491,7 @@ namespace UHub.CoreLib.Security.Authentication
             catch (Exception ex)
             {
                 tokenStatus = TokenValidationStatus.AnonUser;
-                return null;
+                return UserReader.GetAnonymousUser();
             }
         }
 

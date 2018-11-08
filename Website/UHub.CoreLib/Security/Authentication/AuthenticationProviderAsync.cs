@@ -18,11 +18,6 @@ namespace UHub.CoreLib.Security.Authentication
 {
     internal abstract partial class AuthenticationProvider
     {
-        internal AuthenticationProvider()
-        {
-
-        }
-
         /// <summary>
         /// Try to authenticate a user account using the supplied account credentials.  Includes internal logging
         /// </summary>
@@ -32,70 +27,18 @@ namespace UHub.CoreLib.Security.Authentication
         /// <param name="GeneralFailHandler">Error handler in case DB cannot be reached or there is other unknown error</param>
         /// <param name="UserTokenHandler">Success handler to handle user token distribution</param>
         /// <returns>Status Flag</returns>
-        abstract internal bool TryAuthenticateUser(
-            string userEmail, 
+        abstract internal Task<AuthResultCode> TryAuthenticateUserAsync(
+            string userEmail,
             string userPassword,
-            out AuthResultCode ResultCode,
             Action<Guid> GeneralFailHandler = null,
             Func<User, bool> UserTokenHandler = null);
 
-        /// <summary>
-        /// Set current request user for caching
-        /// </summary>
-        /// <param name="CmsUser"></param>
-        internal void SetCurrentUser_Local(User CmsUser)
-        {
-            //set identity
-            HttpContext.Current.Items[AuthenticationManager.REQUEST_CURRENT_USER] = CmsUser;
-        }
-
-
-        /// <summary>
-        /// Set current user via cookie - allows login to persist between requests
-        /// </summary>
-        /// <param name="IsPersistentent">Is token persisten</param>
-        /// <param name="CmsUser">User to set</param>
-        /// <param name="SystemVersion">Specify an Auth Tkn version number. Defaults to <see cref="CmsProperties.CurrentAuthTknVersion"/> </param>
-        /// <exception cref="SqlException"></exception>
-        /// /// <exception cref="Exception"></exception>
-        internal void SetCurrentUser_ClientToken(bool IsPersistentent, User CmsUser)
-        {
-            var token = GenerateAuthToken(IsPersistentent, CmsUser);
-            SetCurrentUser_ClientToken(token);
-        }
-
-        /// <summary>
-        /// Set current user via cookie - allows login to persist between requests
-        /// </summary>
-        /// <param name="token"></param>
-        private protected void SetCurrentUser_ClientToken(AuthenticationToken token)
-        {
-            var authTknCookieName = CoreFactory.Singleton.Properties.AuthTknCookieName;
-
-
-            //remove old token
-            HttpContext.Current.Request.Cookies.Remove(authTknCookieName);
-            HttpContext.Current.Response.Cookies.Remove(authTknCookieName);
-
-
-            string encryptedToken = token.Encrypt();
-            HttpCookie authCookie = new HttpCookie(authTknCookieName, encryptedToken);
-            authCookie.Shareable = false;
-            //set expiration for persistent cookies
-            //otherwise the cookie will expire with browser session
-            if (token.IsPersistent)
-            {
-                authCookie.Expires = token.ExpirationDate.UtcDateTime;
-            }
-
-            HttpContext.Current.Response.Cookies.Add(authCookie);
-        }
 
 
         /// <summary>
         /// Get user auth data from cookie and load as the CurrentUser identity
         /// </summary>
-        internal void ValidateAuthCookie(out User CmsUser, out TokenValidationStatus TokenStatus, Action ErrorHandler = null)
+        internal async Task<(User CmsUser, TokenValidationStatus TokenStatus)> ValidateAuthCookieAsync(Action ErrorHandler = null)
         {
             var authTknCookieName = CoreFactory.Singleton.Properties.AuthTknCookieName;
 
@@ -107,17 +50,19 @@ namespace UHub.CoreLib.Security.Authentication
             if (authCookie == null)
             {
                 ErrorHandler?.Invoke();
-                CmsUser = UserReader.GetAnonymousUser();
-                TokenStatus = TokenValidationStatus.TokenNotFound;
-                return;
+                var CmsUser = UserReader.GetAnonymousUser();
+                var TokenStatus = TokenValidationStatus.TokenNotFound;
+
+                return (CmsUser, TokenStatus);
             }
 
             if (authCookie.Value.IsEmpty())
             {
                 ErrorHandler?.Invoke();
-                CmsUser = UserReader.GetAnonymousUser();
-                TokenStatus = TokenValidationStatus.TokenNotFound;
-                return;
+                var CmsUser = UserReader.GetAnonymousUser();
+                var TokenStatus = TokenValidationStatus.TokenNotFound;
+
+                return (CmsUser, TokenStatus);
             }
 
 
@@ -139,7 +84,7 @@ namespace UHub.CoreLib.Security.Authentication
                 };
 
 
-            ValidateAuthToken(authCookie.Value, out CmsUser, out TokenStatus, ErrorHandler, succHandler);
+            return await ValidateAuthTokenAsync(authCookie.Value, ErrorHandler, succHandler);
 
         }
 
@@ -152,24 +97,22 @@ namespace UHub.CoreLib.Security.Authentication
         /// <param name="errorHandler"></param>
         /// <param name="SuccessHandler"></param>
         /// <returns></returns>
-        internal bool ValidateAuthToken(
+        internal async Task<(User CmsUser, TokenValidationStatus TokenStatus)> ValidateAuthTokenAsync(
             string tokenStr,
-            out User CmsUser,
-            out TokenValidationStatus tokenStatus,
             Action errorHandler = null,
             Action<AuthenticationToken> SuccessHandler = null)
         {
 
             if (tokenStr.IsEmpty())
             {
-                CmsUser = UserReader.GetAnonymousUser();
-                tokenStatus = TokenValidationStatus.TokenNotFound;
+                var CmsUser = UserReader.GetAnonymousUser();
                 try
                 {
                     errorHandler?.Invoke();
                 }
                 catch { }
-                return false;
+
+                return (CmsUser, TokenValidationStatus.TokenNotFound);
             }
             //get token
             AuthenticationToken authToken = null;
@@ -180,17 +123,18 @@ namespace UHub.CoreLib.Security.Authentication
             catch (Exception ex)
             {
                 CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex);
-                CmsUser = UserReader.GetAnonymousUser();
-                tokenStatus = TokenValidationStatus.TokenAESFailure;
+
+                var CmsUser = UserReader.GetAnonymousUser();
                 try
                 {
                     errorHandler?.Invoke();
                 }
                 catch { }
-                return false;
+
+                return (CmsUser, TokenValidationStatus.TokenAESFailure);
             }
 
-            return ValidateAuthToken(authToken, out CmsUser, out tokenStatus, errorHandler, SuccessHandler);
+            return await ValidateAuthTokenAsync(authToken, errorHandler, SuccessHandler);
         }
 
         /// <summary>
@@ -202,10 +146,8 @@ namespace UHub.CoreLib.Security.Authentication
         /// <param name="errorHandler"></param>
         /// <param name="SuccessHandler"></param>
         /// <returns></returns>
-        private protected bool ValidateAuthToken(
+        private protected async Task<(User CmsUser, TokenValidationStatus TokenStatus)> ValidateAuthTokenAsync(
             AuthenticationToken token,
-            out User CmsUser,
-            out TokenValidationStatus tokenStatus,
             Action errorHandler = null,
             Action<AuthenticationToken> SuccessHandler = null)
         {
@@ -214,20 +156,28 @@ namespace UHub.CoreLib.Security.Authentication
             if (token == null)
             {
                 errorHandler?.Invoke();
-                CmsUser = UserReader.GetAnonymousUser();
-                tokenStatus = TokenValidationStatus.TokenNotFound;
-                return false;
+                var CmsUser = UserReader.GetAnonymousUser();
+
+                return (CmsUser, TokenValidationStatus.TokenNotFound);
             }
 
             string sessionID = GetAdjustedSessionID(token.IsPersistent);
 
 
-            if (!TokenManager.IsTokenValid(token, sessionID, out var tempStatus))
+            long userID = token.UserID;
+            var taskGetUser = UserReader.GetUserAsync(userID);
+
+            var tokenStatus = await TokenManager.IsTokenValidAsync(token, sessionID);
+            var isTokenValid = tokenStatus == TokenValidationStatus.Success;
+
+
+            if (isTokenValid)
             {
                 errorHandler?.Invoke();
-                CmsUser = UserReader.GetAnonymousUser();
-                tokenStatus = tempStatus;
-                return false;
+                var CmsUser = UserReader.GetAnonymousUser();
+
+
+                return (CmsUser, tokenStatus);
             }
 
             if
@@ -237,39 +187,29 @@ namespace UHub.CoreLib.Security.Authentication
             )
             {
                 errorHandler?.Invoke();
-                CmsUser = UserReader.GetAnonymousUser();
-                tokenStatus = TokenValidationStatus.TokenVersionMismatch;
-                return false;
+                var CmsUser = UserReader.GetAnonymousUser();
+
+                return (CmsUser, TokenValidationStatus.TokenVersionMismatch);
             }
 
 
-            long userID = token.UserID;
+
             ////////////////////////////////////////////////////////////////////////////////////////////////////
             //Validate CMS User
             ////////////////////////////////////////////////////////////////////////////////////////////////////
             //try to get the real user from CMS DB
-            User cmsUser_local;
-            try
-            {
-                cmsUser_local = UserReader.GetUser(userID);
-            }
-            catch
-            {
+            User cmsUser_local = await taskGetUser;
 
-                errorHandler?.Invoke();
-                CmsUser = UserReader.GetAnonymousUser();
-                tokenStatus = TokenValidationStatus.TokenUserError;
-                return false;
-            }
 
             //validate CMS specific user
             if (cmsUser_local == null || cmsUser_local.ID == null)
             {
                 errorHandler?.Invoke();
-                CmsUser = UserReader.GetAnonymousUser();
-                tokenStatus = TokenValidationStatus.TokenUserError;
-                return false;
+                var CmsUser = UserReader.GetAnonymousUser();
+
+                return (CmsUser, TokenValidationStatus.TokenUserError);
             }
+
 
             //check user version
             if (CoreFactory.Singleton.Properties.EnableTokenVersioning)
@@ -278,9 +218,9 @@ namespace UHub.CoreLib.Security.Authentication
                 if (cmsUser_local.Version != userVersion)
                 {
                     errorHandler?.Invoke();
-                    CmsUser = UserReader.GetAnonymousUser();
-                    tokenStatus = TokenValidationStatus.TokenVersionMismatch;
-                    return false;
+                    var CmsUser = UserReader.GetAnonymousUser();
+
+                    return (CmsUser, TokenValidationStatus.TokenVersionMismatch);
                 }
             }
 
@@ -288,16 +228,17 @@ namespace UHub.CoreLib.Security.Authentication
             if (!cmsUser_local.IsConfirmed)
             {
                 errorHandler?.Invoke();
-                CmsUser = UserReader.GetAnonymousUser();
-                tokenStatus = TokenValidationStatus.TokenUserNotConfirmed;
-                return false;
+                var CmsUser = UserReader.GetAnonymousUser();
+
+                return (CmsUser, TokenValidationStatus.TokenUserNotConfirmed);
             }
             if (!cmsUser_local.IsApproved)
             {
                 errorHandler?.Invoke();
-                CmsUser = UserReader.GetAnonymousUser();
-                tokenStatus = TokenValidationStatus.TokenUserNotApproved;
-                return false;
+                var CmsUser = UserReader.GetAnonymousUser();
+
+
+                return (CmsUser, TokenValidationStatus.TokenUserNotApproved);
             }
 
             //user disabled for some other reason
@@ -305,9 +246,9 @@ namespace UHub.CoreLib.Security.Authentication
             if (!cmsUser_local.IsEnabled)
             {
                 errorHandler?.Invoke();
-                CmsUser = UserReader.GetAnonymousUser();
-                tokenStatus = TokenValidationStatus.TokenUserDisabled;
-                return false;
+                var CmsUser = UserReader.GetAnonymousUser();
+
+                return (CmsUser, TokenValidationStatus.TokenUserDisabled);
             }
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -315,100 +256,11 @@ namespace UHub.CoreLib.Security.Authentication
             ////////////////////////////////////////////////////////////////////////////////////////////////////
 
             SuccessHandler?.Invoke(token);
-            CmsUser = cmsUser_local;
-            tokenStatus = TokenValidationStatus.Success;
-            return true;
+
+            return (cmsUser_local, TokenValidationStatus.Success);
 
         }
 
-        /// <summary>
-        /// Get real session ID from web client or use the get the ID presented by the MACHINE_KEY attribute
-        /// </summary>
-        /// <param name="isPersistent"></param>
-        /// <returns></returns>
-        private protected string GetAdjustedSessionID(bool isPersistent)
-        {
-            string sessionID = "";
-            string clientKey = "";
-            clientKey = HttpContext.Current?.Request?.Headers[Common.AUTH_HEADER_MACHINE_KEY] ?? "";
-
-            //session ID must be ignored for persistent connections
-            //otherwise token will not work if user comes back to site at later date
-            if (isPersistent)
-            {
-                if (clientKey.IsNotEmpty())
-                {
-                    return clientKey;
-                }
-                else
-                {
-                    return "";
-                }
-            }
-
-            //NOT PERSISTENT
-            if (clientKey.IsNotEmpty())
-            {
-                sessionID = clientKey;
-            }
-            else
-            {
-
-                sessionID = HttpContext.Current?.Session?.SessionID ?? "";
-            }
-
-            //sterilize for token processing
-            sessionID.Replace('|', '0');
-            return sessionID;
-        }
-
-        /// <summary>
-        /// Slide the expiration date for an auth token
-        /// </summary>
-        /// <param name="token"></param>
-        internal bool SlideAuthTokenExpiration(AuthenticationToken token)
-        {
-            if (token.IsPersistent)
-            {
-                //persistent tokens are already set to max possible age
-                //no slide is necessary
-                return false;
-            }
-
-            //ensure that the new expiration date is inside the max lifespan window
-            var timeout = CoreFactory.Singleton.Properties.AuthTokenTimeout;
-            var slideDate = FailoverDateTimeOffset.UtcNow.Add(timeout);
-            DateTimeOffset maxExpire;
-
-
-            var maxLifespan = CoreFactory.Singleton.Properties.MaxAuthTokenLifespan;
-            if (maxLifespan.Ticks == 0)
-            {
-                maxExpire = DateTimeOffset.MaxValue;
-            }
-            else
-            {
-                maxExpire = token.IssueDate.Add(maxLifespan);
-            }
-
-
-            if (slideDate <= maxExpire)
-            {
-                token.SetExpiration(slideDate);
-                return true;
-            }
-            if (slideDate > maxExpire)
-            {
-                if (token.ExpirationDate == maxExpire)
-                {
-                    return false;
-                }
-                token.SetExpiration(maxExpire);
-                return true;
-            }
-
-            return false;
-        }
 
         /// <summary>
         /// Generate new auth token for user and write validator to DB
@@ -419,7 +271,7 @@ namespace UHub.CoreLib.Security.Authentication
         /// <exception cref="SqlException"></exception>
         /// <exception cref="Exception"></exception>
         /// <returns></returns>
-        internal AuthenticationToken GenerateAuthToken(bool IsPersistent, User cmsUser)
+        internal async Task<AuthenticationToken> GenerateAuthTokenAsync(bool IsPersistent, User cmsUser)
         {
             if (cmsUser.ID == null)
             {
@@ -453,11 +305,11 @@ namespace UHub.CoreLib.Security.Authentication
 
 
             AuthenticationToken authToken = new AuthenticationToken(isPersistent, issue, expiration, ID, sysVersion, userVersion, sessionID);
-            
+
 
             try
             {
-                TokenManager.SaveTokenValidatorToDB(authToken);
+                await TokenManager.SaveTokenValidatorToDBAsync(authToken);
             }
             catch
             {
@@ -472,9 +324,9 @@ namespace UHub.CoreLib.Security.Authentication
 
         #region IsUserLocked
 
-        internal bool IsUserLockedOut(long UserID)
+        internal async Task<bool> IsUserLockedOutAsync(long UserID)
         {
-            var info = GetUserAuthInfo_DB(UserID);
+            var info = await GetUserAuthInfo_DBAsync(UserID);
             if (info == null)
             {
                 throw new InvalidOperationException("User does not exist");
@@ -489,9 +341,9 @@ namespace UHub.CoreLib.Security.Authentication
 
 
         #region GetUserLockoutDate
-        internal DateTimeOffset GetUserLockoutDate(long UserID)
+        internal async Task<DateTimeOffset> GetUserLockoutDateAsync(long UserID)
         {
-            var info = GetUserAuthInfo_DB(UserID);
+            var info = await GetUserAuthInfo_DBAsync(UserID);
             if (info == null)
             {
                 throw new InvalidOperationException("User does not exist");
@@ -504,10 +356,10 @@ namespace UHub.CoreLib.Security.Authentication
 
 
         #region LockoutUser
-        private protected void LockoutUser(long UserID)
+        private protected async Task LockoutUserAsync(long UserID)
         {
 
-            SqlWorker.ExecNonQuery(
+            await SqlWorker.ExecNonQueryAsync(
                CoreFactory.Singleton.Properties.CmsDBConfig,
                "[dbo].[User_SetLastLockoutDateByID]",
                (cmd) =>
@@ -519,10 +371,10 @@ namespace UHub.CoreLib.Security.Authentication
 
 
         #region ResetLockout
-        internal void ResetUserLockout(long UserID)
+        internal async Task ResetUserLockoutAsync(long UserID)
         {
 
-            SqlWorker.ExecNonQuery(
+            await SqlWorker.ExecNonQueryAsync(
                CoreFactory.Singleton.Properties.CmsDBConfig,
                "[dbo].[User_ResetFailedPswdAttemptsByID]",
                (cmd) =>
@@ -535,7 +387,7 @@ namespace UHub.CoreLib.Security.Authentication
 
         #region HandleBadPswd
 
-        private protected void HandleBadPswdAttempt(UserAuthInfo UserAuthInfo)
+        private protected async Task HandleBadPswdAttemptAsync(UserAuthInfo UserAuthInfo)
         {
 
             //log failed pswd attempt to DB
@@ -557,33 +409,36 @@ namespace UHub.CoreLib.Security.Authentication
             var psdAttmptPrd = CoreFactory.Singleton.Properties.PswdAttemptPeriod;
 
             var dt = UserAuthInfo.StartFailedPswdWindow ?? DateTimeOffset.MinValue;
+
+
+            //initialize error state
+            List<Task> taskSet = new List<Task>();
             if ((dt + psdAttmptPrd) < FailoverDateTimeOffset.UtcNow)
             {
                 failCount = 0;
-                ResetUserLockout(UserAuthInfo.UserID);
-                failCount++;
-                LogFailedPsdAttempt(UserAuthInfo.UserID);
+                taskSet.Add(ResetUserLockoutAsync(UserAuthInfo.UserID));
             }
-            else
-            {
-                failCount++;
-                LogFailedPsdAttempt(UserAuthInfo.UserID);
-            }
+            //advance error state
+            failCount++;
+            taskSet.Add(LogFailedPsdAttemptAsync(UserAuthInfo.UserID));
 
 
             if (failCount >= maxPsdAttmpt)
             {
-                LockoutUser(UserAuthInfo.UserID);
+                taskSet.Add(LockoutUserAsync(UserAuthInfo.UserID));
             }
+
+
+            await Task.WhenAll(taskSet);
         }
         #endregion HandleBadPsd
 
 
         #region LogFailedPswd
-        private protected void LogFailedPsdAttempt(long UserID)
+        private protected async Task LogFailedPsdAttemptAsync(long UserID)
         {
 
-            SqlWorker.ExecNonQuery(
+            await SqlWorker.ExecNonQueryAsync(
                 CoreFactory.Singleton.Properties.CmsDBConfig,
                 "[dbo].[User_LogFailedPswdAttemptByID]",
                 (cmd) =>
@@ -595,10 +450,10 @@ namespace UHub.CoreLib.Security.Authentication
 
 
         #region UserAuthInfo
-        private protected UserAuthInfo GetUserAuthInfo_DB(long UserID)
+        private protected async Task<UserAuthInfo> GetUserAuthInfo_DBAsync(long UserID)
         {
 
-            return SqlWorker.ExecBasicQuery(
+            var temp = SqlWorker.ExecBasicQueryAsync(
                 CoreFactory.Singleton.Properties.CmsDBConfig,
                 "[dbo].[User_GetAuthInfoByID]",
                 (cmd) =>
@@ -609,13 +464,16 @@ namespace UHub.CoreLib.Security.Authentication
                 {
                     return reader.ToCustomDBType<UserAuthInfo>();
 
-                }).SingleOrDefault();
+                });
+
+
+            return (await temp).SingleOrDefault();
         }
 
-        private protected UserAuthInfo GetUserAuthInfo_DB(string Email)
+        private protected async Task<UserAuthInfo> GetUserAuthInfo_DBAsync(string Email)
         {
 
-            return SqlWorker.ExecBasicQuery(
+            var temp = SqlWorker.ExecBasicQueryAsync(
                 CoreFactory.Singleton.Properties.CmsDBConfig,
                 "[dbo].[User_GetAuthInfoByEmail]",
                 (cmd) =>
@@ -625,15 +483,17 @@ namespace UHub.CoreLib.Security.Authentication
                 (reader) =>
                 {
                     return reader.ToCustomDBType<UserAuthInfo>();
+                });
 
-                }).SingleOrDefault();
+
+            return (await temp).SingleOrDefault();
         }
 
 
-        private protected UserAuthInfo GetUserAuthInfo_DB(string Username, string Domain)
+        private protected async Task<UserAuthInfo> GetUserAuthInfo_DBAsync(string Username, string Domain)
         {
 
-            return SqlWorker.ExecBasicQuery(
+            var temp = SqlWorker.ExecBasicQueryAsync(
                 CoreFactory.Singleton.Properties.CmsDBConfig,
                 "[dbo].[User_GetAuthInfoByUsername]",
                 (cmd) =>
@@ -645,7 +505,10 @@ namespace UHub.CoreLib.Security.Authentication
                 {
                     return reader.ToCustomDBType<UserAuthInfo>();
 
-                }).SingleOrDefault();
+                });
+
+
+            return (await temp).SingleOrDefault();
         }
 
         #endregion UserAuthInfo

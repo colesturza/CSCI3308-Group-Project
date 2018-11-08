@@ -11,7 +11,7 @@ namespace UHub.CoreLib.Security.Authentication.Interfaces
     /// <summary>
     /// Authentication manager interface to control method exposure
     /// </summary>
-    public interface IAuthenticationManager
+    public partial interface IAuthenticationManager
     {
         /// <summary>
         /// Validate user credentials then set authentication token via cookie

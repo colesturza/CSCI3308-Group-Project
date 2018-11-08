@@ -15,14 +15,14 @@ namespace UHub.CoreLib.Entities.Posts.Management
 {
     public static partial class PostReader
     {
-        public static long GetPostCountByParent(long ParentID)
+        public static async Task<long> GetPostCountByParentAsync(long ParentID)
         {
             if (!CoreFactory.Singleton.IsEnabled)
             {
                 throw new SystemDisabledException();
             }
 
-            return SqlWorker.ExecScalar<long>(
+            return await SqlWorker.ExecScalarAsync<long>(
                 _dbConn,
                 "[dbo].[Posts_GetCountByParent]",
                 (cmd) =>
@@ -41,7 +41,7 @@ namespace UHub.CoreLib.Entities.Posts.Management
         /// <param name="PageNum"></param>
         /// <param name="ItemCount"></param>
         /// <returns></returns>
-        public static IEnumerable<Post> GetPostsByParentPage(long ParentID, long? StartID, int? PageNum, short? ItemCount)
+        public static async Task<IEnumerable<Post>> GetPostsByParentPageAsync(long ParentID, long? StartID, int? PageNum, short? ItemCount)
         {
 
             if (!CoreFactory.Singleton.IsEnabled)
@@ -52,7 +52,7 @@ namespace UHub.CoreLib.Entities.Posts.Management
             ItemCount = ItemCount ?? DEFAULT_PAGE_SIZE;
 
 
-            return SqlWorker.ExecBasicQuery(
+            return await SqlWorker.ExecBasicQueryAsync(
                 _dbConn,
                 "[dbo].[Posts_GetByParentPage]",
                 (cmd) =>
@@ -77,7 +77,7 @@ namespace UHub.CoreLib.Entities.Posts.Management
         /// <param name="PageNum"></param>
         /// <param name="ItemCount"></param>
         /// <returns></returns>
-        public static List<Post> GetPostsByParentPage(long ParentID, short? ItemCount, out long StartID)
+        public static async Task<(IEnumerable<Post> PostSet, long StartID)> GetPostsByParentPage(long ParentID, short? ItemCount)
         {
 
             if (!CoreFactory.Singleton.IsEnabled)
@@ -87,7 +87,7 @@ namespace UHub.CoreLib.Entities.Posts.Management
             ItemCount = ItemCount ?? DEFAULT_PAGE_SIZE;
 
 
-            var postSet = SqlWorker.ExecBasicQuery(
+            var postSetRaw = await SqlWorker.ExecBasicQueryAsync(
                 _dbConn,
                 "[dbo].[Posts_GetByParentPage]",
                 (cmd) =>
@@ -100,7 +100,10 @@ namespace UHub.CoreLib.Entities.Posts.Management
                 (row) =>
                 {
                     return row.ToCustomDBType<Post>();
-                }).ToList();
+                });
+
+
+            var postSet = postSetRaw.ToList();
 
 
             long maxID = -1;
@@ -111,22 +114,21 @@ namespace UHub.CoreLib.Entities.Posts.Management
                     maxID = postSet[i].ID.Value;
                 }
             }
-            StartID = maxID;
 
 
-            return postSet;
+            return (postSet, maxID);
         }
 
 
 
-        public static long GetPostCountBySchool(long SchoolID)
+        public static async Task<long> GetPostCountBySchoolAsync(long SchoolID)
         {
             if (!CoreFactory.Singleton.IsEnabled)
             {
                 throw new SystemDisabledException();
             }
 
-            return SqlWorker.ExecScalar<long>(
+            return await SqlWorker.ExecScalarAsync<long>(
                 _dbConn,
                 "[dbo].[Posts_GetCountBySchool]",
                 (cmd) =>
@@ -145,7 +147,7 @@ namespace UHub.CoreLib.Entities.Posts.Management
         /// <param name="PageNum"></param>
         /// <param name="ItemCount"></param>
         /// <returns></returns>
-        public static IEnumerable<Post> GetPostsBySchoolPage(long SchoolID, long? StartID, int? PageNum, short? ItemCount)
+        public static async Task<IEnumerable<Post>> GetPostsBySchoolPageAsync(long SchoolID, long? StartID, int? PageNum, short? ItemCount)
         {
 
             if (!CoreFactory.Singleton.IsEnabled)
@@ -156,7 +158,7 @@ namespace UHub.CoreLib.Entities.Posts.Management
             ItemCount = ItemCount ?? DEFAULT_PAGE_SIZE;
 
 
-            return SqlWorker.ExecBasicQuery(
+            return await SqlWorker.ExecBasicQueryAsync(
                 _dbConn,
                 "[dbo].[Posts_GetBySchoolPage]",
                 (cmd) =>
@@ -181,7 +183,7 @@ namespace UHub.CoreLib.Entities.Posts.Management
         /// <param name="PageNum"></param>
         /// <param name="ItemCount"></param>
         /// <returns></returns>
-        public static List<Post> GetPostsBySchoolPage(long SchoolID, short? ItemCount, out long StartID)
+        public static async Task<(IEnumerable<Post> PostSet, long StartID)> GetPostsBySchoolPage(long SchoolID, short? ItemCount)
         {
 
             if (!CoreFactory.Singleton.IsEnabled)
@@ -191,7 +193,7 @@ namespace UHub.CoreLib.Entities.Posts.Management
             ItemCount = ItemCount ?? DEFAULT_PAGE_SIZE;
 
 
-            var postSet = SqlWorker.ExecBasicQuery(
+            var postSetRaw = await SqlWorker.ExecBasicQueryAsync(
                 _dbConn,
                 "[dbo].[Posts_GetBySchoolPage]",
                 (cmd) =>
@@ -204,7 +206,10 @@ namespace UHub.CoreLib.Entities.Posts.Management
                 (row) =>
                 {
                     return row.ToCustomDBType<Post>();
-                }).ToList();
+                });
+
+
+            var postSet = postSetRaw.ToList();
 
 
             long maxID = -1;
@@ -215,21 +220,20 @@ namespace UHub.CoreLib.Entities.Posts.Management
                     maxID = postSet[i].ID.Value;
                 }
             }
-            StartID = maxID;
 
 
-            return postSet;
+            return (postSet, maxID);
         }
 
 
-        public static long GetPostCountByClub(long ClubID)
+        public static async Task<long> GetPostCountByClubAsync(long ClubID)
         {
             if (!CoreFactory.Singleton.IsEnabled)
             {
                 throw new SystemDisabledException();
             }
 
-            return SqlWorker.ExecScalar<long>(
+            return await SqlWorker.ExecScalarAsync<long>(
                 _dbConn,
                 "[dbo].[Posts_GetCountByClub]",
                 (cmd) =>
@@ -247,7 +251,7 @@ namespace UHub.CoreLib.Entities.Posts.Management
         /// <param name="PageNum"></param>
         /// <param name="ItemCount"></param>
         /// <returns></returns>
-        public static IEnumerable<Post> GetPostsByClubPage(long ClubID, long? StartID, int? PageNum, short? ItemCount)
+        public static async Task<IEnumerable<Post>> GetPostsByClubPageAsync(long ClubID, long? StartID, int? PageNum, short? ItemCount)
         {
 
             if (!CoreFactory.Singleton.IsEnabled)
@@ -257,7 +261,7 @@ namespace UHub.CoreLib.Entities.Posts.Management
             ItemCount = ItemCount ?? DEFAULT_PAGE_SIZE;
 
 
-            return SqlWorker.ExecBasicQuery(
+            return await SqlWorker.ExecBasicQueryAsync(
                 _dbConn,
                 "[dbo].[Posts_GetByClubPage]",
                 (cmd) =>
@@ -282,7 +286,7 @@ namespace UHub.CoreLib.Entities.Posts.Management
         /// <param name="PageNum"></param>
         /// <param name="ItemCount"></param>
         /// <returns></returns>
-        public static List<Post> GetPostsByClubPage(long ClubID, short? ItemCount, out long StartID)
+        public static async Task<(List<Post> PostSet, long StartID)> GetPostsByClubPageAsync(long ClubID, short? ItemCount)
         {
 
             if (!CoreFactory.Singleton.IsEnabled)
@@ -292,7 +296,7 @@ namespace UHub.CoreLib.Entities.Posts.Management
             ItemCount = ItemCount ?? DEFAULT_PAGE_SIZE;
 
 
-            var postSet = SqlWorker.ExecBasicQuery(
+            var postSetRaw = await SqlWorker.ExecBasicQueryAsync(
                 _dbConn,
                 "[dbo].[Posts_GetByClubPage]",
                 (cmd) =>
@@ -305,9 +309,10 @@ namespace UHub.CoreLib.Entities.Posts.Management
                 (row) =>
                 {
                     return row.ToCustomDBType<Post>();
-                }).ToList();
+                });
 
 
+            var postSet = postSetRaw.ToList();
 
             long maxID = -1;
             for (int i = 0; i < postSet.Count; i++)
@@ -317,10 +322,9 @@ namespace UHub.CoreLib.Entities.Posts.Management
                     maxID = postSet[i].ID.Value;
                 }
             }
-            StartID = maxID;
 
 
-            return postSet;
+            return (postSet, maxID);
 
 
         }

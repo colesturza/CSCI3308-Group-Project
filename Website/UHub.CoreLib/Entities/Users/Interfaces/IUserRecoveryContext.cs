@@ -10,7 +10,7 @@ namespace UHub.CoreLib.Entities.Users.Interfaces
     /// <summary>
     /// CMS user account recovery context
     /// </summary>
-    public interface IUserRecoveryContext
+    public partial interface IUserRecoveryContext
     {
         #region DataProperties
         /// <summary>

@@ -17,28 +17,22 @@ namespace UHub.CoreLib.Entities.Users.Management
     internal static partial class UserWriter
     {
 
-
         /// <summary>
         /// Attempts to create a new CMS user in the database and returns the UserUID if successful
         /// </summary>
         /// <returns></returns>
-        internal static long? TryCreateUser(User cmsUser) => TryCreateUser(cmsUser, out _);
-
-        /// <summary>
-        /// Attempts to create a new CMS user in the database and returns the UserUID if successful
-        /// </summary>
-        /// <returns></returns>
-        internal static long? TryCreateUser(User cmsUser, out string ErrorMsg)
+        internal static async Task<long?> TryCreateUserAsync(User cmsUser)
         {
             if (!CoreFactory.Singleton.IsEnabled)
             {
                 throw new SystemDisabledException();
             }
 
+
             try
             {
 
-                long? userID = SqlWorker.ExecScalar<long?>
+                long? userID = await SqlWorker.ExecScalarAsync<long?>
                     (CoreFactory.Singleton.Properties.CmsDBConfig,
                     "[dbo].[User_Create]",
                     (cmd) =>
@@ -60,13 +54,12 @@ namespace UHub.CoreLib.Entities.Users.Management
                         cmd.Parameters.Add("@CreatedBy", SqlDbType.BigInt).Value = DBNull.Value;
                     });
 
+
                 if (userID == null)
                 {
-                    ErrorMsg = ResponseStrings.DBError.WRITE_UNKNOWN;
                     return null;
                 }
 
-                ErrorMsg = null;
                 return userID;
             }
             catch (Exception ex)
@@ -75,12 +68,12 @@ namespace UHub.CoreLib.Entities.Users.Management
                 Exception ex_outer = new Exception(errCode, ex);
                 CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
 
-                ErrorMsg = ex.Message;
+
                 return null;
             }
         }
 
-        internal static void UpdateUserInfo(User cmsUser)
+        internal static async Task<bool> TryUpdateUserInfoAsync(User cmsUser)
         {
             if (!CoreFactory.Singleton.IsEnabled)
             {
@@ -96,7 +89,7 @@ namespace UHub.CoreLib.Entities.Users.Management
             {
 
                 //run sproc
-                SqlWorker.ExecNonQuery(
+                await SqlWorker.ExecNonQueryAsync(
                     CoreFactory.Singleton.Properties.CmsDBConfig,
                     "[dbo].[User_UpdateByID]",
                     (cmd) =>
@@ -114,6 +107,8 @@ namespace UHub.CoreLib.Entities.Users.Management
                         cmd.Parameters.Add("@ModifiedBy", SqlDbType.BigInt).Value = DBNull.Value;
                     });
 
+
+                return true;
             }
             catch (Exception ex)
             {
@@ -121,7 +116,7 @@ namespace UHub.CoreLib.Entities.Users.Management
                 Exception ex_outer = new Exception(errCode, ex);
                 CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
 
-                throw new Exception();
+                return false;
             }
         }
 
@@ -129,7 +124,7 @@ namespace UHub.CoreLib.Entities.Users.Management
         /// Confirm user account
         /// </summary>
         /// <param name="RefUID"></param>
-        internal static bool ConfirmUser(string RefUID)
+        internal static async Task<bool> ConfirmUserAsync(string RefUID)
         {
             if (!CoreFactory.Singleton.IsEnabled)
             {
@@ -139,13 +134,14 @@ namespace UHub.CoreLib.Entities.Users.Management
 
             try
             {
-                return SqlWorker.ExecScalar<bool>(
+                return await SqlWorker.ExecScalarAsync<bool>(
                         CoreFactory.Singleton.Properties.CmsDBConfig,
                         "[dbo].[User_UpdateConfirmFlag]",
                         (cmd) =>
                         {
                             cmd.Parameters.Add("@RefUID", SqlDbType.NVarChar).Value = RefUID;
                         });
+
             }
             catch (Exception ex)
             {
@@ -162,11 +158,11 @@ namespace UHub.CoreLib.Entities.Users.Management
         /// </summary>
         /// <param name="UserUID"></param>
         /// <param name="IsApproved"></param>
-        internal static void UpdateUserApproval(long UserUID, bool IsApproved)
+        internal static async Task<bool> TryUpdateUserApprovalAsync(long UserUID, bool IsApproved)
         {
             try
             {
-                SqlWorker.ExecNonQuery(
+                await SqlWorker.ExecNonQueryAsync(
                     CoreFactory.Singleton.Properties.CmsDBConfig,
                     "[dbo].[User_UpdateApprovalFlag]",
                     (cmd) =>
@@ -174,6 +170,9 @@ namespace UHub.CoreLib.Entities.Users.Management
                         cmd.Parameters.Add("@UserID", SqlDbType.BigInt).Value = UserUID;
                         cmd.Parameters.Add("@IsApproved", SqlDbType.Bit).Value = IsApproved;
                     });
+
+
+                return true;
             }
             catch (Exception ex)
             {
@@ -181,7 +180,7 @@ namespace UHub.CoreLib.Entities.Users.Management
                 Exception ex_outer = new Exception(errCode, ex);
                 CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
 
-                throw new Exception();
+                return false;
             }
         }
 
@@ -190,12 +189,12 @@ namespace UHub.CoreLib.Entities.Users.Management
         /// </summary>
         /// <param name="UserUID"></param>
         /// <param name="Version"></param>
-        internal static void UpdateUserVersion(long UserID, string Version)
+        internal static async Task<bool> TryUpdateUserVersionAsync(long UserID, string Version)
         {
 
             try
             {
-                SqlWorker.ExecNonQuery(
+                await SqlWorker.ExecNonQueryAsync(
                     CoreFactory.Singleton.Properties.CmsDBConfig,
                     "[dbo].[User_UpdateVersionByID]",
                     (cmd) =>
@@ -203,6 +202,9 @@ namespace UHub.CoreLib.Entities.Users.Management
                         cmd.Parameters.Add("@UserID", SqlDbType.BigInt).Value = UserID;
                         cmd.Parameters.Add("@Version", SqlDbType.NVarChar).Value = Version;
                     });
+
+
+                return true;
             }
             catch (Exception ex)
             {
@@ -210,7 +212,7 @@ namespace UHub.CoreLib.Entities.Users.Management
                 Exception ex_outer = new Exception(errCode, ex);
                 CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
 
-                throw new Exception();
+                return false;
             }
         }
 
@@ -220,11 +222,11 @@ namespace UHub.CoreLib.Entities.Users.Management
         /// </summary>
         /// <param name="RequestedBy">The user executing the delete command</param>
         /// <param name="UserUID">The user being deleted</param>
-        internal static void DeleteUser(long UserID, long? DeletedBy = null)
+        internal static async Task<bool> DeleteUserAsync(long UserID, long? DeletedBy = null)
         {
             try
             {
-                SqlWorker.ExecNonQuery(
+                await SqlWorker.ExecNonQueryAsync(
                     CoreFactory.Singleton.Properties.CmsDBConfig,
                     "[dbo].[User_DeleteByID]",
                     (cmd) =>
@@ -232,6 +234,9 @@ namespace UHub.CoreLib.Entities.Users.Management
                         cmd.Parameters.Add("@UserID", SqlDbType.BigInt).Value = UserID;
                         cmd.Parameters.Add("@DeletedBy", SqlDbType.BigInt).Value = DeletedBy;
                     });
+
+
+                return true;
             }
             catch (Exception ex)
             {
@@ -239,7 +244,7 @@ namespace UHub.CoreLib.Entities.Users.Management
                 Exception ex_outer = new Exception(errCode, ex);
                 CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
 
-                throw new Exception();
+                return false;
             }
         }
         /// <summary>
@@ -247,11 +252,11 @@ namespace UHub.CoreLib.Entities.Users.Management
         /// </summary>
         /// <param name="UserID"></param>
         /// <returns></returns>
-        internal static bool TryPurgeUser(long UserID)
+        internal static async Task<bool> TryPurgeUserAsync(long UserID)
         {
             try
             {
-                SqlWorker.ExecNonQuery(
+                await SqlWorker.ExecNonQueryAsync(
                     CoreFactory.Singleton.Properties.CmsDBConfig,
                     "[dbo].[User_PurgeByID]",
                     (cmd) =>
@@ -275,11 +280,11 @@ namespace UHub.CoreLib.Entities.Users.Management
         /// Attempt to purge a user from the DB
         /// </summary>
         /// <returns></returns>
-        internal static bool TryPurgeUser(string Email)
+        internal static async Task<bool> TryPurgeUserAsync(string Email)
         {
             try
             {
-                SqlWorker.ExecNonQuery(
+                await SqlWorker.ExecNonQueryAsync(
                     CoreFactory.Singleton.Properties.CmsDBConfig,
                     "[dbo].[User_PurgeByEmail]",
                     (cmd) =>
@@ -302,7 +307,7 @@ namespace UHub.CoreLib.Entities.Users.Management
         /// <summary>
         /// Attempt to purge users that have not yet been confirmed and are older than the specified age tolerance
         /// </summary>
-        internal static void TryPurgeUnconfirmedUsers(TimeSpan AcctAgeTolerance)
+        internal static async Task<bool> TryPurgeUnconfirmedUsersAsync(TimeSpan AcctAgeTolerance)
         {
             try
             {
@@ -310,19 +315,24 @@ namespace UHub.CoreLib.Entities.Users.Management
                 //users created afgter this date will be ignored
                 var minKeepDate = DateTimeOffset.UtcNow - AcctAgeTolerance;
 
-                SqlWorker.ExecNonQuery(
-                    CoreFactory.Singleton.Properties.CmsDBConfig,
+                await SqlWorker.ExecNonQueryAsync
+                    (CoreFactory.Singleton.Properties.CmsDBConfig,
                     "[dbo].[Users_PurgeUnconfirmed]",
                     (cmd) =>
                     {
                         cmd.Parameters.Add("@MinKeepDate", SqlDbType.UniqueIdentifier).Value = minKeepDate;
                     });
+
+
+                return true;
             }
             catch (Exception ex)
             {
                 var errCode = "6FE73439-372D-4935-92C9-912B47822499";
                 Exception ex_outer = new Exception(errCode, ex);
                 CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
+
+                return false;
             }
         }
 
@@ -334,7 +344,7 @@ namespace UHub.CoreLib.Entities.Users.Management
         /// <param name="UserUID"></param>
         /// <param name="RecoveryKey"></param>
         /// <returns>RecoveryID for the recovery context</returns>
-        internal static IUserRecoveryContext CreateRecoveryContext(long UserID, string RecoveryKey, bool IsTemporary, bool IsOptional)
+        internal static async Task<IUserRecoveryContext> CreateRecoveryContextAsync(long UserID, string RecoveryKey, bool IsTemporary, bool IsOptional)
         {
             DateTimeOffset resetExpiration;
 
@@ -364,7 +374,7 @@ namespace UHub.CoreLib.Entities.Users.Management
 
             try
             {
-                return SqlWorker.ExecBasicQuery(
+                var temp = await SqlWorker.ExecBasicQueryAsync(
                     CoreFactory.Singleton.Properties.CmsDBConfig,
                     "[dbo].[User_CreateRecoveryContext]",
                     (cmd) =>
@@ -377,7 +387,10 @@ namespace UHub.CoreLib.Entities.Users.Management
                     {
                         var output = reader.ToCustomDBType<UserRecoveryContext>();
                         return output;
-                    }).SingleOrDefault();
+                    });
+
+
+                return temp.SingleOrDefault();
             }
             catch (Exception ex)
             {
@@ -385,22 +398,25 @@ namespace UHub.CoreLib.Entities.Users.Management
                 Exception ex_outer = new Exception(errCode, ex);
                 CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
 
-                throw new Exception();
+                return null;
             }
 
         }
 
-        internal static void LogFailedRecoveryContextAttempt(string RecoveryID)
+        internal static async Task<bool> TryLogFailedRecoveryContextAttemptAsync(string RecoveryID)
         {
             try
             {
-                SqlWorker.ExecNonQuery(
+                await SqlWorker.ExecNonQueryAsync(
                     CoreFactory.Singleton.Properties.CmsDBConfig,
                     "[dbo].[User_LogFailedRecoveryContextAttempt]",
                     (cmd) =>
                     {
                         cmd.Parameters.Add("@RecoveryID", SqlDbType.NVarChar).Value = RecoveryID;
                     });
+
+
+                return true;
             }
             catch (Exception ex)
             {
@@ -408,21 +424,24 @@ namespace UHub.CoreLib.Entities.Users.Management
                 Exception ex_outer = new Exception(errCode, ex);
                 CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
 
-                throw new Exception();
+
+                return false;
             }
         }
 
-        internal static void DeleteRecoveryContext(string RecoveryID)
+        internal static async Task<bool> TryDeleteRecoveryContextAsync(string RecoveryID)
         {
             try
             {
-                SqlWorker.ExecNonQuery(
+                await SqlWorker.ExecNonQueryAsync(
                     CoreFactory.Singleton.Properties.CmsDBConfig,
                     "[dbo].[User_DeleteUserRecoveryContextByID]",
                     (cmd) =>
                     {
                         cmd.Parameters.Add("@RecoveryID", SqlDbType.NVarChar).Value = RecoveryID;
                     });
+
+                return true;
             }
             catch (Exception ex)
             {
@@ -430,21 +449,24 @@ namespace UHub.CoreLib.Entities.Users.Management
                 Exception ex_outer = new Exception(errCode, ex);
                 CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
 
-                throw new Exception();
+                return false;
             }
         }
 
-        internal static void DeleteRecoveryContext(int UserID)
+        internal static async Task<bool> TryDeleteRecoveryContextAsync(int UserID)
         {
             try
             {
-                SqlWorker.ExecNonQuery(
+                await SqlWorker.ExecNonQueryAsync(
                     CoreFactory.Singleton.Properties.CmsDBConfig,
                     "[dbo].[User_DeleteUserRecoveryContextByUserID]",
                     (cmd) =>
                     {
                         cmd.Parameters.Add("@UserID", SqlDbType.BigInt).Value = UserID;
                     });
+
+
+                return true;
             }
             catch (Exception ex)
             {
@@ -452,7 +474,8 @@ namespace UHub.CoreLib.Entities.Users.Management
                 Exception ex_outer = new Exception(errCode, ex);
                 CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
 
-                throw new Exception();
+
+                return false;
             }
         }
         #endregion Recovery

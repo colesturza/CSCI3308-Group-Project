@@ -10,7 +10,7 @@ using UHub.CoreLib.Tools;
 
 namespace UHub.CoreLib.Security.Authentication
 {
-    internal static class TokenManager
+    internal static partial class TokenManager
     {
 
 

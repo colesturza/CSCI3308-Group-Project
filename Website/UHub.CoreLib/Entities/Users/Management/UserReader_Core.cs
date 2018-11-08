@@ -26,6 +26,11 @@ namespace UHub.CoreLib.Entities.Users.Management
         #region Individual
         public static bool DoesUserExist(long UserID)
         {
+            if (!CoreFactory.Singleton.IsEnabled)
+            {
+                throw new SystemDisabledException();
+            }
+
             return SqlWorker.ExecScalar<bool>(
                 _dbConn,
                 "[dbo].[User_DoesExistByID]",
@@ -37,6 +42,10 @@ namespace UHub.CoreLib.Entities.Users.Management
 
         public static bool DoesUserExist(string Email)
         {
+            if (!CoreFactory.Singleton.IsEnabled)
+            {
+                throw new SystemDisabledException();
+            }
 
             return SqlWorker.ExecScalar<bool>(
                 _dbConn,
@@ -49,6 +58,10 @@ namespace UHub.CoreLib.Entities.Users.Management
 
         public static bool DoesUserExist(string Username, string Domain)
         {
+            if (!CoreFactory.Singleton.IsEnabled)
+            {
+                throw new SystemDisabledException();
+            }
 
             return SqlWorker.ExecScalar<bool>(
                 _dbConn,
@@ -69,6 +82,11 @@ namespace UHub.CoreLib.Entities.Users.Management
         /// <returns></returns>
         public static long? GetUserID(string Email)
         {
+            if (!CoreFactory.Singleton.IsEnabled)
+            {
+                throw new SystemDisabledException();
+            }
+
             return SqlWorker.ExecScalar<long>(
                 _dbConn,
                 "[dbo].[User_GetIDByEmail]",
@@ -85,6 +103,10 @@ namespace UHub.CoreLib.Entities.Users.Management
         /// <returns></returns>
         public static long? GetUserID(string Username, string Domain)
         {
+            if (!CoreFactory.Singleton.IsEnabled)
+            {
+                throw new SystemDisabledException();
+            }
 
             return SqlWorker.ExecScalar<long>(
                 _dbConn,

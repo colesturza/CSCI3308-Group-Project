@@ -15,15 +15,6 @@ namespace UHub.CoreLib.Entities.Posts.Management
 
     public static partial class PostReader
     {
-        //TODO: abstract to config file
-        private const short DEFAULT_PAGE_SIZE = 20;
-
-        private static string _dbConn = null;
-
-        static PostReader()
-        {
-            _dbConn = CoreFactory.Singleton.Properties.CmsDBConfig;
-        }
 
         #region Individual
         /// <summary>
@@ -31,15 +22,14 @@ namespace UHub.CoreLib.Entities.Posts.Management
         /// </summary>
         /// <param name="PostID"></param>
         /// <returns></returns>
-        public static Post GetPost(long PostID)
+        public static async Task<Post> GetPostAsync(long PostID)
         {
             if (!CoreFactory.Singleton.IsEnabled)
             {
                 throw new SystemDisabledException();
             }
 
-
-            return SqlWorker.ExecBasicQuery(
+            var temp = await SqlWorker.ExecBasicQueryAsync(
                 _dbConn,
                 "[dbo].[Post_GetByID]",
                 (cmd) =>
@@ -49,16 +39,21 @@ namespace UHub.CoreLib.Entities.Posts.Management
                 (reader) =>
                 {
                     return reader.ToCustomDBType<Post>();
-                }).SingleOrDefault();
+                });
+
+
+            return temp.SingleOrDefault();
         }
         #endregion Individual
+
+
 
         #region Group
         /// <summary>
         /// Get all the posts in the DB
         /// </summary>
         /// <returns></returns>
-        public static IEnumerable<Post> GetAllPosts()
+        public static async Task<IEnumerable<Post>> GetAllPostsAsync()
         {
 
             if (!CoreFactory.Singleton.IsEnabled)
@@ -67,7 +62,7 @@ namespace UHub.CoreLib.Entities.Posts.Management
             }
 
 
-            return SqlWorker.ExecBasicQuery(
+            return await SqlWorker.ExecBasicQueryAsync(
                 _dbConn,
                 "[dbo].[Posts_GetAll]",
                 (cmd) => { },
@@ -83,7 +78,7 @@ namespace UHub.CoreLib.Entities.Posts.Management
         /// </summary>
         /// <param name="ParentID"></param>
         /// <returns></returns>
-        public static IEnumerable<Post> GetPostsByParent(long ParentID)
+        public static async Task<IEnumerable<Post>> GetPostsByParentAsync(long ParentID)
         {
 
             if (!CoreFactory.Singleton.IsEnabled)
@@ -92,7 +87,7 @@ namespace UHub.CoreLib.Entities.Posts.Management
             }
 
 
-            return SqlWorker.ExecBasicQuery(
+            return await SqlWorker.ExecBasicQueryAsync(
                 _dbConn,
                 "[dbo].[Posts_GetByParent]",
                 (cmd) =>
@@ -110,7 +105,7 @@ namespace UHub.CoreLib.Entities.Posts.Management
         /// </summary>
         /// <param name="SchoolID"></param>
         /// <returns></returns>
-        public static IEnumerable<Post> GetPostsBySchool(long SchoolID)
+        public static async Task<IEnumerable<Post>> GetPostsBySchoolAsync(long SchoolID)
         {
 
             if (!CoreFactory.Singleton.IsEnabled)
@@ -119,7 +114,7 @@ namespace UHub.CoreLib.Entities.Posts.Management
             }
 
 
-            return SqlWorker.ExecBasicQuery(
+            return await SqlWorker.ExecBasicQueryAsync(
                 _dbConn,
                 "[dbo].[Posts_GetBySchool]",
                 (cmd) =>
@@ -137,7 +132,7 @@ namespace UHub.CoreLib.Entities.Posts.Management
         /// </summary>
         /// <param name="SchoolClubID"></param>
         /// <returns></returns>
-        public static IEnumerable<Post> GetPostsByClub(long SchoolClubID)
+        public static async Task<IEnumerable<Post>> GetPostsByClubAsync(long SchoolClubID)
         {
 
             if (!CoreFactory.Singleton.IsEnabled)
@@ -146,7 +141,7 @@ namespace UHub.CoreLib.Entities.Posts.Management
             }
 
 
-            return SqlWorker.ExecBasicQuery(
+            return await SqlWorker.ExecBasicQueryAsync(
                 _dbConn,
                 "[dbo].[Posts_GetByClub]",
                 (cmd) =>
@@ -158,8 +153,6 @@ namespace UHub.CoreLib.Entities.Posts.Management
                     return row.ToCustomDBType<Post>();
                 });
         }
-
-        
 
 
         #endregion Group

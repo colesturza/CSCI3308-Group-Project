@@ -15,7 +15,7 @@ using System.Text.RegularExpressions;
 
 namespace UHub.CoreLib.Security.Authentication
 {
-    internal sealed class FormsAuthProvider : AuthenticationProvider
+    internal sealed partial class FormsAuthProvider : AuthenticationProvider
     {
         /// <summary>
         /// Try to authenticate a user account using the supplied account credentials.  Includes internal logging
