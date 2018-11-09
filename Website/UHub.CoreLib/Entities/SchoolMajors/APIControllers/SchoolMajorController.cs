@@ -24,10 +24,10 @@ namespace UHub.CoreLib.Entities.SchoolMajors.APIControllers
         [HttpGet]
         [Route("GetAllBySchool")]
         [ApiCacheControl(12 * 3600)]
-        public IHttpActionResult GetAllBySchool(long SchoolID)
+        public async Task<IHttpActionResult> GetAllBySchool(long SchoolID)
         {
 
-            var majorSet = SchoolMajorReader.GetMajorsBySchool(SchoolID);
+            var majorSet = await SchoolMajorReader.GetMajorsBySchoolAsync(SchoolID);
 
             return Ok(majorSet.Select(x => x.ToDto<SchoolMajor_R_PublicDTO>()));
 
@@ -37,14 +37,14 @@ namespace UHub.CoreLib.Entities.SchoolMajors.APIControllers
         [HttpGet]
         [Route("GetAllByEmail")]
         [ApiCacheControl(12 * 3600)]
-        public IHttpActionResult GetAllByEmail(string email)
+        public async Task<IHttpActionResult> GetAllByEmail(string email)
         {
             if(!email.IsValidEmail())
             {
                 return BadRequest();
             }
 
-            var majorSet = SchoolMajorReader.GetMajorsByEmail(email);
+            var majorSet = await SchoolMajorReader.GetMajorsByEmailAsync(email);
 
             return Ok(majorSet.Select(x => x.ToDto<SchoolMajor_R_PublicDTO>()));
 
@@ -54,9 +54,9 @@ namespace UHub.CoreLib.Entities.SchoolMajors.APIControllers
         [HttpGet]
         [Route("GetAllByDomain")]
         [ApiCacheControl(12 * 3600)]
-        public IHttpActionResult GetAllByDomain(string domain)
+        public async Task<IHttpActionResult> GetAllByDomain(string domain)
         {
-            var majorSet = SchoolMajorReader.GetMajorsByDomain(domain);
+            var majorSet = await SchoolMajorReader.GetMajorsByDomainAsync(domain);
 
             return Ok(majorSet.Select(x => x.ToDto<SchoolMajor_R_PublicDTO>()));
 
