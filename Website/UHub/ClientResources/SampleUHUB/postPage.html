@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="utilUHUB.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <title>U-HUB post creation</title>
+</head>
+<body class="custom-color1">
+
+<div id="mainNav" class="container-fullwidth">
+<nav class="navbar navbar-expand navbar-dark bg-dark">
+    <a class="navbar-brand" href="#">UHUB</a>
+    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Dropdown link
+                </a>
+                <div id="communityDrop" class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                    <a class="dropdown-item" v-for="community in communities" v-bind=community.url> {{ community.name }} </a>
+                </div>
+            </li>
+        </ul>
+    </div>
+</nav>
+</div>
+
+<div id="createPostText" class="container-fullwidth">
+  <div class="jumbotron">
+    <h1 class="display-4" align="center">Create a post</h1>
+  </div>
+</div>
+
+<div id="enterInfo" class="container">
+  <div class="form-group">
+    <label for="title">Title:</label>
+    <input type="text" class="form-control" ref="title">
+  </div>
+  <div class="form-group">
+    <label for="content">Content:</label>
+    <textarea type="text" class="form-control rounded-0" ref="content" rows="10"></textarea>
+  </div>
+  <div class="form-check form-check-inline">
+    <input type="checkbox" class="form-check-input" ref="public">
+    <label class="form-check-label" for="public">private</label>
+  </div>
+  <div class="form-check form-check-inline">
+    <input type="checkbox" class="form-check-input" ref="comment">
+    <label class="form-check-label" for="comment">enable comments</label>
+  </div>
+  <button v-on:click="readRefs">Submit</button>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+<script src="postVue.js"></script>
+</body>
+</html>
