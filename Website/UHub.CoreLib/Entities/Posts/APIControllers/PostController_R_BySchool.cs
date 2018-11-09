@@ -131,7 +131,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
         [HttpPost()]
         [Route("GetAllBySchool")]
         [ApiAuthControl]
-        public IHttpActionResult GetAllBySchool()
+        public async Task<IHttpActionResult> GetAllBySchool()
         {
             string status = "";
             HttpStatusCode statCode = HttpStatusCode.BadRequest;
@@ -145,7 +145,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             var schoolID = cmsUser.SchoolID.Value;
 
 
-            var posts = PostReader.GetPostsBySchool(schoolID);
+            var posts = await PostReader.GetPostsBySchoolAsync(schoolID);
 
 
             var sanitizerMode = CoreFactory.Singleton.Properties.HtmlSanitizerMode;
@@ -179,7 +179,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
         [HttpPost()]
         [Route("GetPageBySchool")]
         [ApiAuthControl]
-        public IHttpActionResult GetPageBySchool(long? StartID = null, int? PageNum = null, short PageSize = DEFAULT_PAGE_SIZE)
+        public async Task<IHttpActionResult> GetPageBySchool(long? StartID = null, int? PageNum = null, short PageSize = DEFAULT_PAGE_SIZE)
         {
             string status = "";
             HttpStatusCode statCode = HttpStatusCode.BadRequest;
@@ -193,7 +193,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             var schoolID = cmsUser.SchoolID.Value;
 
 
-            var posts = PostReader.GetPostsBySchoolPage(schoolID, StartID, PageNum, PageSize);
+            var posts = await PostReader.GetPostsBySchoolPageAsync(schoolID, StartID, PageNum, PageSize);
 
             var sanitizerMode = CoreFactory.Singleton.Properties.HtmlSanitizerMode;
             var shouldSanitize = (sanitizerMode & HtmlSanitizerMode.OnRead) != 0;

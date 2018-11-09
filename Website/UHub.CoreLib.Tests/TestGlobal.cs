@@ -191,7 +191,7 @@ namespace UHub.CoreLib.Tests
         }
 
 
-        public static T GetAuthRequest<T>(T controllerArg, bool useCookie = true, string email = null, string password = null) where T : ApiController
+        public static async Task<T> GetAuthRequest<T>(T controllerArg, bool useCookie = false, string email = null, string password = null) where T : ApiController
         {
             var authController = GetStdRequest(new AuthenticationController());
 
@@ -205,14 +205,13 @@ namespace UHub.CoreLib.Tests
                 Password = password
             };
 
-            var response = authController.GetToken(cred);
+            var response = await authController.GetToken(cred);
             Assert.IsNotNull(response);
 
             var result = response as OkNegotiatedContentResult<string>;
             Assert.IsNotNull(result);
 
             var token = result.Content;
-
 
 
             var controller = GetStdRequest(controllerArg);

@@ -274,7 +274,7 @@ namespace UHub.CoreLib.Entities.Posts.Management.Tests
                 {
                     taskSet.Add(worker());
                 }
-                await Task.WhenAll(taskSet.ToArray());
+                await Task.WhenAll(taskSet);
 
 
                 var end_outer = FailoverDateTimeOffset.UtcNow;
