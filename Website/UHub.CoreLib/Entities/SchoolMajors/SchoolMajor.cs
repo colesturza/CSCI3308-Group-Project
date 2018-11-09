@@ -12,34 +12,34 @@ namespace UHub.CoreLib.Entities.SchoolMajors
     [DataClass]
     public sealed partial class SchoolMajor : DBEntityBase, ISchoolMajor_R_Public
     {
-        [DataProperty(EnableDBColumnValidation: false)]
+        [DataProperty]
         public long? ID { get; set; }
 
-        [DataProperty(EnableDBColumnValidation: false)]
+        [DataProperty]
         public string Name { get; set; }
 
-        [DataProperty(EnableDBColumnValidation: false)]
+        [DataProperty]
         public bool IsEnabled { get; set; }
 
-        [DataProperty(EnableDBColumnValidation: false)]
+        [DataProperty]
         public bool IsReadonly { get; set; }
 
-        [DataProperty(EnableDBColumnValidation: false)]
+        [DataProperty]
         public string Description { get; set; }
 
-        [DataProperty(EnableDBColumnValidation: false)]
+        [DataProperty]
         public bool IsDeleted { get; set; }
 
-        [DataProperty(EnableDBColumnValidation: false)]
+        [DataProperty]
         public long CreatedBy { get; set; }
 
-        [DataProperty(EnableDBColumnValidation: false)]
+        [DataProperty]
         public DateTimeOffset CreatedDate { get; set; }
 
-        [DataProperty(EnableDBColumnValidation: false)]
+        [DataProperty]
         public long? ModifiedBy { get; set; }
 
-        [DataProperty(EnableDBColumnValidation: false)]
+        [DataProperty]
         public DateTimeOffset? ModifiedDate { get; set; }
     }
 }

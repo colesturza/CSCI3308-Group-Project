@@ -15,6 +15,7 @@ using UHub.CoreLib.Entities.SchoolClubs.Management;
 using UHub.CoreLib.Entities.Schools.Management;
 using UHub.CoreLib.Management;
 using UHub.CoreLib.Tools;
+using UHub.CoreLib.Security;
 
 namespace UHub.CoreLib.Entities.Posts.APIControllers
 {
@@ -69,9 +70,17 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
                     return Content(HttpStatusCode.Forbidden, "Access Denied");
                 }
 
+                var sanitizerMode = CoreFactory.Singleton.Properties.HtmlSanitizerMode;
+                if ((sanitizerMode & HtmlSanitizerMode.OnRead) != 0)
+                {
+                    postPublic.Content = postPublic.Content.SanitizeHtml();
+                }
+
+
                 //check for member status
                 if (IsUserMember)
                 {
+
                     return Ok(postPublic);
                 }
                 else

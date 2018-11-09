@@ -47,7 +47,6 @@ namespace UHub.CoreLib.Entities.Posts.Management
         #endregion Individual
 
 
-
         #region Group
         /// <summary>
         /// Get all the posts in the DB
@@ -156,5 +155,50 @@ namespace UHub.CoreLib.Entities.Posts.Management
 
 
         #endregion Group
+
+
+        #region Counters
+
+        public static async Task<IEnumerable<PostClusteredCount>> GetPostClusteredCountsAsync()
+        {
+            if (!CoreFactory.Singleton.IsEnabled)
+            {
+                throw new SystemDisabledException();
+            }
+
+
+            return await SqlWorker.ExecBasicQueryAsync(
+                _dbConn,
+                "[dbo].[Posts_GetClusteredCounts]",
+                (cmd) => { },
+                (reader) =>
+                {
+                    return reader.ToCustomDBType<PostClusteredCount>();
+                });
+        }
+
+
+        public static async Task<IEnumerable<PostClusteredCount>> GetPostClusteredCountsAsync(long SchoolID)
+        {
+            if (!CoreFactory.Singleton.IsEnabled)
+            {
+                throw new SystemDisabledException();
+            }
+
+
+            return await SqlWorker.ExecBasicQueryAsync(
+                _dbConn,
+                "[dbo].[Posts_GetClusteredCountsBySchool]",
+                (cmd) =>
+                {
+                    cmd.Parameters.Add("@SchoolID", SqlDbType.BigInt).Value = SchoolID;
+                },
+                (reader) =>
+                {
+                    return reader.ToCustomDBType<PostClusteredCount>();
+                });
+        }
+
+        #endregion Counters
     }
 }

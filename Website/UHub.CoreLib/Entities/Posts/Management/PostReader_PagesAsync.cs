@@ -15,7 +15,7 @@ namespace UHub.CoreLib.Entities.Posts.Management
 {
     public static partial class PostReader
     {
-        public static async Task<long> GetPostCountByParentAsync(long ParentID)
+        public static async Task<long> GetPostCountByParentAsync(long ParentID, bool IncludePrivatePosts)
         {
             if (!CoreFactory.Singleton.IsEnabled)
             {
@@ -28,6 +28,7 @@ namespace UHub.CoreLib.Entities.Posts.Management
                 (cmd) =>
                 {
                     cmd.Parameters.Add("@ParentID", SqlDbType.BigInt).Value = ParentID;
+                    cmd.Parameters.Add("@IncludePrivatePosts", SqlDbType.Bit).Value = IncludePrivatePosts;
                 });
 
         }
@@ -77,7 +78,7 @@ namespace UHub.CoreLib.Entities.Posts.Management
         /// <param name="PageNum"></param>
         /// <param name="ItemCount"></param>
         /// <returns></returns>
-        public static async Task<(IEnumerable<Post> PostSet, long StartID)> GetPostsByParentPage(long ParentID, short? ItemCount)
+        public static async Task<(IEnumerable<Post> PostSet, long StartID)> GetPostsByParentPageAsync(long ParentID, short? ItemCount)
         {
 
             if (!CoreFactory.Singleton.IsEnabled)
@@ -183,7 +184,7 @@ namespace UHub.CoreLib.Entities.Posts.Management
         /// <param name="PageNum"></param>
         /// <param name="ItemCount"></param>
         /// <returns></returns>
-        public static async Task<(IEnumerable<Post> PostSet, long StartID)> GetPostsBySchoolPage(long SchoolID, short? ItemCount)
+        public static async Task<(IEnumerable<Post> PostSet, long StartID)> GetPostsBySchoolPageAsync(long SchoolID, short? ItemCount)
         {
 
             if (!CoreFactory.Singleton.IsEnabled)
@@ -226,7 +227,7 @@ namespace UHub.CoreLib.Entities.Posts.Management
         }
 
 
-        public static async Task<long> GetPostCountByClubAsync(long ClubID)
+        public static async Task<long> GetPostCountByClubAsync(long ClubID, bool IncludePrivatePosts)
         {
             if (!CoreFactory.Singleton.IsEnabled)
             {
@@ -239,6 +240,7 @@ namespace UHub.CoreLib.Entities.Posts.Management
                 (cmd) =>
                 {
                     cmd.Parameters.Add("@ClubID", SqlDbType.BigInt).Value = ClubID;
+                    cmd.Parameters.Add("@IncludePrivatePosts", SqlDbType.Bit).Value = IncludePrivatePosts;
                 });
 
         }

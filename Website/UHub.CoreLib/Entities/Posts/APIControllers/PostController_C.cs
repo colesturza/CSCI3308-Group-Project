@@ -16,6 +16,7 @@ using UHub.CoreLib.Entities.SchoolClubs.Management;
 using UHub.CoreLib.Entities.Users.Management;
 using UHub.CoreLib.Extensions;
 using UHub.CoreLib.Management;
+using UHub.CoreLib.Security;
 using UHub.CoreLib.Tools;
 
 
@@ -35,7 +36,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
                 return Content(statCode, status);
             }
 
-            if(post == null)
+            if (post == null)
             {
                 return BadRequest();
             }
@@ -74,7 +75,11 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
 
             try
             {
-                tmpPost.Content = tmpPost.Content.SanitizeHtml();
+                var sanitizerMode = CoreFactory.Singleton.Properties.HtmlSanitizerMode;
+                if ((sanitizerMode & HtmlSanitizerMode.OnWrite) != 0)
+                {
+                    tmpPost.Content = tmpPost.Content.SanitizeHtml();
+                }
                 tmpPost.CreatedBy = cmsUser.ID.Value;
 
 

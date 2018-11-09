@@ -218,6 +218,7 @@
     <Compile Include="Entities\ClubModerators\Interfaces\IClubModerator_R_Public.cs" />
     <Compile Include="Entities\ClubModerators\Management\ClubModeratorReader_Core.cs" />
     <Compile Include="Entities\ClubModerators\ClubModerator.cs" />
+    <Compile Include="Entities\Posts\PostClusteredCount.cs" />
     <Compile Include="Entities\SchoolClubs\APIControllers\SchoolClubController_C.cs" />
     <Compile Include="Entities\SchoolClubs\APIControllers\SchoolClubController_Core.cs" />
     <Compile Include="Entities\SchoolClubs\APIControllers\SchoolClubController_R.cs" />
@@ -251,6 +252,8 @@
     <Compile Include="Entities\Users\Interfaces\IUserCredential.cs" />
     <Compile Include="Entities\Users\Interfaces\IUserRecoveryContextAsync.cs" />
     <Compile Include="Entities\Users\Management\UserReader_CoreAsync.cs" />
+    <Compile Include="Entities\Users\Management\UserReader_EntClubAsync.cs" />
+    <Compile Include="Entities\Users\Management\UserReader_EntClub.cs" />
     <Compile Include="Entities\Users\Management\UserReader_EntClubModsAsync.cs" />
     <Compile Include="Entities\Users\Management\UserReader_EntCommentsAsync.cs" />
     <Compile Include="Entities\Users\Management\UserReader_EntComments.cs" />

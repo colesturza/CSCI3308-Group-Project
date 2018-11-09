@@ -16,6 +16,7 @@ using UHub.CoreLib.Entities.SchoolClubs.Management;
 using UHub.CoreLib.Entities.Users.Management;
 using UHub.CoreLib.Extensions;
 using UHub.CoreLib.Management;
+using UHub.CoreLib.Security;
 using UHub.CoreLib.Tools;
 
 namespace UHub.CoreLib.Entities.Posts.APIControllers
@@ -25,7 +26,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
         [HttpPost()]
         [Route("GetPostCountByClub")]
         [ApiAuthControl]
-        public IHttpActionResult GetPostCountByClub(long ClubID)
+        public async Task<IHttpActionResult> GetPostCountByClub(long ClubID)
         {
             string status = "";
             HttpStatusCode statCode = HttpStatusCode.BadRequest;
@@ -35,8 +36,15 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             }
 
 
+            var taskGetTargetClub = SchoolClubReader.GetClubAsync(ClubID);
             var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser();
-            var targetClub = SchoolClubReader.GetClub(ClubID);
+
+            var taskIsUserBanned = SchoolClubReader.IsUserBannedAsync(ClubID, cmsUser.ID.Value);
+            var taskIsUserMember = SchoolClubReader.ValidateMembershipAsync(ClubID, cmsUser.ID.Value);
+
+
+
+            var targetClub = await taskGetTargetClub;
 
             if (targetClub == null)
             {
@@ -48,8 +56,17 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
                 return NotFound();
             }
 
+            var isUserMember = await taskIsUserMember;
+            var taskGetCount = PostReader.GetPostCountByClubAsync(ClubID, isUserMember);
 
-            var count = PostReader.GetPostCountByClub(ClubID);
+
+            if (await taskIsUserBanned)
+            {
+                return Ok(0);
+            }
+
+
+            var count = await taskGetCount;
             return Ok(count);
         }
 
@@ -57,7 +74,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
         [HttpPost()]
         [Route("GetPageCountByClub")]
         [ApiAuthControl]
-        public IHttpActionResult GetPageCountByClub(long ClubID, short PageSize = DEFAULT_PAGE_SIZE)
+        public async Task<IHttpActionResult> GetPageCountByClub(long ClubID, short PageSize = DEFAULT_PAGE_SIZE)
         {
             string status = "";
             HttpStatusCode statCode = HttpStatusCode.BadRequest;
@@ -67,9 +84,12 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             }
 
 
+            var taskGetTargetClub = SchoolClubReader.GetClubAsync(ClubID);
             var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser();
-            var targetClub = SchoolClubReader.GetClub(ClubID);
+            var taskIsUserMember = SchoolClubReader.ValidateMembershipAsync(ClubID, cmsUser.ID.Value);
 
+
+            var targetClub = await taskGetTargetClub;
             if (targetClub == null)
             {
                 return NotFound();
@@ -80,8 +100,11 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
                 return NotFound();
             }
 
+            var isUserMember = await taskIsUserMember;
+            var taskGetCount = PostReader.GetPostCountByClubAsync(ClubID, isUserMember);
 
-            var count = PostReader.GetPostCountByClub(ClubID);
+
+            var count = await taskGetCount;
             if (count == 0)
             {
                 return Ok(0);
@@ -107,7 +130,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
         [HttpPost()]
         [Route("GetAllByClub")]
         [ApiAuthControl]
-        public IHttpActionResult GetAllByClub(long ClubID)
+        public async Task<IHttpActionResult> GetAllByClub(long ClubID)
         {
             string status = "";
             HttpStatusCode statCode = HttpStatusCode.BadRequest;
@@ -144,18 +167,37 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
 
 
             var posts = PostReader.GetPostsByClub(ClubID);
-            //check for member status
-            if (IsUserMember)
+            var sanitizerMode = CoreFactory.Singleton.Properties.HtmlSanitizerMode;
+            var shouldSanitize = (sanitizerMode & HtmlSanitizerMode.OnRead) != 0;
+
+
+            IEnumerable<Post_R_PublicDTO> outSet = null;
+            if (shouldSanitize)
             {
-                var outSet = posts.Select(x => x.ToDto<Post_R_PublicDTO>());
-                return Ok(outSet);
+                outSet = posts
+                    .Select(x =>
+                    {
+                        x.Content = x.Content.SanitizeHtml();
+                        return x.ToDto<Post_R_PublicDTO>();
+                    });
             }
             else
             {
-                var outSet = posts.Where(x => x.IsPublic).Select(x => x.ToDto<Post_R_PublicDTO>());
-                return Ok(outSet);
+                outSet = posts
+                    .Select(x =>
+                    {
+                        return x.ToDto<Post_R_PublicDTO>();
+                    });
             }
 
+
+            //check for member status
+            if (!IsUserMember)
+            {
+                outSet = outSet.Where(x => x.IsPublic);
+            }
+
+            return Ok(outSet);
         }
 
 
@@ -198,15 +240,34 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
 
 
             var posts = PostReader.GetPostsByClubPage(ClubID, StartID, PageNum, PageSize);
-            IEnumerable<Post_R_PublicDTO> outSet = Enumerable.Empty<Post_R_PublicDTO>();
-            //check for member status
-            if (IsUserMember)
+
+            var sanitizerMode = CoreFactory.Singleton.Properties.HtmlSanitizerMode;
+            var shouldSanitize = (sanitizerMode & HtmlSanitizerMode.OnRead) != 0;
+
+            IEnumerable<Post_R_PublicDTO> outSet = null;
+            if (shouldSanitize)
             {
-                outSet = posts.Select(x => x.ToDto<Post_R_PublicDTO>());
+                outSet = posts
+                    .Select(x =>
+                    {
+                        x.Content = x.Content.SanitizeHtml();
+                        return x.ToDto<Post_R_PublicDTO>();
+                    });
             }
             else
             {
-                outSet = posts.Where(x => x.IsPublic).Select(x => x.ToDto<Post_R_PublicDTO>());
+                outSet = posts
+                    .Select(x =>
+                    {
+                        return x.ToDto<Post_R_PublicDTO>();
+                    });
+            }
+
+
+            //check for member status
+            if (!IsUserMember)
+            {
+                outSet = outSet.Where(x => x.IsPublic);
             }
 
 

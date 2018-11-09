@@ -159,9 +159,52 @@ namespace UHub.CoreLib.Entities.Posts.Management
                 });
         }
 
-        
+
 
 
         #endregion Group
+
+        #region Counters
+
+        public static IEnumerable<PostClusteredCount> GetPostClusteredCounts()
+        {
+            if (!CoreFactory.Singleton.IsEnabled)
+            {
+                throw new SystemDisabledException();
+            }
+
+
+            return SqlWorker.ExecBasicQuery(
+                _dbConn,
+                "[dbo].[Posts_GetClusteredCounts]",
+                (cmd) => { },
+                (reader) =>
+                {
+                    return reader.ToCustomDBType<PostClusteredCount>();
+                });
+        }
+
+        public static IEnumerable<PostClusteredCount> GetPostClusteredCounts(long SchoolID)
+        {
+            if (!CoreFactory.Singleton.IsEnabled)
+            {
+                throw new SystemDisabledException();
+            }
+
+
+            return SqlWorker.ExecBasicQuery(
+                _dbConn,
+                "[dbo].[Posts_GetClusteredCountsBySchool]",
+                (cmd) =>
+                {
+                    cmd.Parameters.Add("@SchoolID", SqlDbType.BigInt).Value = SchoolID;
+                },
+                (reader) =>
+                {
+                    return reader.ToCustomDBType<PostClusteredCount>();
+                });
+        }
+
+        #endregion Counters
     }
 }

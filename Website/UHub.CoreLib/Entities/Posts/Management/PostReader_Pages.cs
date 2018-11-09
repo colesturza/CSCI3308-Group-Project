@@ -15,7 +15,7 @@ namespace UHub.CoreLib.Entities.Posts.Management
 {
     public static partial class PostReader
     {
-        public static long GetPostCountByParent(long ParentID)
+        public static long GetPostCountByParent(long ParentID, bool IncludePrivatePosts)
         {
             if (!CoreFactory.Singleton.IsEnabled)
             {
@@ -28,6 +28,7 @@ namespace UHub.CoreLib.Entities.Posts.Management
                 (cmd) =>
                 {
                     cmd.Parameters.Add("@ParentID", SqlDbType.BigInt).Value = ParentID;
+                    cmd.Parameters.Add("@IncludePrivatePosts", SqlDbType.Bit).Value = IncludePrivatePosts;
                 });
 
         }
@@ -222,7 +223,7 @@ namespace UHub.CoreLib.Entities.Posts.Management
         }
 
 
-        public static long GetPostCountByClub(long ClubID)
+        public static long GetPostCountByClub(long ClubID, bool IncludePrivatePosts)
         {
             if (!CoreFactory.Singleton.IsEnabled)
             {
@@ -235,6 +236,7 @@ namespace UHub.CoreLib.Entities.Posts.Management
                 (cmd) =>
                 {
                     cmd.Parameters.Add("@ClubID", SqlDbType.BigInt).Value = ClubID;
+                    cmd.Parameters.Add("@IncludePrivatePosts", SqlDbType.BigInt).Value = IncludePrivatePosts;
                 });
 
         }

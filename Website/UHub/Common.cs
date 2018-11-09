@@ -149,12 +149,12 @@ namespace UHub
                     AcctPswdResetURL = "~/Account/ResetPassword",
                     AcctPswdUpdateURL = "~/Account/UpdatePassword",
                     AcctPswdResetExpiration = new TimeSpan(0, 0, 30, 0),
-                    EnableRecaptcha = (env == "PRD"),                //CAPTCHA
+                    EnableRecaptcha = true,                //CAPTCHA
                     RecaptchaPublicKey = captchaPublicKey,
                     RecaptchaPrivateKey = captchaPrivateKey,
-                    AutoConfirmNewAccounts = true,
+                    AutoConfirmNewAccounts = false,
                     AutoApproveNewAccounts = true,
-                    EnableTokenVersioning = false,           //VERSION
+                    EnableTokenVersioning = true,           //VERSION
                     CookieSameSiteMode = CookieSameSiteModes.Lax,
                     EnablePswdReset = true,
                     EnablePersistentAuthTokens = true,
@@ -166,6 +166,7 @@ namespace UHub
                     //EnableUserActivityLogging = true,
                     LocalLogMode = LocalLoggingMode.SystemEvents,
                     LoggingSource = LoggingSource.UHUB_CMS,
+                    UsageLogMode = UsageLoggingMode.None,
                     GoogleAnalyticsKey = googleAnalyticsKey
                 },
                 Errors = new CmsConfig_Errors
@@ -289,7 +290,7 @@ namespace UHub
                     AcctPswdResetURL = "~/Account/ResetPassword",
                     AcctPswdUpdateURL = "~/Account/UpdatePassword",
                     AcctPswdResetExpiration = new TimeSpan(0, 0, 30, 0),
-                    EnableRecaptcha = (env == "PRD"),                //CAPTCHA
+                    EnableRecaptcha = false,                //CAPTCHA
                     RecaptchaPublicKey = captchaPublicKey,
                     RecaptchaPrivateKey = captchaPrivateKey,
                     AutoConfirmNewAccounts = true,
@@ -306,6 +307,7 @@ namespace UHub
                     //EnableUserActivityLogging = true,
                     LocalLogMode = LocalLoggingMode.SystemEvents,
                     LoggingSource = LoggingSource.UHUB_CMS,
+                    UsageLogMode = UsageLoggingMode.None,
                     GoogleAnalyticsKey = googleAnalyticsKey
                 },
                 Errors = new CmsConfig_Errors

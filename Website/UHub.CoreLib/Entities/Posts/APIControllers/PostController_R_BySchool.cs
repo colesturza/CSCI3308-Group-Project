@@ -17,6 +17,7 @@ using UHub.CoreLib.Entities.Schools.Management;
 using UHub.CoreLib.Entities.Users.Management;
 using UHub.CoreLib.Extensions;
 using UHub.CoreLib.Management;
+using UHub.CoreLib.Security;
 using UHub.CoreLib.Tools;
 
 namespace UHub.CoreLib.Entities.Posts.APIControllers
@@ -29,7 +30,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
         [HttpPost()]
         [Route("GetPostCountBySchool")]
         [ApiAuthControl]
-        public IHttpActionResult GetPostCountBySchool()
+        public async Task<IHttpActionResult> GetPostCountBySchool()
         {
             string status = "";
             HttpStatusCode statCode = HttpStatusCode.BadRequest;
@@ -40,10 +41,29 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
 
 
             var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser();
+            var userID = cmsUser.ID.Value;
             var schoolID = cmsUser.SchoolID.Value;
 
 
-            var count = PostReader.GetPostCountBySchool(schoolID);
+            var taskGetUserMemberships = UserReader.GetValidClubMembershipsAsync(userID);
+            var taskGetCountSet = PostReader.GetPostClusteredCountsAsync(schoolID);
+
+            var membershipHash = (await taskGetUserMemberships).ToHashSet();
+            await taskGetCountSet;
+
+
+            var count = 0L;
+
+            foreach(var counter in taskGetCountSet.Result)
+            {
+                count += counter.PublicPostCount;
+                if(counter.ClubID != null && membershipHash.Contains(counter.ClubID.Value))
+                {
+                    count += counter.PrivatePostCount;
+                }
+            }
+
+
             return Ok(count);
 
         }
@@ -51,7 +71,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
         [HttpPost()]
         [Route("GetPageCountBySchool")]
         [ApiAuthControl]
-        public IHttpActionResult GetPageCountBySchool(short PageSize = DEFAULT_PAGE_SIZE)
+        public async Task<IHttpActionResult> GetPageCountBySchool(short PageSize = DEFAULT_PAGE_SIZE)
         {
             string status = "";
             HttpStatusCode statCode = HttpStatusCode.BadRequest;
@@ -62,10 +82,29 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
 
 
             var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser();
+            var userID = cmsUser.ID.Value;
             var schoolID = cmsUser.SchoolID.Value;
 
 
-            var count = PostReader.GetPostCountBySchool(schoolID);
+            var taskGetUserMemberships = UserReader.GetValidClubMembershipsAsync(userID);
+            var taskGetCountSet = PostReader.GetPostClusteredCountsAsync(schoolID);
+
+            var membershipHash = (await taskGetUserMemberships).ToHashSet();
+            await taskGetCountSet;
+
+
+            var count = 0L;
+
+            foreach (var counter in taskGetCountSet.Result)
+            {
+                count += counter.PublicPostCount;
+                if (counter.ClubID != null && membershipHash.Contains(counter.ClubID.Value))
+                {
+                    count += counter.PrivatePostCount;
+                }
+            }
+
+
             if (count == 0)
             {
                 return Ok(0);
@@ -108,7 +147,31 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
 
             var posts = PostReader.GetPostsBySchool(schoolID);
 
-            var outSet = posts.Select(x => x.ToDto<Post_R_PublicDTO>());
+
+            var sanitizerMode = CoreFactory.Singleton.Properties.HtmlSanitizerMode;
+            var shouldSanitize = (sanitizerMode & HtmlSanitizerMode.OnRead) != 0;
+
+
+            IEnumerable<Post_R_PublicDTO> outSet = null;
+            if (shouldSanitize)
+            {
+                outSet = posts
+                    .Select(x =>
+                    {
+                        x.Content = x.Content.SanitizeHtml();
+                        return x.ToDto<Post_R_PublicDTO>();
+                    });
+            }
+            else
+            {
+                outSet = posts
+                    .Select(x =>
+                    {
+                        return x.ToDto<Post_R_PublicDTO>();
+                    });
+            }
+
+
             return Ok(outSet);
 
         }
@@ -132,7 +195,30 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
 
             var posts = PostReader.GetPostsBySchoolPage(schoolID, StartID, PageNum, PageSize);
 
-            var outSet = posts.Select(x => x.ToDto<Post_R_PublicDTO>());
+            var sanitizerMode = CoreFactory.Singleton.Properties.HtmlSanitizerMode;
+            var shouldSanitize = (sanitizerMode & HtmlSanitizerMode.OnRead) != 0;
+
+
+            IEnumerable<Post_R_PublicDTO> outSet = null;
+            if (shouldSanitize)
+            {
+                outSet = posts
+                    .Select(x =>
+                    {
+                        x.Content = x.Content.SanitizeHtml();
+                        return x.ToDto<Post_R_PublicDTO>();
+                    });
+            }
+            else
+            {
+                outSet = posts
+                    .Select(x =>
+                    {
+                        return x.ToDto<Post_R_PublicDTO>();
+                    });
+            }
+
+
 
 
             //get the highest ent ID from data set

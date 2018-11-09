@@ -1,0 +1,27 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using UHub.CoreLib.Attributes;
+using UHub.CoreLib.DataInterop;
+
+namespace UHub.CoreLib.Entities.Posts
+{
+    [DataClass]
+    public sealed partial class PostClusteredCount : DBEntityBase
+    {
+        [DataProperty]
+        public long SchoolID { get; set; }
+
+        [DataProperty]
+        public long? ClubID { get; set; }
+
+        [DataProperty]
+        public long PublicPostCount { get; set; }
+
+        [DataProperty]
+        public long PrivatePostCount { get; set; }
+
+    }
+}
