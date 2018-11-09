@@ -1,10 +1,14 @@
+var string1 = "https://u-hub.life/schoolclubs/21"
+var seperated = string1.split('/')
+console.log(seperated)
 new Vue({
   el: '#enterInfo',
   data: {
     title: "",
     content: "",
     public: "",
-    comment: ""
+    comment: "",
+    parentID: ""
   },
   methods: {
     readRefs:function(){
@@ -13,7 +17,7 @@ new Vue({
       this.content = this.data.content.value
       this.public = this.data.public.checked
       this.comment = this.data.comment.checked
-      this.parentID = window.href
+      this.parentID = seperated.slice(-1)[0]
       this.postobj = JSON.stringify(this.$data)
       console.log(JSON.stringify(this.$data))
     }
@@ -22,7 +26,7 @@ new Vue({
     postobj: $.ajax({
       method: "POST",
       data: this.postobj,
-      url: "https://u-hub.life/uhubapi/posts/Create"
+      url: "/uhubapi/posts/Create"
     })
   }
 })
