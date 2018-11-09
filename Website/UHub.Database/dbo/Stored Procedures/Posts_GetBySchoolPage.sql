@@ -13,6 +13,7 @@ begin
 	declare @adjStartIdx bigint
 	declare @adjEndIdx bigint
 
+
 	--set StartID to the id of the newest ent
 	if(@StartID is null)
 	begin
@@ -22,6 +23,16 @@ begin
 		from dbo.vPosts
 		order by
 			CreatedDate desc
+	end
+	else begin
+
+		--kill if start id does not exist as a post
+		if((select EntTypeID from Entities where ID = @StartID) != 6)	--POST TYPE [6]
+		begin
+			return;
+
+		end
+
 	end
 
 	--START ID CAN BE DERIVED AT CLIENT
@@ -71,11 +82,14 @@ begin
 	values (@SchoolID);
 
 
+
+
+	
 	--get set of posts starting at the 
 	with postCTE as
 	(
 
-		select
+		select --top (@adjEndIdx - 1)
 			vu.ID,
 			vu.IsEnabled,
 			vu.IsReadonly,

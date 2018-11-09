@@ -27,6 +27,11 @@ namespace UHub.CoreLib.DataInterop
         private string Database { get; }
 
         /// <summary>
+        /// Flag to determine whether the connection should allow async processing
+        /// </summary>
+        private bool EnableAsync { get; }
+
+        /// <summary>
         /// Flag to determine if integrated security should be used or SQL authentication
         /// </summary>
         private bool UseIntegratedSecurity { get; }
@@ -41,14 +46,15 @@ namespace UHub.CoreLib.DataInterop
         /// </summary>
         private string Password { get; }
 
+
         /// <summary>
         /// Initializer
         /// </summary>
         /// <param name="Server">SQL server name or IP</param>
         /// <param name="Database">SQL DB name</param>
         /// <param name="UseIntegratedSecurity"></param>
-        public SqlConfig(string Server, string Database, bool UseIntegratedSecurity) :
-            this(Server, Database, UseIntegratedSecurity, "", "")
+        public SqlConfig(string Server, string Database, bool EnableAsync, bool UseIntegratedSecurity) :
+            this(Server, Database, EnableAsync, UseIntegratedSecurity, "", "")
         {
 
         }
@@ -59,8 +65,8 @@ namespace UHub.CoreLib.DataInterop
         /// <param name="Database">SQL DB name</param>
         /// <param name="Username">SQL username</param>
         /// <param name="Password">SQL user password</param>
-        public SqlConfig(string Server, string Database, string Username, string Password) :
-            this(Server, Database, false, Username, Password)
+        public SqlConfig(string Server, string Database, bool EnableAsync, string Username, string Password) :
+            this(Server, Database, EnableAsync, false, Username, Password)
         {
 
         }
@@ -72,10 +78,11 @@ namespace UHub.CoreLib.DataInterop
         /// <param name="UseIntegratedSecurity"></param>
         /// <param name="Username">SQL username</param>
         /// <param name="Password">SQL user password</param>
-        public SqlConfig(string Server, string Database, bool UseIntegratedSecurity, string Username, string Password)
+        public SqlConfig(string Server, string Database, bool EnableAsync, bool UseIntegratedSecurity, string Username, string Password)
         {
             this.Server = Server;
             this.Database = Database;
+            this.EnableAsync = EnableAsync;
             this.UseIntegratedSecurity = UseIntegratedSecurity;
             this.Username = Username;
             this.Password = Password;
@@ -99,6 +106,7 @@ namespace UHub.CoreLib.DataInterop
             {
                 this.Server = config.Server;
                 this.Database = config.Database;
+                this.EnableAsync = config.EnableAsync;
                 this.UseIntegratedSecurity = config.UseIntegratedSecurity;
                 this.Username = config.Username;
                 this.Password = config.Password;
@@ -211,6 +219,12 @@ namespace UHub.CoreLib.DataInterop
             builder.Append("Database=");
             builder.Append(Database);
             builder.Append(";");
+            //Async
+            if(EnableAsync)
+            {
+                builder.Append("Asynchronous Processing=True;");
+            }
+
             //IntegratedSecurity
             if (UseIntegratedSecurity)
             {

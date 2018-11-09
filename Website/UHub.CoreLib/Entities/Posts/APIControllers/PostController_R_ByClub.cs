@@ -198,18 +198,29 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
 
 
             var posts = PostReader.GetPostsByClubPage(ClubID, StartID, PageNum, PageSize);
+            IEnumerable<Post_R_PublicDTO> outSet = Enumerable.Empty<Post_R_PublicDTO>();
             //check for member status
             if (IsUserMember)
             {
-                var outSet = posts.Select(x => x.ToDto<Post_R_PublicDTO>());
-                return Ok(outSet);
+                outSet = posts.Select(x => x.ToDto<Post_R_PublicDTO>());
             }
             else
             {
-                var outSet = posts.Where(x => x.IsPublic).Select(x => x.ToDto<Post_R_PublicDTO>());
-                return Ok(outSet);
+                outSet = posts.Where(x => x.IsPublic).Select(x => x.ToDto<Post_R_PublicDTO>());
             }
 
+
+            //get the highest ent ID from data set
+            //this is the pagination StartID
+            //used to lock paging to the entities available at initial invocation
+            var maxId = outSet.Max(x => x.ID);
+            var procSet = new
+            {
+                StartID = maxId,
+                Data = outSet
+            };
+
+            return Ok(procSet);
         }
 
 

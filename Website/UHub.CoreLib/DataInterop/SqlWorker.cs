@@ -13,7 +13,7 @@ namespace UHub.CoreLib.DataInterop
     /// <summary>
     /// SQL encapsulation provider
     /// </summary>
-    public static class SqlWorker
+    public static partial class SqlWorker
     {
         internal enum ExecutionModes
         {

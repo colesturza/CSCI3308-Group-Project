@@ -40,6 +40,12 @@
     <Reference Include="BCrypt.Net-Core, Version=1.5.0.0, Culture=neutral, PublicKeyToken=4d63bfbfdfd3c6e4, processorArchitecture=MSIL">
       <HintPath>..\packages\BCrypt.Net-Core.1.5.0\lib\net452\BCrypt.Net-Core.dll</HintPath>
     </Reference>
+    <Reference Include="GoogleAnalyticsTracker.Core, Version=4.6.7.0, Culture=neutral, PublicKeyToken=04ab204e84b117c0, processorArchitecture=MSIL">
+      <HintPath>..\packages\GoogleAnalyticsTracker.Core.4.6.7\lib\portable45-net45+win8+wpa81\GoogleAnalyticsTracker.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="GoogleAnalyticsTracker.WebAPI2, Version=4.6.7.0, Culture=neutral, PublicKeyToken=04ab204e84b117c0, processorArchitecture=MSIL">
+      <HintPath>..\packages\GoogleAnalyticsTracker.WebAPI2.4.6.7\lib\net45\GoogleAnalyticsTracker.WebAPI2.dll</HintPath>
+    </Reference>
     <Reference Include="HtmlSanitizer, Version=3.0.0.0, Culture=neutral, PublicKeyToken=61c49a1a9e79cc28, processorArchitecture=MSIL">
       <HintPath>..\packages\HtmlSanitizer.4.0.187\lib\net45\HtmlSanitizer.dll</HintPath>
     </Reference>
@@ -53,6 +59,9 @@
       <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.ComponentModel.Composition.Registration" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.Entity" />
@@ -127,6 +136,8 @@
     <Compile Include="Attributes\DataPropertyAttribute.cs" />
     <Compile Include="Attributes\DtoClassAttribute.cs" />
     <Compile Include="Attributes\MvcAuthControlAttribute.cs" />
+    <Compile Include="Attributes\ApiValidateRecaptchaAttribute.cs" />
+    <Compile Include="Attributes\MvcValidateRecaptchaAttribute.cs" />
     <Compile Include="ClientFriendly\ResponseStrings.cs" />
     <Compile Include="Common.cs" />
     <Compile Include="Config\CmsConfiguration_Grouped.cs" />
@@ -163,11 +174,13 @@
     <Compile Include="DataInterop\DtoEntityBase.cs" />
     <Compile Include="DataInterop\SqlConfig.cs" />
     <Compile Include="DataInterop\SqlConverters.cs" />
+    <Compile Include="DataInterop\SqlWorkerAsync.cs" />
     <Compile Include="DataInterop\SqlWorker.cs" />
     <Compile Include="Entities\ClubModerators\APIControllers\ClubModeratorController_Core.cs" />
     <Compile Include="Entities\ClubModerators\APIControllers\ClubModeratorController_C.cs" />
     <Compile Include="Entities\ClubModerators\DTOs\ClubModerator_C_PublicDTO.cs" />
     <Compile Include="Entities\ClubModerators\Interfaces\IClubModerator_C_Public.cs" />
+    <Compile Include="Entities\ClubModerators\Management\ClubModeratorWriterAsync.cs" />
     <Compile Include="Entities\ClubModerators\Management\ClubModeratorWriter.cs" />
     <Compile Include="Entities\Comments\APIControllers\CommentController_C.cs" />
     <Compile Include="Entities\Comments\APIControllers\CommentController_Core.cs" />
@@ -178,6 +191,7 @@
     <Compile Include="Entities\Comments\DTOs\Comment_R_PublicDTO.cs" />
     <Compile Include="Entities\Comments\Interfaces\IComment_C_Public.cs" />
     <Compile Include="Entities\Comments\Interfaces\IComment_R_Public.cs" />
+    <Compile Include="Entities\Comments\Management\CommentReader_CoreAsync.cs" />
     <Compile Include="Entities\Comments\Management\CommentWriter.cs" />
     <Compile Include="Entities\Comments\Management\CommentReader_Core.cs" />
     <Compile Include="Entities\Files\File.cs" />
@@ -193,7 +207,10 @@
     <Compile Include="Entities\Posts\DTOs\Post_R_PublicDTO.cs" />
     <Compile Include="Entities\Posts\Interfaces\IPost_C_Public.cs" />
     <Compile Include="Entities\Posts\Interfaces\IPost_R_Public.cs" />
+    <Compile Include="Entities\Posts\Management\PostReader_CoreAsync.cs" />
+    <Compile Include="Entities\Posts\Management\PostReader_PagesAsync.cs" />
     <Compile Include="Entities\Posts\Management\PostReader_Pages.cs" />
+    <Compile Include="Entities\Posts\Management\PostWriterAsync.cs" />
     <Compile Include="Entities\Posts\Management\PostWriter.cs" />
     <Compile Include="Entities\Posts\Management\PostReader_Core.cs" />
     <Compile Include="Entities\Posts\Post.cs" />
@@ -208,25 +225,41 @@
     <Compile Include="Entities\SchoolClubs\Interfaces\ISchoolClub_R_Public.cs" />
     <Compile Include="Entities\SchoolClubs\DTOs\SchoolClub_R_PublicDTO.cs" />
     <Compile Include="Entities\SchoolClubs\Interfaces\ISchoolClub_C_Public.cs" />
+    <Compile Include="Entities\SchoolClubs\Management\SchoolClubReader_AuthZAsync.cs" />
     <Compile Include="Entities\SchoolClubs\Management\SchoolClubReader_AuthZ.cs" />
+    <Compile Include="Entities\SchoolClubs\Management\SchoolClubReader_CoreAsync.cs" />
     <Compile Include="Entities\SchoolClubs\Management\SchoolClubReader_Core.cs" />
+    <Compile Include="Entities\SchoolClubs\Management\SchoolClubWriterAsync.cs" />
     <Compile Include="Entities\SchoolClubs\Management\SchoolClubWriter.cs" />
     <Compile Include="Entities\SchoolClubs\SchoolClub.cs" />
     <Compile Include="Entities\SchoolMajors\APIControllers\SchoolMajorController.cs" />
     <Compile Include="Entities\SchoolMajors\DTOs\SchoolMajor_R_PublicDTO.cs" />
     <Compile Include="Entities\SchoolMajors\Interfaces\ISchoolMajor_R_Public.cs" />
+    <Compile Include="Entities\SchoolMajors\Management\SchoolMajorReader_CoreAsync.cs" />
+    <Compile Include="Entities\SchoolMajors\Management\SchoolMajorWriterAsync.cs" />
     <Compile Include="Entities\SchoolMajors\Management\SchoolMajorWriter.cs" />
     <Compile Include="Entities\SchoolMajors\Management\SchoolMajorReader_Core.cs" />
     <Compile Include="Entities\SchoolMajors\SchoolMajor.cs" />
     <Compile Include="Entities\Schools\APIControllers\SchoolController.cs" />
     <Compile Include="Entities\Schools\DTOs\School_R_PublicDTO.cs" />
     <Compile Include="Entities\Schools\Interfaces\ISchool_R_Public.cs" />
+    <Compile Include="Entities\Schools\Management\SchoolReader_CoreAsync.cs" />
     <Compile Include="Entities\Schools\Management\SchoolReader_Core.cs" />
     <Compile Include="Entities\Schools\School.cs" />
     <Compile Include="Entities\Users\APIControllers\UserController.cs" />
+    <Compile Include="Entities\Users\DTOs\User_CredentialDTO.cs" />
+    <Compile Include="Entities\Users\Interfaces\IUserCredential.cs" />
+    <Compile Include="Entities\Users\Interfaces\IUserRecoveryContextAsync.cs" />
+    <Compile Include="Entities\Users\Management\UserReader_CoreAsync.cs" />
+    <Compile Include="Entities\Users\Management\UserReader_EntClubModsAsync.cs" />
+    <Compile Include="Entities\Users\Management\UserReader_EntCommentsAsync.cs" />
     <Compile Include="Entities\Users\Management\UserReader_EntComments.cs" />
     <Compile Include="Entities\Users\Management\UserReader_EntClubMods.cs" />
+    <Compile Include="Entities\Users\Management\UserReader_EntPostsAsync.cs" />
     <Compile Include="Entities\Users\Management\UserReader_EntPosts.cs" />
+    <Compile Include="Entities\Users\Management\UserReader_RecoveryContextAsync.cs" />
+    <Compile Include="Entities\Users\Management\UserWriterAsync.cs" />
+    <Compile Include="Entities\Users\UserAsync.cs" />
     <Compile Include="ErrorHandling\Exceptions\AccessForbiddenException.cs" />
     <Compile Include="ErrorHandling\Exceptions\ConfigurationException.cs" />
     <Compile Include="ErrorHandling\Exceptions\EntityGoneException.cs" />
@@ -244,6 +277,7 @@
     <Compile Include="Extensions\HttpResponseExtensions.cs" />
     <Compile Include="Extensions\IEnumerableExtensions.cs" />
     <Compile Include="Extensions\ListExtensions.cs" />
+    <Compile Include="Extensions\MvcControllerExtensions.cs" />
     <Compile Include="Extensions\ObjectExtensions.cs" />
     <Compile Include="Extensions\PropertyInfoExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
@@ -251,29 +285,44 @@
     <Compile Include="Extensions\TypeExtensions.cs" />
     <Compile Include="Logging\Enums\ActivityLogType.cs" />
     <Compile Include="Logging\Enums\LocationLogType.cs" />
-    <Compile Include="Logging\Enums\LoggingMode.cs" />
+    <Compile Include="Logging\Enums\LocalLoggingMode.cs" />
     <Compile Include="Logging\Enums\LoggingSource.cs" />
-    <Compile Include="Logging\FileEventWorker.cs" />
-    <Compile Include="Logging\ILoggingWorker.cs" />
+    <Compile Include="Logging\Enums\UsageLoggingMode.cs" />
+    <Compile Include="Logging\LocalFileEventProvider.cs" />
+    <Compile Include="Logging\Interfaces\ILocalLogProvider.cs" />
+    <Compile Include="Logging\Interfaces\IUsageLogProvider.cs" />
+    <Compile Include="Logging\LoggingHelpers.cs" />
+    <Compile Include="Logging\LoggingManager_Usage.cs" />
+    <Compile Include="Logging\LoggingManager_local.cs" />
     <Compile Include="Logging\LoggingManager.cs" />
-    <Compile Include="Logging\SysEventWorker.cs" />
+    <Compile Include="Logging\LocalSysEventProvider.cs" />
+    <Compile Include="Logging\UsageGAnalyticsProvider.cs" />
+    <Compile Include="Logging\UsageLogData.cs" />
     <Compile Include="Management\CoreFactory.cs" />
     <Compile Include="Management\CoreManager.cs" />
     <Compile Include="Management\CoreProperties.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Security\Accounts\AccountManagerAsync.cs" />
     <Compile Include="Security\Accounts\AccountManager.cs" />
     <Compile Include="Security\Accounts\APIControllers\AccountController.cs" />
     <Compile Include="Security\Accounts\Enums\AccountResultCode.cs" />
+    <Compile Include="Security\Accounts\Interfaces\IAccountManagerAsync.cs" />
+    <Compile Include="Security\Accounts\Interfaces\IAccountManager.cs" />
     <Compile Include="Security\Authentication\APIControllers\AuthenticationController.cs" />
+    <Compile Include="Security\Authentication\AuthenticationManagerAsync.cs" />
     <Compile Include="Security\Authentication\AuthenticationManager.cs" />
+    <Compile Include="Security\Authentication\AuthenticationProviderAsync.cs" />
     <Compile Include="Security\Authentication\AuthenticationToken.cs" />
-    <Compile Include="Security\Authentication\AuthenticationWorker.cs" />
+    <Compile Include="Security\Authentication\AuthenticationProvider.cs" />
     <Compile Include="Security\Authentication\Enums\AuthResultCode.cs" />
     <Compile Include="Security\Authentication\Enums\PasswordValidationStatus.cs" />
     <Compile Include="Security\Authentication\Enums\TokenValidationStatus.cs" />
     <Compile Include="Security\Authentication\Enums\UserLoginScope.cs" />
-    <Compile Include="Security\Authentication\FormsWorker.cs" />
+    <Compile Include="Security\Authentication\FormsAuthProviderAsync.cs" />
+    <Compile Include="Security\Authentication\FormsAuthProvider.cs" />
+    <Compile Include="Security\Authentication\Interfaces\IAuthenticationManagerAsync.cs" />
     <Compile Include="Security\Authentication\Interfaces\IAuthenticationManager.cs" />
+    <Compile Include="Security\Authentication\TokenManagerAsync.cs" />
     <Compile Include="Security\Authentication\TokenManager.cs" />
     <Compile Include="Security\Authentication\TokenValidator.cs" />
     <Compile Include="Security\Authentication\UserAuthInfo.cs" />
@@ -281,8 +330,10 @@
     <Compile Include="Security\Enums\CryptoHashType.cs" />
     <Compile Include="Security\Enums\HtmlSanitizerMode.cs" />
     <Compile Include="Security\RecaptchaManager.cs" />
+    <Compile Include="SmtpInterop\APIControllers\SmtpController.cs" />
     <Compile Include="SmtpInterop\Enums\SmtpResultCode.cs" />
     <Compile Include="SmtpInterop\SmtpConfig.cs" />
+    <Compile Include="SmtpInterop\SmtpManagerAsync.cs" />
     <Compile Include="SmtpInterop\SmtpManager.cs" />
     <Compile Include="SmtpInterop\SmtpMessage.cs" />
     <Compile Include="SmtpInterop\SmtpMessage_ConfirmAcct.cs" />
@@ -346,7 +397,6 @@
     <Folder Include="Entities\SchoolMajors\Enums\" />
     <Folder Include="Entities\Schools\Enums\" />
     <Folder Include="Logging\APIControllers\" />
-    <Folder Include="Logging\Interfaces\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

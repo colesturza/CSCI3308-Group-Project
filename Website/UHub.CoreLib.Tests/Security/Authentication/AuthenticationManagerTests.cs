@@ -35,27 +35,7 @@ namespace UHub.CoreLib.Security.Authentication.Tests
                     email,
                     password,
                     persistent,
-                    ResultHandler: (authCode) =>
-                    {
-                        if (enableDetail)
-                        {
-                            switch (authCode)
-                            {
-                                case AuthResultCode.EmailEmpty: { status = "Email Empty"; break; }
-                                case AuthResultCode.EmailInvalid: { status = "Email Invalid"; break; }
-                                case AuthResultCode.PswdEmpty: { status = "Password Empty"; break; }
-                                case AuthResultCode.UserInvalid: { status = "Account Invalid"; break; }
-                                case AuthResultCode.UserLocked: { status = "Account Locked"; break; }
-                                case AuthResultCode.PendingApproval: { status = "Account Pending Approval"; break; }
-                                case AuthResultCode.PendingConfirmation: { status = "Account Pending Confirmation"; break; }
-                                case AuthResultCode.UserDisabled: { status = "Account Disabled"; break; }
-                                case AuthResultCode.PswdExpired: { status = "Password Expired"; break; }
-                                case AuthResultCode.CredentialsInvalid: { status = "Credentials Invalid"; break; }
-                                case AuthResultCode.Success: { status = "Unknown Error"; break; }
-                            }
-                        }
-
-                    },
+                    out var resultCode,
                     GeneralFailHandler: (code) =>
                     {
                         Assert.Fail();
@@ -65,6 +45,24 @@ namespace UHub.CoreLib.Security.Authentication.Tests
                         }
                     });
 
+
+            if (enableDetail)
+            {
+                switch (resultCode)
+                {
+                    case AuthResultCode.EmailEmpty: { status = "Email Empty"; break; }
+                    case AuthResultCode.EmailInvalid: { status = "Email Invalid"; break; }
+                    case AuthResultCode.PswdEmpty: { status = "Password Empty"; break; }
+                    case AuthResultCode.UserInvalid: { status = "Account Invalid"; break; }
+                    case AuthResultCode.UserLocked: { status = "Account Locked"; break; }
+                    case AuthResultCode.PendingApproval: { status = "Account Pending Approval"; break; }
+                    case AuthResultCode.PendingConfirmation: { status = "Account Pending Confirmation"; break; }
+                    case AuthResultCode.UserDisabled: { status = "Account Disabled"; break; }
+                    case AuthResultCode.PswdExpired: { status = "Password Expired"; break; }
+                    case AuthResultCode.CredentialsInvalid: { status = "Credentials Invalid"; break; }
+                    case AuthResultCode.Success: { status = "Unknown Error"; break; }
+                }
+            }
 
             Console.WriteLine(status);
             if (token.Length > 50)
@@ -78,7 +76,6 @@ namespace UHub.CoreLib.Security.Authentication.Tests
         public void GetTokenTest2()
         {
             TestGlobal.TestInit();
-            
 
 
             var enableDetail = CoreFactory.Singleton.Properties.EnableDetailedAPIErrors;
@@ -95,27 +92,7 @@ namespace UHub.CoreLib.Security.Authentication.Tests
                     email,
                     password,
                     persistent,
-                    ResultHandler: (authCode) =>
-                    {
-                        if (enableDetail)
-                        {
-                            switch (authCode)
-                            {
-                                case AuthResultCode.EmailEmpty: { status = "Email Empty"; break; }
-                                case AuthResultCode.EmailInvalid: { status = "Email Invalid"; break; }
-                                case AuthResultCode.PswdEmpty: { status = "Password Empty"; break; }
-                                case AuthResultCode.UserInvalid: { status = "Account Invalid"; break; }
-                                case AuthResultCode.UserLocked: { status = "Account Locked"; break; }
-                                case AuthResultCode.PendingApproval: { status = "Account Pending Approval"; break; }
-                                case AuthResultCode.PendingConfirmation: { status = "Account Pending Confirmation"; break; }
-                                case AuthResultCode.UserDisabled: { status = "Account Disabled"; break; }
-                                case AuthResultCode.PswdExpired: { status = "Password Expired"; break; }
-                                case AuthResultCode.CredentialsInvalid: { status = "Credentials Invalid"; break; }
-                                case AuthResultCode.Success: { status = "Unknown Error"; break; }
-                            }
-                        }
-
-                    },
+                    out var resultCode,
                     GeneralFailHandler: (code) =>
                     {
                         Assert.Fail();
@@ -124,6 +101,25 @@ namespace UHub.CoreLib.Security.Authentication.Tests
                             status = code.ToString();
                         }
                     });
+
+
+            if (enableDetail)
+            {
+                switch (resultCode)
+                {
+                    case AuthResultCode.EmailEmpty: { status = "Email Empty"; break; }
+                    case AuthResultCode.EmailInvalid: { status = "Email Invalid"; break; }
+                    case AuthResultCode.PswdEmpty: { status = "Password Empty"; break; }
+                    case AuthResultCode.UserInvalid: { status = "Account Invalid"; break; }
+                    case AuthResultCode.UserLocked: { status = "Account Locked"; break; }
+                    case AuthResultCode.PendingApproval: { status = "Account Pending Approval"; break; }
+                    case AuthResultCode.PendingConfirmation: { status = "Account Pending Confirmation"; break; }
+                    case AuthResultCode.UserDisabled: { status = "Account Disabled"; break; }
+                    case AuthResultCode.PswdExpired: { status = "Password Expired"; break; }
+                    case AuthResultCode.CredentialsInvalid: { status = "Credentials Invalid"; break; }
+                    case AuthResultCode.Success: { status = "Unknown Error"; break; }
+                }
+            }
 
 
             Console.WriteLine(status);

@@ -8,12 +8,8 @@ namespace UHub.CoreLib.Entities.ClubModerators.Interfaces
 {
     public interface IClubModerator_C_Public
     {
-        bool IsEnabled { get; set; }
-
-        bool IsReadOnly { get; set; }
-
         long UserID { get; set; }
-
         bool IsOwner { get; set; }
+        bool IsEnabled { get; set; }
     }
 }

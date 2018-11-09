@@ -1,4 +1,4 @@
-﻿@model UHub.Models.Account.ClientCreds
+﻿@model UHub.CoreLib.Entities.Users.DTOs.User_CredentialDTO
 @using UHub.CoreLib.Extensions
 
 @{
@@ -11,6 +11,7 @@
 @{
     Html.BeginForm();
 }
+
 
 @Html.LabelFor(x => x.Email)
 @Html.TextBoxFor(x => x.Email, new { @class = "CSS_CLASS" })
@@ -37,7 +38,11 @@
 
 
 <p></p>
-<input type="submit" name="btn_Submit" value="Click Me" formaction="~/Account/ProcessCredentials" />
+@{
+    Html.RenderPartial("~/Views/Security/RecaptchaPartial.cshtml");
+}
+
+@*<input type="submit" name="btn_Submit" value="Click Me" formaction="~/Account/ProcessCredentials" />*@
 
 
 @Scripts.Render("~/bundles/jquery")

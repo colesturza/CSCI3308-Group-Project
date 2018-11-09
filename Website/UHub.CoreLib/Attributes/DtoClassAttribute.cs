@@ -8,7 +8,7 @@ namespace UHub.CoreLib.Attributes
 {
 
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
-    public class DtoClassAttribute : Attribute
+    public sealed class DtoClassAttribute : Attribute
     {
 
         public Type ConversionType { get; }

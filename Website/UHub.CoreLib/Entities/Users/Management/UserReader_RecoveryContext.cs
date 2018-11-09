@@ -13,7 +13,6 @@ namespace UHub.CoreLib.Entities.Users.Management
 {
     public static partial class UserReader
     {
-        #region UserRecoveryContext
 
         public static IUserRecoveryContext GetUserRecoveryContext(long UserID)
         {
@@ -33,7 +32,7 @@ namespace UHub.CoreLib.Entities.Users.Management
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex);
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex);
                 throw new Exception();
             }
         }
@@ -57,12 +56,10 @@ namespace UHub.CoreLib.Entities.Users.Management
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex);
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex);
                 throw new Exception();
             }
         }
-
-        #endregion UserRecoveryContext
 
     }
 }

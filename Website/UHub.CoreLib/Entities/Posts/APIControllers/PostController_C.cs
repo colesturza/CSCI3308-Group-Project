@@ -34,11 +34,11 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             {
                 return Content(statCode, status);
             }
-            if (!HandleRecaptcha(out status))
-            {
-                return Content(statCode, status);
-            }
 
+            if(post == null)
+            {
+                return BadRequest();
+            }
 
 
             var tmpPost = post.ToInternal<Post>();
@@ -91,7 +91,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             {
                 var errCode = "d4bcfc43-5247-45a3-b448-5baeea96058e";
                 Exception ex_outer = new Exception(errCode, ex);
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex_outer);
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
 
                 return Content(HttpStatusCode.InternalServerError, status);
             }

@@ -23,7 +23,7 @@ namespace UHub.CoreLib.Entities.Comments.APIControllers
         [HttpPost()]
         [Route("Create")]
         [ApiAuthControl]
-        public IHttpActionResult CreateComment([FromBody] Comment_C_PublicDTO comment)
+        public IHttpActionResult Create([FromBody] Comment_C_PublicDTO comment)
         {
             string status = "";
             HttpStatusCode statCode = HttpStatusCode.BadRequest;
@@ -31,13 +31,14 @@ namespace UHub.CoreLib.Entities.Comments.APIControllers
             {
                 return Content(statCode, status);
             }
-            if (!HandleRecaptcha(out status))
+
+            if (comment == null)
             {
-                return Content(statCode, status);
+                return BadRequest();
             }
 
-            var tmpComment = comment.ToInternal<Comment>();
 
+            var tmpComment = comment.ToInternal<Comment>();
             var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser();
 
 
@@ -70,7 +71,7 @@ namespace UHub.CoreLib.Entities.Comments.APIControllers
             {
                 var errCode = "8b9255a4-070b-427c-91a9-4755199aaded";
                 Exception ex_outer = new Exception(errCode, ex);
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex_outer);
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
 
                 return Content(HttpStatusCode.InternalServerError, status);
             }

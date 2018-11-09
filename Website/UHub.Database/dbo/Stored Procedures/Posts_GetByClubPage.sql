@@ -23,6 +23,24 @@ begin
 		order by
 			CreatedDate desc
 	end
+	else begin
+
+		--kill if start id does not exist as a post
+		if((select EntTypeID from Entities where ID = @StartID) != 6)	--POST TYPE [6]
+		begin
+			return;
+
+		end
+	end
+
+
+	--kill if club id does not exist as a club
+	if((select EntTypeID from Entities where ID = @ClubID) != 4)	--SCHOOL CLUB TYPE [4]
+	begin
+		return;
+	end
+
+
 	--START ID CAN BE DERIVED AT CLIENT
 	--STARTID = MAX(ID) WHEN PAGE=0
 
@@ -58,7 +76,8 @@ begin
 	with postSet as
 	(
 
-		select
+		--only select top records necessary to fulfill the request
+		select top(@adjEndIdx - 1)
 			vu.ID,
 			vu.IsEnabled,
 			vu.IsReadonly,
@@ -80,7 +99,7 @@ begin
 			,ROW_NUMBER() over (order by vu.CreatedDate desc) as RowNum
 		from dbo.vPosts vu
 
-		where 
+		where
 			vu.ID <= @StartID
 			and vu.ParentID = @ClubID
 
@@ -109,7 +128,6 @@ begin
 	from postSet ps
 	where
 		RowNum >= @adjStartIdx
-		and RowNum < @adjEndIdx
 
 
 

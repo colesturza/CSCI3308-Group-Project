@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
@@ -117,8 +118,11 @@ namespace UHub.CoreLib.Management
             Properties.EnableTokenVersioning = cmsConfig.Security.EnableTokenVersioning;
             Properties.HtmlSanitizerMode = cmsConfig.Security.HtmlSanitizerMode;
             //LOGGING
-            Properties.LoggingMode = cmsConfig.Logging.LoggingMode;
+            Properties.LocalLogMode = cmsConfig.Logging.LocalLogMode;
             Properties.LoggingSource = cmsConfig.Logging.LoggingSource;
+            Properties.UsageLogMode = cmsConfig.Logging.UsageLogMode;
+
+            Properties.GoogleAnalyticsKey = cmsConfig.Logging.GoogleAnalyticsKey;
             //ERRORS
             Properties.EnableCustomErrorCodes = cmsConfig.Errors.EnableCustomErrorCodes;
             //API
@@ -132,12 +136,20 @@ namespace UHub.CoreLib.Management
         }
 
 
+        public CoreProperties()
+        {
+            //Get random number for current token version - prevents old tokens from persisting after a system reset
+            ResetCurrentAuthTknVersion();
+
+
+            this.CmsVersionNumber = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+        }
 
 
         //--------------------------------------------------------------------------------------------------
         //-------------------------------------------- INSTANCE --------------------------------------------
         //--------------------------------------------------------------------------------------------------
-
+        public string CmsVersionNumber { get; } = "1.0.0.0";
         /// <summary>
         /// CMS DB schema version validation object
         /// </summary>
@@ -366,13 +378,18 @@ namespace UHub.CoreLib.Management
         /// <summary>
         /// Logging target mode.  Defines drop zone for log messages
         /// </summary>
-        public LoggingMode LoggingMode { get; private set; }
+        public LocalLoggingMode LocalLogMode { get; private set; }
+        public UsageLoggingMode UsageLogMode { get; private set; }
         /// <summary>
         /// Name of log folder if using SystemEvents
         /// <para></para>
         /// Default: Application
         /// </summary>
         public LoggingSource LoggingSource { get; private set; }
+        /// <summary>
+        /// Key for google analytics tracking
+        /// </summary>
+        public string GoogleAnalyticsKey { get; private set; }
         //--------------------------------------------------------------------------------------------------
         //--------------------------------------------- ERRORS ---------------------------------------------
         //--------------------------------------------------------------------------------------------------
@@ -405,14 +422,7 @@ namespace UHub.CoreLib.Management
         public HashSet<FileCategory> AllowedFileUploadTypes { get; private set; }
 
 
-        internal CoreProperties()
-        {
 
-            //Get random number for current token version - prevents old tokens from persisting after a system reset
-            ResetCurrentAuthTknVersion();
-
-
-        }
 
 
         /// <summary>

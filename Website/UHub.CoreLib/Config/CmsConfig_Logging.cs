@@ -14,12 +14,18 @@ namespace UHub.CoreLib.Config
         /// <para></para>
         /// Default: LocalFile
         /// </summary>
-        public LoggingMode LoggingMode { get; set; } = LoggingMode.LocalFile;
+        public LocalLoggingMode LocalLogMode { get; set; } = LocalLoggingMode.LocalFile;
         /// <summary>
         /// Name of log folder if using SystemEvents
         /// <para></para>
         /// Default: Application
         /// </summary>
         public LoggingSource LoggingSource { get; set; } = LoggingSource.Application;
+
+        public UsageLoggingMode UsageLogMode { get; set; } = UsageLoggingMode.None;
+        /// <summary>
+        /// Key for google analytics tracking
+        /// </summary>
+        public string GoogleAnalyticsKey { get; set; }
     }
 }

@@ -17,7 +17,7 @@ using UHub.CoreLib.Management;
 namespace UHub.CoreLib.Attributes
 {
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
-    public class MvcAuthControlAttribute : System.Web.Mvc.AuthorizeAttribute
+    public sealed class MvcAuthControlAttribute : System.Web.Mvc.AuthorizeAttribute
     {
         public bool RequireAdmin { get; set; }
 
@@ -68,7 +68,7 @@ namespace UHub.CoreLib.Attributes
             {
                 var errCode = "C39F81BF-E61D-4C55-AA0D-E8950549E74B";
                 Exception ex_outer = new Exception(errCode, ex);
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex_outer);
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
 
 
                 HandleLoginRedirect(ref filterContext);
@@ -83,7 +83,7 @@ namespace UHub.CoreLib.Attributes
 
 
 
-            var targetAddr = filterContext.HttpContext.Request.RawUrl;
+            var targetAddr = filterContext.HttpContext.Request.Url.AbsoluteUri;
             var cookie = new HttpCookie(fwrdCookieName);
             cookie.Value = targetAddr;
             cookie.Domain = CoreFactory.Singleton.Properties.CookieDomain;

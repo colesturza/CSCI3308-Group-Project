@@ -8,6 +8,7 @@ using UHub.CoreLib.Config;
 using UHub.CoreLib.Logging;
 using UHub.CoreLib.Security;
 using UHub.CoreLib.Security.Accounts;
+using UHub.CoreLib.Security.Accounts.Interfaces;
 using UHub.CoreLib.Security.Authentication;
 using UHub.CoreLib.Security.Authentication.Interfaces;
 
@@ -28,17 +29,17 @@ namespace UHub.CoreLib.Management
         //SECURITY
         private RecaptchaManager _recaptcha;
         public RecaptchaManager Recaptcha { get => _recaptcha; }
-
+        //auth
+        private IAuthenticationManager _auth;
+        public IAuthenticationManager Auth { get => _auth; }
+        //account
+        private IAccountManager _account;
+        public IAccountManager Accounts { get => _account; }
 
 
         //LOGGING
         private LoggingManager _logging;
         public LoggingManager Logging { get => _logging; }
-
-
-        //AUTHENTICATION
-        private IAuthenticationManager _auth;
-        public IAuthenticationManager Auth { get => _auth; }
 
 
         /// <summary>
@@ -60,22 +61,34 @@ namespace UHub.CoreLib.Management
 
 
             //LOGGING
-            if (_properties.LoggingMode == LoggingMode.LocalFile)
+            _logging = new LoggingManager();
+            if ((_properties.LocalLogMode & LocalLoggingMode.LocalFile) != 0)
             {
-                _logging = new LoggingManager(new FileEventWorker());
+                var fileProvider = new LocalFileEventProvider();
+                _logging.AddProvider(fileProvider);
             }
-            else if (_properties.LoggingMode == LoggingMode.SystemEvents)
+            if ((_properties.LocalLogMode & LocalLoggingMode.SystemEvents) != 0)
             {
                 var logSrc = Properties.LoggingSource;
                 var fName = Properties.SiteFriendlyName;
-                _logging = new LoggingManager(new SysEventWorker(logSrc, fName));
+                var eventProvider = new LocalSysEventProvider(logSrc, fName);
+
+                _logging.AddProvider(eventProvider);
             }
+            if((_properties.UsageLogMode & UsageLoggingMode.GoogleAnalytics) != 0)
+            {
+                var googleProvider = new UsageGAnalyticsProvider();
+
+                _logging.AddProvider(googleProvider);
+            }
+
 
 
             _recaptcha = new RecaptchaManager();
 
 
             _auth = new AuthenticationManager();
+            _account = new AccountManager();
 
 
             System.Web.Http.GlobalConfiguration.Configure((config) =>

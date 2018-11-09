@@ -6,9 +6,14 @@ using System.Threading.Tasks;
 
 namespace UHub.CoreLib.Logging
 {
-    public enum LoggingMode
+    [Flags]
+    public enum LocalLoggingMode
     {
-        LocalFile,
-        SystemEvents
+        None = 0,
+
+        LocalFile = 1,
+        SystemEvents = 2,
+
+        All = LocalFile | SystemEvents
     }
 }

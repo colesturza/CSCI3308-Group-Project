@@ -66,7 +66,7 @@ namespace UHub.CoreLib.Entities.Posts.Management
             {
                 var errCode = "2F8CCEB7-DAE1-485E-A43A-E4F52E87E945";
                 Exception ex_outer = new Exception(errCode, ex);
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex_outer);
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
 
                 ErrorMsg = ex.Message;
                 return null;

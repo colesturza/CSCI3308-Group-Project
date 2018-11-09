@@ -115,5 +115,13 @@ namespace UHub.CoreLib.Entities.Users
             UserWriter.DeleteRecoveryContext(this.RecoveryID);
         }
 
+        /// <summary>
+        /// Delete this recovery context from the DB
+        /// </summary>
+        public async Task DeleteAsync()
+        {
+            await UserWriter.TryDeleteRecoveryContextAsync(this.RecoveryID);
+        }
+
     }
 }

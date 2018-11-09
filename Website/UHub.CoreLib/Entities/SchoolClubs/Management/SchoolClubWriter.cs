@@ -64,7 +64,7 @@ namespace UHub.CoreLib.Entities.SchoolClubs.Management
             {
                 var errCode = "493296D4-9F35-4823-B0D0-48D9C30F3A86";
                 Exception ex_outer = new Exception(errCode, ex);
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex_outer);
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
 
                 ErrorMsg = ex.Message;
                 return null;

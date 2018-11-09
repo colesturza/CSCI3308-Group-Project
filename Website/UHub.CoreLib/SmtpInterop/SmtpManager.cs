@@ -11,7 +11,7 @@ namespace UHub.CoreLib.SmtpInterop
     /// <summary>
     /// CMS SMTP (email) manager to send messages from the site
     /// </summary>
-    public static class SmtpManager
+    public static partial class SmtpManager
     {
         /// <summary>
         /// Attempt to send an email using the system configuration
@@ -60,7 +60,7 @@ namespace UHub.CoreLib.SmtpInterop
                     catch (Exception ex)
                     {
                         result = SmtpResultCode.SendError;
-                        CoreFactory.Singleton.Logging.CreateErrorLog(ex);
+                        CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex);
                         return false;
                     }
                 }

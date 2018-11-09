@@ -10,6 +10,7 @@ using System.Web.Http.Controllers;
 using System.Net.Http;
 using UHub.CoreLib.Tests;
 using UHub.CoreLib.Security.Accounts;
+using UHub.CoreLib.Entities.Users.DTOs;
 
 namespace UHub.CoreLib.Security.Authentication.APIControllers.Tests
 {
@@ -28,7 +29,14 @@ namespace UHub.CoreLib.Security.Authentication.APIControllers.Tests
             var password = "testtest";
 
 
-            var response = controller.GetToken(email, password);
+            User_CredentialDTO cred = new User_CredentialDTO()
+            {
+                Email = email,
+                Password = password
+            };
+
+
+            var response = controller.GetToken(cred);
             Assert.IsNotNull(response);
 
             var result = response as OkNegotiatedContentResult<string>;
