@@ -143,15 +143,14 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser();
 
 
-            SchoolClub targetClub = null;
-            bool IsUserBanned = true;
-            bool IsUserMember = false;
+            var taskTargetClub = SchoolClubReader.GetClubAsync(ClubID);
+            var taskIsUserBanned = SchoolClubReader.IsUserBannedAsync(ClubID, cmsUser.ID.Value);
+            var taskIsUserMember = SchoolClubReader.ValidateMembershipAsync(ClubID, cmsUser.ID.Value);
 
-            TaskList tasks = new TaskList();
-            tasks.Add(() => { targetClub = SchoolClubReader.GetClub(ClubID); });
-            tasks.Add(() => { IsUserBanned = SchoolClubReader.IsUserBanned(ClubID, cmsUser.ID.Value); });
-            tasks.Add(() => { IsUserMember = SchoolClubReader.ValidateMembership(ClubID, cmsUser.ID.Value); });
-            tasks.ExecuteAll();
+
+            await Task.WhenAll(taskTargetClub, taskIsUserBanned);
+            var targetClub = taskTargetClub.Result;
+            var IsUserBanned = taskIsUserBanned.Result;
 
             //verify same school
             if (targetClub.SchoolID != cmsUser.SchoolID)
@@ -192,7 +191,8 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
 
 
             //check for member status
-            if (!IsUserMember)
+            var isUserMember = await taskIsUserMember;
+            if (!isUserMember)
             {
                 outSet = outSet.Where(x => x.IsPublic);
             }
@@ -204,7 +204,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
         [HttpPost()]
         [Route("GetPageByClub")]
         [ApiAuthControl]
-        public IHttpActionResult GetPageByClub(long ClubID, long? StartID = null, int? PageNum = null, short PageSize = DEFAULT_PAGE_SIZE)
+        public async Task<IHttpActionResult> GetPageByClub(long ClubID, long? StartID = null, int? PageNum = null, short PageSize = DEFAULT_PAGE_SIZE)
         {
             string status = "";
             HttpStatusCode statCode = HttpStatusCode.BadRequest;
@@ -216,15 +216,16 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
 
             var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser();
 
-            SchoolClub targetClub = null;
-            bool IsUserBanned = true;
-            bool IsUserMember = false;
 
-            TaskList tasks = new TaskList();
-            tasks.Add(() => { targetClub = SchoolClubReader.GetClub(ClubID); });
-            tasks.Add(() => { IsUserBanned = SchoolClubReader.IsUserBanned(ClubID, cmsUser.ID.Value); });
-            tasks.Add(() => { IsUserMember = SchoolClubReader.ValidateMembership(ClubID, cmsUser.ID.Value); });
-            tasks.ExecuteAll();
+
+            var taskTargetClub = SchoolClubReader.GetClubAsync(ClubID);
+            var taskIsUserBanned = SchoolClubReader.IsUserBannedAsync(ClubID, cmsUser.ID.Value);
+            var taskIsUserMember = SchoolClubReader.ValidateMembershipAsync(ClubID, cmsUser.ID.Value);
+
+            await Task.WhenAll(taskTargetClub, taskIsUserBanned);
+            var targetClub = await taskTargetClub;
+            var isUserBanned = await taskIsUserBanned;
+
 
             //verify same school
             if (targetClub.SchoolID != cmsUser.SchoolID)
@@ -233,7 +234,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             }
 
             //ensure not banned
-            if (IsUserBanned)
+            if (isUserBanned)
             {
                 return Content(HttpStatusCode.Forbidden, "Access Denied");
             }
@@ -265,7 +266,8 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
 
 
             //check for member status
-            if (!IsUserMember)
+            var isUserMember = await taskIsUserMember;
+            if (!isUserMember)
             {
                 outSet = outSet.Where(x => x.IsPublic);
             }

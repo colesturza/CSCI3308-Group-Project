@@ -27,7 +27,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
         [HttpPost()]
         [Route("Create")]
         [ApiAuthControl]
-        public IHttpActionResult Create([FromBody] Post_C_PublicDTO post)
+        public async Task<IHttpActionResult> Create([FromBody] Post_C_PublicDTO post)
         {
             string status = "";
             HttpStatusCode statCode = HttpStatusCode.BadRequest;
@@ -46,14 +46,13 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser();
 
 
-            bool isValidParent = false;
-            bool isUserBanned = true;
+            
+            var taskIsValidParent = UserReader.ValidatePostParentAsync((long)cmsUser.ID, tmpPost.ParentID);
+            var taskIsUserBanned = SchoolClubReader.IsUserBannedAsync(post.ParentID, cmsUser.ID.Value);
 
-            TaskList tasks = new TaskList();
-            tasks.Add(() => { isValidParent = UserReader.ValidatePostParent((long)cmsUser.ID, tmpPost.ParentID); });
-            tasks.Add(() => { isUserBanned = SchoolClubReader.IsUserBanned(post.ParentID, cmsUser.ID.Value); });
-            tasks.ExecuteAll();
 
+
+            var isValidParent = await taskIsValidParent;
 
             if (!isValidParent)
             {
@@ -62,7 +61,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
                 return Content(statCode, status);
             }
 
-            if (isUserBanned)
+            if (await taskIsUserBanned)
             {
                 status = "Access Denied";
                 statCode = HttpStatusCode.Forbidden;
@@ -83,7 +82,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
                 tmpPost.CreatedBy = cmsUser.ID.Value;
 
 
-                long? PostID = PostWriter.TryCreatePost(tmpPost);
+                long? PostID = await PostWriter.TryCreatePostAsync(tmpPost);
 
                 if (PostID != null)
                 {

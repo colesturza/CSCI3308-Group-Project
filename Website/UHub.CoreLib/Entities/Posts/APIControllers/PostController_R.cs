@@ -24,7 +24,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
         [HttpPost()]
         [Route("GetByID")]
         [ApiAuthControl]
-        public IHttpActionResult GetByID(long postID)
+        public async Task<IHttpActionResult> GetByID(long postID)
         {
             string status = "";
             HttpStatusCode statCode = HttpStatusCode.BadRequest;
