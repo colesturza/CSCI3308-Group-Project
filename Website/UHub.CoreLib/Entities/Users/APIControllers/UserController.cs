@@ -40,8 +40,7 @@ namespace UHub.CoreLib.Entities.Users.APIControllers
             }
 
 
-            var userResult = await CoreFactory.Singleton.Auth.GetCurrentUserAsync();
-            var cmsUser = userResult.CmsUser;
+            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser();
 
 
             return Ok(cmsUser.ToDto<User_R_PrivateDTO>());
@@ -61,9 +60,7 @@ namespace UHub.CoreLib.Entities.Users.APIControllers
                 return Content(statCode, status);
             }
 
-            var userResult = await CoreFactory.Singleton.Auth.GetCurrentUserAsync();
-            var cmsUser = userResult.CmsUser;
-
+            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser();
             var domain = cmsUser.Email.GetEmailDomain();
 
 
@@ -113,8 +110,7 @@ namespace UHub.CoreLib.Entities.Users.APIControllers
                 return Content(statCode, status);
             }
 
-            var userResult = await CoreFactory.Singleton.Auth.GetCurrentUserAsync();
-            var cmsUser = userResult.CmsUser;
+            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser();
 
 
             //search for user

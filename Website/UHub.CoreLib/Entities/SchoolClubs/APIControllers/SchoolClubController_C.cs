@@ -27,7 +27,7 @@ namespace UHub.CoreLib.Entities.SchoolClubs.APIControllers
         [HttpPost]
         [Route("Create")]
         [ApiAuthControl]
-        public IHttpActionResult Create([FromBody] SchoolClub_C_PublicDTO club)
+        public async Task<IHttpActionResult> Create([FromBody] SchoolClub_C_PublicDTO club)
         {
             string status = "";
             HttpStatusCode statCode = HttpStatusCode.BadRequest;
@@ -54,12 +54,16 @@ namespace UHub.CoreLib.Entities.SchoolClubs.APIControllers
                 tmpClub.SchoolID = cmsUser.SchoolID.Value;
                 tmpClub.CreatedBy = cmsUser.ID.Value;
 
-                var clubID = SchoolClubWriter.TryCreateClub(tmpClub);
+                var clubID = await SchoolClubWriter.TryCreateClubAsync(tmpClub);
+
 
                 if (clubID == null)
                 {
                     return BadRequest();
                 }
+
+
+                return Ok();
             }
             catch (Exception ex)
             {
@@ -69,9 +73,6 @@ namespace UHub.CoreLib.Entities.SchoolClubs.APIControllers
 
                 return Content(HttpStatusCode.InternalServerError, status);
             }
-
-
-            return Ok();
 
         }
 
