@@ -7,17 +7,24 @@ using UHub.CoreLib.Attributes;
 
 namespace UHub.Controllers
 {
-    public class PostsController : Controller
+    public class SchoolController : Controller
     {
         [MvcAuthControl]
         public ActionResult Index()
         {
+            var idObj = Url.RequestContext.RouteData.Values["id"];
+
+
             return View();
         }
 
-        [MvcAuthControl]
-        public ActionResult Create()
+
+        [MvcAuthControl(RequireAdmin = true)]
+        public ActionResult CreatePost()
         {
+            var idObj = Url.RequestContext.RouteData.Values["id"];
+
+
             return View();
         }
     }
