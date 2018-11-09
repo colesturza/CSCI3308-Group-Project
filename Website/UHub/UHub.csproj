@@ -279,6 +279,8 @@
     <Content Include="Views\Error\Index.cshtml" />
     <Content Include="Views\Account\Confirm.cshtml" />
     <Content Include="Views\Security\RecaptchaPartial.cshtml" />
+    <Content Include="Views\Account\ForgotPassword.cshtml" />
+    <Content Include="Views\Account\Recover.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
