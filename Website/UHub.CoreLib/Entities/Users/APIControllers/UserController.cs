@@ -30,7 +30,7 @@ namespace UHub.CoreLib.Entities.Users.APIControllers
         [Route("GetMe")]
         [HttpPost]
         [ApiAuthControl]
-        public IHttpActionResult GetMe()
+        public async Task<IHttpActionResult> GetMe()
         {
             string status = "";
             HttpStatusCode statCode = HttpStatusCode.BadRequest;
@@ -40,7 +40,9 @@ namespace UHub.CoreLib.Entities.Users.APIControllers
             }
 
 
-            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser();
+            var userResult = await CoreFactory.Singleton.Auth.GetCurrentUserAsync();
+            var cmsUser = userResult.CmsUser;
+
 
             return Ok(cmsUser.ToDto<User_R_PrivateDTO>());
 
@@ -50,7 +52,7 @@ namespace UHub.CoreLib.Entities.Users.APIControllers
         [Route("GetByUname")]
         [HttpPost]
         [ApiAuthControl]
-        public IHttpActionResult GetByUname(string username)
+        public async Task<IHttpActionResult> GetByUname(string username)
         {
             string status = "";
             HttpStatusCode statCode = HttpStatusCode.BadRequest;
@@ -59,12 +61,15 @@ namespace UHub.CoreLib.Entities.Users.APIControllers
                 return Content(statCode, status);
             }
 
-            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser();
+            var userResult = await CoreFactory.Singleton.Auth.GetCurrentUserAsync();
+            var cmsUser = userResult.CmsUser;
+
             var domain = cmsUser.Email.GetEmailDomain();
 
 
             //search for user
-            var targetUser = UserReader.GetUser(username, domain);
+            var targetUser = await UserReader.GetUserAsync(username, domain);
+
 
             //ensure user is found
             if (targetUser == null)
@@ -99,7 +104,7 @@ namespace UHub.CoreLib.Entities.Users.APIControllers
         [Route("GetByID")]
         [HttpPost]
         [ApiAuthControl]
-        public IHttpActionResult GetByID(long UserID )
+        public async Task<IHttpActionResult> GetByID(long UserID )
         {
             string status = "";
             HttpStatusCode statCode = HttpStatusCode.BadRequest;
@@ -108,11 +113,12 @@ namespace UHub.CoreLib.Entities.Users.APIControllers
                 return Content(statCode, status);
             }
 
-            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser();
+            var userResult = await CoreFactory.Singleton.Auth.GetCurrentUserAsync();
+            var cmsUser = userResult.CmsUser;
 
 
             //search for user
-            var targetUser = UserReader.GetUser(UserID);
+            var targetUser = await UserReader.GetUserAsync(UserID);
 
             //ensure user is found
             if (targetUser == null)
