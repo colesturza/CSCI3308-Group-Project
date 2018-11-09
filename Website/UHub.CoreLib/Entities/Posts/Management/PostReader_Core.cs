@@ -77,6 +77,34 @@ namespace UHub.CoreLib.Entities.Posts.Management
                 });
         }
 
+
+        /// <summary>
+        /// Get all the posts in the DB by parent
+        /// </summary>
+        /// <param name="ParentID"></param>
+        /// <returns></returns>
+        public static IEnumerable<Post> GetPostsByParent(long ParentID)
+        {
+
+            if (!CoreFactory.Singleton.IsEnabled)
+            {
+                throw new SystemDisabledException();
+            }
+
+
+            return SqlWorker.ExecBasicQuery(
+                _dbConn,
+                "[dbo].[Posts_GetByParent]",
+                (cmd) =>
+                {
+                    cmd.Parameters.Add("@ParentID", SqlDbType.BigInt).Value = ParentID;
+                },
+                (row) =>
+                {
+                    return row.ToCustomDBType<Post>();
+                });
+        }
+
         /// <summary>
         /// Get all the posts in the DB by school
         /// </summary>
@@ -120,7 +148,7 @@ namespace UHub.CoreLib.Entities.Posts.Management
 
             return SqlWorker.ExecBasicQuery(
                 _dbConn,
-                "[dbo].[Posts_GetBySchoolClub]",
+                "[dbo].[Posts_GetByClub]",
                 (cmd) =>
                 {
                     cmd.Parameters.Add("@SchoolClubID", SqlDbType.BigInt).Value = SchoolClubID;

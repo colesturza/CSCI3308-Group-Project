@@ -133,17 +133,21 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             var posts = PostReader.GetPostsBySchoolPage(schoolID, StartID, PageNum, PageSize);
 
             var outSet = posts.Select(x => x.ToDto<Post_R_PublicDTO>());
-            return Ok(outSet);
+
+
+            //get the highest ent ID from data set
+            //this is the pagination StartID
+            //used to lock paging to the entities available at initial invocation
+            var maxId = outSet.Max(x => x.ID);
+            var procSet = new
+            {
+                StartID = maxId,
+                Data = outSet
+            };
+
+            return Ok(procSet);
 
         }
-
-
-
-
-
-
-
-
 
     }
 }

@@ -40,12 +40,14 @@ namespace UHub.CoreLib.Entities.SchoolClubs.APIControllers
                 return Content(statCode, status);
             }
 
+            if(club == null)
+            {
+                return BadRequest();
+            }
+
 
             var tmpClub = club.ToInternal<SchoolClub>();
             var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser();
-
-
-
 
             try
             {
@@ -63,7 +65,7 @@ namespace UHub.CoreLib.Entities.SchoolClubs.APIControllers
             {
                 var errCode = "d4bcfc43-5247-45a3-b448-5baeea96058e";
                 Exception ex_outer = new Exception(errCode, ex);
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex_outer);
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
 
                 return Content(HttpStatusCode.InternalServerError, status);
             }

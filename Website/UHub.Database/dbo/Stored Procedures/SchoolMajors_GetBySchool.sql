@@ -32,10 +32,10 @@ begin
 
 	from dbo.vSchoolMajors vu
 
-	INNER JOIN dbo.EntChildXRef
+	INNER JOIN dbo.EntChildXRef ecx
 	ON 
-		ParentEntID = @SchoolID
-		AND ChildEntID = vu.ID
+		ecx.ParentEntID = @SchoolID
+		AND ecx.ChildEntID = vu.ID
 
 end
 

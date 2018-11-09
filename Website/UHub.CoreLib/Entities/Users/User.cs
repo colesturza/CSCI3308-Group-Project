@@ -15,7 +15,7 @@ namespace UHub.CoreLib.Entities.Users
 {
 
     [DataClass]
-    public sealed partial class User : DBEntityBase, IUser_C_Public, IUser_R_Private, IUser_U_Private
+    public sealed partial class User : DBEntityBase, IUserCredential, IUser_C_Public, IUser_R_Private, IUser_U_Private
     {
         private const short USER_VERSION_LENGTH = 10;
 
@@ -91,7 +91,7 @@ namespace UHub.CoreLib.Entities.Users
             {
                 return "/";
             }
-            return CoreFactory.Singleton.Properties.AcctConfirmURL + $"?ID={this.RefUID}";
+            return CoreFactory.Singleton.Properties.AcctConfirmURL + $"/{this.RefUID}";
         }
 
         public IUserRecoveryContext GetRecoveryContext()

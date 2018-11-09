@@ -1,4 +1,4 @@
-﻿CREATE proc School_GetByEmail
+﻿CREATE proc [dbo].[School_GetByEmail]
 
 	@Email nvarchar(250)
 
@@ -9,12 +9,17 @@ begin
 
 	declare @_entID bigint
 
+
+	declare @domain nvarchar(250)
+	set @domain = SUBSTRING(@email, CHARINDEX('@', @email), 250)
+
+
 	select 
 		@_entID = xr.EntID
 	from dbo.EntPropertyXRef xr
 	where
 		xr.PropID = 17		--DomainValidator
-		and @Email like '%' + xr.PropValue
+		and @domain = xr.PropValue
 
 
 	select top(1) 

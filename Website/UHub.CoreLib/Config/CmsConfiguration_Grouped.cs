@@ -22,7 +22,7 @@ namespace UHub.CoreLib.Config
     /// </summary>
     public sealed class CmsConfiguration_Grouped
     {
-        
+
         public CmsConfig_Instance Instance = null;
         public CmsConfig_DB DB = null;
         public CmsConfig_Storage Storage = null;
@@ -46,51 +46,61 @@ namespace UHub.CoreLib.Config
         /// <exception cref="ArgumentException"></exception>
         public bool Validate()
         {
-            if(Instance == null)
+            if (Instance == null)
             {
-                throw new ArgumentException($"{nameof(CmsConfig_Instance)} cannot be null");
+                string err = $"{nameof(CmsConfig_Instance)} cannot be null";
+                throw new ArgumentException(err);
             }
-            if(DB == null)
+            if (DB == null)
             {
-                throw new ArgumentException($"{nameof(CmsConfig_DB)} cannot be null");
+                string err = $"{nameof(CmsConfig_DB)} cannot be null";
+                throw new ArgumentException(err);
             }
             if (Storage == null)
             {
-                throw new ArgumentException($"{nameof(CmsConfig_Storage)} cannot be null");
+                string err = $"{nameof(CmsConfig_Storage)} cannot be null";
+                throw new ArgumentException(err);
             }
             if (Mail == null)
             {
-                throw new ArgumentException($"{nameof(CmsConfig_Mail)} cannot be null");
+                string err = $"{nameof(CmsConfig_Mail)} cannot be null";
+                throw new ArgumentException(err);
             }
-            if(Security == null)
+            if (Security == null)
             {
-                throw new ArgumentException($"{nameof(CmsConfig_Security)} cannot be null");
+                string err = $"{nameof(CmsConfig_Security)} cannot be null";
+                throw new ArgumentException();
             }
-            if(Logging == null)
+            if (Logging == null)
             {
-                throw new ArgumentException($"{nameof(CmsConfig_Logging)} cannot be null");
+                string err = $"{nameof(CmsConfig_Logging)} cannot be null";
+                throw new ArgumentException(err);
             }
-            if(Errors == null)
+            if (Errors == null)
             {
-                throw new ArgumentException($"{nameof(CmsConfig_Errors)} cannot be null");
+                string err = $"{nameof(CmsConfig_Errors)} cannot be null";
+                throw new ArgumentException(err);
             }
-            if(Caching == null)
+            if (Caching == null)
             {
-                throw new ArgumentException($"{nameof(CmsConfig_Caching)} cannot be null");
+                string err = $"{nameof(CmsConfig_Caching)} cannot be null";
+                throw new ArgumentException(err);
             }
-            if(API == null)
+            if (API == null)
             {
-                throw new ArgumentException($"{nameof(CmsConfig_API)} cannot be null");
+                string err = $"{nameof(CmsConfig_API)} cannot be null";
+                throw new ArgumentException(err);
             }
 
-            
+
             //friendly name
             ValidateString(Instance.SiteFriendlyName, nameof(Instance.SiteFriendlyName));
             //base url (only URL that cant be virtual)
             ValidateString(Instance.CmsPublicBaseURL, nameof(Instance.CmsPublicBaseURL));
             if (Instance.CmsPublicBaseURL.RgxIsMatch("[?#]") || !Instance.CmsPublicBaseURL.IsValidURL())
             {
-                throw new ArgumentException($"{nameof(Instance.CmsPublicBaseURL)} is not a valid physical URL.");
+                string err = $"{nameof(Instance.CmsPublicBaseURL)} is not a valid physical URL.";
+                throw new ArgumentException(err);
             }
             //resource url
             ValidateURL(Instance.CmsStaticResourceURL, nameof(Instance.CmsStaticResourceURL));
@@ -100,41 +110,52 @@ namespace UHub.CoreLib.Config
             ValidateSqlConfig(DB.CmsDBConfig, nameof(DB.CmsDBConfig));
             if (!ValidateCmsDB())
             {
-                throw new ArgumentException($"{nameof(DB.CmsDBConfig)} is not properly configured.  Please ensure that the TIPC CMS module is installed and your username/password are accurate.");
+                string err = $"{nameof(DB.CmsDBConfig)} is not properly configured.  Please ensure that the TIPC CMS module is installed and your username/password are accurate.";
+                throw new ArgumentException(err);
             }
 
             //STORAGE CONNECTIONS
             ValidateDirectory(Storage.FileStoreDirectory, nameof(Storage.FileStoreDirectory));
             ValidateDirectory(Storage.ImageStoreDirectory, nameof(Storage.ImageStoreDirectory));
             ValidateDirectory(Storage.TempCacheDirectory, nameof(Storage.TempCacheDirectory));
-            if (Logging.LoggingMode == LoggingMode.LocalFile)
+            if ((Logging.LocalLogMode & LocalLoggingMode.LocalFile) != 0)
             {
                 ValidateDirectory(Storage.LogStoreDirectory, nameof(Storage.LogStoreDirectory));
+            }
+
+            //LOGGING
+            if ((Logging.UsageLogMode & UsageLoggingMode.GoogleAnalytics) != 0)
+            {
+                ValidateString(Logging.GoogleAnalyticsKey, nameof(Logging.GoogleAnalyticsKey));
             }
 
 
 
             //SECURITY
             ValidateObject(Security.MaxPswdAge, nameof(Security.MaxPswdAge));
-            
+
             if (Security.MaxPswdAge != null && Security.MaxPswdAge.Ticks < 0)
             {
-                throw new ArgumentException($"{nameof(Security.MaxPswdAge)} cannot be less than 0.");
+                string err = $"{nameof(Security.MaxPswdAge)} cannot be less than 0.";
+                throw new ArgumentException(err);
             }
             if (Security.MaxPswdAge != null && Security.MaxPswdAge.Ticks > 0)
             {
                 if (!Security.EnablePswdReset)
                 {
-                    throw new ArgumentException($"{nameof(Security.EnablePswdReset)} must be set if {nameof(Security.MaxPswdAge)} is set.");
+                    string err = $"{nameof(Security.EnablePswdReset)} must be set if {nameof(Security.MaxPswdAge)} is set.";
+                    throw new ArgumentException(err);
                 }
             }
             if (Security.ForceHTTPS != Security.ForceSecureCookies)
             {
-                throw new ArgumentException($"Security Mismatch - {nameof(Security.ForceHTTPS)} and {nameof(Security.ForceSecureCookies)} must be set to the same value.");
+                string err = $"Security Mismatch - {nameof(Security.ForceHTTPS)} and {nameof(Security.ForceSecureCookies)} must be set to the same value.";
+                throw new ArgumentException(err);
             }
             if (Security.CookieDomain.IsNotEmpty() && !Security.CookieDomain.Split(',').All(dmn => dmn.RgxIsMatch($@"^{RgxPatterns.Cookie.DOMAIN}$", RegexOptions.IgnoreCase)))
             {
-                throw new ArgumentException("Invalid cookie domain format.");
+                string err = "Invalid cookie domain format.";
+                throw new ArgumentException(err);
             }
             if (Security.EnableRecaptcha)
             {
@@ -147,7 +168,8 @@ namespace UHub.CoreLib.Config
             //mut ensure max lifespan is not infinite
             if (Security.AuthTokenTimeout.Ticks > Security.MaxAuthTokenLifespan.Ticks && Security.MaxAuthTokenLifespan.Ticks > 0)
             {
-                throw new ArgumentException(nameof(Security.AuthTokenTimeout) + " must be greater than " + nameof(Security.MaxAuthTokenLifespan));
+                string err = nameof(Security.AuthTokenTimeout) + " must be greater than " + nameof(Security.MaxAuthTokenLifespan);
+                throw new ArgumentException(err);
             }
 
             //--LOGIN URL
@@ -159,7 +181,8 @@ namespace UHub.CoreLib.Config
             {
                 if (Mail.NoReplyMailConfig == null)
                 {
-                    throw new ArgumentException($"{nameof(Mail.NoReplyMailConfig)} must be set if AutoConfirmNewAccounts is false.");
+                    string err = $"{nameof(Mail.NoReplyMailConfig)} must be set if AutoConfirmNewAccounts is false.";
+                    throw new ArgumentException(err);
                 }
                 else
                 {
@@ -170,13 +193,14 @@ namespace UHub.CoreLib.Config
                 {
                     if (!Mail.NoReplyMailConfig.Validate())
                     {
-                        throw new ArgumentException($"{nameof(Mail.NoReplyMailConfig)} is invalid.");
+                        string err = $"{nameof(Mail.NoReplyMailConfig)} is invalid.";
+                        throw new ArgumentException(err);
                     }
                 }
                 catch (Exception ex)
                 {
-
-                    throw new ArgumentException($"{nameof(Mail.NoReplyMailConfig)}: {ex.Message}");
+                    string err = $"{nameof(Mail.NoReplyMailConfig)}: {ex.Message}";
+                    throw new ArgumentException(err);
                 }
 
                 ValidateURL(Security.AcctConfirmURL, nameof(Security.AcctConfirmURL));

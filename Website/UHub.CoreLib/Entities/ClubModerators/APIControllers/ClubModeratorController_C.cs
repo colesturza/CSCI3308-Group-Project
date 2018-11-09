@@ -15,6 +15,7 @@ using UHub.CoreLib.Tools;
 
 namespace UHub.CoreLib.Entities.ClubModerators.APIControllers
 {
+
     public sealed partial class ClubModeratorController
     {
         [HttpPost()]
@@ -32,6 +33,13 @@ namespace UHub.CoreLib.Entities.ClubModerators.APIControllers
             {
                 return Content(statCode, status);
             }
+
+            if(clubModerator == null)
+            {
+                return BadRequest();
+            }
+
+
 
             var tmpClubModerator = clubModerator.ToInternal<ClubModerator>();
             var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser();
@@ -80,7 +88,7 @@ namespace UHub.CoreLib.Entities.ClubModerators.APIControllers
             {
                 var errCode = "185AB13F-2C5C-435B-8B87-AA48F1AB3C73";
                 Exception ex_outer = new Exception(errCode, ex);
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex_outer);
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
 
                 return Content(HttpStatusCode.InternalServerError, status);
             }

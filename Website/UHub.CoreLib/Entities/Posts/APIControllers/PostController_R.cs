@@ -32,24 +32,31 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
                 return Content(statCode, status);
             }
 
-            var post = PostReader.GetPost(postID);
-            var parentID = post.ParentID;
-
+            var postInternal = PostReader.GetPost(postID);
+            if (postInternal == null)
+            {
+                return NotFound();
+            }
+            var parentID = postInternal.ParentID;
+            bool IsUserBanned = true;
+            bool IsUserMember = false;
+            SchoolClub postClub = null;
             var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser();
-            var postClub = SchoolClubReader.GetClub(parentID);
 
-            var outSet = post.ToDto<Post_R_PublicDTO>();
+
+            TaskList tasks = new TaskList();
+            tasks.Add(() => { postClub = SchoolClubReader.GetClub(parentID); });
+            tasks.Add(() => { IsUserBanned = SchoolClubReader.IsUserBanned(parentID, cmsUser.ID.Value); });
+            tasks.Add(() => { IsUserMember = SchoolClubReader.ValidateMembership(parentID, cmsUser.ID.Value); });
+            tasks.ExecuteAll();
+
+
+
+
+            var postPublic = postInternal.ToDto<Post_R_PublicDTO>();
 
             if (postClub != null)
             {
-                bool IsUserBanned = true;
-                bool IsUserMember = false;
-
-                TaskList tasks = new TaskList();
-                tasks.Add(() => { IsUserBanned = SchoolClubReader.IsUserBanned(parentID, cmsUser.ID.Value); });
-                tasks.Add(() => { IsUserMember = SchoolClubReader.ValidateMembership(parentID, cmsUser.ID.Value); });
-                tasks.ExecuteAll();
-
                 //verify same school
                 if (postClub.SchoolID != cmsUser.SchoolID)
                 {
@@ -65,25 +72,30 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
                 //check for member status
                 if (IsUserMember)
                 {
-                    return Ok(outSet);
+                    return Ok(postPublic);
                 }
                 else
                 {
-                    if (post.IsPublic)
+                    if (postInternal.IsPublic)
                     {
-                        return Ok(outSet);
+                        return Ok(postPublic);
+                    }
+                    else
+                    {
+                        return Content(HttpStatusCode.Forbidden, "Access Denied");
                     }
                 }
             }
-            // This is what happens if the parent is a school.
 
+
+            // This is what happens if the parent is a school.
             //verify same school
-            if (post.ParentID != cmsUser.SchoolID)
+            if (postInternal.ParentID != cmsUser.SchoolID)
             {
                 return NotFound();
             }
 
-            return Ok(outSet);
+            return Ok(postPublic);
         }
     }
 }

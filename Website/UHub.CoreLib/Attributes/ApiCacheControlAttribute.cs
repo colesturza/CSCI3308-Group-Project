@@ -9,7 +9,7 @@ using System.Web.Http.Filters;
 namespace UHub.CoreLib.Attributes
 {
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
-    public class ApiCacheControlAttribute : ActionFilterAttribute
+    public sealed class ApiCacheControlAttribute : ActionFilterAttribute
     {
         /// <summary>
         /// MaxAge in seconds

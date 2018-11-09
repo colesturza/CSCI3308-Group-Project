@@ -43,6 +43,10 @@ namespace UHub.CoreLib.Security.Accounts.APIControllers
                 return Content(statCode, status);
             }
 
+            if (user == null)
+            {
+                return BadRequest();
+            }
 
 
             var tmpUser = user.ToInternal<User>();
@@ -55,24 +59,10 @@ namespace UHub.CoreLib.Security.Accounts.APIControllers
 
             try
             {
-                AccountManager.TryCreateUser(tmpUser, true,
-                    (acctCode) =>
-                    {
-                        if (enableDetail)
-                        {
-                            switch (acctCode)
-                            {
-                                case AccountResultCode.EmailEmpty: { status = "Email Empty"; break; }
-                                case AccountResultCode.EmailInvalid: { status = "Email Invalid"; break; }
-                                case AccountResultCode.EmailDuplicate: { status = "Email Duplicate"; break; }
-                                case AccountResultCode.EmailDomainInvalid: { status = "Email Domain Not Supported"; break; }
-                                case AccountResultCode.UsernameDuplicate: { status = "Username Duplicate"; break; }
-                                case AccountResultCode.MajorInvalid: { status = "Major Invalid"; break; }
-                                case AccountResultCode.PswdEmpty: { status = "Password Empty"; break; }
-                                case AccountResultCode.PswdInvalid: { status = "Password Invalid"; break; }
-                            }
-                        }
-                    },
+                var isCreated = CoreFactory.Singleton.Accounts.TryCreateUser(
+                    tmpUser,
+                    true,
+                    out var resultCode,
                     (code) =>
                     {
                         statCode = HttpStatusCode.InternalServerError;
@@ -85,14 +75,31 @@ namespace UHub.CoreLib.Security.Accounts.APIControllers
                     {
                         status = "User Created";
                         statCode = HttpStatusCode.OK;
-
                     });
+
+
+                if (!isCreated && enableDetail)
+                {
+                    switch (resultCode)
+                    {
+                        case AccountResultCode.EmailEmpty: { status = "Email Empty"; break; }
+                        case AccountResultCode.EmailInvalid: { status = "Email Invalid"; break; }
+                        case AccountResultCode.EmailDuplicate: { status = "Email Duplicate"; break; }
+                        case AccountResultCode.EmailDomainInvalid: { status = "Email Domain Not Supported"; break; }
+                        case AccountResultCode.UsernameDuplicate: { status = "Username Duplicate"; break; }
+                        case AccountResultCode.UserInvalid: { status = "User is not valid"; break; }
+                        case AccountResultCode.MajorInvalid: { status = "Major Invalid"; break; }
+                        case AccountResultCode.PswdEmpty: { status = "Password Empty"; break; }
+                        case AccountResultCode.PswdInvalid: { status = "Password Invalid"; break; }
+                        case AccountResultCode.UnknownError: { status = "An unknown error has occured"; break; }
+                    }
+                }
             }
             catch (Exception ex)
             {
                 var errCode = "100d1257-b74c-461d-a389-b90298895e5d";
                 Exception ex_outer = new Exception(errCode, ex);
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex_outer);
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
 
                 return Content(HttpStatusCode.InternalServerError, status);
             }

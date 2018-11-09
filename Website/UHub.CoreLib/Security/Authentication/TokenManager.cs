@@ -10,7 +10,7 @@ using UHub.CoreLib.Tools;
 
 namespace UHub.CoreLib.Security.Authentication
 {
-    internal static class TokenManager
+    internal static partial class TokenManager
     {
 
 
@@ -37,7 +37,7 @@ namespace UHub.CoreLib.Security.Authentication
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex);
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex);
                 return null;
             }
 

@@ -17,7 +17,7 @@ using UHub.CoreLib.Entities.Users.Management;
 namespace UHub.CoreLib.Security.Authentication
 {
 
-    internal sealed class AuthenticationManager : IAuthenticationManager
+    internal sealed partial class AuthenticationManager : IAuthenticationManager
     {
         /// <summary>
         /// Request variable to store the current user.  Used as temp caching to prevent extra lookups
@@ -25,12 +25,24 @@ namespace UHub.CoreLib.Security.Authentication
         internal const string REQUEST_CURRENT_USER = "Global_CurrentUser";
 
 
-        private AuthenticationWorker authWorker;
+        private AuthenticationProvider authWorker;
         internal AuthenticationManager()
         {
-            authWorker = new FormsWorker();
+            authWorker = new FormsAuthProvider();
         }
 
+        /// <summary>
+        /// Validate user credentials then set authentication token via cookie
+        /// </summary>
+        /// <param name="UserEmail">Email address associated with the user account</param>
+        /// <param name="UserPassword">Password associated with the user account</param>
+        /// <param name="IsPersistent">Flag to set token persistence status</param>
+        /// <param name="GeneralFailHandler">Error handler in case DB cannot be reached or there is other unknown error</param>
+        public bool TrySetClientAuthToken(
+            string UserEmail,
+            string UserPassword,
+            bool IsPersistent,
+            Action<Guid> GeneralFailHandler = null) => TrySetClientAuthToken(UserEmail, UserPassword, IsPersistent, out _, GeneralFailHandler);
 
 
         /// <summary>
@@ -38,14 +50,14 @@ namespace UHub.CoreLib.Security.Authentication
         /// </summary>
         /// <param name="UserEmail">Email address associated with the user account</param>
         /// <param name="UserPassword">Password associated with the user account</param>
-        /// <param name="IsPersistent">Flag to set token persistence status
-        /// <paramref name="ResultHandler">Result handler specifying process status</paramref>
+        /// <param name="IsPersistent">Flag to set token persistence status</param>
+        /// <paramref name="ResultCode">Result code to indicate process status</paramref>
         /// <param name="GeneralFailHandler">Error handler in case DB cannot be reached or there is other unknown error</param>
-        public void TrySetClientAuthToken(
+        public bool TrySetClientAuthToken(
             string UserEmail,
             string UserPassword,
             bool IsPersistent,
-            Action<AuthResultCode> ResultHandler = null,
+            out AuthResultCode ResultCode,
             Action<Guid> GeneralFailHandler = null)
         {
             if (!CoreFactory.Singleton.IsEnabled)
@@ -79,13 +91,14 @@ namespace UHub.CoreLib.Security.Authentication
             }
 
 
-            var success = authWorker.TryAuthenticateUser(
+            var status = authWorker.TryAuthenticateUser(
                 UserEmail,
                 UserPassword,
-                ResultHandler,
+                out ResultCode,
                 GeneralFailHandler,
                 userTokenHandler);
 
+            return status;
         }
 
         /// <summary>
@@ -94,14 +107,14 @@ namespace UHub.CoreLib.Security.Authentication
         /// <param name="UserEmail">Email address associated with the user account</param>
         /// <param name="UserPassword">Password associated with the user account</param>
         /// <param name="IsPersistent">Flag to set token persistence status</param>
-        /// <paramref name="ResultHandler">Result handler specifying process status</paramref>
+        /// <paramref name="ResultCode">Result code to indicate process status</paramref>
         /// <param name="GeneralFailHandler">Error handler in case DB cannot be reached or there is other unknown error</param>
         /// <returns></returns>
         public string TryGetClientAuthToken(
             string UserEmail,
             string UserPassword,
             bool IsPersistent,
-            Action<AuthResultCode> ResultHandler = null,
+            out AuthResultCode ResultCode,
             Action<Guid> GeneralFailHandler = null)
         {
             if (!CoreFactory.Singleton.IsEnabled)
@@ -125,7 +138,7 @@ namespace UHub.CoreLib.Security.Authentication
                 {
                     token = "ERROR";
                     GeneralFailHandler(new Guid("B51AD0A9-1E02-4911-AA67-FC60A0E19E90"));
-                    CoreFactory.Singleton.Logging.CreateErrorLog(ex);
+                    CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex);
 
                     return false;
                 }
@@ -133,7 +146,7 @@ namespace UHub.CoreLib.Security.Authentication
                 {
                     token = "ERROR";
                     GeneralFailHandler(new Guid("88CB24F0-139D-42BE-82D5-56666580323D"));
-                    CoreFactory.Singleton.Logging.CreateErrorLog(ex);
+                    CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex);
 
                     return false;
                 }
@@ -143,7 +156,7 @@ namespace UHub.CoreLib.Security.Authentication
             var success = authWorker.TryAuthenticateUser(
                 UserEmail,
                 UserPassword,
-                ResultHandler,
+                out ResultCode,
                 GeneralFailHandler,
                 userTokenHandler);
 
@@ -186,18 +199,31 @@ namespace UHub.CoreLib.Security.Authentication
             return newToken;
         }
 
+
         /// <summary>
         /// Try to authenticate a user account using the supplied account credentials
         /// </summary>
         /// <param name="UserEmail">Email address associated with the user account</param>
         /// <param name="UserPassword">Password associated with the user account</param>
-        /// <paramref name="ResultHandler">Result handler specifying process status</paramref>
         /// <param name="GeneralFailHandler">Error handler in case DB cannot be reached or there is other unknown error</param>
         /// <returns></returns>
         public bool TryAuthenticateUser(
             string UserEmail,
             string UserPassword,
-            Action<AuthResultCode> ResultHandler = null,
+            Action<Guid> GeneralFailHandler = null) => TryAuthenticateUser(UserEmail, UserPassword, out _, GeneralFailHandler);
+
+        /// <summary>
+        /// Try to authenticate a user account using the supplied account credentials
+        /// </summary>
+        /// <param name="UserEmail">Email address associated with the user account</param>
+        /// <param name="UserPassword">Password associated with the user account</param>
+        /// <paramref name="ResultCode">Result code to indicate process status</paramref>
+        /// <param name="GeneralFailHandler">Error handler in case DB cannot be reached or there is other unknown error</param>
+        /// <returns></returns>
+        public bool TryAuthenticateUser(
+            string UserEmail,
+            string UserPassword,
+            out AuthResultCode ResultCode,
             Action<Guid> GeneralFailHandler = null)
         {
             if (!CoreFactory.Singleton.IsEnabled)
@@ -208,7 +234,7 @@ namespace UHub.CoreLib.Security.Authentication
             return authWorker.TryAuthenticateUser(
                 UserEmail,
                 UserPassword,
-                ResultHandler,
+                out ResultCode,
                 GeneralFailHandler,
                 null);
         }
@@ -465,7 +491,7 @@ namespace UHub.CoreLib.Security.Authentication
             catch (Exception ex)
             {
                 tokenStatus = TokenValidationStatus.AnonUser;
-                return null;
+                return UserReader.GetAnonymousUser();
             }
         }
 
@@ -566,11 +592,11 @@ namespace UHub.CoreLib.Security.Authentication
             bool DEBUG = false;
             if (ErrorCode != -1 && DEBUG)
             {
-                CoreFactory.Singleton.Logging.CreateMessageLog(ErrorCode.ToString());
+                CoreFactory.Singleton.Logging.CreateMessageLogAsync(ErrorCode.ToString());
             }
             if (key != null && DEBUG)
             {
-                CoreFactory.Singleton.Logging.CreateMessageLog(key.ToString());
+                CoreFactory.Singleton.Logging.CreateMessageLogAsync(key.ToString());
             }
 
             try

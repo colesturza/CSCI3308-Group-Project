@@ -132,24 +132,10 @@ namespace UHub.CoreLib.Security.Accounts.Tests
 
             try
             {
-                var t = AccountManager.TryCreateUser(tmpUser, true,
-                    ArgFailHandler: (acctCode) =>
-                    {
-                        if (enableDetail)
-                        {
-                            switch (acctCode)
-                            {
-                                case AccountResultCode.EmailEmpty: { status = "Email Empty"; break; }
-                                case AccountResultCode.EmailInvalid: { status = "Email Invalid"; break; }
-                                case AccountResultCode.EmailDuplicate: { status = "Email Duplicate"; break; }
-                                case AccountResultCode.EmailDomainInvalid: { status = "Email Domain Not Supported"; break; }
-                                case AccountResultCode.UsernameDuplicate: { status = "Username Duplicate"; break; }
-                                case AccountResultCode.MajorInvalid: { status = "Major Invalid"; break; }
-                                case AccountResultCode.PswdEmpty: { status = "Password Empty"; break; }
-                                case AccountResultCode.PswdInvalid: { status = "Password Invalid"; break; }
-                            }
-                        }
-                    },
+                var t = CoreFactory.Singleton.Accounts.TryCreateUser(
+                    tmpUser, 
+                    true,
+                    out var resultCode,
                     GeneralFailHandler: (code) =>
                     {
                         if (enableFailCode)
@@ -161,6 +147,23 @@ namespace UHub.CoreLib.Security.Accounts.Tests
                     {
                         status = "User Created";
                     });
+
+
+                if (!t && enableDetail)
+                {
+                    switch (resultCode)
+                    {
+                        case AccountResultCode.EmailEmpty: { status = "Email Empty"; break; }
+                        case AccountResultCode.EmailInvalid: { status = "Email Invalid"; break; }
+                        case AccountResultCode.EmailDuplicate: { status = "Email Duplicate"; break; }
+                        case AccountResultCode.EmailDomainInvalid: { status = "Email Domain Not Supported"; break; }
+                        case AccountResultCode.UsernameDuplicate: { status = "Username Duplicate"; break; }
+                        case AccountResultCode.MajorInvalid: { status = "Major Invalid"; break; }
+                        case AccountResultCode.PswdEmpty: { status = "Password Empty"; break; }
+                        case AccountResultCode.PswdInvalid: { status = "Password Invalid"; break; }
+                    }
+                }
+
 
             }
             catch (Exception ex)

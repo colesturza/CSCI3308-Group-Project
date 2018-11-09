@@ -12,7 +12,7 @@ using UHub.CoreLib.Management;
 
 namespace UHub.CoreLib.Entities.ClubModerators.Management
 {
-    class ClubModeratorWriter
+    public sealed partial class ClubModeratorWriter
     {
         /// <summary>
         /// Attempts to create a new CMS club moderator in the database and returns the club moderators id if successful
@@ -65,7 +65,7 @@ namespace UHub.CoreLib.Entities.ClubModerators.Management
             {
                 var errCode = "BD0886CA-E8DB-4A0F-A574-ADA6FE36F4D5";
                 Exception ex_outer = new Exception(errCode, ex);
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex_outer);
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
 
                 ErrorMsg = ex.Message;
                 return null;

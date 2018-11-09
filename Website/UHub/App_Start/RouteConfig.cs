@@ -12,6 +12,15 @@ namespace UHub
         public static void RegisterRoutes(RouteCollection routes)
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
+            routes.IgnoreRoute(CoreLib.Common.API_ROUTE_PREFIX + "/*");
+
+            routes.MapRoute(
+                name: "ErrorHandler",
+                url: "Error/{id}",
+                defaults: new { controller = "Error", action = "Index", id = UrlParameter.Optional }
+
+            );
+
 
             routes.MapRoute(
                 name: "Default",

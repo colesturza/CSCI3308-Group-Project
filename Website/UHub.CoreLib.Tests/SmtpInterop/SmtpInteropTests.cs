@@ -8,6 +8,7 @@ using UHub.CoreLib;
 using UHub.CoreLib.SmtpInterop;
 using UHub.CoreLib.Management;
 using UHub.CoreLib.Tests;
+using UHub.CoreLib.Tools;
 
 namespace UHub.CoreLib.SmtpInterop.Tests
 {
@@ -16,19 +17,25 @@ namespace UHub.CoreLib.SmtpInterop.Tests
     {
 
         [TestMethod]
-        public void SendMessageTest()
+        public async Task SendMessageTest()
         {
             TestGlobal.TestInit();
 
 
-            var msg = new SmtpMessage_ConfirmAcct($"Confirm U-HUB Account (TEST)", "U-HUB", "aual1780@colorado.edu")
+            DateTimeOffset start, end;
+
+            var msg = new SmtpMessage_ConfirmAcct($"Confirm U-HUB Account (TEST1)", "U-HUB", "aual1780@colorado.edu")
             {
                 ConfirmationURL = "https://u-hub.life"
             };
 
+            start = FailoverDateTimeOffset.UtcNow;
+            var val1 = SmtpManager.TrySendMessage(msg);
+            end = FailoverDateTimeOffset.UtcNow;
 
-            var val = SmtpManager.TrySendMessage(msg);
-            Assert.IsTrue(val);
+            Console.WriteLine($"{(end - start).TotalMilliseconds}ms");
+
+            Assert.IsTrue(val1);
 
         }
     }

@@ -1,0 +1,35 @@
+﻿@using UHub.CoreLib.Management;
+
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
+
+@{
+    string argSubmitPath = null;
+    if (this.ViewData.ContainsKey("SubmitPath"))
+    {
+        argSubmitPath = this.ViewData["SubmitPath"].ToString();
+    }
+
+
+    var hasRecaptcha = CoreFactory.Singleton.Properties.EnableRecaptcha;
+    var publicKey = CoreFactory.Singleton.Properties.RecaptchaPublicKey;
+
+
+
+    if (hasRecaptcha)
+    {
+        <div class="g-recaptcha" data-sitekey="@publicKey"></div>
+        if (argSubmitPath == null)
+        {
+            <input type="submit" name="btn_Submit" value="Submit" />
+        }
+        else
+        {
+            <input type="submit" name="btn_Submit" value="Submit" formaction="@argSubmitPath" />
+        }
+    }
+    else
+    {
+        <input type="submit" name="btn_Submit" value="Submit" formaction="@argSubmitPath" />
+    }
+}

@@ -11,6 +11,7 @@ using UHub.CoreLib.Extensions;
 using UHub.CoreLib.Management;
 using System.Net;
 using UHub.CoreLib.Attributes;
+using UHub.CoreLib.Entities.Users.DTOs;
 
 namespace UHub.CoreLib.Security.Authentication.APIControllers
 {
@@ -31,7 +32,7 @@ namespace UHub.CoreLib.Security.Authentication.APIControllers
 
         [Route("GetToken")]
         [HttpPost()]
-        public IHttpActionResult GetToken(string email, string password, bool persistent = false)
+        public IHttpActionResult GetToken([FromBody] User_CredentialDTO user, bool persistent = false)
         {
             string status = "";
             HttpStatusCode statCode = HttpStatusCode.BadRequest;
@@ -43,6 +44,13 @@ namespace UHub.CoreLib.Security.Authentication.APIControllers
             {
                 return Content(statCode, status);
             }
+
+            if(user == null)
+            {
+                return InternalServerError();
+            }
+            string email = user.Email;
+            string password = user.Password;
 
 
             var enableDetail = CoreFactory.Singleton.Properties.EnableDetailedAPIErrors;
@@ -60,34 +68,7 @@ namespace UHub.CoreLib.Security.Authentication.APIControllers
                     email,
                     password,
                     persistent,
-                    ResultHandler: (authCode) =>
-                    {
-                        if (enableDetail)
-                        {
-                            switch (authCode)
-                            {
-                                case AuthResultCode.EmailEmpty: { status = "Email Empty"; break; }
-                                case AuthResultCode.EmailInvalid: { status = "Email Invalid"; break; }
-                                case AuthResultCode.PswdEmpty: { status = "Password Empty"; break; }
-                                case AuthResultCode.UserInvalid: { status = "Account Invalid"; break; }
-                                case AuthResultCode.UserLocked: { status = "Account Locked"; break; }
-                                case AuthResultCode.PendingApproval: { status = "Account Pending Approval"; break; }
-                                case AuthResultCode.PendingConfirmation: { status = "Account Pending Confirmation"; break; }
-                                case AuthResultCode.UserDisabled: { status = "Account Disabled"; break; }
-                                case AuthResultCode.PswdExpired: { status = "Password Expired"; break; }
-                                case AuthResultCode.CredentialsInvalid: { status = "Credentials Invalid"; break; }
-                                case AuthResultCode.Success: { status = "Unknown Error"; break; }
-                            }
-                        }
-                        //this looks strange, but is relevant for a very specific edge case
-                        //if the auth worker emits a "Success" code without a populated token
-                        //then this will properly alert the user that some unknown internal error has occured
-                        if (authCode == AuthResultCode.Success)
-                        {
-                            statCode = HttpStatusCode.InternalServerError;
-                        }
-
-                    },
+                    out var ResultCode,
                     GeneralFailHandler: (code) =>
                     {
                         statCode = HttpStatusCode.InternalServerError;
@@ -96,12 +77,40 @@ namespace UHub.CoreLib.Security.Authentication.APIControllers
                             status = code.ToString();
                         }
                     });
+
+
+                if (enableDetail)
+                {
+                    switch (ResultCode)
+                    {
+                        case AuthResultCode.EmailEmpty: { status = "Email Empty"; break; }
+                        case AuthResultCode.EmailInvalid: { status = "Email Invalid"; break; }
+                        case AuthResultCode.PswdEmpty: { status = "Password Empty"; break; }
+                        case AuthResultCode.UserInvalid: { status = "Account Invalid"; break; }
+                        case AuthResultCode.UserLocked: { status = "Account Locked"; break; }
+                        case AuthResultCode.PendingApproval: { status = "Account Pending Approval"; break; }
+                        case AuthResultCode.PendingConfirmation: { status = "Account Pending Confirmation"; break; }
+                        case AuthResultCode.UserDisabled: { status = "Account Disabled"; break; }
+                        case AuthResultCode.PswdExpired: { status = "Password Expired"; break; }
+                        case AuthResultCode.CredentialsInvalid: { status = "Credentials Invalid"; break; }
+                        case AuthResultCode.Success: { status = "Unknown Error"; break; }
+                    }
+                }
+                //this looks strange, but is relevant for a very specific edge case
+                //if the auth worker emits a "Success" code without a populated token
+                //then this will properly alert the user that some unknown internal error has occured
+                if (ResultCode == AuthResultCode.Success)
+                {
+                    statCode = HttpStatusCode.InternalServerError;
+                }
+
+
             }
             catch (Exception ex)
             {
                 var errCode = "4717C1CF-7C2E-4596-9917-119FF7248B10";
                 Exception ex_outer = new Exception(errCode, ex);
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex_outer);
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
 
                 return Content(HttpStatusCode.InternalServerError, status);
             }
@@ -146,7 +155,7 @@ namespace UHub.CoreLib.Security.Authentication.APIControllers
             {
                 var errCode = "7D136E21-6F6C-436B-89E3-9F57E6C0861D";
                 Exception ex_outer = new Exception(errCode, ex);
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex_outer);
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
 
 
                 //return original token
@@ -154,7 +163,7 @@ namespace UHub.CoreLib.Security.Authentication.APIControllers
             }
 
 
-            
+
         }
 
 

@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UHub.CoreLib.Logging
+namespace UHub.CoreLib.Logging.Interfaces
 {
-    internal interface ILoggingWorker
+    internal interface ILocalLogProvider
     {
         /// <summary>
         /// Create success message
