@@ -17,7 +17,7 @@ namespace UHub.CoreLib.Entities.Comments.APIControllers
         [HttpPost()]
         [Route("GetByPost")]
         [ApiAuthControl]
-        public IHttpActionResult GetByPost(long postID)
+        public async Task<IHttpActionResult> GetByPost(long postID)
         {
             string status = "";
             HttpStatusCode statCode = HttpStatusCode.BadRequest;
@@ -26,7 +26,9 @@ namespace UHub.CoreLib.Entities.Comments.APIControllers
                 return Content(statCode, status);
             }
 
-            var comments = CommentReader.GetCommentsByPost(postID);
+
+
+            var comments = await CommentReader.GetCommentsByPostAsync(postID);
 
             var outSet = comments.Select(x => x.ToDto<Comment_R_PublicDTO>());
             return Ok(outSet);

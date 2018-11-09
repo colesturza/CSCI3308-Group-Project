@@ -192,6 +192,7 @@
     <Compile Include="Entities\Comments\Interfaces\IComment_C_Public.cs" />
     <Compile Include="Entities\Comments\Interfaces\IComment_R_Public.cs" />
     <Compile Include="Entities\Comments\Management\CommentReader_CoreAsync.cs" />
+    <Compile Include="Entities\Comments\Management\CommentWriterAsync.cs" />
     <Compile Include="Entities\Comments\Management\CommentWriter.cs" />
     <Compile Include="Entities\Comments\Management\CommentReader_Core.cs" />
     <Compile Include="Entities\Files\File.cs" />

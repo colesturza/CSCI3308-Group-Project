@@ -23,7 +23,7 @@ namespace UHub.CoreLib.Entities.Comments.APIControllers
         [HttpPost()]
         [Route("Create")]
         [ApiAuthControl]
-        public IHttpActionResult Create([FromBody] Comment_C_PublicDTO comment)
+        public async Task<IHttpActionResult> Create([FromBody] Comment_C_PublicDTO comment)
         {
             string status = "";
             HttpStatusCode statCode = HttpStatusCode.BadRequest;
@@ -42,8 +42,9 @@ namespace UHub.CoreLib.Entities.Comments.APIControllers
             var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser();
 
 
+            var validateParent = await UserReader.ValidateCommentParentAsync((long)cmsUser.ID, tmpComment.ParentID);
 
-            if (!UserReader.ValidateCommentParent((long)cmsUser.ID, tmpComment.ParentID))
+            if (!validateParent)
             {
                 status = "User is forbidden.";
                 statCode = HttpStatusCode.Forbidden;
@@ -58,7 +59,7 @@ namespace UHub.CoreLib.Entities.Comments.APIControllers
                 tmpComment.Content = tmpComment.Content.SanitizeHtml();
                 tmpComment.CreatedBy = cmsUser.ID.Value;
 
-                long? PostID = CommentWriter.TryCreateComment(tmpComment);
+                long? PostID = await CommentWriter.TryCreateCommentAsync(tmpComment);
 
                 if (PostID != null)
                 {

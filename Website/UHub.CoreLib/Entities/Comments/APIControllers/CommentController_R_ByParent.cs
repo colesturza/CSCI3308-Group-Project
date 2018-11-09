@@ -17,7 +17,7 @@ namespace UHub.CoreLib.Entities.Comments.APIControllers
         [HttpPost()]
         [Route("GetByParent")]
         [ApiAuthControl]
-        public IHttpActionResult GetByParent(long parentID)
+        public async Task<IHttpActionResult> GetByParent(long parentID)
         {
             string status = "";
             HttpStatusCode statCode = HttpStatusCode.BadRequest;
@@ -26,7 +26,9 @@ namespace UHub.CoreLib.Entities.Comments.APIControllers
                 return Content(statCode, status);
             }
 
-            var comments = CommentReader.GetCommentsByParent(parentID);
+
+
+            var comments = await CommentReader.GetCommentsByParentAsync(parentID);
 
             var outSet = comments.Select(x => x.ToDto<Comment_R_PublicDTO>());
             return Ok(outSet);
