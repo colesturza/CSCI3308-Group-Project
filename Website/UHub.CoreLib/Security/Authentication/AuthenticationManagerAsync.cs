@@ -32,6 +32,7 @@ namespace UHub.CoreLib.Security.Authentication
             string UserEmail,
             string UserPassword,
             bool IsPersistent,
+            HttpContext Context,
             Action<Guid> GeneralFailHandler = null)
         {
             if (!CoreFactory.Singleton.IsEnabled)
@@ -45,8 +46,8 @@ namespace UHub.CoreLib.Security.Authentication
                 var authCookieName = CoreFactory.Singleton.Properties.AuthTknCookieName;
 
                 //remove old token
-                HttpContext.Current.Request.Cookies.Remove(authCookieName);
-                HttpContext.Current.Response.Cookies.Remove(authCookieName);
+                Context.Request.Cookies.Remove(authCookieName);
+                Context.Response.Cookies.Remove(authCookieName);
 
                 //everything good
                 //write user auth cookie
@@ -84,6 +85,7 @@ namespace UHub.CoreLib.Security.Authentication
             string UserEmail,
             string UserPassword,
             bool IsPersistent,
+            HttpContext Context,
             Action<Guid> GeneralFailHandler = null)
         {
             if (!CoreFactory.Singleton.IsEnabled)
@@ -99,7 +101,7 @@ namespace UHub.CoreLib.Security.Authentication
                 //write user auth cookie
                 try
                 {
-                    var tkn = authWorker.GenerateAuthToken(IsPersistent, cmsUser);
+                    var tkn = authWorker.GenerateAuthToken(IsPersistent, cmsUser, Context);
                     token = tkn.Encrypt();
 
                     return true;
@@ -140,7 +142,7 @@ namespace UHub.CoreLib.Security.Authentication
         /// </summary>
         /// <param name="token"></param>
         /// <returns></returns>
-        public async Task<(string Token, TokenValidationStatus TokenStatus)> TrySlideAuthTokenExpirationAsync(string token)
+        public async Task<(string Token, TokenValidationStatus TokenStatus)> TrySlideAuthTokenExpirationAsync(string token, HttpContext Context)
         {
             if (!CoreFactory.Singleton.IsEnabled)
             {
@@ -156,7 +158,7 @@ namespace UHub.CoreLib.Security.Authentication
                 newToken = authToken.Encrypt();
             }
 
-            var result = await authWorker.ValidateAuthTokenAsync(token, () => { TryLogOut(5); }, succHandler);
+            var result = await authWorker.ValidateAuthTokenAsync(token, Context, () => { TryLogOut(5); }, succHandler);
 
 
             return (token, result.TokenStatus);
@@ -194,7 +196,7 @@ namespace UHub.CoreLib.Security.Authentication
         /// </summary>
         /// <param name="tokenStr">AuthToken in string form</param>
         /// <returns>Status flag</returns>
-        public async Task<(bool StatusFlag, TokenValidationStatus TokenStatus)> TrySetRequestUserAsync(string tokenStr)
+        public async Task<(bool StatusFlag, TokenValidationStatus TokenStatus)> TrySetRequestUserAsync(string tokenStr, HttpContext Context)
         {
             if (!CoreFactory.Singleton.IsEnabled)
             {
@@ -210,7 +212,7 @@ namespace UHub.CoreLib.Security.Authentication
             if (!isValid)
             {
                 cmsUser = UserReader.GetAnonymousUser();
-                HttpContext.Current.Items[AuthenticationManager.REQUEST_CURRENT_USER] = cmsUser;
+                Context.Items[AuthenticationManager.REQUEST_CURRENT_USER] = cmsUser;
                 return (false, tokenStatus);
             }
 
@@ -218,12 +220,12 @@ namespace UHub.CoreLib.Security.Authentication
             if (cmsUser == null || cmsUser.ID == null)
             {
                 cmsUser = UserReader.GetAnonymousUser();
-                HttpContext.Current.Items[AuthenticationManager.REQUEST_CURRENT_USER] = cmsUser;
+                Context.Items[AuthenticationManager.REQUEST_CURRENT_USER] = cmsUser;
                 return (false, tokenStatus);
             }
 
 
-            HttpContext.Current.Items[AuthenticationManager.REQUEST_CURRENT_USER] = cmsUser;
+            Context.Items[AuthenticationManager.REQUEST_CURRENT_USER] = cmsUser;
 
 
             var isSuccess = cmsUser.ID != null;
@@ -255,7 +257,7 @@ namespace UHub.CoreLib.Security.Authentication
         /// Returns the authenticated user or a reference to Anon instance
         /// </summary>
         /// <returns></returns>
-        public async Task<(bool StatusFlag, User CmsUser, TokenValidationStatus TokenStatus)> IsUserLoggedInAsync()
+        public async Task<(bool StatusFlag, User CmsUser, TokenValidationStatus TokenStatus)> IsUserLoggedInAsync(HttpContext Context)
         {
 
             if (!CoreFactory.Singleton.IsEnabled)
@@ -264,7 +266,7 @@ namespace UHub.CoreLib.Security.Authentication
             }
 
 
-            var requestUser = HttpContext.Current.Items[AuthenticationManager.REQUEST_CURRENT_USER];
+            var requestUser = Context.Items[AuthenticationManager.REQUEST_CURRENT_USER];
 
             if (false && requestUser != null && requestUser is User currentUser)
             {
@@ -279,7 +281,7 @@ namespace UHub.CoreLib.Security.Authentication
             }
             else
             {
-                var authData = await authWorker.ValidateAuthCookieAsync();
+                var authData = await authWorker.ValidateAuthCookieAsync(Context);
                 var CmsUser = authData.CmsUser;
                 var TokenStatus = authData.TokenStatus;
 
@@ -293,14 +295,14 @@ namespace UHub.CoreLib.Security.Authentication
                     }
 
                     CmsUser = UserReader.GetAnonymousUser();
-                    HttpContext.Current.Items[AuthenticationManager.REQUEST_CURRENT_USER] = CmsUser;
+                    Context.Items[AuthenticationManager.REQUEST_CURRENT_USER] = CmsUser;
 
                     return (false, CmsUser, TokenStatus);
                 }
 
 
                 //GOOD USER
-                HttpContext.Current.Items[AuthenticationManager.REQUEST_CURRENT_USER] = CmsUser;
+                Context.Items[AuthenticationManager.REQUEST_CURRENT_USER] = CmsUser;
 
 
 
@@ -315,7 +317,7 @@ namespace UHub.CoreLib.Security.Authentication
         /// Get the currently authenticated CMS user. If the user is not authenticated, then an anonymous user is returned (UID=null, class=Anon)
         /// </summary>
         /// <returns></returns>
-        public async Task<(User CmsUser, TokenValidationStatus TokenStatus)> GetCurrentUserAsync()
+        public async Task<(User CmsUser, TokenValidationStatus TokenStatus)> GetCurrentUserAsync(HttpContext Context)
         {
             if (!CoreFactory.Singleton.IsEnabled)
             {
@@ -325,7 +327,7 @@ namespace UHub.CoreLib.Security.Authentication
             try
             {
 
-                var requestUser = HttpContext.Current?.Items[AuthenticationManager.REQUEST_CURRENT_USER];
+                var requestUser = Context.Items[AuthenticationManager.REQUEST_CURRENT_USER];
 
 
                 if (requestUser != null && requestUser is User currentUser)
@@ -335,7 +337,7 @@ namespace UHub.CoreLib.Security.Authentication
                 else
                 {
 
-                    var authData = await authWorker.ValidateAuthCookieAsync();
+                    var authData = await authWorker.ValidateAuthCookieAsync(Context);
                     var CmsUser = authData.CmsUser;
                     var TokenStatus = authData.TokenStatus;
 
@@ -348,14 +350,14 @@ namespace UHub.CoreLib.Security.Authentication
                             TokenStatus = TokenValidationStatus.AnonUser;
                         }
                         CmsUser = UserReader.GetAnonymousUser();
-                        HttpContext.Current.Items[AuthenticationManager.REQUEST_CURRENT_USER] = CmsUser;
+                        Context.Items[AuthenticationManager.REQUEST_CURRENT_USER] = CmsUser;
 
 
                     }
                     else
                     {
                         //GOOD USER
-                        HttpContext.Current.Items[AuthenticationManager.REQUEST_CURRENT_USER] = CmsUser;
+                        Context.Items[AuthenticationManager.REQUEST_CURRENT_USER] = CmsUser;
 
                     }
 

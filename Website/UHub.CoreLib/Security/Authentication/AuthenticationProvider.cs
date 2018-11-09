@@ -13,6 +13,7 @@ using UHub.CoreLib.Tools;
 using UHub.CoreLib.Entities.Users;
 using UHub.CoreLib.Entities.Users.Interfaces;
 using UHub.CoreLib.Entities.Users.Management;
+using System.Runtime.CompilerServices;
 
 namespace UHub.CoreLib.Security.Authentication
 {
@@ -60,7 +61,8 @@ namespace UHub.CoreLib.Security.Authentication
         /// /// <exception cref="Exception"></exception>
         internal void SetCurrentUser_ClientToken(bool IsPersistentent, User CmsUser)
         {
-            var token = GenerateAuthToken(IsPersistentent, CmsUser);
+            var context = HttpContext.Current;
+            var token = GenerateAuthToken(IsPersistentent, CmsUser, context);
             SetCurrentUser_ClientToken(token);
         }
 
@@ -219,7 +221,8 @@ namespace UHub.CoreLib.Security.Authentication
                 return false;
             }
 
-            string sessionID = GetAdjustedSessionID(token.IsPersistent);
+            var context = HttpContext.Current;
+            string sessionID = GetAdjustedSessionID(token.IsPersistent, context);
 
 
             if (!TokenManager.IsTokenValid(token, sessionID, out var tempStatus))
@@ -326,7 +329,7 @@ namespace UHub.CoreLib.Security.Authentication
         /// </summary>
         /// <param name="isPersistent"></param>
         /// <returns></returns>
-        private protected string GetAdjustedSessionID(bool isPersistent)
+        private protected string GetAdjustedSessionID(bool isPersistent, HttpContext Context)
         {
             string sessionID = "";
             string clientKey = "";
@@ -354,11 +357,11 @@ namespace UHub.CoreLib.Security.Authentication
             else
             {
 
-                sessionID = HttpContext.Current?.Session?.SessionID ?? "";
+                sessionID = Context.Session?.SessionID ?? "";
             }
 
             //sterilize for token processing
-            sessionID.Replace('|', '0');
+            sessionID = sessionID.Replace('|', '0');
             return sessionID;
         }
 
@@ -419,7 +422,7 @@ namespace UHub.CoreLib.Security.Authentication
         /// <exception cref="SqlException"></exception>
         /// <exception cref="Exception"></exception>
         /// <returns></returns>
-        internal AuthenticationToken GenerateAuthToken(bool IsPersistent, User cmsUser)
+        internal AuthenticationToken GenerateAuthToken(bool IsPersistent, User cmsUser, HttpContext context)
         {
             if (cmsUser.ID == null)
             {
@@ -434,7 +437,7 @@ namespace UHub.CoreLib.Security.Authentication
             var ID = cmsUser.ID.Value;
             var sysVersion = CoreFactory.Singleton.Properties.CurrentAuthTknVersion;
             string userVersion = cmsUser.Version;
-            string sessionID = GetAdjustedSessionID(isPersistent);
+            string sessionID = GetAdjustedSessionID(isPersistent, context);
 
 
             var maxTknLifespan = CoreFactory.Singleton.Properties.MaxAuthTokenLifespan;

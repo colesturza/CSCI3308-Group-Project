@@ -15,7 +15,7 @@ namespace UHub.CoreLib.Entities.Posts
         public long SchoolID { get; set; }
 
         [DataProperty]
-        public long? ClubID { get; set; }
+        public long? SchoolClubID { get; set; }
 
         [DataProperty]
         public long PublicPostCount { get; set; }

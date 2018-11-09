@@ -21,7 +21,7 @@ namespace UHub.CoreLib.Entities.Users.Management
 
             return await SqlWorker.ExecBasicQueryAsync<long>(
                 _dbConn,
-                "[dbo].[User_GetValidMemberships_Light]",
+                "[dbo].[User_GetValidClubMemberships_Light]",
                 (cmd) =>
                 {
                     cmd.Parameters.Add("@UserID", SqlDbType.BigInt).Value = UserID;

@@ -57,7 +57,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             foreach(var counter in taskGetCountSet.Result)
             {
                 count += counter.PublicPostCount;
-                if(counter.ClubID != null && membershipHash.Contains(counter.ClubID.Value))
+                if(counter.SchoolClubID != null && membershipHash.Contains(counter.SchoolClubID.Value))
                 {
                     count += counter.PrivatePostCount;
                 }
@@ -98,7 +98,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             foreach (var counter in taskGetCountSet.Result)
             {
                 count += counter.PublicPostCount;
-                if (counter.ClubID != null && membershipHash.Contains(counter.ClubID.Value))
+                if (counter.SchoolClubID != null && membershipHash.Contains(counter.SchoolClubID.Value))
                 {
                     count += counter.PrivatePostCount;
                 }

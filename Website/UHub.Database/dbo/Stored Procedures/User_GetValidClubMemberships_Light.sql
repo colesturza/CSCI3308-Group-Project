@@ -1,4 +1,4 @@
-﻿CREATE proc User_GetValidClubMemberships_Light
+﻿CREATE proc [dbo].[User_GetValidClubMemberships_Light]
 
 	@UserID bigint
 
@@ -6,7 +6,7 @@ as
 begin
 
 	select
-		emx.TargetEntID
+		emx.TargetEntID		as ClubID
 	from EntMemberXRef emx
 	where
 		emx.ActorEntID = @UserID

@@ -214,8 +214,8 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             }
 
 
-            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser();
-
+            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser(out var stat);
+            
 
             var taskTargetClub = SchoolClubReader.GetClubAsync(ClubID);
             var taskIsUserBanned = SchoolClubReader.IsUserBannedAsync(ClubID, cmsUser.ID.Value);

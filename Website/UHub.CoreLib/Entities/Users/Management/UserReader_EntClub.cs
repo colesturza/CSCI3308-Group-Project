@@ -21,15 +21,15 @@ namespace UHub.CoreLib.Entities.Users.Management
 
             return SqlWorker.ExecBasicQuery<long>(
                 _dbConn,
-                "[dbo].[User_GetValidMemberships_Light]",
+                "[dbo].[User_GetValidClubMemberships_Light]",
                 (cmd) =>
                 {
                     cmd.Parameters.Add("@UserID", SqlDbType.BigInt).Value = UserID;
                 },
                 (reader) =>
                 {
-                    //READ COLUMN 0
-                    //read column 0 as long
+                    //READ FIRST COLUMN 
+                    //read column 1 as long
                     //this column has the ID of clubs where user is an approved member
                     return reader.GetInt64(0);
                 });

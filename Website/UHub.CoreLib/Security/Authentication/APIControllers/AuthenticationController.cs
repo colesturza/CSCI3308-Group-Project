@@ -12,6 +12,7 @@ using UHub.CoreLib.Management;
 using System.Net;
 using UHub.CoreLib.Attributes;
 using UHub.CoreLib.Entities.Users.DTOs;
+using System.Web;
 
 namespace UHub.CoreLib.Security.Authentication.APIControllers
 {
@@ -61,6 +62,8 @@ namespace UHub.CoreLib.Security.Authentication.APIControllers
             string token = null;
             try
             {
+                var context = HttpContext.Current;
+
                 //if token generation fails, then create an error message to send to client
                 //if detailed errors are enabled, then give brief description
                 //if not, then present the same error for all failure types
@@ -68,6 +71,7 @@ namespace UHub.CoreLib.Security.Authentication.APIControllers
                     email,
                     password,
                     persistent,
+                    context,
                     GeneralFailHandler: (code) =>
                     {
                         statCode = HttpStatusCode.InternalServerError;
@@ -147,7 +151,9 @@ namespace UHub.CoreLib.Security.Authentication.APIControllers
             //in case of any error, fail silent and return the original token
             try
             {
-                var resultSet = await CoreFactory.Singleton.Auth.TrySlideAuthTokenExpirationAsync(token);
+                var context = HttpContext.Current;
+
+                var resultSet = await CoreFactory.Singleton.Auth.TrySlideAuthTokenExpirationAsync(token, context);
 
                 string newToken = resultSet.Token;
                 var status = resultSet.TokenStatus;

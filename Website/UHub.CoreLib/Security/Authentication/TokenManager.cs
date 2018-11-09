@@ -113,6 +113,7 @@ namespace UHub.CoreLib.Security.Authentication
         /// <returns></returns>
         internal static bool IsTokenValid(AuthenticationToken token, string SessionID, out TokenValidationStatus tokenStatus)
         {
+
             var now = FailoverDateTimeOffset.UtcNow;
 
             TokenValidator validator = GetValidator(token);

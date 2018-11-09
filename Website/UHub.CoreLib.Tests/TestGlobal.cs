@@ -248,7 +248,7 @@ namespace UHub.CoreLib.Tests
             var httpResponse = new HttpResponse(stringWriter);
             var httpContext = new HttpContext(httpRequest, httpResponse);
 
-            var sessionContainer = new HttpSessionStateContainer("id", new SessionStateItemCollection(),
+            var sessionContainer = new HttpSessionStateContainer("asjkas", new SessionStateItemCollection(),
                                                     new HttpStaticObjectsCollection(), 10, true,
                                                     HttpCookieMode.AutoDetect,
                                                     SessionStateMode.InProc, false);

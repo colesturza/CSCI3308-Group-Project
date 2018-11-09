@@ -20,6 +20,7 @@ using UHub.CoreLib.Entities.SchoolMajors.Management;
 using UHub.CoreLib.Entities.Schools.Management;
 using UHub.CoreLib.Security.Accounts.Interfaces;
 using UHub.CoreLib.Security.Authentication;
+using System.Web;
 
 namespace UHub.CoreLib.Security.Accounts
 {
@@ -345,6 +346,7 @@ namespace UHub.CoreLib.Security.Accounts
             string OldPassword,
             string NewPassword,
             bool DeviceLogout,
+            HttpContext Context,
             Action<Guid> GeneralFailHandler = null)
         {
 
@@ -366,6 +368,7 @@ namespace UHub.CoreLib.Security.Accounts
                 OldPassword,
                 NewPassword,
                 DeviceLogout,
+                Context,
                 GeneralFailHandler);
         }
 
@@ -383,6 +386,7 @@ namespace UHub.CoreLib.Security.Accounts
             string OldPassword,
             string NewPassword,
             bool DeviceLogout,
+            HttpContext Context,
             Action<Guid> GeneralFailHandler = null)
         {
 
@@ -479,7 +483,7 @@ namespace UHub.CoreLib.Security.Accounts
                     modUser.UpdateVersion();
 
                     //re auth current user to prevent lapse in service
-                    await CoreFactory.Singleton.Auth.TrySetClientAuthTokenAsync(modUser.Email, NewPassword, false);
+                    await CoreFactory.Singleton.Auth.TrySetClientAuthTokenAsync(modUser.Email, NewPassword, false, Context);
                 }
 
 
@@ -513,6 +517,7 @@ namespace UHub.CoreLib.Security.Accounts
         public async Task<AccountResultCode> TryResetPasswordAsync(
             string UserEmail,
             string NewPassword,
+            HttpContext Context,
             Action<Guid> GeneralFailHandler = null)
         {
 
@@ -542,6 +547,7 @@ namespace UHub.CoreLib.Security.Accounts
             return await TryResetPasswordAsync(
                 ID.Value,
                 NewPassword,
+                Context,
                 GeneralFailHandler);
         }
 
@@ -557,6 +563,7 @@ namespace UHub.CoreLib.Security.Accounts
         public async Task<AccountResultCode> TryResetPasswordAsync(
             long UserID,
             string NewPassword,
+            HttpContext Context,
             Action<Guid> GeneralFailHandler = null)
         {
             if (!CoreFactory.Singleton.IsEnabled)
@@ -628,7 +635,7 @@ namespace UHub.CoreLib.Security.Accounts
                 //re auth current user to prevent lapse in service
                 try
                 {
-                    await CoreFactory.Singleton.Auth.TrySetClientAuthTokenAsync(modUser.Email, NewPassword, false);
+                    await CoreFactory.Singleton.Auth.TrySetClientAuthTokenAsync(modUser.Email, NewPassword, false, Context);
                 }
                 catch
                 {

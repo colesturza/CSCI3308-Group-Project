@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 using UHub.CoreLib.Entities.Users;
 using UHub.CoreLib.Entities.Users.Interfaces;
 
@@ -60,6 +61,7 @@ namespace UHub.CoreLib.Security.Accounts.Interfaces
             string OldPassword,
             string NewPassword,
             bool DeviceLogout,
+            HttpContext Context,
             Action<Guid> GeneralFailHandler = null);
 
 
@@ -78,6 +80,7 @@ namespace UHub.CoreLib.Security.Accounts.Interfaces
             string OldPassword,
             string NewPassword,
             bool DeviceLogout,
+            HttpContext Context,
             Action<Guid> GeneralFailHandler = null);
 
 
@@ -94,6 +97,7 @@ namespace UHub.CoreLib.Security.Accounts.Interfaces
         Task<AccountResultCode> TryResetPasswordAsync(
             string UserEmail,
             string NewPassword,
+            HttpContext Context,
             Action<Guid> GeneralFailHandler = null);
 
 
@@ -110,6 +114,7 @@ namespace UHub.CoreLib.Security.Accounts.Interfaces
         Task<AccountResultCode> TryResetPasswordAsync(
             long UserID,
             string NewPassword,
+            HttpContext Context,
             Action<Guid> GeneralFailHandler = null);
 
 

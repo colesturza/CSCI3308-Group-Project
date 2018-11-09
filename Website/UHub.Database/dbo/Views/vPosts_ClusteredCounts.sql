@@ -1,4 +1,5 @@
-﻿create view vPosts_ClusteredCounts
+﻿
+CREATE view [dbo].[vPosts_ClusteredCounts]
 as
 
 with clubCounterPublic as
@@ -43,8 +44,8 @@ with clubCounterPublic as
 select
 	ecx.ParentEntID					as SchoolID,
 	ccPub.SchoolClubID				as SchoolClubID,
-	ccPub.PostCount					as PublicPostCount,
-	COALESCE(ccPriv.PostCount, 0)	as PrivatePostCount
+	cast(ccPub.PostCount as bigint)					as PublicPostCount,
+	cast(COALESCE(ccPriv.PostCount, 0) as bigint)	as PrivatePostCount
 from clubCounterPublic ccPub
 left join clubCounterPrivate ccPriv
 on
@@ -62,8 +63,8 @@ UNION ALL
 select
 	ParentEntID		as SchoolID,
 	null			as SchoolClubID,
-	count(*)		as PublicPostCount,
-	0				as PrivatePostCount
+	cast(count(*) as bigint)		as PublicPostCount,
+	cast(0 as bigint)				as PrivatePostCount
 from dbo.EntChildXRef ecx
 where
 	ChildEntType = 6		--POST TYPE [6]

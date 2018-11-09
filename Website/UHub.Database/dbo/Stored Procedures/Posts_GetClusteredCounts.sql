@@ -1,4 +1,4 @@
-﻿create proc Posts_GetClusteredCounts
+﻿CREATE proc [dbo].[Posts_GetClusteredCounts]
 as
 begin
 
@@ -6,7 +6,7 @@ begin
 	select
 		SchoolID,
 		SchoolClubID,
-		PublicPostCount
+		PublicPostCount,
 		PrivatePostCount
 	from vPosts_ClusteredCounts
 

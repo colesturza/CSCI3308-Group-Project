@@ -38,14 +38,14 @@ namespace UHub.CoreLib.Security.Authentication
         /// <summary>
         /// Get user auth data from cookie and load as the CurrentUser identity
         /// </summary>
-        internal async Task<(User CmsUser, TokenValidationStatus TokenStatus)> ValidateAuthCookieAsync(Action ErrorHandler = null)
+        internal async Task<(User CmsUser, TokenValidationStatus TokenStatus)> ValidateAuthCookieAsync(HttpContext Context, Action ErrorHandler = null)
         {
             var authTknCookieName = CoreFactory.Singleton.Properties.AuthTknCookieName;
 
             //get cookie
             HttpCookie authCookie =
-                    HttpContext.Current?.Request?.Cookies.Get(authTknCookieName) ??
-                    HttpContext.Current?.Response?.Cookies.Get(authTknCookieName);
+                    Context.Request?.Cookies.Get(authTknCookieName) ??
+                    Context.Response?.Cookies.Get(authTknCookieName);
 
             if (authCookie == null)
             {
@@ -84,7 +84,7 @@ namespace UHub.CoreLib.Security.Authentication
                 };
 
 
-            return await ValidateAuthTokenAsync(authCookie.Value, ErrorHandler, succHandler);
+            return await ValidateAuthTokenAsync(authCookie.Value, Context, ErrorHandler, succHandler);
 
         }
 
@@ -99,6 +99,7 @@ namespace UHub.CoreLib.Security.Authentication
         /// <returns></returns>
         internal async Task<(User CmsUser, TokenValidationStatus TokenStatus)> ValidateAuthTokenAsync(
             string tokenStr,
+            HttpContext Context,
             Action errorHandler = null,
             Action<AuthenticationToken> SuccessHandler = null)
         {
@@ -134,7 +135,7 @@ namespace UHub.CoreLib.Security.Authentication
                 return (CmsUser, TokenValidationStatus.TokenAESFailure);
             }
 
-            return await ValidateAuthTokenAsync(authToken, errorHandler, SuccessHandler);
+            return await ValidateAuthTokenAsync(authToken, Context, errorHandler, SuccessHandler);
         }
 
         /// <summary>
@@ -148,6 +149,7 @@ namespace UHub.CoreLib.Security.Authentication
         /// <returns></returns>
         private protected async Task<(User CmsUser, TokenValidationStatus TokenStatus)> ValidateAuthTokenAsync(
             AuthenticationToken token,
+            HttpContext Context,
             Action errorHandler = null,
             Action<AuthenticationToken> SuccessHandler = null)
         {
@@ -161,7 +163,7 @@ namespace UHub.CoreLib.Security.Authentication
                 return (CmsUser, TokenValidationStatus.TokenNotFound);
             }
 
-            string sessionID = GetAdjustedSessionID(token.IsPersistent);
+            string sessionID = GetAdjustedSessionID(token.IsPersistent, Context);
 
 
             long userID = token.UserID;
@@ -271,7 +273,7 @@ namespace UHub.CoreLib.Security.Authentication
         /// <exception cref="SqlException"></exception>
         /// <exception cref="Exception"></exception>
         /// <returns></returns>
-        internal async Task<AuthenticationToken> GenerateAuthTokenAsync(bool IsPersistent, User cmsUser)
+        internal async Task<AuthenticationToken> GenerateAuthTokenAsync(bool IsPersistent, User cmsUser, HttpContext Context)
         {
             if (cmsUser.ID == null)
             {
@@ -286,7 +288,7 @@ namespace UHub.CoreLib.Security.Authentication
             var ID = cmsUser.ID.Value;
             var sysVersion = CoreFactory.Singleton.Properties.CurrentAuthTknVersion;
             string userVersion = cmsUser.Version;
-            string sessionID = GetAdjustedSessionID(isPersistent);
+            string sessionID = GetAdjustedSessionID(isPersistent, Context);
 
 
             var maxTknLifespan = CoreFactory.Singleton.Properties.MaxAuthTokenLifespan;
