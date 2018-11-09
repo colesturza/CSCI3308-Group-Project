@@ -182,6 +182,11 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="ClientResources\SampleUHUB\homeVue.js" />
+    <Content Include="ClientResources\SampleUHUB\index.html" />
+    <Content Include="ClientResources\SampleUHUB\postPage.html" />
+    <Content Include="ClientResources\SampleUHUB\postVue.js" />
+    <Content Include="ClientResources\SampleUHUB\utilUHUB.css" />
     <Content Include="ClientResources\Scripts\Home.js" />
     <Content Include="ClientResources\Scripts\homeVue.js" />
     <Content Include="ClientResources\Scripts\Master.js" />
@@ -206,6 +211,9 @@
     <Content Include="ClientResources\Styles\Master_Footer.scss" />
     <Content Include="ClientResources\Styles\Master_Header.scss" />
     <Content Include="ClientResources\Styles\Master.scss" />
+    <Content Include="ClientResources\SampleUHUB\.homeVue.js.swp" />
+    <Content Include="ClientResources\SampleUHUB\.index.html.swp" />
+    <Content Include="ClientResources\SampleUHUB\postPage" />
     <None Include="Properties\PublishProfiles\CustomProfile.pubxml" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
