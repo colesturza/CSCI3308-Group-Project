@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="utilUHUB.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <title>U-HUB</title>
+</head>
+<body class="custom-color1">
+
+<div id="mainNav" class="container-fullwidth">
+<nav class="navbar navbar-expand navbar-light bg-info">
+    <a class="navbar-brand" href="#">UHUB</a>
+    <div class="Qcollapse navbar-collapse" id="navbarNavDropdown">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Dropdown link
+                </a>
+                <div id="communityDrop" class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                    <a class="dropdown-item" v-for="community in communities" v-bind=community.url> {{ community.name }} </a>
+                </div>
+            </li>
+        </ul>
+        <form class="form-inline">
+            <input class="form-control mx-2 my-auto d-inline" type="search" placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-primary my-2 my-md-0" type="submit">Search</button>
+        </form>
+    </div>
+</nav>
+</div>
+
+<div id="auxNav" class="container-fullwidth">
+    <ul class="nav navbar-expand-md bg-light justify-content-center">
+        <li class="nav-item navbar-brand pl-3 pr-0 pt-1">
+            <span class="align-middle">Sort</span>
+        </li>
+        <li class="nav-item px-3 py-2">
+            <div class="dropdown">
+                <button class="btn btn-sm dropdown-toggle" type="button" id="sortDropdownButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Select
+                </button>
+                <div class="dropdown-menu" aria-labelledby="sortDropdownButton">
+                    <a class="dropdown-item" href="#">Popular</a>
+                    <a class="dropdown-item" href="#">Date Posted</a>
+                </div>
+            </div>
+        </li>
+    </ul>
+</div>
+
+<div id="body-content" class="container mt-4">
+    <div>
+        <ul id="post-list" class="list-group list-group-flush w-70 float-md-left">
+            <li class="list-group-item mb-3"  v-for="post in posts">
+                <h4> {{ post.subject }} </h4>
+                <p> {{ post.postContent }} </p>
+            </li>
+        </ul>
+    </div>
+    <div id="community-block" class="border bg-white p-3 w-25 float-md-right">
+        <h5 class="mx-auto d-flex justify-content-center p-2">Home</h5>
+        <div class="container">
+            <span class="m-1">
+            You can find the most popular posts here.
+            </span>
+        </div>
+    </div>
+</div>
+
+<script src="homeVue.js"></script>
+</body>
+</html>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
