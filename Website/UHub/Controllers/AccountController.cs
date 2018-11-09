@@ -28,6 +28,12 @@ namespace UHub.Controllers
         }
 
 
+        public ActionResult Create()
+        {
+            return View();
+        }
+
+
 
         [System.Web.Mvc.HttpGet]
         public ActionResult Login()
