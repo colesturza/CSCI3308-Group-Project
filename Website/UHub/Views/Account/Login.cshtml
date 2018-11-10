@@ -42,7 +42,12 @@
     Html.RenderPartial("~/Views/Security/RecaptchaPartial.cshtml");
 }
 
-@*<input type="submit" name="btn_Submit" value="Click Me" formaction="~/Account/ProcessCredentials" />*@
+<p></p>
+OR
+@Html.RouteLink("Create Account", new RouteValueDictionary {
+    ["controller"] = "Account",
+    ["action"] = "Create"
+})
 
 
 @Scripts.Render("~/bundles/jquery")
