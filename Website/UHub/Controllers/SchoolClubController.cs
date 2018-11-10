@@ -20,6 +20,26 @@ namespace UHub.Controllers
 
 
         [MvcAuthControl]
+        public ActionResult About()
+        {
+            var idObj = Url.RequestContext.RouteData.Values["id"];
+
+
+            return View();
+        }
+
+
+        [MvcAuthControl]
+        public ActionResult ModEdit()
+        {
+            var idObj = Url.RequestContext.RouteData.Values["id"];
+
+
+            return View();
+        }
+
+
+        [MvcAuthControl]
         public ActionResult CreatePost()
         {
             var idObj = Url.RequestContext.RouteData.Values["id"];

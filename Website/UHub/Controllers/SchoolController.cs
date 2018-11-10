@@ -27,5 +27,25 @@ namespace UHub.Controllers
 
             return View();
         }
+
+
+        [MvcAuthControl]
+        public ActionResult Clubs()
+        {
+            var idObj = Url.RequestContext.RouteData.Values["id"];
+
+
+            return View();
+        }
+
+
+        [MvcAuthControl]
+        public ActionResult CreateClub()
+        {
+            var idObj = Url.RequestContext.RouteData.Values["id"];
+
+
+            return View();
+        }
     }
 }

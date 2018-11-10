@@ -6,17 +6,24 @@ using System.Web.Mvc;
 
 namespace UHub.Controllers
 {
-    public class HomeController : Controller
+    public class PostController : Controller
     {
         public ActionResult Index()
         {
+            var idObj = Url.RequestContext.RouteData.Values["id"];
+
+
             return View();
         }
 
 
-        public ActionResult Index2()
+        public ActionResult Edit()
         {
+            var idObj = Url.RequestContext.RouteData.Values["id"];
+
+
             return View();
         }
+
     }
 }

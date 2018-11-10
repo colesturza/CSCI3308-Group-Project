@@ -202,5 +202,15 @@ namespace UHub.Controllers
         {
             return View();
         }
+
+
+        public ActionResult Find()
+        {
+            var idObj = Url.RequestContext.RouteData.Values["id"];
+            var idStr = idObj?.ToString() ?? "0";
+            var valid = int.TryParse(idStr, out var id);
+
+            return View();
+        }
     }
 }
