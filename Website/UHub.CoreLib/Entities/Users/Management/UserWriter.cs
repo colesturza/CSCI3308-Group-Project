@@ -364,7 +364,7 @@ namespace UHub.CoreLib.Entities.Users.Management
 
             try
             {
-                return SqlWorker.ExecBasicQuery(
+                return SqlWorker.ExecBasicQuery<UserRecoveryContext>(
                     CoreFactory.Singleton.Properties.CmsDBConfig,
                     "[dbo].[User_CreateRecoveryContext]",
                     (cmd) =>
@@ -373,11 +373,8 @@ namespace UHub.CoreLib.Entities.Users.Management
                         cmd.Parameters.Add("@RecoveryKey", SqlDbType.NVarChar).Value = RecoveryKey;
                         cmd.Parameters.Add("@EffToDate", SqlDbType.DateTimeOffset).Value = resetExpiration;
                         cmd.Parameters.Add("@IsOptional", SqlDbType.Bit).Value = IsOptional;
-                    }, (reader) =>
-                    {
-                        var output = reader.ToCustomDBType<UserRecoveryContext>();
-                        return output;
-                    }).SingleOrDefault();
+                    })
+                    .SingleOrDefault();
             }
             catch (Exception ex)
             {

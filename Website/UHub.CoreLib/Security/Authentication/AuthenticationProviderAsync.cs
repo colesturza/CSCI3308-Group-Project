@@ -455,17 +455,12 @@ namespace UHub.CoreLib.Security.Authentication
         private protected async Task<UserAuthInfo> GetUserAuthInfo_DBAsync(long UserID)
         {
 
-            var temp = SqlWorker.ExecBasicQueryAsync(
+            var temp = SqlWorker.ExecBasicQueryAsync<UserAuthInfo>(
                 CoreFactory.Singleton.Properties.CmsDBConfig,
                 "[dbo].[User_GetAuthInfoByID]",
                 (cmd) =>
                 {
                     cmd.Parameters.Add("@UserID", SqlDbType.BigInt).Value = UserID;
-                },
-                (reader) =>
-                {
-                    return reader.ToCustomDBType<UserAuthInfo>();
-
                 });
 
 
@@ -475,16 +470,12 @@ namespace UHub.CoreLib.Security.Authentication
         private protected async Task<UserAuthInfo> GetUserAuthInfo_DBAsync(string Email)
         {
 
-            var temp = SqlWorker.ExecBasicQueryAsync(
+            var temp = SqlWorker.ExecBasicQueryAsync<UserAuthInfo>(
                 CoreFactory.Singleton.Properties.CmsDBConfig,
                 "[dbo].[User_GetAuthInfoByEmail]",
                 (cmd) =>
                 {
                     cmd.Parameters.Add("@Email", SqlDbType.NVarChar).Value = Email;
-                },
-                (reader) =>
-                {
-                    return reader.ToCustomDBType<UserAuthInfo>();
                 });
 
 
@@ -495,18 +486,13 @@ namespace UHub.CoreLib.Security.Authentication
         private protected async Task<UserAuthInfo> GetUserAuthInfo_DBAsync(string Username, string Domain)
         {
 
-            var temp = SqlWorker.ExecBasicQueryAsync(
+            var temp = SqlWorker.ExecBasicQueryAsync<UserAuthInfo>(
                 CoreFactory.Singleton.Properties.CmsDBConfig,
                 "[dbo].[User_GetAuthInfoByUsername]",
                 (cmd) =>
                 {
                     cmd.Parameters.Add("@Username", SqlDbType.NVarChar).Value = Username;
                     cmd.Parameters.Add("@Domain", SqlDbType.NVarChar).Value = Domain;
-                },
-                (reader) =>
-                {
-                    return reader.ToCustomDBType<UserAuthInfo>();
-
                 });
 
 

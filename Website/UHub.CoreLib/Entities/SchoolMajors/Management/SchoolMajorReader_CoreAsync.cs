@@ -28,16 +28,12 @@ namespace UHub.CoreLib.Entities.SchoolMajors.Management
             }
 
 
-            var temp = await SqlWorker.ExecBasicQueryAsync(
+            var temp = await SqlWorker.ExecBasicQueryAsync<SchoolMajor>(
                 _dbConn,
                 "[dbo].[SchoolMajor_GetByID]",
                 (cmd) =>
                 {
                     cmd.Parameters.Add("@SchoolMajorID", SqlDbType.BigInt).Value = SchoolMajorID;
-                },
-                (reader) =>
-                {
-                    return reader.ToCustomDBType<SchoolMajor>();
                 });
 
 
@@ -59,14 +55,7 @@ namespace UHub.CoreLib.Entities.SchoolMajors.Management
             }
 
 
-            return await SqlWorker.ExecBasicQueryAsync(
-                _dbConn,
-                "[dbo].[SchoolMajors_GetAll]",
-                (cmd) => { },
-                (row) =>
-                {
-                    return row.ToCustomDBType<SchoolMajor>();
-                });
+            return await SqlWorker.ExecBasicQueryAsync<SchoolMajor>(_dbConn, "[dbo].[SchoolMajors_GetAll]");
         }
 
         /// <summary>
@@ -83,16 +72,12 @@ namespace UHub.CoreLib.Entities.SchoolMajors.Management
             }
 
 
-            return await SqlWorker.ExecBasicQueryAsync(
+            return await SqlWorker.ExecBasicQueryAsync<SchoolMajor>(
                 _dbConn,
                 "[dbo].[SchoolMajors_GetBySchool]",
                 (cmd) =>
                 {
                     cmd.Parameters.Add("@SchoolID", SqlDbType.BigInt).Value = SchoolID;
-                },
-                (row) =>
-                {
-                    return row.ToCustomDBType<SchoolMajor>();
                 });
         }
 
@@ -111,16 +96,12 @@ namespace UHub.CoreLib.Entities.SchoolMajors.Management
             }
 
 
-            return await SqlWorker.ExecBasicQueryAsync(
+            return await SqlWorker.ExecBasicQueryAsync<SchoolMajor>(
                 _dbConn,
                 "[dbo].[SchoolMajors_GetByEmail]",
                 (cmd) =>
                 {
                     cmd.Parameters.Add("@Email", SqlDbType.NVarChar).Value = Email;
-                },
-                (row) =>
-                {
-                    return row.ToCustomDBType<SchoolMajor>();
                 });
         }
 
@@ -138,16 +119,12 @@ namespace UHub.CoreLib.Entities.SchoolMajors.Management
             }
 
 
-            return await SqlWorker.ExecBasicQueryAsync(
+            return await SqlWorker.ExecBasicQueryAsync<SchoolMajor>(
                 _dbConn,
                 "[dbo].[SchoolMajors_GetByDomain]",
                 (cmd) =>
                 {
                     cmd.Parameters.Add("@Domain", SqlDbType.NVarChar).Value = Domain;
-                },
-                (row) =>
-                {
-                    return row.ToCustomDBType<SchoolMajor>();
                 });
         }
 

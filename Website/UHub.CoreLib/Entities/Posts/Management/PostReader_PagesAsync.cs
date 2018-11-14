@@ -53,7 +53,7 @@ namespace UHub.CoreLib.Entities.Posts.Management
             ItemCount = ItemCount ?? DEFAULT_PAGE_SIZE;
 
 
-            return await SqlWorker.ExecBasicQueryAsync(
+            return await SqlWorker.ExecBasicQueryAsync<Post>(
                 _dbConn,
                 "[dbo].[Posts_GetByParentPage]",
                 (cmd) =>
@@ -62,10 +62,6 @@ namespace UHub.CoreLib.Entities.Posts.Management
                     cmd.Parameters.Add("@StartID", SqlDbType.BigInt).Value = HandleParamEmpty(StartID);
                     cmd.Parameters.Add("@PageNum", SqlDbType.Int).Value = HandleParamEmpty(PageNum);
                     cmd.Parameters.Add("@ItemCount", SqlDbType.SmallInt).Value = ItemCount;
-                },
-                (row) =>
-                {
-                    return row.ToCustomDBType<Post>();
                 });
         }
 
@@ -88,7 +84,7 @@ namespace UHub.CoreLib.Entities.Posts.Management
             ItemCount = ItemCount ?? DEFAULT_PAGE_SIZE;
 
 
-            var postSetRaw = await SqlWorker.ExecBasicQueryAsync(
+            var postSetRaw = await SqlWorker.ExecBasicQueryAsync<Post>(
                 _dbConn,
                 "[dbo].[Posts_GetByParentPage]",
                 (cmd) =>
@@ -97,10 +93,6 @@ namespace UHub.CoreLib.Entities.Posts.Management
                     cmd.Parameters.Add("@StartID", SqlDbType.BigInt).Value = HandleParamEmpty(null);
                     cmd.Parameters.Add("@PageNum", SqlDbType.Int).Value = HandleParamEmpty(null);
                     cmd.Parameters.Add("@ItemCount", SqlDbType.SmallInt).Value = ItemCount;
-                },
-                (row) =>
-                {
-                    return row.ToCustomDBType<Post>();
                 });
 
 
@@ -159,7 +151,7 @@ namespace UHub.CoreLib.Entities.Posts.Management
             ItemCount = ItemCount ?? DEFAULT_PAGE_SIZE;
 
 
-            return await SqlWorker.ExecBasicQueryAsync(
+            return await SqlWorker.ExecBasicQueryAsync<Post>(
                 _dbConn,
                 "[dbo].[Posts_GetBySchoolPage]",
                 (cmd) =>
@@ -168,10 +160,6 @@ namespace UHub.CoreLib.Entities.Posts.Management
                     cmd.Parameters.Add("@StartID", SqlDbType.BigInt).Value = HandleParamEmpty(StartID);
                     cmd.Parameters.Add("@PageNum", SqlDbType.Int).Value = HandleParamEmpty(PageNum);
                     cmd.Parameters.Add("@ItemCount", SqlDbType.SmallInt).Value = ItemCount;
-                },
-                (row) =>
-                {
-                    return row.ToCustomDBType<Post>();
                 });
         }
 
@@ -194,7 +182,7 @@ namespace UHub.CoreLib.Entities.Posts.Management
             ItemCount = ItemCount ?? DEFAULT_PAGE_SIZE;
 
 
-            var postSetRaw = await SqlWorker.ExecBasicQueryAsync(
+            var postSetRaw = await SqlWorker.ExecBasicQueryAsync<Post>(
                 _dbConn,
                 "[dbo].[Posts_GetBySchoolPage]",
                 (cmd) =>
@@ -203,10 +191,6 @@ namespace UHub.CoreLib.Entities.Posts.Management
                     cmd.Parameters.Add("@StartID", SqlDbType.BigInt).Value = HandleParamEmpty(null);
                     cmd.Parameters.Add("@PageNum", SqlDbType.Int).Value = HandleParamEmpty(null);
                     cmd.Parameters.Add("@ItemCount", SqlDbType.SmallInt).Value = ItemCount;
-                },
-                (row) =>
-                {
-                    return row.ToCustomDBType<Post>();
                 });
 
 
@@ -263,7 +247,7 @@ namespace UHub.CoreLib.Entities.Posts.Management
             ItemCount = ItemCount ?? DEFAULT_PAGE_SIZE;
 
 
-            return await SqlWorker.ExecBasicQueryAsync(
+            return await SqlWorker.ExecBasicQueryAsync<Post>(
                 _dbConn,
                 "[dbo].[Posts_GetByClubPage]",
                 (cmd) =>
@@ -272,10 +256,6 @@ namespace UHub.CoreLib.Entities.Posts.Management
                     cmd.Parameters.Add("@StartID", SqlDbType.BigInt).Value = HandleParamEmpty(StartID);
                     cmd.Parameters.Add("@PageNum", SqlDbType.Int).Value = HandleParamEmpty(PageNum);
                     cmd.Parameters.Add("@ItemCount", SqlDbType.SmallInt).Value = ItemCount;
-                },
-                (row) =>
-                {
-                    return row.ToCustomDBType<Post>();
                 });
         }
 
@@ -298,7 +278,7 @@ namespace UHub.CoreLib.Entities.Posts.Management
             ItemCount = ItemCount ?? DEFAULT_PAGE_SIZE;
 
 
-            var postSetRaw = await SqlWorker.ExecBasicQueryAsync(
+            var postSetRaw = await SqlWorker.ExecBasicQueryAsync<Post>(
                 _dbConn,
                 "[dbo].[Posts_GetByClubPage]",
                 (cmd) =>
@@ -307,10 +287,6 @@ namespace UHub.CoreLib.Entities.Posts.Management
                     cmd.Parameters.Add("@StartID", SqlDbType.BigInt).Value = HandleParamEmpty(null);
                     cmd.Parameters.Add("@PageNum", SqlDbType.Int).Value = HandleParamEmpty(null);
                     cmd.Parameters.Add("@ItemCount", SqlDbType.SmallInt).Value = ItemCount;
-                },
-                (row) =>
-                {
-                    return row.ToCustomDBType<Post>();
                 });
 
 

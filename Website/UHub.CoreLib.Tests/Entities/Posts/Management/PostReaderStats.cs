@@ -60,12 +60,11 @@ namespace UHub.CoreLib.Entities.Posts.Management.Tests
         */
 
         //useful metric, but dont include in tests (too time consuming)
-        [TestMethod]
+        //[TestMethod]
         public async Task GetPostStatTest()
         {
             TestGlobal.TestInit();
             var iterCount = 50;
-
 
             {
                 var samples1 = new List<double>();
@@ -81,11 +80,8 @@ namespace UHub.CoreLib.Entities.Posts.Management.Tests
                     var set = SqlWorker.ExecBasicQuery<Post>(
                     CoreFactory.Singleton.Properties.CmsDBConfig,
                     "[dbo].[Posts_GetAll]",
-                    (cmd) => { },
-                    (reader) =>
-                    {
-                        return reader.ToCustomDBType<Post>();
-                    }).ToList();
+                    (cmd) => { })
+                    .ToList();
 
                     var end = FailoverDateTimeOffset.UtcNow;
 
@@ -114,8 +110,6 @@ namespace UHub.CoreLib.Entities.Posts.Management.Tests
                 Console.WriteLine();
                 Console.WriteLine();
             }
-
-
             {
                 var samples1 = new List<double>();
                 var itmCount = 0;
@@ -130,11 +124,8 @@ namespace UHub.CoreLib.Entities.Posts.Management.Tests
                     var set = SqlWorker.ExecBasicQuery<Post>(
                     CoreFactory.Singleton.Properties.CmsDBConfig,
                     "[dbo].[Posts_GetAll]",
-                    (cmd) => { },
-                    (reader) =>
-                    {
-                        return reader.ToCustomDBType<Post>();
-                    }).ToList();
+                    (cmd) => { })
+                    .ToList();
 
                     var end = FailoverDateTimeOffset.UtcNow;
 
@@ -177,11 +168,7 @@ namespace UHub.CoreLib.Entities.Posts.Management.Tests
                     var set = await SqlWorker.ExecBasicQueryAsync<Post>(
                         CoreFactory.Singleton.Properties.CmsDBConfig,
                         "[dbo].[Posts_GetAll]",
-                        (cmd) => { },
-                        (reader) =>
-                        {
-                            return reader.ToCustomDBType<Post>();
-                        });
+                        (cmd) => { });
 
                     var end = FailoverDateTimeOffset.UtcNow;
 

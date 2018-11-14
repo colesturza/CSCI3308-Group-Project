@@ -34,17 +34,14 @@ namespace UHub.CoreLib.Entities.SchoolClubs.Management
             }
 
 
-            return SqlWorker.ExecBasicQuery(
+            return SqlWorker.ExecBasicQuery<SchoolClub>(
                 _dbConn,
                 "[dbo].[SchoolClub_GetByID]",
                 (cmd) =>
                 {
                     cmd.Parameters.Add("@SchoolClubID", SqlDbType.BigInt).Value = SchoolClubID;
-                },
-                (reader) =>
-                {
-                    return reader.ToCustomDBType<SchoolClub>();
-                }).SingleOrDefault();
+                })
+                .SingleOrDefault();
         }
         #endregion Individual
 
@@ -62,14 +59,7 @@ namespace UHub.CoreLib.Entities.SchoolClubs.Management
             }
 
 
-            return SqlWorker.ExecBasicQuery(
-                _dbConn,
-                "[dbo].[SchoolClubs_GetAll]",
-                (cmd) => { },
-                (row) =>
-                {
-                    return row.ToCustomDBType<SchoolClub>();
-                });
+            return SqlWorker.ExecBasicQuery<SchoolClub>(_dbConn, "[dbo].[SchoolClubs_GetAll]");
         }
 
         /// <summary>
@@ -86,15 +76,11 @@ namespace UHub.CoreLib.Entities.SchoolClubs.Management
             }
 
 
-            return SqlWorker.ExecBasicQuery(
+            return SqlWorker.ExecBasicQuery<SchoolClub>(
                 _dbConn,
                 "[dbo].[SchoolClubs_GetBySchool]",
                 (cmd) => {
                     cmd.Parameters.Add("@SchoolID", SqlDbType.BigInt).Value = SchoolID;
-                },
-                (row) =>
-                {
-                    return row.ToCustomDBType<SchoolClub>();
                 });
         }
 
@@ -112,15 +98,11 @@ namespace UHub.CoreLib.Entities.SchoolClubs.Management
             }
 
 
-            return SqlWorker.ExecBasicQuery(
+            return SqlWorker.ExecBasicQuery<SchoolClub>(
                 _dbConn,
                 "[dbo].[SchoolClubs_GetByEmail]",
                 (cmd) => {
                     cmd.Parameters.Add("@Email", SqlDbType.NVarChar).Value = Email;
-                },
-                (row) =>
-                {
-                    return row.ToCustomDBType<SchoolClub>();
                 });
         }
 
@@ -139,15 +121,11 @@ namespace UHub.CoreLib.Entities.SchoolClubs.Management
             }
 
 
-            return SqlWorker.ExecBasicQuery(
+            return SqlWorker.ExecBasicQuery<SchoolClub>(
                 _dbConn,
                 "[dbo].[SchoolClubs_GetByDomain]",
                 (cmd) => {
                     cmd.Parameters.Add("@Domain", SqlDbType.NVarChar).Value = Domain;
-                },
-                (row) =>
-                {
-                    return row.ToCustomDBType<SchoolClub>();
                 });
         }
         #endregion Group

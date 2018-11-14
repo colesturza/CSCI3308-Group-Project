@@ -29,16 +29,12 @@ namespace UHub.CoreLib.Entities.Posts.Management
                 throw new SystemDisabledException();
             }
 
-            var temp = await SqlWorker.ExecBasicQueryAsync(
+            var temp = await SqlWorker.ExecBasicQueryAsync<Post>(
                 _dbConn,
                 "[dbo].[Post_GetByID]",
                 (cmd) =>
                 {
                     cmd.Parameters.Add("@PostID", SqlDbType.BigInt).Value = PostID;
-                },
-                (reader) =>
-                {
-                    return reader.ToCustomDBType<Post>();
                 });
 
 
@@ -61,14 +57,7 @@ namespace UHub.CoreLib.Entities.Posts.Management
             }
 
 
-            return await SqlWorker.ExecBasicQueryAsync(
-                _dbConn,
-                "[dbo].[Posts_GetAll]",
-                (cmd) => { },
-                (row) =>
-                {
-                    return row.ToCustomDBType<Post>();
-                });
+            return await SqlWorker.ExecBasicQueryAsync<Post>(_dbConn, "[dbo].[Posts_GetAll]");
         }
 
 
@@ -86,16 +75,12 @@ namespace UHub.CoreLib.Entities.Posts.Management
             }
 
 
-            return await SqlWorker.ExecBasicQueryAsync(
+            return await SqlWorker.ExecBasicQueryAsync<Post>(
                 _dbConn,
                 "[dbo].[Posts_GetByParent]",
                 (cmd) =>
                 {
                     cmd.Parameters.Add("@ParentID", SqlDbType.BigInt).Value = ParentID;
-                },
-                (row) =>
-                {
-                    return row.ToCustomDBType<Post>();
                 });
         }
 
@@ -113,16 +98,12 @@ namespace UHub.CoreLib.Entities.Posts.Management
             }
 
 
-            return await SqlWorker.ExecBasicQueryAsync(
+            return await SqlWorker.ExecBasicQueryAsync<Post>(
                 _dbConn,
                 "[dbo].[Posts_GetBySchool]",
                 (cmd) =>
                 {
                     cmd.Parameters.Add("@SchoolID", SqlDbType.BigInt).Value = SchoolID;
-                },
-                (row) =>
-                {
-                    return row.ToCustomDBType<Post>();
                 });
         }
 
@@ -140,16 +121,12 @@ namespace UHub.CoreLib.Entities.Posts.Management
             }
 
 
-            return await SqlWorker.ExecBasicQueryAsync(
+            return await SqlWorker.ExecBasicQueryAsync<Post>(
                 _dbConn,
                 "[dbo].[Posts_GetByClub]",
                 (cmd) =>
                 {
                     cmd.Parameters.Add("@SchoolClubID", SqlDbType.BigInt).Value = SchoolClubID;
-                },
-                (row) =>
-                {
-                    return row.ToCustomDBType<Post>();
                 });
         }
 
@@ -167,14 +144,10 @@ namespace UHub.CoreLib.Entities.Posts.Management
             }
 
 
-            return await SqlWorker.ExecBasicQueryAsync(
+            return await SqlWorker.ExecBasicQueryAsync<PostClusteredCount>(
                 _dbConn,
                 "[dbo].[Posts_GetClusteredCounts]",
-                (cmd) => { },
-                (reader) =>
-                {
-                    return reader.ToCustomDBType<PostClusteredCount>();
-                });
+                (cmd) => { });
         }
 
 
@@ -186,16 +159,12 @@ namespace UHub.CoreLib.Entities.Posts.Management
             }
 
 
-            return await SqlWorker.ExecBasicQueryAsync(
+            return await SqlWorker.ExecBasicQueryAsync<PostClusteredCount>(
                 _dbConn,
                 "[dbo].[Posts_GetClusteredCountsBySchool]",
                 (cmd) =>
                 {
                     cmd.Parameters.Add("@SchoolID", SqlDbType.BigInt).Value = SchoolID;
-                },
-                (reader) =>
-                {
-                    return reader.ToCustomDBType<PostClusteredCount>();
                 });
         }
 

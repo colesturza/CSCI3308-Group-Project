@@ -601,54 +601,42 @@ namespace UHub.CoreLib.Security.Authentication
         private protected UserAuthInfo GetUserAuthInfo_DB(long UserID)
         {
 
-            return SqlWorker.ExecBasicQuery(
+            return SqlWorker.ExecBasicQuery<UserAuthInfo>(
                 CoreFactory.Singleton.Properties.CmsDBConfig,
                 "[dbo].[User_GetAuthInfoByID]",
                 (cmd) =>
                 {
                     cmd.Parameters.Add("@UserID", SqlDbType.BigInt).Value = UserID;
-                },
-                (reader) =>
-                {
-                    return reader.ToCustomDBType<UserAuthInfo>();
-
-                }).SingleOrDefault();
+                })
+                .SingleOrDefault();
         }
 
         private protected UserAuthInfo GetUserAuthInfo_DB(string Email)
         {
 
-            return SqlWorker.ExecBasicQuery(
+            return SqlWorker.ExecBasicQuery<UserAuthInfo>(
                 CoreFactory.Singleton.Properties.CmsDBConfig,
                 "[dbo].[User_GetAuthInfoByEmail]",
                 (cmd) =>
                 {
                     cmd.Parameters.Add("@Email", SqlDbType.NVarChar).Value = Email;
-                },
-                (reader) =>
-                {
-                    return reader.ToCustomDBType<UserAuthInfo>();
-
-                }).SingleOrDefault();
+                })
+                .SingleOrDefault();
         }
 
 
         private protected UserAuthInfo GetUserAuthInfo_DB(string Username, string Domain)
         {
 
-            return SqlWorker.ExecBasicQuery(
+            return SqlWorker.ExecBasicQuery<UserAuthInfo>(
                 CoreFactory.Singleton.Properties.CmsDBConfig,
                 "[dbo].[User_GetAuthInfoByUsername]",
                 (cmd) =>
                 {
                     cmd.Parameters.Add("@Username", SqlDbType.NVarChar).Value = Username;
                     cmd.Parameters.Add("@Domain", SqlDbType.NVarChar).Value = Domain;
-                },
-                (reader) =>
-                {
-                    return reader.ToCustomDBType<UserAuthInfo>();
-
-                }).SingleOrDefault();
+                })
+                .SingleOrDefault();
         }
 
         #endregion UserAuthInfo

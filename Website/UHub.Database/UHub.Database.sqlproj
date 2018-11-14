@@ -64,7 +64,6 @@
     <Folder Include="dbo\Views\" />
     <Folder Include="dbo\Stored Procedures\" />
     <Folder Include="DataLoaders" />
-    <Folder Include="Security\" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="dbo\Tables\EntPropertyXRef.sql" />
@@ -224,12 +223,6 @@
     <Build Include="DataLoaders\dbo.SchemaVersioning.Table.sql" />
     <Build Include="dbo\Tables\Users_1.sql" />
     <Build Include="dbo\Tables\Entities_1.sql" />
-    <Build Include="Security\wmccurdy_sql.sql" />
-    <Build Include="Security\UHubHelper.sql" />
-    <Build Include="Security\tipconsulting_3308_ProjectTeam.sql" />
-    <Build Include="Security\jreiss_sql.sql" />
-    <Build Include="Security\csturza_sql.sql" />
-    <Build Include="Security\RoleMemberships.sql" />
     <Build Include="DataLoaders\schoolMajorsClubs.sql" />
     <Build Include="DataLoaders\schoolMajor.sql" />
   </ItemGroup>
