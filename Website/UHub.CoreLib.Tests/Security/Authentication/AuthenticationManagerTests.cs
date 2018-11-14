@@ -86,7 +86,7 @@ namespace UHub.CoreLib.Security.Authentication.Tests
             var email = "aual1780@colorado.edu";
             var password = "testtest";
             var persistent = false;
-
+            var isFailed = false;
 
             var token = CoreFactory.Singleton.Auth.TryGetClientAuthToken(
                     email,
@@ -95,7 +95,8 @@ namespace UHub.CoreLib.Security.Authentication.Tests
                     out var resultCode,
                     GeneralFailHandler: (code) =>
                     {
-                        Assert.Fail();
+                        isFailed = true;
+                        CoreFactory.Singleton.Logging.CreateErrorLogAsync(code).Wait();
                         if (enableFailCode)
                         {
                             status = code.ToString();
@@ -121,6 +122,10 @@ namespace UHub.CoreLib.Security.Authentication.Tests
                 }
             }
 
+            if(isFailed)
+            {
+                Assert.Fail();
+            }
 
             Console.WriteLine(status);
             Assert.AreEqual("Unknown Error", status);

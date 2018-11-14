@@ -12,6 +12,8 @@
 );
 
 
+
+
 GO
 CREATE NONCLUSTERED INDEX [IX_UserRecovery_UserID]
     ON [dbo].[UserRecovery]([UserID] ASC);

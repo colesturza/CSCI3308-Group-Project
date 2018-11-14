@@ -333,7 +333,7 @@ namespace UHub.CoreLib.Security.Authentication
         {
             string sessionID = "";
             string clientKey = "";
-            clientKey = HttpContext.Current?.Request?.Headers[Common.AUTH_HEADER_MACHINE_KEY] ?? "";
+            clientKey = Context?.Request?.Headers[Common.AUTH_HEADER_MACHINE_KEY] ?? "";
 
             //session ID must be ignored for persistent connections
             //otherwise token will not work if user comes back to site at later date
@@ -357,7 +357,7 @@ namespace UHub.CoreLib.Security.Authentication
             else
             {
 
-                sessionID = Context.Session?.SessionID ?? "";
+                sessionID = Context?.Session?.SessionID ?? "";
             }
 
             //sterilize for token processing

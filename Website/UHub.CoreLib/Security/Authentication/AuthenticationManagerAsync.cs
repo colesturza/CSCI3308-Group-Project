@@ -60,7 +60,7 @@ namespace UHub.CoreLib.Security.Authentication
                 catch
                 {
 
-                    GeneralFailHandler(new Guid("070E2C1C-9162-4175-AAB8-018BB38F095D"));
+                    GeneralFailHandler(new Guid("B0FE06E5-C2CD-47E1-B68C-15AA0F02281A"));
                     return false;
                 }
             }
@@ -109,7 +109,7 @@ namespace UHub.CoreLib.Security.Authentication
                 catch (CryptographicException ex)
                 {
                     token = "ERROR";
-                    GeneralFailHandler(new Guid("B51AD0A9-1E02-4911-AA67-FC60A0E19E90"));
+                    GeneralFailHandler(new Guid("B4BDF1F7-C946-419F-A403-ABDFEA540E2B"));
                     CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex);
 
                     return false;
@@ -117,7 +117,7 @@ namespace UHub.CoreLib.Security.Authentication
                 catch (Exception ex)
                 {
                     token = "ERROR";
-                    GeneralFailHandler(new Guid("88CB24F0-139D-42BE-82D5-56666580323D"));
+                    GeneralFailHandler(new Guid("8BF88EC6-B13E-4E65-809F-277B572300C6"));
                     CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex);
 
                     return false;
