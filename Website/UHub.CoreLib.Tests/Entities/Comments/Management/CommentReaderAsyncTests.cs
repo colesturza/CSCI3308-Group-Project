@@ -1,33 +1,33 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using UHub.CoreLib.Tests;
 
 namespace UHub.CoreLib.Entities.Comments.Management.Tests
 {
-    [TestClass]
     public partial class CommentReaderTests
     {
         [TestMethod]
-        public void GetCommentsByPostTest()
+        public async Task GetCommentsByPostAsyncTest()
         {
             TestGlobal.TestInit();
 
 
             long postID = 353;
-            var comments = CommentReader.GetCommentsByPost(postID);
+            var comments = await CommentReader.GetCommentsByPostAsync(postID);
 
             Assert.IsNotNull(comments);
         }
 
 
         [TestMethod]
-        public void GetCommentsByParentTest()
+        public async Task GetCommentsByParentAsyncTest()
         {
             TestGlobal.TestInit();
 
 
             long postID = 353;
-            var comments = CommentReader.GetCommentsByParent(postID);
+            var comments = await CommentReader.GetCommentsByParentAsync(postID);
 
             Assert.IsNotNull(comments);
         }
