@@ -23,10 +23,19 @@ namespace UHub
 
 
             routes.MapRoute(
-                name: "Default",
-                url: "{controller}/{action}/{id}",
-                defaults: new { controller = "Account", action = "Login", id = UrlParameter.Optional }
+                name: "DefaultHomePage",
+                url: "",
+                defaults: new { controller = "Account", action = "Login"}
             );
+
+
+            routes.MapRoute(
+                name: "DefaultControllerAction",
+                url: "{controller}/{action}/{id}",
+                defaults: new { action = "Index", id = UrlParameter.Optional }
+            );
+
+
         }
     }
 }
