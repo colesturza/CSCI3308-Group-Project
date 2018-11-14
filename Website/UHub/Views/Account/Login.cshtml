@@ -39,12 +39,16 @@
 
 <p></p>
 @{
-    Html.RenderPartial("~/Views/Security/RecaptchaPartial.cshtml");
+    Html.RenderPartial("~/Views/Security/RecaptchaPartial.cshtml", new UHub.Models.Security.RecaptchaLoginViewModel
+    {
+        SubmitValue = "Login",
+        SubmitClass = "CSS_CLASS",
+    });
 }
 
 <p></p>
 OR
-@Html.RouteLink("Create Account", new RouteValueDictionary {
+@Html.RouteLink("Create an Account", new RouteValueDictionary {
     ["controller"] = "Account",
     ["action"] = "Create"
 })
