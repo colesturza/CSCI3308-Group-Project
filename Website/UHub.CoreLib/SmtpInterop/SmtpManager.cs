@@ -11,14 +11,17 @@ namespace UHub.CoreLib.SmtpInterop
     /// <summary>
     /// CMS SMTP (email) manager to send messages from the site
     /// </summary>
-    public static partial class SmtpManager
+    public sealed partial class SmtpManager
     {
+        internal SmtpManager() { }
+
+
         /// <summary>
         /// Attempt to send an email using the system configuration
         /// </summary>
         /// <param name="Message"></param>
         /// <returns></returns>
-        public static bool TrySendMessage(SmtpMessage Message)
+        public bool TrySendMessage(SmtpMessage Message)
         {
             return TrySendMessage(Message, out _);
         }
@@ -29,7 +32,7 @@ namespace UHub.CoreLib.SmtpInterop
         /// </summary>
         /// <param name="Message"></param>
         /// <returns></returns>
-        public static bool TrySendMessage(SmtpMessage Message, out SmtpResultCode result)
+        public bool TrySendMessage(SmtpMessage Message, out SmtpResultCode result)
         {
             if (!Message.Validate())
             {

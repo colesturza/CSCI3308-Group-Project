@@ -11,7 +11,7 @@ namespace UHub.CoreLib.SmtpInterop
     /// <summary>
     /// CMS SMTP (email) manager to send messages from the site
     /// </summary>
-    public static partial class SmtpManager
+    public sealed partial class SmtpManager
     {
 
         /// <summary>
@@ -19,7 +19,7 @@ namespace UHub.CoreLib.SmtpInterop
         /// </summary>
         /// <param name="Message"></param>
         /// <returns></returns>
-        public static async Task<SmtpResultCode> TrySendMessageAsync(SmtpMessage Message)
+        public async Task<SmtpResultCode> TrySendMessageAsync(SmtpMessage Message)
         {
             if (!Message.Validate())
             {

@@ -19,6 +19,10 @@ namespace UHub.Models.Security
         /// CSS class for submit button
         /// </summary>
         public string SubmitClass { get; set; } = "";
+        /// <summary>
+        /// Flag to set submit button behavior
+        /// </summary>
+        public bool UseSubmitBehavior { get; set; } = true;
 
     }
 }

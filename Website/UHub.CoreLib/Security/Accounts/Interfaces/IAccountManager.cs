@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UHub.CoreLib.Entities.Users;
+using UHub.CoreLib.Entities.Users.Interfaces;
 
 namespace UHub.CoreLib.Security.Accounts.Interfaces
 {
@@ -147,5 +148,31 @@ namespace UHub.CoreLib.Security.Accounts.Interfaces
         /// <param name="Username"></param>
         /// <param name="Domain"></param>
         void DeleteUser(string Username, string Domain);
+
+
+        /// <summary>
+        /// Create a user password recovery context. Allows users to create a new password if they forget their old password.  Can be used to force a user to reset their password by setting [IsOptional=TRUE]
+        /// </summary>
+        /// <param name="UserEmail">User email</param>
+        /// <param name="IsOptional">Specify whether or not user will be forced to update password</param>
+        /// <param name="GeneralFailHandler">Error handler in case DB cannot be reached or there is other unknown error</param>
+        /// <returns></returns>
+        (AccountResultCode ResultCode, IUserRecoveryContext RecoveryContext, string RecoveryKey) TryCreateUserRecoveryContext(
+            string UserEmail,
+            bool IsOptional,
+            Action<Guid> GeneralFailHandler = null);
+
+
+        /// <summary>
+        /// Create a user password recovery context. Allows users to create a new password if they forget their old password.  Can be used to force a user to reset their password by setting [IsOptional=TRUE]
+        /// </summary>
+        /// <param name="UserUID">User UID</param>
+        /// <param name="IsOptional">Specify whether or not user will be forced to update password</param>
+        /// <param name="GeneralFailHandler">Error handler in case DB cannot be reached or there is other unknown error</param>
+        /// <returns></returns>
+        (AccountResultCode ResultCode, IUserRecoveryContext RecoveryContext, string RecoveryKey) TryCreateUserRecoveryContext(
+            long UserID,
+            bool IsOptional,
+            Action<Guid> GeneralFailHandler = null);
     }
 }

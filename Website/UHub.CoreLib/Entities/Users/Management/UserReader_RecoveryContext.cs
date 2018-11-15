@@ -11,10 +11,10 @@ using UHub.CoreLib.Entities.Users.Interfaces;
 
 namespace UHub.CoreLib.Entities.Users.Management
 {
-    public static partial class UserReader
+    internal static partial class UserReader
     {
 
-        public static IUserRecoveryContext GetUserRecoveryContext(long UserID)
+        public static IUserRecoveryContext GetRecoveryContext(long UserID)
         {
             try
             {
@@ -33,7 +33,7 @@ namespace UHub.CoreLib.Entities.Users.Management
             }
         }
 
-        public static IUserRecoveryContext GetUserRecoveryContext(string RecoveryID)
+        public static IUserRecoveryContext GetRecoveryContext(string RecoveryID)
         {
             try
             {

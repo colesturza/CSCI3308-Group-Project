@@ -42,7 +42,7 @@ namespace UHub.CoreLib.Entities.Users
 
         public string RecoveryURL
         {
-            get => CoreFactory.Singleton.Properties.AcctPswdResetURL + "?ID=" + this.RecoveryID;
+            get => CoreFactory.Singleton.Properties.AcctPswdRecoveryURL + "?ID=" + this.RecoveryID;
         }
         #endregion StdProperties
 
