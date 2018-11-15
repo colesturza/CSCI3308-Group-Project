@@ -24,7 +24,7 @@ namespace UHub.CoreLib.Entities.SchoolClubs.APIControllers
     public sealed partial class SchoolClubController
     {
 
-        [HttpPost]
+        [HttpGet]
         [Route("GetAllBySchool")]
         [ApiAuthControl]
         public async Task<IHttpActionResult> GetAllBySchool()
