@@ -35,7 +35,7 @@ namespace UHub
             );
 
             routes.MapRoute(
-                name: "DefaultControllerAction",
+                name: "DefaultController",
                 url: "{controller}/{action}/{id}",
                 defaults: new {id = UrlParameter.Optional }
             );
