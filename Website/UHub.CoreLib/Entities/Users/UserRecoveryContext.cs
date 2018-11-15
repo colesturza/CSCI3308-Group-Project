@@ -20,8 +20,6 @@ namespace UHub.CoreLib.Entities.Users
         [DataProperty]
         public long UserID { get; set; }
         [DataProperty]
-        public Guid UserUID { get; set; }
-        [DataProperty]
         public string RecoveryID { get; set; }
         [DataProperty]
         public string RecoveryKey { get; set; }
