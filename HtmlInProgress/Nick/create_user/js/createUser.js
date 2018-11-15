@@ -36,7 +36,7 @@ var createUser = new Vue({
     }
 });
 /*
-    When email is unfocused,
+    When email is unfocused, sends ajax request to get list of majors to supply the dropdown
  */
 $("#email").blur(function(){
     var majornames = [];
