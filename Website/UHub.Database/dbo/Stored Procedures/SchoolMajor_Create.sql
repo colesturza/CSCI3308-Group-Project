@@ -6,8 +6,8 @@ CREATE proc [dbo].[SchoolMajor_Create]
 	--CREATE PARAMETERS
 	
 	--DYNAMIC
-	@Name nvarchar(200),
-	@Description nvarchar(500),
+	@Name nvarchar(max),
+	@Description nvarchar(max),
 
 	--HIERARCHY
 	@ParentID bigint,

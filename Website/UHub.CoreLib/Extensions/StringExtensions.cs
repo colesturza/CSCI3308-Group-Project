@@ -55,7 +55,7 @@ namespace UHub.CoreLib.Extensions
                 return false;
             }
 
-            if(!RgxIsMatch(email, $"^{RgxPatterns.User.EMAIL}$"))
+            if (!RgxIsMatch(email, RgxPatterns.User.EMAIL_B))
             {
                 return false;
             }
@@ -69,6 +69,22 @@ namespace UHub.CoreLib.Extensions
             {
                 return false;
             }
+        }
+
+        /// <summary>
+        /// Check if a string is a valid email
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns></returns>
+        public static bool IsValidEmailDomain(this string domain)
+        {
+            if (domain.IsEmpty())
+            {
+                return false;
+            }
+
+            return RgxIsMatch(domain, RgxPatterns.User.EMAIL_DOMAIN_B);
+
         }
         /// <summary>
         /// Get domain portion from email

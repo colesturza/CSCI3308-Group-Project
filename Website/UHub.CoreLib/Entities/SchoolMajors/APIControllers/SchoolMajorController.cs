@@ -39,7 +39,7 @@ namespace UHub.CoreLib.Entities.SchoolMajors.APIControllers
         [ApiCacheControl(12 * 3600)]
         public async Task<IHttpActionResult> GetAllByEmail(string email)
         {
-            if(!email.IsValidEmail())
+            if (!email.IsValidEmail())
             {
                 return BadRequest();
             }
@@ -56,6 +56,12 @@ namespace UHub.CoreLib.Entities.SchoolMajors.APIControllers
         [ApiCacheControl(12 * 3600)]
         public async Task<IHttpActionResult> GetAllByDomain(string domain)
         {
+            if (!domain.IsValidEmailDomain())
+            {
+                return BadRequest();
+            }
+
+
             var majorSet = await SchoolMajorReader.GetMajorsByDomainAsync(domain);
 
             return Ok(majorSet.Select(x => x.ToDto<SchoolMajor_R_PublicDTO>()));
