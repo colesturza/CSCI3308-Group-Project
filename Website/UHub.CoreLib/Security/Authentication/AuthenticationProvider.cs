@@ -13,6 +13,7 @@ using UHub.CoreLib.Tools;
 using UHub.CoreLib.Entities.Users;
 using UHub.CoreLib.Entities.Users.Interfaces;
 using UHub.CoreLib.Entities.Users.Management;
+using System.Runtime.CompilerServices;
 
 namespace UHub.CoreLib.Security.Authentication
 {
@@ -60,7 +61,8 @@ namespace UHub.CoreLib.Security.Authentication
         /// /// <exception cref="Exception"></exception>
         internal void SetCurrentUser_ClientToken(bool IsPersistentent, User CmsUser)
         {
-            var token = GenerateAuthToken(IsPersistentent, CmsUser);
+            var context = HttpContext.Current;
+            var token = GenerateAuthToken(IsPersistentent, CmsUser, context);
             SetCurrentUser_ClientToken(token);
         }
 
@@ -219,7 +221,8 @@ namespace UHub.CoreLib.Security.Authentication
                 return false;
             }
 
-            string sessionID = GetAdjustedSessionID(token.IsPersistent);
+            var context = HttpContext.Current;
+            string sessionID = GetAdjustedSessionID(token.IsPersistent, context);
 
 
             if (!TokenManager.IsTokenValid(token, sessionID, out var tempStatus))
@@ -326,11 +329,11 @@ namespace UHub.CoreLib.Security.Authentication
         /// </summary>
         /// <param name="isPersistent"></param>
         /// <returns></returns>
-        private protected string GetAdjustedSessionID(bool isPersistent)
+        private protected string GetAdjustedSessionID(bool isPersistent, HttpContext Context)
         {
             string sessionID = "";
             string clientKey = "";
-            clientKey = HttpContext.Current?.Request?.Headers[Common.AUTH_HEADER_MACHINE_KEY] ?? "";
+            clientKey = Context?.Request?.Headers[Common.AUTH_HEADER_MACHINE_KEY] ?? "";
 
             //session ID must be ignored for persistent connections
             //otherwise token will not work if user comes back to site at later date
@@ -354,11 +357,11 @@ namespace UHub.CoreLib.Security.Authentication
             else
             {
 
-                sessionID = HttpContext.Current?.Session?.SessionID ?? "";
+                sessionID = Context?.Session?.SessionID ?? "";
             }
 
             //sterilize for token processing
-            sessionID.Replace('|', '0');
+            sessionID = sessionID.Replace('|', '0');
             return sessionID;
         }
 
@@ -419,7 +422,7 @@ namespace UHub.CoreLib.Security.Authentication
         /// <exception cref="SqlException"></exception>
         /// <exception cref="Exception"></exception>
         /// <returns></returns>
-        internal AuthenticationToken GenerateAuthToken(bool IsPersistent, User cmsUser)
+        internal AuthenticationToken GenerateAuthToken(bool IsPersistent, User cmsUser, HttpContext context)
         {
             if (cmsUser.ID == null)
             {
@@ -434,7 +437,7 @@ namespace UHub.CoreLib.Security.Authentication
             var ID = cmsUser.ID.Value;
             var sysVersion = CoreFactory.Singleton.Properties.CurrentAuthTknVersion;
             string userVersion = cmsUser.Version;
-            string sessionID = GetAdjustedSessionID(isPersistent);
+            string sessionID = GetAdjustedSessionID(isPersistent, context);
 
 
             var maxTknLifespan = CoreFactory.Singleton.Properties.MaxAuthTokenLifespan;
@@ -598,54 +601,42 @@ namespace UHub.CoreLib.Security.Authentication
         private protected UserAuthInfo GetUserAuthInfo_DB(long UserID)
         {
 
-            return SqlWorker.ExecBasicQuery(
+            return SqlWorker.ExecBasicQuery<UserAuthInfo>(
                 CoreFactory.Singleton.Properties.CmsDBConfig,
                 "[dbo].[User_GetAuthInfoByID]",
                 (cmd) =>
                 {
                     cmd.Parameters.Add("@UserID", SqlDbType.BigInt).Value = UserID;
-                },
-                (reader) =>
-                {
-                    return reader.ToCustomDBType<UserAuthInfo>();
-
-                }).SingleOrDefault();
+                })
+                .SingleOrDefault();
         }
 
         private protected UserAuthInfo GetUserAuthInfo_DB(string Email)
         {
 
-            return SqlWorker.ExecBasicQuery(
+            return SqlWorker.ExecBasicQuery<UserAuthInfo>(
                 CoreFactory.Singleton.Properties.CmsDBConfig,
                 "[dbo].[User_GetAuthInfoByEmail]",
                 (cmd) =>
                 {
                     cmd.Parameters.Add("@Email", SqlDbType.NVarChar).Value = Email;
-                },
-                (reader) =>
-                {
-                    return reader.ToCustomDBType<UserAuthInfo>();
-
-                }).SingleOrDefault();
+                })
+                .SingleOrDefault();
         }
 
 
         private protected UserAuthInfo GetUserAuthInfo_DB(string Username, string Domain)
         {
 
-            return SqlWorker.ExecBasicQuery(
+            return SqlWorker.ExecBasicQuery<UserAuthInfo>(
                 CoreFactory.Singleton.Properties.CmsDBConfig,
                 "[dbo].[User_GetAuthInfoByUsername]",
                 (cmd) =>
                 {
                     cmd.Parameters.Add("@Username", SqlDbType.NVarChar).Value = Username;
                     cmd.Parameters.Add("@Domain", SqlDbType.NVarChar).Value = Domain;
-                },
-                (reader) =>
-                {
-                    return reader.ToCustomDBType<UserAuthInfo>();
-
-                }).SingleOrDefault();
+                })
+                .SingleOrDefault();
         }
 
         #endregion UserAuthInfo

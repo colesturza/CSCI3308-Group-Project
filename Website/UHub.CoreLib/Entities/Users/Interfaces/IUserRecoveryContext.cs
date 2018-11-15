@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UHub.CoreLib.Attributes;
+using UHub.CoreLib.Security.Accounts;
 
 namespace UHub.CoreLib.Entities.Users.Interfaces
 {
@@ -69,12 +70,12 @@ namespace UHub.CoreLib.Entities.Users.Interfaces
         /// </summary>
         /// <param name="Key"></param>
         /// <returns></returns>
-        bool ValidateRecoveryKey(string Key);
+        AccountResultCode ValidateRecoveryKey(string Key);
 
         /// <summary>
         /// Update the failed attempt count
         /// </summary>
-        void UpdateAttemptCount();
+        AccountResultCode IncrementAttemptCount();
 
         /// <summary>
         /// Delete this context to prevent it from being used again

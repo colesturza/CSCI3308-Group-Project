@@ -7,6 +7,8 @@
 );
 
 
+
+
 GO
 CREATE UNIQUE NONCLUSTERED INDEX [IX_UserClassXRef]
     ON [dbo].[UserClassXRef]([UserID] ASC);

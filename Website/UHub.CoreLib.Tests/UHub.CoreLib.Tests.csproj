@@ -99,8 +99,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ContextUtil.cs" />
+    <Compile Include="Entities\Comments\Management\CommentReaderAsyncTests.cs" />
+    <Compile Include="Entities\Comments\Management\CommentWriterAsyncTests.cs" />
     <Compile Include="Entities\Comments\Management\CommentWriterTests.cs" />
     <Compile Include="Entities\Comments\Management\CommentReaderTests.cs" />
+    <Compile Include="Entities\Posts\Management\PostReaderAsyncTests.cs" />
+    <Compile Include="Entities\Posts\Management\PostReaderStats.cs" />
     <Compile Include="Entities\Posts\Management\PostReaderTests.cs" />
     <Compile Include="Entities\Posts\Management\PostWriterTests.cs" />
     <Compile Include="Entities\Posts\Management\PostReaderAPITests.cs" />

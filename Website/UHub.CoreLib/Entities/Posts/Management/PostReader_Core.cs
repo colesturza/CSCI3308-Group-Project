@@ -39,17 +39,14 @@ namespace UHub.CoreLib.Entities.Posts.Management
             }
 
 
-            return SqlWorker.ExecBasicQuery(
+            return SqlWorker.ExecBasicQuery<Post>(
                 _dbConn,
                 "[dbo].[Post_GetByID]",
                 (cmd) =>
                 {
                     cmd.Parameters.Add("@PostID", SqlDbType.BigInt).Value = PostID;
-                },
-                (reader) =>
-                {
-                    return reader.ToCustomDBType<Post>();
-                }).SingleOrDefault();
+                })
+                .SingleOrDefault();
         }
         #endregion Individual
 
@@ -67,14 +64,10 @@ namespace UHub.CoreLib.Entities.Posts.Management
             }
 
 
-            return SqlWorker.ExecBasicQuery(
+            return SqlWorker.ExecBasicQuery<Post>(
                 _dbConn,
                 "[dbo].[Posts_GetAll]",
-                (cmd) => { },
-                (row) =>
-                {
-                    return row.ToCustomDBType<Post>();
-                });
+                (cmd) => { });
         }
 
 
@@ -92,16 +85,12 @@ namespace UHub.CoreLib.Entities.Posts.Management
             }
 
 
-            return SqlWorker.ExecBasicQuery(
+            return SqlWorker.ExecBasicQuery<Post>(
                 _dbConn,
                 "[dbo].[Posts_GetByParent]",
                 (cmd) =>
                 {
                     cmd.Parameters.Add("@ParentID", SqlDbType.BigInt).Value = ParentID;
-                },
-                (row) =>
-                {
-                    return row.ToCustomDBType<Post>();
                 });
         }
 
@@ -119,16 +108,12 @@ namespace UHub.CoreLib.Entities.Posts.Management
             }
 
 
-            return SqlWorker.ExecBasicQuery(
+            return SqlWorker.ExecBasicQuery<Post>(
                 _dbConn,
                 "[dbo].[Posts_GetBySchool]",
                 (cmd) =>
                 {
                     cmd.Parameters.Add("@SchoolID", SqlDbType.BigInt).Value = SchoolID;
-                },
-                (row) =>
-                {
-                    return row.ToCustomDBType<Post>();
                 });
         }
 
@@ -146,22 +131,53 @@ namespace UHub.CoreLib.Entities.Posts.Management
             }
 
 
-            return SqlWorker.ExecBasicQuery(
+            return SqlWorker.ExecBasicQuery<Post>(
                 _dbConn,
                 "[dbo].[Posts_GetByClub]",
                 (cmd) =>
                 {
                     cmd.Parameters.Add("@SchoolClubID", SqlDbType.BigInt).Value = SchoolClubID;
-                },
-                (row) =>
-                {
-                    return row.ToCustomDBType<Post>();
                 });
         }
 
-        
+
 
 
         #endregion Group
+
+        #region Counters
+
+        public static IEnumerable<PostClusteredCount> GetPostClusteredCounts()
+        {
+            if (!CoreFactory.Singleton.IsEnabled)
+            {
+                throw new SystemDisabledException();
+            }
+
+
+            return SqlWorker.ExecBasicQuery<PostClusteredCount>(
+                _dbConn,
+                "[dbo].[Posts_GetClusteredCounts]",
+                (cmd) => { });
+        }
+
+        public static IEnumerable<PostClusteredCount> GetPostClusteredCounts(long SchoolID)
+        {
+            if (!CoreFactory.Singleton.IsEnabled)
+            {
+                throw new SystemDisabledException();
+            }
+
+
+            return SqlWorker.ExecBasicQuery<PostClusteredCount>(
+                _dbConn,
+                "[dbo].[Posts_GetClusteredCountsBySchool]",
+                (cmd) =>
+                {
+                    cmd.Parameters.Add("@SchoolID", SqlDbType.BigInt).Value = SchoolID;
+                });
+        }
+
+        #endregion Counters
     }
 }

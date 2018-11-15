@@ -130,7 +130,8 @@ namespace UHub.CoreLib.Security.Authentication
                 //write user auth cookie
                 try
                 {
-                    var tkn = authWorker.GenerateAuthToken(IsPersistent, cmsUser);
+                    var context = HttpContext.Current;
+                    var tkn = authWorker.GenerateAuthToken(IsPersistent, cmsUser, context);
                     token = tkn.Encrypt();
                     return true;
                 }

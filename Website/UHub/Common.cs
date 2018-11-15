@@ -146,17 +146,17 @@ namespace UHub
                     LoginURL = "~/Account/Login",
                     DefaultAuthFwdURL = "~/Account",
                     AcctConfirmURL = "~/Account/Confirm",
-                    AcctPswdResetURL = "~/Account/ResetPassword",
+                    AcctPswdRecoveryURL = "~/Account/Recover",
                     AcctPswdUpdateURL = "~/Account/UpdatePassword",
-                    AcctPswdResetExpiration = new TimeSpan(0, 0, 30, 0),
-                    EnableRecaptcha = (env == "PRD"),                //CAPTCHA
+                    AcctPswdRecoveryExpiration = new TimeSpan(0, 0, 30, 0),
+                    EnableRecaptcha = true,                //CAPTCHA
                     RecaptchaPublicKey = captchaPublicKey,
                     RecaptchaPrivateKey = captchaPrivateKey,
-                    AutoConfirmNewAccounts = true,
+                    AutoConfirmNewAccounts = false,
                     AutoApproveNewAccounts = true,
-                    EnableTokenVersioning = false,           //VERSION
+                    EnableTokenVersioning = true,           //VERSION
                     CookieSameSiteMode = CookieSameSiteModes.Lax,
-                    EnablePswdReset = true,
+                    EnablePswdRecovery = true,
                     EnablePersistentAuthTokens = true,
                     HtmlSanitizerMode = HtmlSanitizerMode.OnWrite | HtmlSanitizerMode.OnRead
                 },
@@ -166,6 +166,7 @@ namespace UHub
                     //EnableUserActivityLogging = true,
                     LocalLogMode = LocalLoggingMode.SystemEvents,
                     LoggingSource = LoggingSource.UHUB_CMS,
+                    UsageLogMode = UsageLoggingMode.None,
                     GoogleAnalyticsKey = googleAnalyticsKey
                 },
                 Errors = new CmsConfig_Errors
@@ -286,17 +287,17 @@ namespace UHub
                     LoginURL = "~/Account/Login",
                     DefaultAuthFwdURL = "~/Account",
                     AcctConfirmURL = "~/Account/Confirm",
-                    AcctPswdResetURL = "~/Account/ResetPassword",
+                    AcctPswdRecoveryURL = "~/Account/Recover",
                     AcctPswdUpdateURL = "~/Account/UpdatePassword",
-                    AcctPswdResetExpiration = new TimeSpan(0, 0, 30, 0),
-                    EnableRecaptcha = (env == "PRD"),                //CAPTCHA
+                    AcctPswdRecoveryExpiration = new TimeSpan(0, 0, 30, 0),
+                    EnableRecaptcha = false,                //CAPTCHA
                     RecaptchaPublicKey = captchaPublicKey,
                     RecaptchaPrivateKey = captchaPrivateKey,
                     AutoConfirmNewAccounts = true,
                     AutoApproveNewAccounts = true,
                     EnableTokenVersioning = false,           //VERSION
                     CookieSameSiteMode = CookieSameSiteModes.Lax,
-                    EnablePswdReset = true,
+                    EnablePswdRecovery = true,
                     EnablePersistentAuthTokens = true,
                     HtmlSanitizerMode = HtmlSanitizerMode.OnWrite | HtmlSanitizerMode.OnRead
                 },
@@ -306,6 +307,7 @@ namespace UHub
                     //EnableUserActivityLogging = true,
                     LocalLogMode = LocalLoggingMode.SystemEvents,
                     LoggingSource = LoggingSource.UHUB_CMS,
+                    UsageLogMode = UsageLoggingMode.None,
                     GoogleAnalyticsKey = googleAnalyticsKey
                 },
                 Errors = new CmsConfig_Errors

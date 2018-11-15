@@ -1,0 +1,36 @@
+﻿@{
+    ViewBag.Title = "Account Recovery";
+}
+
+<h2>Account Recovery</h2>
+
+@{
+    Html.BeginForm();
+}
+
+
+
+
+<input type="password" name="txt_RecoveryKey" placeholder="Recovery Key:">
+
+<p></p>
+
+<input type="password" name="txt_NewPswd" placeholder="New Password:"><br />
+<input type="password" name="txt_ConfirmPswd" placeholder="Confirm Password:">
+
+
+<p>@ViewBag.Message</p>
+
+@{
+    Html.RenderPartial("~/Views/Security/_RecaptchaPartial.cshtml", new UHub.Models.Security.RecaptchaLoginViewModel
+    {
+        SubmitValue = "Login",
+        SubmitClass = "CSS_CLASS",
+    });
+}
+
+
+
+@{
+    Html.EndForm();
+}

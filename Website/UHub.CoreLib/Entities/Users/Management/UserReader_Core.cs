@@ -131,17 +131,14 @@ namespace UHub.CoreLib.Entities.Users.Management
             }
 
 
-            return SqlWorker.ExecBasicQuery(
+            return SqlWorker.ExecBasicQuery<User>(
                 _dbConn,
                 "[dbo].[User_GetByID]",
                 (cmd) =>
                 {
                     cmd.Parameters.Add("@UserID", SqlDbType.BigInt).Value = UserID;
-                },
-                (reader) =>
-                {
-                    return reader.ToCustomDBType<User>();
-                }).SingleOrDefault();
+                })
+                .SingleOrDefault();
         }
 
         /// <summary>
@@ -157,17 +154,14 @@ namespace UHub.CoreLib.Entities.Users.Management
             }
 
 
-            return SqlWorker.ExecBasicQuery(
+            return SqlWorker.ExecBasicQuery<User>(
                 _dbConn,
                 "[dbo].[User_GetByEmail]",
                 (cmd) =>
                 {
                     cmd.Parameters.Add("@Email", SqlDbType.NVarChar).Value = HandleParamEmpty(Email);
-                },
-                (reader) =>
-                {
-                    return reader.ToCustomDBType<User>();
-                }).SingleOrDefault();
+                })
+                .SingleOrDefault();
         }
 
         /// <summary>
@@ -182,18 +176,15 @@ namespace UHub.CoreLib.Entities.Users.Management
                 throw new SystemDisabledException();
             }
 
-            return SqlWorker.ExecBasicQuery(
+            return SqlWorker.ExecBasicQuery<User>(
                 _dbConn,
                 "[dbo].[User_GetByUsername]",
                 (cmd) =>
                 {
                     cmd.Parameters.Add("@Username", SqlDbType.NVarChar).Value = HandleParamEmpty(Username);
                     cmd.Parameters.Add("@Domain", SqlDbType.NVarChar).Value = HandleParamEmpty(Domain);
-                },
-                (reader) =>
-                {
-                    return reader.ToCustomDBType<User>();
-                }).SingleOrDefault();
+                })
+                .SingleOrDefault();
         }
         #endregion Individual
 
@@ -203,7 +194,7 @@ namespace UHub.CoreLib.Entities.Users.Management
         /// Get users with lower security class
         /// </summary>
         /// <returns></returns>
-        public static IEnumerable<User> GetUsers()
+        public static IEnumerable<User> GetAllUsers()
         {
 
             if (!CoreFactory.Singleton.IsEnabled)
@@ -212,14 +203,7 @@ namespace UHub.CoreLib.Entities.Users.Management
             }
 
 
-            return SqlWorker.ExecBasicQuery(
-                _dbConn,
-                "[dbo].[User_GetAll]",
-                (cmd) => { },
-                (row) =>
-                {
-                    return row.ToCustomDBType<User>();
-                });
+            return SqlWorker.ExecBasicQuery<User>(_dbConn, "[dbo].[User_GetAll]");
         }
         #endregion Group
 

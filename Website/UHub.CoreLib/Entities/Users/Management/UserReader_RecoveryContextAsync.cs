@@ -14,20 +14,16 @@ namespace UHub.CoreLib.Entities.Users.Management
     public static partial class UserReader
     {
 
-        public static async Task<IUserRecoveryContext> GetUserRecoveryContextAsync(long UserID)
+        public static async Task<IUserRecoveryContext> GetRecoveryContextAsync(long UserID)
         {
             try
             {
-                var temp = await SqlWorker.ExecBasicQueryAsync(
+                var temp = await SqlWorker.ExecBasicQueryAsync<UserRecoveryContext>(
                     _dbConn,
                     "[dbo].[User_GetRecoveryContextByUserID]",
                     (cmd) =>
                     {
                         cmd.Parameters.Add("@UserID", SqlDbType.BigInt).Value = UserID;
-                    },
-                    (reader) =>
-                    {
-                        return reader.ToCustomDBType<UserRecoveryContext>();
                     });
 
 
@@ -40,20 +36,16 @@ namespace UHub.CoreLib.Entities.Users.Management
             }
         }
 
-        public static async Task<IUserRecoveryContext> GetUserRecoveryContextAsync(string RecoveryID)
+        public static async Task<IUserRecoveryContext> GetRecoveryContextAsync(string RecoveryID)
         {
             try
             {
-                var temp = await SqlWorker.ExecBasicQueryAsync(
+                var temp = await SqlWorker.ExecBasicQueryAsync<UserRecoveryContext>(
                     _dbConn,
                     "[dbo].[User_GetRecoveryContextByID]",
                     (cmd) =>
                     {
                         cmd.Parameters.Add("@RecoveryID", SqlDbType.NVarChar).Value = RecoveryID;
-                    },
-                    (reader) =>
-                    {
-                        return reader.ToCustomDBType<UserRecoveryContext>();
                     });
 
                 return temp.SingleOrDefault();

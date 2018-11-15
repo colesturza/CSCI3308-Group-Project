@@ -28,14 +28,7 @@ namespace UHub.CoreLib.Entities.Schools.Management
             }
 
 
-            return SqlWorker.ExecBasicQuery(
-                _dbConn,
-                "[dbo].[Schools_GetAll]",
-                (cmd) => { },
-                (reader) =>
-                {
-                    return reader.ToCustomDBType<School>();
-                });
+            return SqlWorker.ExecBasicQuery<School>(_dbConn, "[dbo].[Schools_GetAll]");
 
         }
 
@@ -52,17 +45,14 @@ namespace UHub.CoreLib.Entities.Schools.Management
                 throw new SystemDisabledException();
             }
 
-            return SqlWorker.ExecBasicQuery(
+            return SqlWorker.ExecBasicQuery<School>(
                 _dbConn,
                 "[dbo].[School_GetByID]",
                 (cmd) =>
                 {
                     cmd.Parameters.Add("@SchoolID", SqlDbType.BigInt).Value = SchoolID;
-                },
-                (reader) =>
-                {
-                    return reader.ToCustomDBType<School>();
-                }).SingleOrDefault();
+                })
+                .SingleOrDefault();
         }
 
 
@@ -78,17 +68,14 @@ namespace UHub.CoreLib.Entities.Schools.Management
                 throw new SystemDisabledException();
             }
 
-            return SqlWorker.ExecBasicQuery(
+            return SqlWorker.ExecBasicQuery<School>(
                 _dbConn,
                 "[dbo].[School_GetByName]",
                 (cmd) =>
                 {
                     cmd.Parameters.Add("@SchoolName", SqlDbType.NVarChar).Value = @SchoolName;
-                },
-                (reader) =>
-                {
-                    return reader.ToCustomDBType<School>();
-                }).SingleOrDefault();
+                })
+                .SingleOrDefault();
         }
 
 
@@ -106,17 +93,14 @@ namespace UHub.CoreLib.Entities.Schools.Management
             }
 
 
-            return SqlWorker.ExecBasicQuery(
+            return SqlWorker.ExecBasicQuery<School>(
                 _dbConn,
                 "[dbo].[School_GetByEmail]",
                 (cmd) =>
                 {
                     cmd.Parameters.Add("@Email", SqlDbType.NVarChar).Value = Email;
-                },
-                (reader) =>
-                {
-                    return reader.ToCustomDBType<School>();
-                }).SingleOrDefault();
+                })
+                .SingleOrDefault();
         }
 
 
@@ -133,17 +117,14 @@ namespace UHub.CoreLib.Entities.Schools.Management
             }
 
 
-            return SqlWorker.ExecBasicQuery(
+            return SqlWorker.ExecBasicQuery<School>(
                 _dbConn,
                 "[dbo].[School_GetByDomain]",
                 (cmd) =>
                 {
                     cmd.Parameters.Add("@Domain", SqlDbType.NVarChar).Value = Domain;
-                },
-                (reader) =>
-                {
-                    return reader.ToCustomDBType<School>();
-                }).SingleOrDefault();
+                })
+                .SingleOrDefault();
         }
 
 

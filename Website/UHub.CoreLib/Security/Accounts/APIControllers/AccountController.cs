@@ -30,7 +30,7 @@ namespace UHub.CoreLib.Security.Accounts.APIControllers
 
         [HttpPost()]
         [Route("CreateUser")]
-        public IHttpActionResult CreateUser([FromBody] User_C_PublicDTO user)
+        public async Task<IHttpActionResult> CreateUser([FromBody] User_C_PublicDTO user)
         {
             string status = "";
             HttpStatusCode statCode = HttpStatusCode.BadRequest;
@@ -56,14 +56,14 @@ namespace UHub.CoreLib.Security.Accounts.APIControllers
             var enableFailCode = CoreFactory.Singleton.Properties.EnableInternalAPIErrors;
             status = "Account Creation Failed";
             statCode = HttpStatusCode.BadRequest;
+            bool userCanLogin = false;
 
             try
             {
-                var isCreated = CoreFactory.Singleton.Accounts.TryCreateUser(
+                var resultCode = await CoreFactory.Singleton.Accounts.TryCreateUserAsync(
                     tmpUser,
                     true,
-                    out var resultCode,
-                    (code) =>
+                    GeneralFailHandler: (code) =>
                     {
                         statCode = HttpStatusCode.InternalServerError;
                         if (enableFailCode)
@@ -71,12 +71,14 @@ namespace UHub.CoreLib.Security.Accounts.APIControllers
                             status = code.ToString();
                         }
                     },
-                    (newUser, canLogin) =>
+                    SuccessHandler: (newUser, canLogin) =>
                     {
                         status = "User Created";
                         statCode = HttpStatusCode.OK;
+                        userCanLogin = canLogin;
                     });
 
+                var isCreated = (resultCode == AccountResultCode.Success);
 
                 if (!isCreated && enableDetail)
                 {
@@ -105,7 +107,14 @@ namespace UHub.CoreLib.Security.Accounts.APIControllers
             }
 
 
-            return Content(statCode, status);
+
+            var responseObj = new
+            {
+                status,
+                canLogin = userCanLogin
+            };
+
+            return Content(statCode, responseObj);
 
         }
 

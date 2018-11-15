@@ -5,7 +5,7 @@ CREATE proc [dbo].[Post_Create]
 	--CREATE PARAMETERS
 	
 	--DYNAMIC
-	@Name nvarchar(200),
+	@Name nvarchar(max),
 	@Content nvarchar(max),
 	@IsLocked bit null = null,
 	@CanComment bit null = null,

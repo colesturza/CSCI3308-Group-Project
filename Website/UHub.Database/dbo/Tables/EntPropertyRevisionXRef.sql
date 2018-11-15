@@ -11,6 +11,8 @@
 );
 
 
+
+
 GO
 CREATE NONCLUSTERED INDEX [IX_EntPropertyRevisionXRef]
     ON [dbo].[EntPropertyRevisionXRef]([EntID] ASC, [EntTypeID] ASC, [PropID] ASC);

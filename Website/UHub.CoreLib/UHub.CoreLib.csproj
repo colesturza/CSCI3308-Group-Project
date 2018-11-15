@@ -192,6 +192,7 @@
     <Compile Include="Entities\Comments\Interfaces\IComment_C_Public.cs" />
     <Compile Include="Entities\Comments\Interfaces\IComment_R_Public.cs" />
     <Compile Include="Entities\Comments\Management\CommentReader_CoreAsync.cs" />
+    <Compile Include="Entities\Comments\Management\CommentWriterAsync.cs" />
     <Compile Include="Entities\Comments\Management\CommentWriter.cs" />
     <Compile Include="Entities\Comments\Management\CommentReader_Core.cs" />
     <Compile Include="Entities\Files\File.cs" />
@@ -201,6 +202,7 @@
     <Compile Include="Entities\Posts\APIControllers\PostController_C.cs" />
     <Compile Include="Entities\Posts\APIControllers\PostController_Core.cs" />
     <Compile Include="Entities\Posts\APIControllers\PostController_R.cs" />
+    <Compile Include="Entities\Posts\APIControllers\PostController_R_ByParent.cs" />
     <Compile Include="Entities\Posts\APIControllers\PostController_R_ByClub.cs" />
     <Compile Include="Entities\Posts\APIControllers\PostController_R_BySchool.cs" />
     <Compile Include="Entities\Posts\DTOs\Post_C_PublicDTO.cs" />
@@ -218,6 +220,7 @@
     <Compile Include="Entities\ClubModerators\Interfaces\IClubModerator_R_Public.cs" />
     <Compile Include="Entities\ClubModerators\Management\ClubModeratorReader_Core.cs" />
     <Compile Include="Entities\ClubModerators\ClubModerator.cs" />
+    <Compile Include="Entities\Posts\PostClusteredCount.cs" />
     <Compile Include="Entities\SchoolClubs\APIControllers\SchoolClubController_C.cs" />
     <Compile Include="Entities\SchoolClubs\APIControllers\SchoolClubController_Core.cs" />
     <Compile Include="Entities\SchoolClubs\APIControllers\SchoolClubController_R.cs" />
@@ -251,6 +254,8 @@
     <Compile Include="Entities\Users\Interfaces\IUserCredential.cs" />
     <Compile Include="Entities\Users\Interfaces\IUserRecoveryContextAsync.cs" />
     <Compile Include="Entities\Users\Management\UserReader_CoreAsync.cs" />
+    <Compile Include="Entities\Users\Management\UserReader_EntClubAsync.cs" />
+    <Compile Include="Entities\Users\Management\UserReader_EntClub.cs" />
     <Compile Include="Entities\Users\Management\UserReader_EntClubModsAsync.cs" />
     <Compile Include="Entities\Users\Management\UserReader_EntCommentsAsync.cs" />
     <Compile Include="Entities\Users\Management\UserReader_EntComments.cs" />
@@ -259,8 +264,13 @@
     <Compile Include="Entities\Users\Management\UserReader_EntPosts.cs" />
     <Compile Include="Entities\Users\Management\UserReader_RecoveryContextAsync.cs" />
     <Compile Include="Entities\Users\Management\UserWriterAsync.cs" />
+    <Compile Include="Entities\Users\Management\UserWriter_Core.cs" />
+    <Compile Include="Entities\Users\Management\UserWriter_RecoveryContext.cs" />
+    <Compile Include="Entities\Users\Management\UserWriter_RecoveryContextAsync.cs" />
     <Compile Include="Entities\Users\UserAsync.cs" />
+    <Compile Include="Entities\Users\UserRecoveryContextAsync.cs" />
     <Compile Include="ErrorHandling\Exceptions\AccessForbiddenException.cs" />
+    <Compile Include="ErrorHandling\Exceptions\ConfigBootstrapException.cs" />
     <Compile Include="ErrorHandling\Exceptions\ConfigurationException.cs" />
     <Compile Include="ErrorHandling\Exceptions\EntityGoneException.cs" />
     <Compile Include="ErrorHandling\Exceptions\InvalidDBCastException.cs" />

@@ -32,8 +32,8 @@ namespace UHub.CoreLib.Entities.Users.Management
             try
             {
 
-                long? userID = await SqlWorker.ExecScalarAsync<long?>
-                    (CoreFactory.Singleton.Properties.CmsDBConfig,
+                long? userID = await SqlWorker.ExecScalarAsync<long?>(
+                    _dbConn,
                     "[dbo].[User_Create]",
                     (cmd) =>
                     {
@@ -90,7 +90,7 @@ namespace UHub.CoreLib.Entities.Users.Management
 
                 //run sproc
                 await SqlWorker.ExecNonQueryAsync(
-                    CoreFactory.Singleton.Properties.CmsDBConfig,
+                    _dbConn,
                     "[dbo].[User_UpdateByID]",
                     (cmd) =>
                     {
@@ -135,7 +135,7 @@ namespace UHub.CoreLib.Entities.Users.Management
             try
             {
                 return await SqlWorker.ExecScalarAsync<bool>(
-                        CoreFactory.Singleton.Properties.CmsDBConfig,
+                        _dbConn,
                         "[dbo].[User_UpdateConfirmFlag]",
                         (cmd) =>
                         {
@@ -163,7 +163,7 @@ namespace UHub.CoreLib.Entities.Users.Management
             try
             {
                 await SqlWorker.ExecNonQueryAsync(
-                    CoreFactory.Singleton.Properties.CmsDBConfig,
+                    _dbConn,
                     "[dbo].[User_UpdateApprovalFlag]",
                     (cmd) =>
                     {
@@ -195,7 +195,7 @@ namespace UHub.CoreLib.Entities.Users.Management
             try
             {
                 await SqlWorker.ExecNonQueryAsync(
-                    CoreFactory.Singleton.Properties.CmsDBConfig,
+                    _dbConn,
                     "[dbo].[User_UpdateVersionByID]",
                     (cmd) =>
                     {
@@ -227,7 +227,7 @@ namespace UHub.CoreLib.Entities.Users.Management
             try
             {
                 await SqlWorker.ExecNonQueryAsync(
-                    CoreFactory.Singleton.Properties.CmsDBConfig,
+                    _dbConn,
                     "[dbo].[User_DeleteByID]",
                     (cmd) =>
                     {
@@ -257,7 +257,7 @@ namespace UHub.CoreLib.Entities.Users.Management
             try
             {
                 await SqlWorker.ExecNonQueryAsync(
-                    CoreFactory.Singleton.Properties.CmsDBConfig,
+                    _dbConn,
                     "[dbo].[User_PurgeByID]",
                     (cmd) =>
                     {
@@ -285,7 +285,7 @@ namespace UHub.CoreLib.Entities.Users.Management
             try
             {
                 await SqlWorker.ExecNonQueryAsync(
-                    CoreFactory.Singleton.Properties.CmsDBConfig,
+                    _dbConn,
                     "[dbo].[User_PurgeByEmail]",
                     (cmd) =>
                     {
@@ -315,8 +315,8 @@ namespace UHub.CoreLib.Entities.Users.Management
                 //users created afgter this date will be ignored
                 var minKeepDate = DateTimeOffset.UtcNow - AcctAgeTolerance;
 
-                await SqlWorker.ExecNonQueryAsync
-                    (CoreFactory.Singleton.Properties.CmsDBConfig,
+                await SqlWorker.ExecNonQueryAsync(
+                    _dbConn,
                     "[dbo].[Users_PurgeUnconfirmed]",
                     (cmd) =>
                     {
@@ -335,150 +335,6 @@ namespace UHub.CoreLib.Entities.Users.Management
                 return false;
             }
         }
-
-
-        #region Recovery
-        /// <summary>
-        /// Create an account recovery context for a specified user
-        /// </summary>
-        /// <param name="UserUID"></param>
-        /// <param name="RecoveryKey"></param>
-        /// <returns>RecoveryID for the recovery context</returns>
-        internal static async Task<IUserRecoveryContext> CreateRecoveryContextAsync(long UserID, string RecoveryKey, bool IsTemporary, bool IsOptional)
-        {
-            DateTimeOffset resetExpiration;
-
-            if (IsTemporary)
-            {
-                var span = CoreFactory.Singleton.Properties.AcctPswdResetExpiration;
-                if (span.Ticks == 0)
-                {
-                    resetExpiration = DateTimeOffset.MaxValue;
-                }
-                else
-                {
-                    resetExpiration = DateTimeOffset.Now.Add(span);
-                }
-            }
-            else
-            {
-                if (IsOptional)
-                {
-                    resetExpiration = DateTimeOffset.Now.AddMonths(1);
-                }
-                else
-                {
-                    resetExpiration = DateTimeOffset.MaxValue.Date;
-                }
-            }
-
-            try
-            {
-                var temp = await SqlWorker.ExecBasicQueryAsync(
-                    CoreFactory.Singleton.Properties.CmsDBConfig,
-                    "[dbo].[User_CreateRecoveryContext]",
-                    (cmd) =>
-                    {
-                        cmd.Parameters.Add("@UserID", SqlDbType.BigInt).Value = HandleParamEmpty(UserID);
-                        cmd.Parameters.Add("@RecoveryKey", SqlDbType.NVarChar).Value = RecoveryKey;
-                        cmd.Parameters.Add("@EffToDate", SqlDbType.DateTimeOffset).Value = resetExpiration;
-                        cmd.Parameters.Add("@IsOptional", SqlDbType.Bit).Value = IsOptional;
-                    }, (reader) =>
-                    {
-                        var output = reader.ToCustomDBType<UserRecoveryContext>();
-                        return output;
-                    });
-
-
-                return temp.SingleOrDefault();
-            }
-            catch (Exception ex)
-            {
-                var errCode = "2CE3A9C1-DFC0-4AD0-B0F0-B893DAD61695";
-                Exception ex_outer = new Exception(errCode, ex);
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
-
-                return null;
-            }
-
-        }
-
-        internal static async Task<bool> TryLogFailedRecoveryContextAttemptAsync(string RecoveryID)
-        {
-            try
-            {
-                await SqlWorker.ExecNonQueryAsync(
-                    CoreFactory.Singleton.Properties.CmsDBConfig,
-                    "[dbo].[User_LogFailedRecoveryContextAttempt]",
-                    (cmd) =>
-                    {
-                        cmd.Parameters.Add("@RecoveryID", SqlDbType.NVarChar).Value = RecoveryID;
-                    });
-
-
-                return true;
-            }
-            catch (Exception ex)
-            {
-                var errCode = "7BF7BD80-7A27-4DEC-9AE1-46FEF34F93FD";
-                Exception ex_outer = new Exception(errCode, ex);
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
-
-
-                return false;
-            }
-        }
-
-        internal static async Task<bool> TryDeleteRecoveryContextAsync(string RecoveryID)
-        {
-            try
-            {
-                await SqlWorker.ExecNonQueryAsync(
-                    CoreFactory.Singleton.Properties.CmsDBConfig,
-                    "[dbo].[User_DeleteUserRecoveryContextByID]",
-                    (cmd) =>
-                    {
-                        cmd.Parameters.Add("@RecoveryID", SqlDbType.NVarChar).Value = RecoveryID;
-                    });
-
-                return true;
-            }
-            catch (Exception ex)
-            {
-                var errCode = "5A5DCF9F-2C25-4539-9F74-C7BC99EA192D";
-                Exception ex_outer = new Exception(errCode, ex);
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
-
-                return false;
-            }
-        }
-
-        internal static async Task<bool> TryDeleteRecoveryContextAsync(int UserID)
-        {
-            try
-            {
-                await SqlWorker.ExecNonQueryAsync(
-                    CoreFactory.Singleton.Properties.CmsDBConfig,
-                    "[dbo].[User_DeleteUserRecoveryContextByUserID]",
-                    (cmd) =>
-                    {
-                        cmd.Parameters.Add("@UserID", SqlDbType.BigInt).Value = UserID;
-                    });
-
-
-                return true;
-            }
-            catch (Exception ex)
-            {
-                var errCode = "8932F761-80E0-4960-99D9-B0995D6F2C3A";
-                Exception ex_outer = new Exception(errCode, ex);
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
-
-
-                return false;
-            }
-        }
-        #endregion Recovery
 
 
     }

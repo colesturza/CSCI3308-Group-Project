@@ -12,6 +12,7 @@ using UHub.CoreLib.Entities.Users;
 using UHub.CoreLib.Entities.Users.Interfaces;
 using UHub.CoreLib.Entities.Users.Management;
 using System.Text.RegularExpressions;
+using System.Web;
 
 namespace UHub.CoreLib.Security.Authentication
 {

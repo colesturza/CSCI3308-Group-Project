@@ -27,13 +27,13 @@ namespace UHub.CoreLib.Entities.SchoolClubs.APIControllers
         [HttpPost]
         [Route("GetAllBySchool")]
         [ApiAuthControl]
-        public IHttpActionResult GetAllBySchool()
+        public async Task<IHttpActionResult> GetAllBySchool()
         {
 
             var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser();
             var schoolID = cmsUser.SchoolID.Value;
 
-            var clubSet = SchoolClubReader.GetClubsBySchool(schoolID);
+            var clubSet = await SchoolClubReader.GetClubsBySchoolAsync(schoolID);
 
 
             return Ok(clubSet.Select(x=>x.ToDto<SchoolClub_R_PublicDTO>()));

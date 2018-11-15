@@ -14,20 +14,16 @@ namespace UHub.CoreLib.Entities.Users.Management
     public static partial class UserReader
     {
 
-        public static IUserRecoveryContext GetUserRecoveryContext(long UserID)
+        public static IUserRecoveryContext GetRecoveryContext(long UserID)
         {
             try
             {
-                return SqlWorker.ExecBasicQuery(
+                return SqlWorker.ExecBasicQuery<UserRecoveryContext>(
                     _dbConn,
                     "[dbo].[User_GetRecoveryContextByUserID]",
                     (cmd) =>
                     {
                         cmd.Parameters.Add("@UserID", SqlDbType.BigInt).Value = UserID;
-                    },
-                    (reader) =>
-                    {
-                        return reader.ToCustomDBType<UserRecoveryContext>();
                     }).SingleOrDefault();
             }
             catch (Exception ex)
@@ -37,22 +33,18 @@ namespace UHub.CoreLib.Entities.Users.Management
             }
         }
 
-        public static IUserRecoveryContext GetUserRecoveryContext(string RecoveryID)
+        public static IUserRecoveryContext GetRecoveryContext(string RecoveryID)
         {
             try
             {
-                return SqlWorker.ExecBasicQuery(
+                return SqlWorker.ExecBasicQuery<UserRecoveryContext>(
                     _dbConn,
                     "[dbo].[User_GetRecoveryContextByID]",
                     (cmd) =>
                     {
                         cmd.Parameters.Add("@RecoveryID", SqlDbType.NVarChar).Value = RecoveryID;
-                    },
-                    (reader) =>
-                    {
-                        return reader.ToCustomDBType<UserRecoveryContext>();
-                        
-                    }).SingleOrDefault();
+                    })
+                    .SingleOrDefault();
             }
             catch (Exception ex)
             {

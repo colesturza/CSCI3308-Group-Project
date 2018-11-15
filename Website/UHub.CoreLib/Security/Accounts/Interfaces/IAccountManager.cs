@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UHub.CoreLib.Entities.Users;
+using UHub.CoreLib.Entities.Users.Interfaces;
 
 namespace UHub.CoreLib.Security.Accounts.Interfaces
 {
@@ -15,14 +16,12 @@ namespace UHub.CoreLib.Security.Accounts.Interfaces
         /// <param name="UserEmail">New user email</param>
         /// <param name="UserPassword">New user password</param>
         /// <param name="AttemptAutoLogin">Should system automatically login user after creating account</param>
-        /// <param name="ResultCode">Code returned to indicate process status</param>
         /// <param name="GeneralFailHandler">Error handler in case DB cannot be reached or there is other unknown error</param>
         /// <param name="SuccessHandler">Args: new user object, auto login [T|F]</param>
         /// <returns>Status Flag</returns>
-        bool TryCreateUser(
+        AccountResultCode TryCreateUser(
             User NewUser,
             bool AttemptAutoLogin,
-            out AccountResultCode ResultCode,
             Action<Guid> GeneralFailHandler = null,
             Action<User, bool> SuccessHandler = null);
 
@@ -68,15 +67,13 @@ namespace UHub.CoreLib.Security.Accounts.Interfaces
         /// <param name="OldPassword">Old user password</param>
         /// <param name="NewPassword">New user password</param>
         /// <param name="DeviceLogout">If true, user will be logged out of all other devices</param>
-        /// <param name="ResultCode">Code returned to indicate process status</param>
         /// <param name="GeneralFailHandler">Error handler in case DB cannot be reached or there is other unknown error</param>
         /// <returns>Status flag</returns>
-        bool TryUpdatePassword(
+        AccountResultCode TryUpdatePassword(
             string UserEmail,
             string OldPassword,
             string NewPassword,
             bool DeviceLogout,
-            out AccountResultCode ResultCode,
             Action<Guid> GeneralFailHandler = null);
         /// <summary>
         /// Attempt to update a user password. Requires validation against the current password. User will be signed out of all locations upon completion
@@ -85,15 +82,31 @@ namespace UHub.CoreLib.Security.Accounts.Interfaces
         /// <param name="OldPassword">Old user password</param>
         /// <param name="NewPassword">New user password</param>
         /// <param name="DeviceLogout">If true, user will be logged out of all other devices</param>
-        /// <param name="ResultCode">Code returned to indicate process status</param>
         /// <param name="GeneralFailHandler">Error handler in case DB cannot be reached or there is other unknown error</param>
         /// <returns>Status flag</returns>
-        bool TryUpdatePassword(
+        AccountResultCode TryUpdatePassword(
             long UserID,
             string OldPassword,
             string NewPassword,
             bool DeviceLogout,
-            out AccountResultCode ResultCode,
+            Action<Guid> GeneralFailHandler = null);
+
+
+
+        /// <summary>
+        /// Attempt to recover account password using a recovery context ID and key
+        /// </summary>
+        /// <param name="RecoveryContextID"></param>
+        /// <param name="RecoveryKey"></param>
+        /// <param name="NewPassword"></param>
+        /// <param name="DeviceLogout"></param>
+        /// <param name="GeneralFailHandler"></param>
+        /// <returns></returns>
+        AccountResultCode TryRecoverPassword(
+            string RecoveryContextID,
+            string RecoveryKey,
+            string NewPassword,
+            bool DeviceLogout,
             Action<Guid> GeneralFailHandler = null);
 
 
@@ -103,30 +116,30 @@ namespace UHub.CoreLib.Security.Accounts.Interfaces
         /// </summary>
         /// <param name="UserEmail">User email</param>
         /// <param name="NewPassword">New user password</param>
-        /// <param name="ResultCode">Code returned to indicate process status</param>
+        /// <param name="DeviceLogout"></param>
         /// <param name="GeneralFailHandler">Error handler in case DB cannot be reached or there is other unknown error</param>
         /// <exception cref="SystemDisabledException"></exception>
         /// <exception cref="InvalidOperationException"></exception>
         /// <returns>Status flag</returns>
-        bool TryResetPassword(
+        AccountResultCode TryResetPassword(
             string UserEmail,
             string NewPassword,
-            out AccountResultCode ResultCode,
+            bool DeviceLogout,
             Action<Guid> GeneralFailHandler = null);
         /// <summary>
         /// Attempts to reset a user password.  System level function that overrides validation against the current password. User will be signed out of all locations upon completion
         /// </summary>
         /// <param name="UserUID">User UID</param>
         /// <param name="NewPassword">New password</param>
-        /// <param name="ResultCode">Code returned to indicate process status</param>
+        /// <param name="DeviceLogout"></param>
         /// <param name="GeneralFailHandler">Error handler in case DB cannot be reached or there is other unknown error</param>
         /// <exception cref="SystemDisabledException"></exception>
         /// <exception cref="InvalidOperationException"></exception>
         /// <returns>Status flag</returns>
-        bool TryResetPassword(
-        long UserID,
+        AccountResultCode TryResetPassword(
+            long UserID,
             string NewPassword,
-            out AccountResultCode ResultCode,
+            bool DeviceLogout,
             Action<Guid> GeneralFailHandler = null);
 
 
@@ -147,5 +160,31 @@ namespace UHub.CoreLib.Security.Accounts.Interfaces
         /// <param name="Username"></param>
         /// <param name="Domain"></param>
         void DeleteUser(string Username, string Domain);
+
+
+        /// <summary>
+        /// Create a user password recovery context. Allows users to create a new password if they forget their old password.  Can be used to force a user to reset their password by setting [IsOptional=TRUE]
+        /// </summary>
+        /// <param name="UserEmail">User email</param>
+        /// <param name="IsOptional">Specify whether or not user will be forced to update password</param>
+        /// <param name="GeneralFailHandler">Error handler in case DB cannot be reached or there is other unknown error</param>
+        /// <returns></returns>
+        (AccountResultCode ResultCode, IUserRecoveryContext RecoveryContext, string RecoveryKey) TryCreateUserRecoveryContext(
+            string UserEmail,
+            bool IsOptional,
+            Action<Guid> GeneralFailHandler = null);
+
+
+        /// <summary>
+        /// Create a user password recovery context. Allows users to create a new password if they forget their old password.  Can be used to force a user to reset their password by setting [IsOptional=TRUE]
+        /// </summary>
+        /// <param name="UserUID">User UID</param>
+        /// <param name="IsOptional">Specify whether or not user will be forced to update password</param>
+        /// <param name="GeneralFailHandler">Error handler in case DB cannot be reached or there is other unknown error</param>
+        /// <returns></returns>
+        (AccountResultCode ResultCode, IUserRecoveryContext RecoveryContext, string RecoveryKey) TryCreateUserRecoveryContext(
+            long UserID,
+            bool IsOptional,
+            Action<Guid> GeneralFailHandler = null);
     }
 }

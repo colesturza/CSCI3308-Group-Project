@@ -12,37 +12,37 @@ namespace UHub.CoreLib.Entities.ClubModerators
     [DataClass]
     public sealed partial class ClubModerator : DBEntityBase, IClubModerator_R_Public
     {
-        [DataProperty(EnableDBColumnValidation: false)]
+        [DataProperty]
         public long? ID { get; set; }
 
-        [DataProperty(EnableDBColumnValidation: false)]
+        [DataProperty]
         public bool IsEnabled { get; set; }
 
-        [DataProperty(EnableDBColumnValidation: false)]
+        [DataProperty]
         public bool IsReadOnly { get; set; }
 
-        [DataProperty(EnableDBColumnValidation: false)]
+        [DataProperty]
         public long UserID { get; set; }
 
-        [DataProperty(EnableDBColumnValidation: false)]
+        [DataProperty]
         public bool IsOwner { get; set; }
 
-        [DataProperty(EnableDBColumnValidation: false)]
+        [DataProperty]
         public bool IsValid { get; set; }
 
-        [DataProperty(EnableDBColumnValidation: false)]
+        [DataProperty]
         public bool IsDeleted { get; set; }
 
-        [DataProperty(EnableDBColumnValidation: false)]
+        [DataProperty]
         public long CreatedBy { get; set; }
 
-        [DataProperty(EnableDBColumnValidation: false)]
+        [DataProperty]
         public DateTimeOffset CreatedDate { get; set; }
 
-        [DataProperty(EnableDBColumnValidation: false)]
+        [DataProperty]
         public long? ModifiedBy { get; set; }
 
-        [DataProperty(EnableDBColumnValidation: false)]
+        [DataProperty]
         public DateTimeOffset? ModifiedDate { get; set; }
     }
 }

@@ -6,11 +6,11 @@ CREATE proc [dbo].[School_Create]
 	--CREATE PARAMETERS
 	
 	--DYNAMIC
-	@Name nvarchar(200),
-	@State nvarchar(100),
-	@City nvarchar(200),
-	@DomainValidator nvarchar(100),
-	@Description nvarchar(500),
+	@Name nvarchar(max),
+	@State nvarchar(max),
+	@City nvarchar(max),
+	@DomainValidator nvarchar(max),
+	@Description nvarchar(max),
 
 	--CONST ENT FIELDS
 	@CreatedBy bigint null = null,

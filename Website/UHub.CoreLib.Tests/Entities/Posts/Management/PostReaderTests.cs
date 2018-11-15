@@ -18,7 +18,7 @@ using System.Collections.Concurrent;
 namespace UHub.CoreLib.Entities.Posts.Management.Tests
 {
     [TestClass()]
-    public class PostReaderTests
+    public partial class PostReaderTests
     {
         [TestMethod()]
         public void GetAllPostsTest()
@@ -69,19 +69,6 @@ namespace UHub.CoreLib.Entities.Posts.Management.Tests
             Console.WriteLine($"{(end - start).TotalMilliseconds}ms");
             start = FailoverDateTimeOffset.UtcNow;
             PostReader.GetPost(id);
-            end = FailoverDateTimeOffset.UtcNow;
-            Console.WriteLine($"{(end - start).TotalMilliseconds}ms");
-
-
-            Console.WriteLine();
-
-
-            start = FailoverDateTimeOffset.UtcNow;
-            PostReader.GetPostAsync(id).Wait();
-            end = FailoverDateTimeOffset.UtcNow;
-            Console.WriteLine($"{(end - start).TotalMilliseconds}ms");
-            start = FailoverDateTimeOffset.UtcNow;
-            PostReader.GetPostAsync(id).Wait();
             end = FailoverDateTimeOffset.UtcNow;
             Console.WriteLine($"{(end - start).TotalMilliseconds}ms");
         }
@@ -189,108 +176,6 @@ namespace UHub.CoreLib.Entities.Posts.Management.Tests
             PostReader.GetPostsByClubPage(schoolId, 3, null, 1);
 
 
-        }
-
-
-
-        [TestMethod]
-        public async Task GetPostStatTest()
-        {
-            TestGlobal.TestInit();
-            var iterCount = 50;
-
-            {
-                var samples1 = new List<double>();
-                var itmCount = 0;
-
-                var start_outer = FailoverDateTimeOffset.UtcNow;
-
-
-                Parallel.For(0, iterCount, (x) =>
-                {
-                    var start = FailoverDateTimeOffset.UtcNow;
-
-                    var set = SqlWorker.ExecBasicQuery<Post>(
-                    CoreFactory.Singleton.Properties.CmsDBConfig,
-                    "[dbo].[Posts_GetAll]",
-                    (cmd) => { },
-                    (reader) =>
-                    {
-                        return reader.ToCustomDBType<Post>();
-                    }).ToList();
-
-                    var end = FailoverDateTimeOffset.UtcNow;
-
-
-                    itmCount = set.Count;
-                    double sample = (end - start).TotalSeconds;
-                    samples1.Add(sample);
-                });
-
-                var end_outer = FailoverDateTimeOffset.UtcNow;
-                var totalTime = (end_outer - start_outer).TotalMilliseconds;
-
-                Console.WriteLine($"Synchronous:");
-                Console.WriteLine($"Iterations: {iterCount}");
-                Console.WriteLine($"Total Time: {totalTime}ms");
-                Console.WriteLine($"ItemCount: {itmCount}");
-                Console.WriteLine();
-                Console.WriteLine();
-                Console.WriteLine($"Min: {samples1.Min()}ms");
-                Console.WriteLine($"Max: {samples1.Max()}ms");
-                Console.WriteLine($"Avg: {samples1.Average()}ms");
-                Console.WriteLine($"Median: {samples1.Median()}ms");
-            }
-            Console.WriteLine("-------------------------------------------------------");
-            {
-                var samples1 = new ConcurrentBag<double>();
-                var itmCount = 0;
-
-
-                async Task worker()
-                {
-                    var start = FailoverDateTimeOffset.UtcNow;
-
-                    var set = await SqlWorker.ExecBasicQueryAsync<Post>(
-                        CoreFactory.Singleton.Properties.CmsDBConfig,
-                        "[dbo].[Posts_GetAll]",
-                        (cmd) => { },
-                        (reader) =>
-                        {
-                            return reader.ToCustomDBType<Post>();
-                        });
-
-                    var end = FailoverDateTimeOffset.UtcNow;
-
-                    itmCount = set.Count();
-                    double sample = (end - start).TotalSeconds;
-                    samples1.Add(sample);
-                }
-
-
-                var taskSet = new List<Task>();
-                var start_outer = FailoverDateTimeOffset.UtcNow;
-                for (int i = 0; i < iterCount; i++)
-                {
-                    taskSet.Add(worker());
-                }
-                await Task.WhenAll(taskSet.ToArray());
-
-
-                var end_outer = FailoverDateTimeOffset.UtcNow;
-                var totalTime = (end_outer - start_outer).TotalMilliseconds;
-
-                Console.WriteLine($"Async:");
-                Console.WriteLine($"Iterations: {iterCount}");
-                Console.WriteLine($"Total Time: {totalTime}ms");
-                Console.WriteLine($"ItemCount: {itmCount}");
-                Console.WriteLine();
-                Console.WriteLine();
-                Console.WriteLine($"Min: {samples1.Min()}ms");
-                Console.WriteLine($"Max: {samples1.Max()}ms");
-                Console.WriteLine($"Avg: {samples1.Average()}ms");
-                Console.WriteLine($"Median: {samples1.Median()}ms");
-            }
         }
 
     }

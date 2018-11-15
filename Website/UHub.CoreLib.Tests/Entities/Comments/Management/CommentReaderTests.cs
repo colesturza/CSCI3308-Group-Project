@@ -5,7 +5,7 @@ using UHub.CoreLib.Tests;
 namespace UHub.CoreLib.Entities.Comments.Management.Tests
 {
     [TestClass]
-    public class CommentReaderTests
+    public partial class CommentReaderTests
     {
         [TestMethod]
         public void GetCommentsByPostTest()
@@ -14,8 +14,9 @@ namespace UHub.CoreLib.Entities.Comments.Management.Tests
 
 
             long postID = 353;
-            CommentReader.GetCommentsByPost(postID);
+            var comments = CommentReader.GetCommentsByPost(postID);
 
+            Assert.IsNotNull(comments);
         }
 
 
@@ -26,8 +27,9 @@ namespace UHub.CoreLib.Entities.Comments.Management.Tests
 
 
             long postID = 353;
-            CommentReader.GetCommentsByParent(postID);
+            var comments = CommentReader.GetCommentsByParent(postID);
 
+            Assert.IsNotNull(comments);
         }
     }
 }

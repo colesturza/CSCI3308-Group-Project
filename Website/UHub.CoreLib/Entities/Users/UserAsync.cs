@@ -23,7 +23,7 @@ namespace UHub.CoreLib.Entities.Users
             {
                 throw new InvalidOperationException("Cannot get recovery context of anon user");
             }
-            return await UserReader.GetUserRecoveryContextAsync(this.ID.Value);
+            return await UserReader.GetRecoveryContextAsync(this.ID.Value);
         }
 
         public async Task<bool> SaveAsync()

@@ -35,15 +35,11 @@ namespace UHub.CoreLib.Entities.Comments.Management
             }
 
 
-            return SqlWorker.ExecBasicQuery(
+            return SqlWorker.ExecBasicQuery<Comment>(
                 _dbConn,
                 "[dbo].[Comments_GetByPost]",
                 (cmd) => {
                     cmd.Parameters.Add("@PostID", SqlDbType.BigInt).Value = PostID;
-                },
-                (row) =>
-                {
-                    return row.ToCustomDBType<Comment>();
                 });
         }
 
@@ -62,15 +58,11 @@ namespace UHub.CoreLib.Entities.Comments.Management
             }
 
 
-            return SqlWorker.ExecBasicQuery(
+            return SqlWorker.ExecBasicQuery<Comment>(
                 _dbConn,
                 "[dbo].[Comments_GetByParent]",
                 (cmd) => {
                     cmd.Parameters.Add("@ParentID", SqlDbType.BigInt).Value = ParentID;
-                },
-                (row) =>
-                {
-                    return row.ToCustomDBType<Comment>();
                 });
         }
         #endregion Group

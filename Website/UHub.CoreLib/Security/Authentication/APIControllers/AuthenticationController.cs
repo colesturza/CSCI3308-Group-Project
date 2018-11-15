@@ -12,6 +12,7 @@ using UHub.CoreLib.Management;
 using System.Net;
 using UHub.CoreLib.Attributes;
 using UHub.CoreLib.Entities.Users.DTOs;
+using System.Web;
 
 namespace UHub.CoreLib.Security.Authentication.APIControllers
 {
@@ -32,7 +33,7 @@ namespace UHub.CoreLib.Security.Authentication.APIControllers
 
         [Route("GetToken")]
         [HttpPost()]
-        public IHttpActionResult GetToken([FromBody] User_CredentialDTO user, bool persistent = false)
+        public async Task<IHttpActionResult> GetToken([FromBody] User_CredentialDTO user, bool persistent = false)
         {
             string status = "";
             HttpStatusCode statCode = HttpStatusCode.BadRequest;
@@ -45,9 +46,9 @@ namespace UHub.CoreLib.Security.Authentication.APIControllers
                 return Content(statCode, status);
             }
 
-            if(user == null)
+            if (user == null)
             {
-                return InternalServerError();
+                return BadRequest();
             }
             string email = user.Email;
             string password = user.Password;
@@ -61,14 +62,16 @@ namespace UHub.CoreLib.Security.Authentication.APIControllers
             string token = null;
             try
             {
+                var context = HttpContext.Current;
+
                 //if token generation fails, then create an error message to send to client
                 //if detailed errors are enabled, then give brief description
                 //if not, then present the same error for all failure types
-                token = CoreFactory.Singleton.Auth.TryGetClientAuthToken(
+                var authResultSet = await CoreFactory.Singleton.Auth.TryGetClientAuthTokenAsync(
                     email,
                     password,
                     persistent,
-                    out var ResultCode,
+                    context,
                     GeneralFailHandler: (code) =>
                     {
                         statCode = HttpStatusCode.InternalServerError;
@@ -78,6 +81,8 @@ namespace UHub.CoreLib.Security.Authentication.APIControllers
                         }
                     });
 
+                var ResultCode = authResultSet.ResultCode;
+                token = authResultSet.AuthToken;
 
                 if (enableDetail)
                 {
@@ -131,7 +136,7 @@ namespace UHub.CoreLib.Security.Authentication.APIControllers
         [Route("ExtendToken")]
         [HttpPost()]
         [ApiAuthControl]
-        public IHttpActionResult ExtendToken()
+        public async Task<IHttpActionResult> ExtendToken()
         {
             string result = "";
             HttpStatusCode statCode = HttpStatusCode.BadRequest;
@@ -146,10 +151,20 @@ namespace UHub.CoreLib.Security.Authentication.APIControllers
             //in case of any error, fail silent and return the original token
             try
             {
-                string newToken = CoreFactory.Singleton.Auth.TrySlideAuthTokenExpiration(token);
+                var context = HttpContext.Current;
 
+                var resultSet = await CoreFactory.Singleton.Auth.TrySlideAuthTokenExpirationAsync(token, context);
 
-                return Ok(newToken);
+                string newToken = resultSet.Token;
+                var status = resultSet.TokenStatus;
+                if (status == TokenValidationStatus.Success)
+                {
+                    return Ok(newToken);
+                }
+                else
+                {
+                    return Content(HttpStatusCode.Forbidden, newToken);
+                }
             }
             catch (Exception ex)
             {

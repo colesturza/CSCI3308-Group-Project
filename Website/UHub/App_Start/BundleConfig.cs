@@ -30,14 +30,14 @@ namespace UHub
 
 
             bundles.Add(new ScriptBundle("~/resources/scripts/master").Include(
-                      "~/ClientResources/Scripts/Master.js"));
+                      "~/ClientResources/Master/Scripts/Master.js"));
 
 
 
             var scssBundle = new CustomStyleBundle("~/resources/css/master").Include(
-                "~/ClientResources/Styles/Master.scss",
-                "~/ClientResources/Styles/Master_Header.scss",
-                "~/ClientResources/Styles/Master_Footer.scss");
+                "~/ClientResources/Master/Styles/Master.scss",
+                "~/ClientResources/Master/Styles/Master_Header.scss",
+                "~/ClientResources/Master/Styles/Master_Footer.scss");
             bundles.Add(scssBundle);
 
 

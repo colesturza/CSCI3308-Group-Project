@@ -21,7 +21,7 @@ namespace UHub.CoreLib.Entities.ClubModerators.APIControllers
         [HttpPost()]
         [Route("Create")]
         [ApiAuthControl]
-        public IHttpActionResult Create([FromBody] ClubModerator_C_PublicDTO clubModerator, long clubID)
+        public async Task<IHttpActionResult> Create([FromBody] ClubModerator_C_PublicDTO clubModerator, long clubID)
         {
             string status = "";
             HttpStatusCode statCode = HttpStatusCode.BadRequest;
@@ -44,15 +44,17 @@ namespace UHub.CoreLib.Entities.ClubModerators.APIControllers
             var tmpClubModerator = clubModerator.ToInternal<ClubModerator>();
             var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser();
 
-            bool isCurrentUserOwner = false;
-            bool isCurrentUserBanned = true;
-            bool isUserBanned = true;
+            
+            var taskIsCurrentUserOwner = UserReader.ValidateClubModeratorAsync(clubID, (long)cmsUser.ID);
+            var taskIsCurrentUserBanned = SchoolClubReader.IsUserBannedAsync(clubID, (long)cmsUser.ID);
+            var taskIsNewUserBanned = SchoolClubReader.IsUserBannedAsync(clubID, tmpClubModerator.UserID);
 
-            TaskList tasks = new TaskList();
-            tasks.Add(() => { isCurrentUserOwner = UserReader.ValidateClubModerator(clubID, (long)cmsUser.ID); });
-            tasks.Add(() => { isCurrentUserBanned = SchoolClubReader.IsUserBanned(clubID, (long)cmsUser.ID); });
-            tasks.Add(() => { isUserBanned = SchoolClubReader.IsUserBanned(clubID, tmpClubModerator.UserID); });
-            tasks.ExecuteAll();
+            await Task.WhenAll(taskIsCurrentUserOwner, taskIsCurrentUserBanned, taskIsNewUserBanned);
+            var isCurrentUserBanned = taskIsCurrentUserBanned.Result;
+            var isCurrentUserOwner = taskIsCurrentUserOwner.Result;
+            var isNewUserBanned = taskIsNewUserBanned.Result;
+
+
 
             if (isCurrentUserBanned || !isCurrentUserOwner)
             {
@@ -61,7 +63,7 @@ namespace UHub.CoreLib.Entities.ClubModerators.APIControllers
                 return Content(statCode, status);
             }
 
-            if (isUserBanned)
+            if (isNewUserBanned)
             {
                 status = "User is banned";
                 statCode = HttpStatusCode.Forbidden;
@@ -75,7 +77,7 @@ namespace UHub.CoreLib.Entities.ClubModerators.APIControllers
             try
             {
 
-                long? clubModID = ClubModeratorWriter.TryCreateClubModerator(tmpClubModerator, clubID);
+                long? clubModID = await ClubModeratorWriter.TryCreateClubModeratorAsync(tmpClubModerator, clubID);
 
                 if (clubModID != null)
                 {

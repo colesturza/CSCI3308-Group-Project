@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 using UHub.CoreLib.Entities.Users;
 using UHub.CoreLib.Entities.Users.Interfaces;
 
@@ -60,6 +61,7 @@ namespace UHub.CoreLib.Security.Accounts.Interfaces
             string OldPassword,
             string NewPassword,
             bool DeviceLogout,
+            HttpContext Context,
             Action<Guid> GeneralFailHandler = null);
 
 
@@ -78,6 +80,27 @@ namespace UHub.CoreLib.Security.Accounts.Interfaces
             string OldPassword,
             string NewPassword,
             bool DeviceLogout,
+            HttpContext Context,
+            Action<Guid> GeneralFailHandler = null);
+
+
+
+
+        /// <summary>
+        /// Attempt to recover account password using a recovery context ID and key
+        /// </summary>
+        /// <param name="RecoveryContextID"></param>
+        /// <param name="RecoveryKey"></param>
+        /// <param name="NewPassword"></param>
+        /// <param name="DeviceLogout"></param>
+        /// <param name="GeneralFailHandler"></param>
+        /// <returns></returns>
+        Task<AccountResultCode> TryRecoverPasswordAsync(
+            string RecoveryContextID,
+            string RecoveryKey,
+            string NewPassword,
+            bool DeviceLogout,
+            HttpContext Context,
             Action<Guid> GeneralFailHandler = null);
 
 
@@ -87,6 +110,7 @@ namespace UHub.CoreLib.Security.Accounts.Interfaces
         /// </summary>
         /// <param name="UserEmail">User email</param>
         /// <param name="NewPassword">New user password</param>
+        /// <param name="DeviceLogout"></param>
         /// <param name="GeneralFailHandler">Error handler in case DB cannot be reached or there is other unknown error</param>
         /// <exception cref="SystemDisabledException"></exception>
         /// <exception cref="InvalidOperationException"></exception>
@@ -94,6 +118,8 @@ namespace UHub.CoreLib.Security.Accounts.Interfaces
         Task<AccountResultCode> TryResetPasswordAsync(
             string UserEmail,
             string NewPassword,
+            bool DeviceLogout,
+            HttpContext Context,
             Action<Guid> GeneralFailHandler = null);
 
 
@@ -103,6 +129,7 @@ namespace UHub.CoreLib.Security.Accounts.Interfaces
         /// </summary>
         /// <param name="UserUID">User UID</param>
         /// <param name="NewPassword">New password</param>
+        /// <param name="DeviceLogout"></param>
         /// <param name="GeneralFailHandler">Error handler in case DB cannot be reached or there is other unknown error</param>
         /// <exception cref="SystemDisabledException"></exception>
         /// <exception cref="InvalidOperationException"></exception>
@@ -110,6 +137,8 @@ namespace UHub.CoreLib.Security.Accounts.Interfaces
         Task<AccountResultCode> TryResetPasswordAsync(
             long UserID,
             string NewPassword,
+            bool DeviceLogout,
+            HttpContext Context,
             Action<Guid> GeneralFailHandler = null);
 
 
@@ -133,5 +162,30 @@ namespace UHub.CoreLib.Security.Accounts.Interfaces
         /// <param name="Domain"></param>
         Task DeleteUserAsync(string Username, string Domain);
 
+
+        /// <summary>
+        /// Create a user password recovery context. Allows users to create a new password if they forget their old password.  Can be used to force a user to reset their password by setting [IsOptional=TRUE]
+        /// </summary>
+        /// <param name="UserEmail">User email</param>
+        /// <param name="IsOptional">Specify whether or not user will be forced to update password</param>
+        /// <param name="GeneralFailHandler">Error handler in case DB cannot be reached or there is other unknown error</param>
+        /// <returns></returns>
+        Task<(AccountResultCode ResultCode, IUserRecoveryContext RecoveryContext, string RecoveryKey)> TryCreateUserRecoveryContextAsync(
+            string UserEmail,
+            bool IsOptional,
+            Action<Guid> GeneralFailHandler = null);
+
+
+        /// <summary>
+        /// Create a user password recovery context. Allows users to create a new password if they forget their old password.  Can be used to force a user to reset their password by setting [IsOptional=TRUE]
+        /// </summary>
+        /// <param name="UserUID">User UID</param>
+        /// <param name="IsOptional">Specify whether or not user will be forced to update password</param>
+        /// <param name="GeneralFailHandler">Error handler in case DB cannot be reached or there is other unknown error</param>
+        /// <returns></returns>
+        Task<(AccountResultCode ResultCode, IUserRecoveryContext RecoveryContext, string RecoveryKey)> TryCreateUserRecoveryContextAsync(
+            long UserID,
+            bool IsOptional,
+            Action<Guid> GeneralFailHandler = null);
     }
 }

@@ -12,37 +12,37 @@ namespace UHub.CoreLib.Entities.SchoolClubs
     [DataClass]
     public sealed partial class SchoolClub : DBEntityBase, ISchoolClub_R_Public, ISchoolClub_C_Public
     {
-        [DataProperty(EnableDBColumnValidation: false)]
+        [DataProperty]
         public long? ID { get; set; }
 
-        [DataProperty(EnableDBColumnValidation: false)]
+        [DataProperty]
         public bool IsEnabled { get; set; }
 
-        [DataProperty(EnableDBColumnValidation: false)]
+        [DataProperty]
         public bool IsReadOnly { get; set; }
 
-        [DataProperty(EnableDBColumnValidation: false)]
+        [DataProperty]
         public string Name { get; set; }
 
-        [DataProperty(EnableDBColumnValidation: false)]
+        [DataProperty]
         public string Description { get; set; }
 
-        [DataProperty(EnableDBColumnValidation: false)]
+        [DataProperty]
         public long SchoolID { get; set; }
 
-        [DataProperty(EnableDBColumnValidation: false)]
+        [DataProperty]
         public bool IsDeleted { get; set; }
 
-        [DataProperty(EnableDBColumnValidation: false)]
+        [DataProperty]
         public long CreatedBy { get; set; }
 
-        [DataProperty(EnableDBColumnValidation: false)]
+        [DataProperty]
         public DateTimeOffset CreatedDate { get; set; }
 
-        [DataProperty(EnableDBColumnValidation: false)]
+        [DataProperty]
         public long? ModifiedBy { get; set; }
 
-        [DataProperty(EnableDBColumnValidation: false)]
+        [DataProperty]
         public DateTimeOffset? ModifiedDate { get; set; }
     }
 }

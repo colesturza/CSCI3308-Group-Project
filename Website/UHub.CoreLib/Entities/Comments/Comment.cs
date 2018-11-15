@@ -12,40 +12,40 @@ namespace UHub.CoreLib.Entities.Comments
     [DataClass]
     public sealed partial class Comment : DBEntityBase, IComment_R_Public, IComment_C_Public
     {
-        [DataProperty(EnableDBColumnValidation: false)]
+        [DataProperty]
         public long? ID { get; set; }
 
-        [DataProperty(EnableDBColumnValidation: false)]
+        [DataProperty]
         public bool IsEnabled { get; set; }
 
-        [DataProperty(EnableDBColumnValidation: false)]
+        [DataProperty]
         public bool IsReadOnly { get; set; }
 
-        [DataProperty(EnableDBColumnValidation: false)]
+        [DataProperty]
         public string Content { get; set; }
 
-        [DataProperty(EnableDBColumnValidation: false)]
+        [DataProperty]
         public bool IsModified { get; set; }
 
-        [DataProperty(EnableDBColumnValidation: false)]
+        [DataProperty]
         public long ViewCount { get; set; }
 
-        [DataProperty(EnableDBColumnValidation: false)]
+        [DataProperty]
         public long ParentID { get; set; }
 
-        [DataProperty(EnableDBColumnValidation: false)]
+        [DataProperty]
         public bool IsDeleted { get; set; }
 
-        [DataProperty(EnableDBColumnValidation: false)]
+        [DataProperty]
         public long CreatedBy { get; set; }
 
-        [DataProperty(EnableDBColumnValidation: false)]
+        [DataProperty]
         public DateTimeOffset CreatedDate { get; set; }
 
-        [DataProperty(EnableDBColumnValidation: false)]
+        [DataProperty]
         public long? ModifiedBy { get; set; }
 
-        [DataProperty(EnableDBColumnValidation: false)]
+        [DataProperty]
         public DateTimeOffset? ModifiedDate { get; set; }
     }
 }

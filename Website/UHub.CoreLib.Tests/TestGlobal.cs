@@ -118,9 +118,9 @@ namespace UHub.CoreLib.Tests
                     LoginURL = "https://u-hub.life/Account/Login",
                     DefaultAuthFwdURL = "https://u-hub.life/Account",
                     AcctConfirmURL = "https://u-hub.life/Account/Confirm",
-                    AcctPswdResetURL = "https://u-hub.life/Account/ResetPassword",
+                    AcctPswdRecoveryURL = "https://u-hub.life/Account/ResetPassword",
                     AcctPswdUpdateURL = "https://u-hub.life/Account/UpdatePassword",
-                    AcctPswdResetExpiration = new TimeSpan(0, 0, 30, 0),
+                    AcctPswdRecoveryExpiration = new TimeSpan(0, 0, 30, 0),
                     EnableRecaptcha = false,                //CAPTCHA
                     RecaptchaPublicKey = captchaPublicKey,
                     RecaptchaPrivateKey = captchaPrivateKey,
@@ -128,7 +128,7 @@ namespace UHub.CoreLib.Tests
                     AutoApproveNewAccounts = true,
                     EnableTokenVersioning = false,           //VERSION
                     CookieSameSiteMode = CookieSameSiteModes.Lax,
-                    EnablePswdReset = true,
+                    EnablePswdRecovery = true,
                     EnablePersistentAuthTokens = true,
                     HtmlSanitizerMode = HtmlSanitizerMode.OnWrite | HtmlSanitizerMode.OnRead
                 },
@@ -191,7 +191,7 @@ namespace UHub.CoreLib.Tests
         }
 
 
-        public static T GetAuthRequest<T>(T controllerArg, bool useCookie = true, string email = null, string password = null) where T : ApiController
+        public static async Task<T> GetAuthRequest<T>(T controllerArg, bool useCookie = false, string email = null, string password = null) where T : ApiController
         {
             var authController = GetStdRequest(new AuthenticationController());
 
@@ -205,14 +205,13 @@ namespace UHub.CoreLib.Tests
                 Password = password
             };
 
-            var response = authController.GetToken(cred);
+            var response = await authController.GetToken(cred);
             Assert.IsNotNull(response);
 
             var result = response as OkNegotiatedContentResult<string>;
             Assert.IsNotNull(result);
 
             var token = result.Content;
-
 
 
             var controller = GetStdRequest(controllerArg);
@@ -249,7 +248,7 @@ namespace UHub.CoreLib.Tests
             var httpResponse = new HttpResponse(stringWriter);
             var httpContext = new HttpContext(httpRequest, httpResponse);
 
-            var sessionContainer = new HttpSessionStateContainer("id", new SessionStateItemCollection(),
+            var sessionContainer = new HttpSessionStateContainer("asjkas", new SessionStateItemCollection(),
                                                     new HttpStaticObjectsCollection(), 10, true,
                                                     HttpCookieMode.AutoDetect,
                                                     SessionStateMode.InProc, false);

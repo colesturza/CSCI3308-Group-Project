@@ -17,6 +17,7 @@ using UHub.CoreLib.SmtpInterop;
 using UHub.CoreLib.Tools;
 using UHub.CoreLib.Util;
 using System.Management.Automation;
+using UHub.CoreLib.ErrorHandling.Exceptions;
 
 namespace UHub
 {
@@ -34,6 +35,12 @@ namespace UHub
 
 
             var cmsConfig = Common.GetCmsConfig();
+            if(cmsConfig == null)
+            {
+                throw new ConfigBootstrapException();
+            }
+
+
             CoreFactory.Initialize(cmsConfig);
 
 

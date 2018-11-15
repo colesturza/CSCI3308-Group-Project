@@ -44,24 +44,24 @@ namespace UHub.CoreLib.Config
         /// <para></para>
         /// Default: true
         /// </summary>
-        public bool EnablePswdReset { get; set; } = true;
+        public bool EnablePswdRecovery { get; set; } = true;
         /// <summary>
         /// Account password reset proxy
         /// Users will use this link + RecoveryID to reset their passwords
         /// </summary>
-        public string AcctPswdResetURL { get; set; }
+        public string AcctPswdRecoveryURL { get; set; }
         /// <summary>
         /// Account password update proxy
         /// Users will use this link to update their passwords (after logging in)
         /// </summary>
         public string AcctPswdUpdateURL { get; set; }
         /// <summary>
-        /// Account password reset link expiration length
+        /// Account password recovery link expiration length
         /// Specify how long users will have to change their passwords after a recovery context is created (0 is infinite)
         /// <para></para>
-        /// Default: 5 days
+        /// Default: 1 day
         /// </summary>
-        public TimeSpan AcctPswdResetExpiration { get; set; } = new TimeSpan(5, 0, 0, 0);
+        public TimeSpan AcctPswdRecoveryExpiration { get; set; } = new TimeSpan(1, 0, 0, 0);
         /// <summary>
         /// Force all site content to use secure SSL protected connections.
         /// An SSL certificate must be configured through IIS in order for this setting to work properly.

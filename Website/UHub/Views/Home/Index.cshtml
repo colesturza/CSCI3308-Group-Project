@@ -4,7 +4,7 @@
 
 @section scripts
 {
-    <script src="~/ClientResources/Scripts/Home.js"></script>
+    <script src="~/ClientResources/Home/Scripts/Home.js"></script>
 }
 
 <div id="mainNav" class="container-fullwidth">
@@ -17,7 +17,11 @@
                         Communities
                     </a>
                     <div id="communityDrop" class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                        <a class="dropdown-item" v-for="community in communities" v-bind=community.url> {{ community.name }} </a>
+                        <a class="dropdown-item" 
+                           href="'/SchoolClub/'community.ID"
+                           v-for="community in communities" 
+                           v-bind=community.ID> {{ community.Name }} 
+                        </a>
                     </div>
                 </li>
             </ul>
@@ -52,7 +56,7 @@
     <div>
         <ul id="post-list" class="list-group list-group-flush w-70 float-md-left">
             <li class="list-group-item mb-3"  v-for="post in posts">
-                <h4> {{ post.name }} </h4>
+                <h4> {{ post.Name }} </h4>
                 <p> {{ post.Content }} </p>
             </li>
         </ul>
@@ -61,7 +65,7 @@
         <h5 class="mx-auto d-flex justify-content-center p-2">Home</h5>
         <div class="container">
             <span class="m-1">
-            You can find the most popular posts here.
+                You can find the most popular posts here.
             </span>
         </div>
     </div>

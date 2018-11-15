@@ -11,6 +11,8 @@
 );
 
 
+
+
 GO
 CREATE NONCLUSTERED INDEX [IX_EntFollowXRef_TargetID]
     ON [dbo].[EntFollowXRef]([TargetEntID] ASC);

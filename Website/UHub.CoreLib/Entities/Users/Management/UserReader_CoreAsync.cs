@@ -189,16 +189,12 @@ namespace UHub.CoreLib.Entities.Users.Management
             try
             {
 
-                var temp = await SqlWorker.ExecBasicQueryAsync(
+                var temp = await SqlWorker.ExecBasicQueryAsync<User>(
                     _dbConn,
                     "[dbo].[User_GetByID]",
                     (cmd) =>
                     {
                         cmd.Parameters.Add("@UserID", SqlDbType.BigInt).Value = UserID;
-                    },
-                    (reader) =>
-                    {
-                        return reader.ToCustomDBType<User>();
                     });
 
 
@@ -228,16 +224,12 @@ namespace UHub.CoreLib.Entities.Users.Management
 
             try
             {
-                var temp = await SqlWorker.ExecBasicQueryAsync(
+                var temp = await SqlWorker.ExecBasicQueryAsync<User>(
                 _dbConn,
                 "[dbo].[User_GetByEmail]",
                 (cmd) =>
                 {
                     cmd.Parameters.Add("@Email", SqlDbType.NVarChar).Value = HandleParamEmpty(Email);
-                },
-                (reader) =>
-                {
-                    return reader.ToCustomDBType<User>();
                 });
 
                 return temp.SingleOrDefault();
@@ -267,17 +259,13 @@ namespace UHub.CoreLib.Entities.Users.Management
             try
             {
 
-                var temp = await SqlWorker.ExecBasicQueryAsync(
+                var temp = await SqlWorker.ExecBasicQueryAsync<User>(
                     _dbConn,
                     "[dbo].[User_GetByUsername]",
                     (cmd) =>
                     {
                         cmd.Parameters.Add("@Username", SqlDbType.NVarChar).Value = HandleParamEmpty(Username);
                         cmd.Parameters.Add("@Domain", SqlDbType.NVarChar).Value = HandleParamEmpty(Domain);
-                    },
-                    (reader) =>
-                    {
-                        return reader.ToCustomDBType<User>();
                     });
 
                 return temp.SingleOrDefault();
@@ -299,7 +287,7 @@ namespace UHub.CoreLib.Entities.Users.Management
         /// Get users with lower security class
         /// </summary>
         /// <returns></returns>
-        public static async Task<IEnumerable<User>> GetUsersAsync()
+        public static async Task<IEnumerable<User>> GetAllUsersAsync()
         {
             if (!CoreFactory.Singleton.IsEnabled)
             {
@@ -309,14 +297,7 @@ namespace UHub.CoreLib.Entities.Users.Management
             try
             {
 
-                return await SqlWorker.ExecBasicQueryAsync(
-                    _dbConn,
-                    "[dbo].[User_GetAll]",
-                    (cmd) => { },
-                    (row) =>
-                    {
-                        return row.ToCustomDBType<User>();
-                    });
+                return await SqlWorker.ExecBasicQueryAsync<User>(_dbConn, "[dbo].[User_GetAll]");
 
             }
             catch (Exception ex)

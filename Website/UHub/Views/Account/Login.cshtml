@@ -14,7 +14,7 @@
 
 
 @Html.LabelFor(x => x.Email)
-@Html.TextBoxFor(x => x.Email, new { @class = "CSS_CLASS" })
+@Html.TextBoxFor(x => x.Email, new { placeholder = "Email:", @class = "CSS_CLASS" })
 <br />
 @Html.ValidationMessageFor(x => x.Email)
 @{Html.ValidateFor(x => x.Email);}
@@ -22,7 +22,7 @@
 
 
 @Html.LabelFor(x => x.Password)
-@Html.PasswordFor(x => x.Password)
+@Html.PasswordFor(x => x.Password, new { placeholder = "Password:" })
 <br />
 @Html.ValidationMessageFor(x => x.Password)
 @{Html.ValidateFor(x => x.Password);}
@@ -39,10 +39,24 @@
 
 <p></p>
 @{
-    Html.RenderPartial("~/Views/Security/RecaptchaPartial.cshtml");
+    Html.RenderPartial("~/Views/Security/_RecaptchaPartial.cshtml", new UHub.Models.Security.RecaptchaLoginViewModel
+    {
+        SubmitValue = "Login",
+        SubmitClass = "CSS_CLASS",
+    });
 }
 
-@*<input type="submit" name="btn_Submit" value="Click Me" formaction="~/Account/ProcessCredentials" />*@
+<p></p>
+OR
+@Html.RouteLink("Create an Account", new RouteValueDictionary {
+    ["controller"] = "Account",
+    ["action"] = "Create"
+})
+<p></p>
+Trouble Logging in? @Html.RouteLink("Reset your password here", new RouteValueDictionary {
+["controller"] = "Account",
+["action"] = "ForgotPassword"
+})
 
 
 @Scripts.Render("~/bundles/jquery")

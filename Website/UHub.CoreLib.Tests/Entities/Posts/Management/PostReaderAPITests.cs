@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Reflection;
+using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Results;
@@ -23,13 +24,13 @@ namespace UHub.CoreLib.Entities.Posts.Management.Tests
     public class PostReaderAPITests
     {
         [TestMethod]
-        public void GetPostCountBySchoolTest()
+        public async Task GetPostCountBySchoolTest()
         {
             TestGlobal.TestInit();
 
-            var controller = TestGlobal.GetAuthRequest(new PostController(), true);
+            var controller = await TestGlobal.GetAuthRequest(new PostController(), true);
 
-            var response = controller.GetPostCountBySchool();
+            var response = await controller.GetPostCountBySchool();
             Assert.IsNotNull(response);
 
 
@@ -41,13 +42,13 @@ namespace UHub.CoreLib.Entities.Posts.Management.Tests
 
 
         [TestMethod]
-        public void GetPageCountBySchoolTest()
+        public async Task GetPageCountBySchoolTest()
         {
             TestGlobal.TestInit();
 
-            var controller = TestGlobal.GetAuthRequest(new PostController(), true);
+            var controller = await TestGlobal.GetAuthRequest(new PostController(), true);
 
-            var response = controller.GetPageCountBySchool();
+            var response = await controller.GetPageCountBySchool();
             Assert.IsNotNull(response);
 
 
@@ -58,14 +59,14 @@ namespace UHub.CoreLib.Entities.Posts.Management.Tests
 
 
         [TestMethod]
-        public void GetPageBySchoolTest()
+        public async Task GetPageBySchoolTest()
         {
             TestGlobal.TestInit();
 
-            var controller = TestGlobal.GetAuthRequest(new PostController(), true);
+            var controller = await TestGlobal.GetAuthRequest(new PostController(), true);
 
 
-            dynamic response = controller.GetPageBySchool();
+            dynamic response = await controller.GetPageBySchool();
             Assert.IsNotNull(response);
 
             dynamic result = response.Content;
@@ -76,7 +77,7 @@ namespace UHub.CoreLib.Entities.Posts.Management.Tests
 
 
         [TestMethod]
-        public void GetPostCountByClubTest()
+        public async Task GetPostCountByClubTest()
         {
             TestGlobal.TestInit();
 
@@ -90,9 +91,9 @@ namespace UHub.CoreLib.Entities.Posts.Management.Tests
             }
 
 
-            var controller = TestGlobal.GetAuthRequest(new PostController(), true);
+            var controller = await TestGlobal.GetAuthRequest(new PostController(), true);
 
-            var response = controller.GetPostCountByClub(clubID.Value);
+            var response = await controller.GetPostCountByClub(clubID.Value);
             Assert.IsNotNull(response);
 
 
@@ -103,7 +104,7 @@ namespace UHub.CoreLib.Entities.Posts.Management.Tests
 
 
         [TestMethod]
-        public void GetPageCountByClubTest()
+        public async Task GetPageCountByClubTest()
         {
             TestGlobal.TestInit();
 
@@ -115,9 +116,9 @@ namespace UHub.CoreLib.Entities.Posts.Management.Tests
                 return;
             }
 
-            var controller = TestGlobal.GetAuthRequest(new PostController(), true);
+            var controller = await TestGlobal.GetAuthRequest(new PostController(), true);
 
-            var response = controller.GetPageCountByClub(clubID.Value);
+            var response = await controller.GetPageCountByClub(clubID.Value);
             Assert.IsNotNull(response);
 
 
@@ -128,7 +129,7 @@ namespace UHub.CoreLib.Entities.Posts.Management.Tests
 
 
         [TestMethod]
-        public void GetPageByClubTest()
+        public async Task GetPageByClubTest()
         {
             TestGlobal.TestInit();
 
@@ -141,9 +142,9 @@ namespace UHub.CoreLib.Entities.Posts.Management.Tests
                 return;
             }
 
-            var controller = TestGlobal.GetAuthRequest(new PostController(), true);
+            var controller = await TestGlobal.GetAuthRequest(new PostController(), true);
 
-            dynamic response = controller.GetPageByClub(clubID.Value);
+            dynamic response = await controller.GetPageByClub(clubID.Value);
             Assert.IsNotNull(response);
 
             dynamic result = response.Content;

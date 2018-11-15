@@ -17,7 +17,7 @@ namespace UHub.CoreLib.SmtpInterop.Tests
     {
 
         [TestMethod]
-        public async Task SendMessageTest()
+        public void SendMessageTest()
         {
             TestGlobal.TestInit();
 
@@ -30,12 +30,12 @@ namespace UHub.CoreLib.SmtpInterop.Tests
             };
 
             start = FailoverDateTimeOffset.UtcNow;
-            var val1 = SmtpManager.TrySendMessage(msg);
+            var val1 = CoreFactory.Singleton.Mail.TrySendMessageAsync(msg).Result;
             end = FailoverDateTimeOffset.UtcNow;
 
             Console.WriteLine($"{(end - start).TotalMilliseconds}ms");
 
-            Assert.IsTrue(val1);
+            Assert.IsTrue(val1 == SmtpResultCode.Success);
 
         }
     }

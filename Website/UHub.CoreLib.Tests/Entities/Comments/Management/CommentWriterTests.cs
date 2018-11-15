@@ -9,7 +9,7 @@ using UHub.CoreLib.Tests;
 namespace UHub.CoreLib.Entities.Comments.Management.Tests
 {
     [TestClass]
-    public class CommentWriterTests
+    public partial class CommentWriterTests
     {
         [TestMethod]
         public void TryCreateCommentTest()

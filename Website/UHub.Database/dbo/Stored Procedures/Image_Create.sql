@@ -7,13 +7,13 @@ CREATE proc [dbo].[Image_Create]
 	--CREATE PARAMETERS
 	
 	--DYNAMIC
-	@Name nvarchar(200),
-	@FilePath nvarchar(250),
-	@Description nvarchar(500),
-	@FileHash_SHA256 nvarchar(100),
-	@SourceName nvarchar(200),
-	@SourceType nvarchar(50),
-	@DownloadName nvarchar(200),
+	@Name nvarchar(max),
+	@FilePath nvarchar(max),
+	@Description nvarchar(max),
+	@FileHash_SHA256 nvarchar(max),
+	@SourceName nvarchar(max),
+	@SourceType nvarchar(max),
+	@DownloadName nvarchar(max),
 
 	--HIERARCHY
 	@ParentID bigint,

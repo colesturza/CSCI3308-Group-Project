@@ -12,40 +12,40 @@ namespace UHub.CoreLib.Entities.Schools
     [DataClass]
     public sealed partial class School : DBEntityBase, ISchool_R_Public
     {
-        [DataProperty(EnableDBColumnValidation: false)]
+        [DataProperty]
         public long? ID { get; set; }
 
-        [DataProperty(EnableDBColumnValidation: false)]
+        [DataProperty]
         public string Name { get; set; }
 
-        [DataProperty(EnableDBColumnValidation: false)]
+        [DataProperty]
         public string State { get; set; }
 
-        [DataProperty(EnableDBColumnValidation: false)]
+        [DataProperty]
         public string City { get; set; }
 
-        [DataProperty(EnableDBColumnValidation: false)]
+        [DataProperty]
         public bool IsEnabled { get; set; }
 
-        [DataProperty(EnableDBColumnValidation: false)]
+        [DataProperty]
         public bool IsReadOnly { get; set; }
 
-        [DataProperty(EnableDBColumnValidation: false)]
+        [DataProperty]
         public string Description { get; set; }
 
-        [DataProperty(EnableDBColumnValidation: false)]
+        [DataProperty]
         public string DomainValidator { get; private set; }
 
-        [DataProperty(EnableDBColumnValidation: false)]
+        [DataProperty]
         public long CreatedBy { get; set; }
 
-        [DataProperty(EnableDBColumnValidation: false)]
+        [DataProperty]
         public DateTimeOffset CreatedDate { get; set; }
 
-        [DataProperty(EnableDBColumnValidation: false)]
+        [DataProperty]
         public long? ModifiedBy { get; set; }
 
-        [DataProperty(EnableDBColumnValidation: false)]
+        [DataProperty]
         public DateTimeOffset? ModifiedDate { get; set; }
 
     }

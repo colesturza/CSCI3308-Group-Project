@@ -11,6 +11,7 @@ using System.Net.Http;
 using UHub.CoreLib.Tests;
 using UHub.CoreLib.Security.Accounts;
 using UHub.CoreLib.Entities.Users.DTOs;
+using System.Threading.Tasks;
 
 namespace UHub.CoreLib.Security.Authentication.APIControllers.Tests
 {
@@ -18,7 +19,7 @@ namespace UHub.CoreLib.Security.Authentication.APIControllers.Tests
     public class AuthenticationControllerTests
     {
         [TestMethod]
-        public void GetTokenTest()
+        public async Task GetTokenTest()
         {
             TestGlobal.TestInit();
 
@@ -36,7 +37,7 @@ namespace UHub.CoreLib.Security.Authentication.APIControllers.Tests
             };
 
 
-            var response = controller.GetToken(cred);
+            var response = await controller.GetToken(cred);
             Assert.IsNotNull(response);
 
             var result = response as OkNegotiatedContentResult<string>;
@@ -46,16 +47,16 @@ namespace UHub.CoreLib.Security.Authentication.APIControllers.Tests
         }
 
         [TestMethod]
-        public void ExtendTokenTest()
+        public async Task ExtendTokenTest()
         {
             //USE TOKEN AUTH
 
             TestGlobal.TestInit();
 
             
-            var controller = TestGlobal.GetAuthRequest(new AuthenticationController());
+            var controller = await TestGlobal.GetAuthRequest(new AuthenticationController());
 
-            var response = controller.ExtendToken();
+            var response = await controller.ExtendToken();
             Assert.IsNotNull(response);
 
             var result = response as OkNegotiatedContentResult<string>;
@@ -65,16 +66,16 @@ namespace UHub.CoreLib.Security.Authentication.APIControllers.Tests
 
 
         [TestMethod]
-        public void ExtendTokenTest2()
+        public async Task ExtendTokenTest2()
         {
             //USE COOKIE AUTH
 
             TestGlobal.TestInit();
 
 
-            var controller = TestGlobal.GetAuthRequest(new AuthenticationController(), true);
+            var controller = await TestGlobal.GetAuthRequest(new AuthenticationController(), true);
 
-            var response = controller.ExtendToken();
+            var response = await controller.ExtendToken();
             Assert.IsNotNull(response);
 
             var result = response as OkNegotiatedContentResult<string>;

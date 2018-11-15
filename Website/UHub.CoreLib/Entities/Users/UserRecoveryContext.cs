@@ -10,17 +10,19 @@ using UHub.CoreLib.Management;
 using UHub.CoreLib.Security;
 using UHub.CoreLib.Entities.Users.Interfaces;
 using UHub.CoreLib.Entities.Users.Management;
+using UHub.CoreLib.Security.Accounts;
 
 namespace UHub.CoreLib.Entities.Users
 {
     [DataClass]
     internal sealed partial class UserRecoveryContext : DBEntityBase, IUserRecoveryContext
     {
+        private const string RECOVER_URL_FORMAT = "{0}/{1}";
+
+
         #region DataProperties
         [DataProperty]
         public long UserID { get; set; }
-        [DataProperty]
-        public Guid UserUID { get; set; }
         [DataProperty]
         public string RecoveryID { get; set; }
         [DataProperty]
@@ -39,10 +41,17 @@ namespace UHub.CoreLib.Entities.Users
 
 
         #region StdProperties
-
+        /// <summary>
+        /// Get absolute path to recovery page, including RecoveryID
+        /// </summary>
         public string RecoveryURL
         {
-            get => CoreFactory.Singleton.Properties.AcctPswdResetURL + "?ID=" + this.RecoveryID;
+            get
+            {
+                var url = CoreFactory.Singleton.Properties.AcctPswdRecoveryURL;
+
+                return string.Format(RECOVER_URL_FORMAT, url, this.RecoveryID);
+            }
         }
         #endregion StdProperties
 
@@ -55,33 +64,45 @@ namespace UHub.CoreLib.Entities.Users
         #endregion Constructors
 
 
-        public bool ValidateRecoveryKey(string Key)
+        public AccountResultCode ValidateRecoveryKey(string Key)
         {
 
             if (this.EffFromDate > DateTimeOffset.Now || this.EffToDate < DateTimeOffset.Now)
             {
                 this.Delete();
-                return false;
+                return AccountResultCode.RecoveryContextExpired;
             }
 
             if (!this.IsEnabled)
             {
-                return false;
+                return AccountResultCode.RecoveryContextDisabled;
             }
 
             if (this.AttemptCount > CoreFactory.Singleton.Properties.AcctPswdResetMaxAttemptCount)
             {
                 this.Delete();
-                return false;
+                return AccountResultCode.RecoveryContextDestroyed;
             }
 
+
+            bool isValid = false;
             if (CoreFactory.Singleton.Properties.PswdHashType == CryptoHashType.Bcrypt)
             {
-                return BCrypt.Net.BCrypt.Verify(Key, this.RecoveryKey);
+                isValid = BCrypt.Net.BCrypt.Verify(Key, this.RecoveryKey);
             }
             else
             {
-                return this.RecoveryKey == Key.GetCryptoHash(CoreFactory.Singleton.Properties.PswdHashType);
+                isValid = this.RecoveryKey == Key.GetCryptoHash(CoreFactory.Singleton.Properties.PswdHashType);
+            }
+
+
+            if (isValid)
+            {
+                return AccountResultCode.Success;
+            }
+            else
+            {
+                return AccountResultCode.RecoveryKeyInvalid;
             }
         }
 
@@ -89,22 +110,25 @@ namespace UHub.CoreLib.Entities.Users
         /// <summary>
         /// Increment the attempt count in DB
         /// </summary>
-        public void UpdateAttemptCount()
+        public AccountResultCode IncrementAttemptCount()
         {
             if (AttemptCount >= CoreFactory.Singleton.Properties.AcctPswdResetMaxAttemptCount)
             {
                 this.Delete();
-                throw new InvalidOperationException("This recovery context has exceeded its maximum attempt count");
+                return AccountResultCode.RecoveryContextDestroyed;
             }
 
-            //forced reset does not respect attempt count
+            //Forced reset does not respect attempt count
+            //But no error should be reported
             if (!this.IsOptional)
             {
-                throw new InvalidOperationException("This recovery context does not respect attempt count");
+                return AccountResultCode.Success;
             }
+
 
             this.AttemptCount++;
             UserWriter.LogFailedRecoveryContextAttempt(this.RecoveryID);
+            return AccountResultCode.Success;
         }
 
         /// <summary>
@@ -113,14 +137,6 @@ namespace UHub.CoreLib.Entities.Users
         public void Delete()
         {
             UserWriter.DeleteRecoveryContext(this.RecoveryID);
-        }
-
-        /// <summary>
-        /// Delete this recovery context from the DB
-        /// </summary>
-        public async Task DeleteAsync()
-        {
-            await UserWriter.TryDeleteRecoveryContextAsync(this.RecoveryID);
         }
 
     }

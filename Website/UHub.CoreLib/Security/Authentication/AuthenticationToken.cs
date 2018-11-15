@@ -160,6 +160,7 @@ namespace UHub.CoreLib.Security.Authentication
                 //SESSION ID
                 string sessionId = parts[8];
 
+
                 return new AuthenticationToken(tokenId, tokenSalt, persist, issueDate, expirationDate, userID, systemV, userV, sessionId);
             }
             catch
