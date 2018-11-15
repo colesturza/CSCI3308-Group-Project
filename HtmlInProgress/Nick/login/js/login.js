@@ -5,7 +5,7 @@ var loginReq = $.ajax({
     url: "#https://u-hub.life/uhubapi/auth/GetToken",
     data: login.sendObj
 }).success(function() {
-    console.log("Successful Request");
+    console.log("Successful Login");
 });
 
 login = new Vue({
