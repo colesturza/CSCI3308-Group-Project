@@ -17,7 +17,12 @@
                         Communities
                     </a>
                     <div id="communityDrop" class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                        <a class="dropdown-item" href="#" v-for="community in communities" v-bind=community.ID> {{ community.Name }} </a>
+                        <a class="dropdown-item" 
+                           href="javascript:void(0)"
+                           onclick="goToClubPage(community.ID)"
+                           v-for="community in communities" 
+                           v-bind=community.ID> {{ community.Name }} 
+                        </a>
                     </div>
                 </li>
             </ul>
