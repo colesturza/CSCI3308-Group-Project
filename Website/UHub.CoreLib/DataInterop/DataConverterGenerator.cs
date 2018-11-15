@@ -925,7 +925,6 @@ namespace UHub.CoreLib.Entities.Users
             var columnSet = row.Table.Columns;
             var obj = new UserRecoveryContext();
             obj.UserID = row.Field<System.Int64>("UserID");
-            obj.UserUID = row.Field<System.Guid>("UserUID");
             obj.RecoveryID = row.Field<System.String>("RecoveryID");
             obj.RecoveryKey = row.Field<System.String>("RecoveryKey");
             obj.EffFromDate = row.Field<System.DateTimeOffset>("EffFromDate");
@@ -946,7 +945,6 @@ namespace UHub.CoreLib.Entities.Users
             var obj = new UserRecoveryContext();
 
             obj.UserID = (System.Int64)reader["UserID"];
-            obj.UserUID = (System.Guid)reader["UserUID"];
             obj.RecoveryID = reader["RecoveryID"] as System.String;
             obj.RecoveryKey = reader["RecoveryKey"] as System.String;
             obj.EffFromDate = (System.DateTimeOffset)reader["EffFromDate"];

@@ -12,6 +12,7 @@ using UHub.CoreLib.Management;
 using UHub.CoreLib.Security;
 using UHub.CoreLib.Security.Accounts;
 using UHub.CoreLib.Security.Authentication;
+using UHub.CoreLib.SmtpInterop;
 
 namespace UHub.Controllers
 {
@@ -219,7 +220,7 @@ namespace UHub.Controllers
         [System.Web.Mvc.HttpPost]
         public async Task<ActionResult> Recover(string txt_Email)
         {
-            if(!txt_Email.IsValidEmail())
+            if (!txt_Email.IsValidEmail())
             {
                 ViewBag.Message = "Email is not valid";
                 return View();
@@ -236,7 +237,6 @@ namespace UHub.Controllers
                 }
             }
 
-
             var data = await CoreFactory.Singleton.Accounts
                 .TryCreateUserRecoveryContextAsync(
                     UserEmail: txt_Email,
@@ -244,15 +244,18 @@ namespace UHub.Controllers
                     GeneralFailHandler: null);
 
 
-            if(data.ResultCode != AccountResultCode.Success)
+            if (data.ResultCode != AccountResultCode.Success)
             {
-                //ViewBag.ErrorMessage = data.ResultCode.ToString();
+                //*/
+                ViewBag.Message = data.ResultCode.ToString();
+                /*/
                 ViewBag.Message = "Recovery email sent, please check your inbox";
+                //*/
 
                 //"security" measure
                 //make it more difficult to discover valid email addresses
                 Random rnd = new Random();
-                var fluff = rnd.Next(1800, 2500);
+                var fluff = rnd.Next(1900, 2400);
                 await Task.Delay(fluff);
                 return View();
             }
@@ -265,11 +268,18 @@ namespace UHub.Controllers
             };
 
 
-            await CoreFactory.Singleton.Mail.TrySendMessageAsync(recoveryMessage);
+            var mailResult = await CoreFactory.Singleton.Mail.TrySendMessageAsync(recoveryMessage);
 
-
-            ViewBag.Message = "Recovery email sent, please check your inbox";
-            return View();
+            if (mailResult == SmtpResultCode.Success)
+            {
+                ViewBag.Message = "Recovery email sent, please check your inbox";
+                return View();
+            }
+            else
+            {
+                ViewBag.Message = mailResult.ToString();
+                return View();
+            }
         }
 
 

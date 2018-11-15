@@ -785,8 +785,10 @@ namespace UHub.CoreLib.Security.Accounts
                     return (AccountResultCode.UserInvalid, null, null);
                 }
 
+
+                var hashType = CoreFactory.Singleton.Properties.PswdHashType;
                 string recoveryKey = SysSec.Membership.GeneratePassword(R_KEY_LENGTH, 5);
-                string hashedKey = recoveryKey.GetCryptoHash(CoreFactory.Singleton.Properties.PswdHashType);
+                string hashedKey = recoveryKey.GetCryptoHash(hashType);
 
 
                 var context = await UserWriter.CreateRecoveryContextAsync(UserID, hashedKey, true, true);
