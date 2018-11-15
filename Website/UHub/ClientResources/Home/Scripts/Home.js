@@ -1,5 +1,5 @@
 var communityRequest = $.ajax({
-    method: "GET",
+    method: "POST",
     url: "https://u-hub.life/uhubapi/schoolclubs/GetAllBySchool",
     headers: {auth: ""}
 });
