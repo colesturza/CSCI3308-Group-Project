@@ -7,7 +7,7 @@ CREATE proc [dbo].[SchoolClub_Create]
 	--CREATE PARAMETERS
 	
 	--DYNAMIC
-	@Name nvarchar(200),
+	@Name nvarchar(max),
 	@Description nvarchar(max),
 
 	--HIERARCHY

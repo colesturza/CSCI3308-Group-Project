@@ -38,6 +38,9 @@ namespace UHub.CoreLib.Tools
             public const string EMAIL = @".{3,250}";
             public const string EMAIL_B = @"^.{3,250}$";
 
+            public const string EMAIL_DOMAIN = @".{1,250}";
+            public const string EMAIL_DOMAIN_B = @"^.{1,250}$";
+
             public const string NAME = @"(([ \u00c0-\u01ffA-z'\-])+){2,200}";
             public const string NAME_B = @"^(([ \u00c0-\u01ffA-z'\-])+){2,200}$";
 

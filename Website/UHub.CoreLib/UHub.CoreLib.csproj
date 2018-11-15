@@ -266,6 +266,7 @@
     <Compile Include="Entities\Users\Management\UserWriterAsync.cs" />
     <Compile Include="Entities\Users\UserAsync.cs" />
     <Compile Include="ErrorHandling\Exceptions\AccessForbiddenException.cs" />
+    <Compile Include="ErrorHandling\Exceptions\ConfigBootstrapException.cs" />
     <Compile Include="ErrorHandling\Exceptions\ConfigurationException.cs" />
     <Compile Include="ErrorHandling\Exceptions\EntityGoneException.cs" />
     <Compile Include="ErrorHandling\Exceptions\InvalidDBCastException.cs" />
