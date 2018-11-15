@@ -28,8 +28,7 @@
         <input type="submit" name="btn_Submit" value="@Model.SubmitValue" class="@Model.SubmitClass" formaction="@Model.SubmitPath" />
     }
 
-
-    @*block enter key except for textareas*@
+    //block enter key except for textareas
     if (!Model.UseSubmitBehavior)
     {
         <script>
