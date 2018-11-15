@@ -100,7 +100,7 @@ namespace UHub.CoreLib.Entities.Users
             {
                 throw new InvalidOperationException("Cannot get recovery context of anon user");
             }
-            return UserReader.GetUserRecoveryContext(this.ID.Value);
+            return UserReader.GetRecoveryContext(this.ID.Value);
         }
 
         public void Save()

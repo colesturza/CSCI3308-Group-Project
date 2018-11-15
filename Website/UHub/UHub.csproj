@@ -277,7 +277,7 @@
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\Error\Index.cshtml" />
     <Content Include="Views\Account\Confirm.cshtml" />
-    <Content Include="Views\Security\RecaptchaPartial.cshtml" />
+    <Content Include="Views\Security\_RecaptchaPartial.cshtml" />
     <Content Include="Views\Account\ForgotPassword.cshtml" />
     <Content Include="Views\Account\Recover.cshtml" />
     <Content Include="Views\SchoolClub\Index.cshtml" />
@@ -290,10 +290,13 @@
     <Content Include="Views\School\CreateClube.cshtml" />
     <Content Include="Views\SchoolClub\About.cshtml" />
     <Content Include="Views\SchoolClub\ModEdit.cshtml" />
+    <Content Include="Views\Account\_AccountLinkMenuPartial.cshtml" />
+    <Content Include="Views\Account\UpdatePassword.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="ClientResources\Imgs\" />
+    <Folder Include="Models\Account\" />
     <Folder Include="Views\Post\" />
   </ItemGroup>
   <ItemGroup>

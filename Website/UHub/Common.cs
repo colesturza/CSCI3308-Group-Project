@@ -146,7 +146,7 @@ namespace UHub
                     LoginURL = "~/Account/Login",
                     DefaultAuthFwdURL = "~/Account",
                     AcctConfirmURL = "~/Account/Confirm",
-                    AcctPswdResetURL = "~/Account/ResetPassword",
+                    AcctPswdRecoveryURL = "~/Account/Recover",
                     AcctPswdUpdateURL = "~/Account/UpdatePassword",
                     AcctPswdResetExpiration = new TimeSpan(0, 0, 30, 0),
                     EnableRecaptcha = true,                //CAPTCHA
@@ -156,7 +156,7 @@ namespace UHub
                     AutoApproveNewAccounts = true,
                     EnableTokenVersioning = true,           //VERSION
                     CookieSameSiteMode = CookieSameSiteModes.Lax,
-                    EnablePswdReset = true,
+                    EnablePswdRecovery = true,
                     EnablePersistentAuthTokens = true,
                     HtmlSanitizerMode = HtmlSanitizerMode.OnWrite | HtmlSanitizerMode.OnRead
                 },
@@ -287,7 +287,7 @@ namespace UHub
                     LoginURL = "~/Account/Login",
                     DefaultAuthFwdURL = "~/Account",
                     AcctConfirmURL = "~/Account/Confirm",
-                    AcctPswdResetURL = "~/Account/ResetPassword",
+                    AcctPswdRecoveryURL = "~/Account/Recover",
                     AcctPswdUpdateURL = "~/Account/UpdatePassword",
                     AcctPswdResetExpiration = new TimeSpan(0, 0, 30, 0),
                     EnableRecaptcha = false,                //CAPTCHA
@@ -297,7 +297,7 @@ namespace UHub
                     AutoApproveNewAccounts = true,
                     EnableTokenVersioning = false,           //VERSION
                     CookieSameSiteMode = CookieSameSiteModes.Lax,
-                    EnablePswdReset = true,
+                    EnablePswdRecovery = true,
                     EnablePersistentAuthTokens = true,
                     HtmlSanitizerMode = HtmlSanitizerMode.OnWrite | HtmlSanitizerMode.OnRead
                 },

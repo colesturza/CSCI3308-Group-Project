@@ -525,7 +525,7 @@ namespace UHub.CoreLib.Security.Accounts
             {
                 throw new SystemDisabledException();
             }
-            if (!CoreFactory.Singleton.Properties.EnablePswdReset)
+            if (!CoreFactory.Singleton.Properties.EnablePswdRecovery)
             {
                 throw new InvalidOperationException("Password resets are not enabled");
             }
@@ -571,7 +571,7 @@ namespace UHub.CoreLib.Security.Accounts
                 throw new SystemDisabledException();
             }
 
-            if (!CoreFactory.Singleton.Properties.EnablePswdReset)
+            if (!CoreFactory.Singleton.Properties.EnablePswdRecovery)
             {
                 throw new InvalidOperationException("Password resets are not enabled");
             }
@@ -728,18 +728,16 @@ namespace UHub.CoreLib.Security.Accounts
         /// <param name="UserEmail">User email</param>
         /// <param name="IsOptional">Specify whether or not user will be forced to update password</param>
         /// <param name="GeneralFailHandler">Error handler in case DB cannot be reached or there is other unknown error</param>
-        /// <param name="SuccessHandler"></param>
         /// <returns></returns>
-        internal async Task<AccountResultCode> TryCreateUserRecoveryContextAsync(
+        public async Task<(AccountResultCode ResultCode, IUserRecoveryContext RecoveryContext, string RecoveryKey)> TryCreateUserRecoveryContextAsync(
             string UserEmail,
             bool IsOptional,
-            Action<Guid> GeneralFailHandler = null,
-            Action<IUserRecoveryContext, string> SuccessHandler = null)
+            Action<Guid> GeneralFailHandler = null)
         {
             //check for valid email format
             if (!UserEmail.IsValidEmail())
             {
-                return AccountResultCode.EmailInvalid;
+                return (AccountResultCode.EmailInvalid, null, null);
             }
 
 
@@ -747,15 +745,14 @@ namespace UHub.CoreLib.Security.Accounts
 
             if (id == null)
             {
-                return AccountResultCode.UserInvalid;
+                return (AccountResultCode.UserInvalid, null, null);
             }
 
 
             return await TryCreateUserRecoveryContextAsync(
                 id.Value,
                 IsOptional,
-                GeneralFailHandler,
-                SuccessHandler);
+                GeneralFailHandler);
         }
 
         /// <summary>
@@ -763,15 +760,12 @@ namespace UHub.CoreLib.Security.Accounts
         /// </summary>
         /// <param name="UserUID">User UID</param>
         /// <param name="IsOptional">Specify whether or not user will be forced to update password</param>
-        /// <param name="InvalidUserHandler">Error handler in case user does not exist</param>
         /// <param name="GeneralFailHandler">Error handler in case DB cannot be reached or there is other unknown error</param>
-        /// <param name="SuccessHandler"></param>
         /// <returns></returns>
-        internal async Task<AccountResultCode> TryCreateUserRecoveryContextAsync(
+        public async Task<(AccountResultCode ResultCode, IUserRecoveryContext RecoveryContext, string RecoveryKey)> TryCreateUserRecoveryContextAsync(
             long UserID,
             bool IsOptional,
-            Action<Guid> GeneralFailHandler = null,
-            Action<IUserRecoveryContext, string> SuccessHandler = null)
+            Action<Guid> GeneralFailHandler = null)
         {
             try
             {
@@ -779,7 +773,7 @@ namespace UHub.CoreLib.Security.Accounts
 
                 if (cmsUser == null || cmsUser.ID == null)
                 {
-                    return AccountResultCode.UserInvalid;
+                    return (AccountResultCode.UserInvalid, null, null);
                 }
 
 
@@ -788,7 +782,7 @@ namespace UHub.CoreLib.Security.Accounts
                 var recoveryContext = cmsUser.GetRecoveryContext();
                 if (recoveryContext != null && !recoveryContext.IsOptional)
                 {
-                    return AccountResultCode.UserInvalid;
+                    return (AccountResultCode.UserInvalid, null, null);
                 }
 
                 string recoveryKey = SysSec.Membership.GeneratePassword(R_KEY_LENGTH, 5);
@@ -800,17 +794,15 @@ namespace UHub.CoreLib.Security.Accounts
                 if (context == null)
                 {
                     GeneralFailHandler?.Invoke(new Guid("B2AA0C33-A7A5-4026-ADC1-687C8406E8F8"));
-                    return AccountResultCode.UnknownError;
+                    return (AccountResultCode.UnknownError, null, null);
                 }
 
 
-                
-                SuccessHandler?.Invoke(context, recoveryKey);
-                return AccountResultCode.Success;
+                return (AccountResultCode.Success, context, recoveryKey);
             }
             catch
             {
-                return AccountResultCode.UserInvalid;
+                return (AccountResultCode.UserInvalid, null, null);
             }
 
         }

@@ -95,8 +95,8 @@ namespace UHub.CoreLib.Management
             Properties.MaxPswdAttempts = cmsConfig.Security.MaxPswdAttempts;
             Properties.PswdAttemptPeriod = new TimeSpan(cmsConfig.Security.PswdAttemptPeriod.Ticks);
             Properties.PswdLockResetPeriod = cmsConfig.Security.PswdLockResetPeriod;
-            Properties.EnablePswdReset = cmsConfig.Security.EnablePswdReset;
-            Properties.AcctPswdResetURL = getDynamicURL(cmsConfig.Security.AcctPswdResetURL);
+            Properties.EnablePswdRecovery = cmsConfig.Security.EnablePswdRecovery;
+            Properties.AcctPswdRecoveryURL = getDynamicURL(cmsConfig.Security.AcctPswdRecoveryURL);
             Properties.AcctPswdUpdateURL = getDynamicURL(cmsConfig.Security.AcctPswdUpdateURL);
             Properties.AcctPswdResetExpiration = cmsConfig.Security.AcctPswdResetExpiration;
             Properties.ForceHTTPS = cmsConfig.Security.ForceHTTPS;
@@ -254,12 +254,12 @@ namespace UHub.CoreLib.Management
         /// <summary>
         /// Flag for whether or not users/admins can generate a password reset email with temp psd
         /// </summary>
-        public bool EnablePswdReset { get; private set; }
+        public bool EnablePswdRecovery { get; private set; }
         /// <summary>
         /// Account password reset proxy
         /// Users will use this link + RecoveryID to reset their passwords
         /// </summary>
-        public string AcctPswdResetURL { get; private set; }
+        public string AcctPswdRecoveryURL { get; private set; }
         /// <summary>
         /// Account password update proxy
         /// Users will use this link to update their passwords (after logging in)

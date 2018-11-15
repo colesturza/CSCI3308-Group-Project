@@ -141,9 +141,9 @@ namespace UHub.CoreLib.Config
             }
             if (Security.MaxPswdAge != null && Security.MaxPswdAge.Ticks > 0)
             {
-                if (!Security.EnablePswdReset)
+                if (!Security.EnablePswdRecovery)
                 {
-                    string err = $"{nameof(Security.EnablePswdReset)} must be set if {nameof(Security.MaxPswdAge)} is set.";
+                    string err = $"{nameof(Security.EnablePswdRecovery)} must be set if {nameof(Security.MaxPswdAge)} is set.";
                     throw new ArgumentException(err);
                 }
             }
@@ -210,9 +210,9 @@ namespace UHub.CoreLib.Config
             ValidateURL(Security.AcctPswdUpdateURL, nameof(Security.AcctPswdUpdateURL));
 
             //PASSWORD RESET
-            if (Security.EnablePswdReset)
+            if (Security.EnablePswdRecovery)
             {
-                ValidateURL(Security.AcctPswdResetURL, nameof(Security.AcctPswdResetURL));
+                ValidateURL(Security.AcctPswdRecoveryURL, nameof(Security.AcctPswdRecoveryURL));
 
                 //make sure that MailClient/Pswd reset meta is set if the proxy address is set
                 ValidateObject(Mail.NoReplyMailConfig, nameof(Mail.NoReplyMailConfig));
@@ -227,7 +227,7 @@ namespace UHub.CoreLib.Config
                 ValidateSecureUrl(Security.LoginURL, nameof(Security.LoginURL));
                 ValidateSecureUrl(Security.DefaultAuthFwdURL, nameof(Security.DefaultAuthFwdURL));
                 ValidateSecureUrl(Security.AcctConfirmURL, nameof(Security.AcctConfirmURL));
-                ValidateSecureUrl(Security.AcctPswdResetURL, nameof(Security.AcctPswdResetURL));
+                ValidateSecureUrl(Security.AcctPswdRecoveryURL, nameof(Security.AcctPswdRecoveryURL));
                 ValidateSecureUrl(Security.AcctPswdUpdateURL, nameof(Security.AcctPswdUpdateURL));
             }
 

@@ -118,7 +118,7 @@ namespace UHub.CoreLib.Tests
                     LoginURL = "https://u-hub.life/Account/Login",
                     DefaultAuthFwdURL = "https://u-hub.life/Account",
                     AcctConfirmURL = "https://u-hub.life/Account/Confirm",
-                    AcctPswdResetURL = "https://u-hub.life/Account/ResetPassword",
+                    AcctPswdRecoveryURL = "https://u-hub.life/Account/ResetPassword",
                     AcctPswdUpdateURL = "https://u-hub.life/Account/UpdatePassword",
                     AcctPswdResetExpiration = new TimeSpan(0, 0, 30, 0),
                     EnableRecaptcha = false,                //CAPTCHA
@@ -128,7 +128,7 @@ namespace UHub.CoreLib.Tests
                     AutoApproveNewAccounts = true,
                     EnableTokenVersioning = false,           //VERSION
                     CookieSameSiteMode = CookieSameSiteModes.Lax,
-                    EnablePswdReset = true,
+                    EnablePswdRecovery = true,
                     EnablePersistentAuthTokens = true,
                     HtmlSanitizerMode = HtmlSanitizerMode.OnWrite | HtmlSanitizerMode.OnRead
                 },

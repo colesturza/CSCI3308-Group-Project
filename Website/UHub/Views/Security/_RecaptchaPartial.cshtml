@@ -29,4 +29,20 @@
     }
 
 
+    @*block enter key except for textareas*@
+    if (!Model.UseSubmitBehavior)
+    {
+        <script>
+            $(document).ready(function () {
+                $(document).on("keypress", ":input:not(textarea)", function (event) {
+                    if (event.keyCode == 13) {
+                        event.preventDefault();
+                    }
+                });
+            });
+
+
+        </script>
+    }
+
 }

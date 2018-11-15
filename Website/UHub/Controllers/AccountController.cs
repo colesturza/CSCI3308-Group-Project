@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
 using System.Web.Mvc;
@@ -9,6 +10,7 @@ using UHub.CoreLib.Entities.Users.DTOs;
 using UHub.CoreLib.Extensions;
 using UHub.CoreLib.Management;
 using UHub.CoreLib.Security;
+using UHub.CoreLib.Security.Accounts;
 using UHub.CoreLib.Security.Authentication;
 
 namespace UHub.Controllers
@@ -47,6 +49,8 @@ namespace UHub.Controllers
 
             return View();
         }
+
+
         [System.Web.Mvc.HttpPost]
         public ActionResult Login([FromBody] User_CredentialDTO creds)
         {
@@ -192,18 +196,84 @@ namespace UHub.Controllers
         }
 
 
+        [MvcAuthControl]
+        public ActionResult UpdatePassword()
+        {
+            return View();
+        }
+
+
         public ActionResult ForgotPassword()
         {
             return View();
         }
 
 
+        [System.Web.Mvc.HttpGet]
         public ActionResult Recover()
         {
             return View();
         }
 
 
+        [System.Web.Mvc.HttpPost]
+        public async Task<ActionResult> Recover(string txt_Email)
+        {
+            if(!txt_Email.IsValidEmail())
+            {
+                ViewBag.Message = "Email is not valid";
+                return View();
+            }
+
+
+            if (CoreFactory.Singleton.Properties.EnableRecaptcha)
+            {
+                var isCaptchaValid = CoreFactory.Singleton.Recaptcha.IsCaptchaValid();
+                if (!isCaptchaValid)
+                {
+                    ViewBag.Message = "Captcha is not valid";
+                    return View();
+                }
+            }
+
+
+            var data = await CoreFactory.Singleton.Accounts
+                .TryCreateUserRecoveryContextAsync(
+                    UserEmail: txt_Email,
+                    IsOptional: true,
+                    GeneralFailHandler: null);
+
+
+            if(data.ResultCode != AccountResultCode.Success)
+            {
+                //ViewBag.ErrorMessage = data.ResultCode.ToString();
+                ViewBag.Message = "Recovery email sent, please check your inbox";
+
+                //"security" measure
+                //make it more difficult to discover valid email addresses
+                Random rnd = new Random();
+                var fluff = rnd.Next(1800, 2500);
+                await Task.Delay(fluff);
+                return View();
+            }
+
+
+            var recoveryMessage = new UHub.CoreLib.SmtpInterop.SmtpMessage_ForgotPswd("UHub Account Recovery", "UHub", txt_Email)
+            {
+                RecoveryURL = CoreFactory.Singleton.Properties.AcctPswdRecoveryURL,
+                RecoveryKey = data.RecoveryKey
+            };
+
+
+            await CoreFactory.Singleton.Mail.TrySendMessageAsync(recoveryMessage);
+
+
+            ViewBag.Message = "Recovery email sent, please check your inbox";
+            return View();
+        }
+
+
+        [MvcAuthControl]
         public ActionResult Find()
         {
             var idObj = Url.RequestContext.RouteData.Values["id"];

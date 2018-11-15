@@ -11,6 +11,7 @@ using UHub.CoreLib.Security.Accounts;
 using UHub.CoreLib.Security.Accounts.Interfaces;
 using UHub.CoreLib.Security.Authentication;
 using UHub.CoreLib.Security.Authentication.Interfaces;
+using UHub.CoreLib.SmtpInterop;
 
 namespace UHub.CoreLib.Management
 {
@@ -40,6 +41,10 @@ namespace UHub.CoreLib.Management
         //LOGGING
         private LoggingManager _logging;
         public LoggingManager Logging { get => _logging; }
+
+        //MAIL
+        private SmtpManager _mail;
+        public SmtpManager Mail { get => _mail; }
 
 
         /// <summary>
@@ -75,7 +80,7 @@ namespace UHub.CoreLib.Management
 
                 _logging.AddProvider(eventProvider);
             }
-            if((_properties.UsageLogMode & UsageLoggingMode.GoogleAnalytics) != 0)
+            if ((_properties.UsageLogMode & UsageLoggingMode.GoogleAnalytics) != 0)
             {
                 var googleProvider = new UsageGAnalyticsProvider();
 
@@ -89,6 +94,8 @@ namespace UHub.CoreLib.Management
 
             _auth = new AuthenticationManager();
             _account = new AccountManager();
+
+            _mail = new SmtpManager();
 
 
             System.Web.Http.GlobalConfiguration.Configure((config) =>

@@ -44,12 +44,12 @@ namespace UHub.CoreLib.Config
         /// <para></para>
         /// Default: true
         /// </summary>
-        public bool EnablePswdReset { get; set; } = true;
+        public bool EnablePswdRecovery { get; set; } = true;
         /// <summary>
         /// Account password reset proxy
         /// Users will use this link + RecoveryID to reset their passwords
         /// </summary>
-        public string AcctPswdResetURL { get; set; }
+        public string AcctPswdRecoveryURL { get; set; }
         /// <summary>
         /// Account password update proxy
         /// Users will use this link to update their passwords (after logging in)

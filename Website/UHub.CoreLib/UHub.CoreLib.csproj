@@ -264,6 +264,9 @@
     <Compile Include="Entities\Users\Management\UserReader_EntPosts.cs" />
     <Compile Include="Entities\Users\Management\UserReader_RecoveryContextAsync.cs" />
     <Compile Include="Entities\Users\Management\UserWriterAsync.cs" />
+    <Compile Include="Entities\Users\Management\UserWriter_Core.cs" />
+    <Compile Include="Entities\Users\Management\UserWriter_RecoveryContext.cs" />
+    <Compile Include="Entities\Users\Management\UserWriter_RecoveryContextAsync.cs" />
     <Compile Include="Entities\Users\UserAsync.cs" />
     <Compile Include="ErrorHandling\Exceptions\AccessForbiddenException.cs" />
     <Compile Include="ErrorHandling\Exceptions\ConfigBootstrapException.cs" />
