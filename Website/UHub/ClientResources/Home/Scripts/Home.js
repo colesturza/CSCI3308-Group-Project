@@ -1,12 +1,12 @@
 var communityRequest = $.ajax({
     method: "POST",
-    url: "https://" + window.location.hostname + "dev.u-hub.life/uhubapi/schoolclubs/GetAllBySchool",
+    url: "https://" + window.location.hostname + "/uhubapi/schoolclubs/GetAllBySchool",
     headers: {auth: ""}
 });
 
 var homePosts = $.ajax({
     method: "POST",
-    url: "https://" + window.location.hostname +  "dev.u-hub.life/uhubapi/posts/GetAllBySchool",
+    url: "https://" + window.location.hostname +  "/uhubapi/posts/GetAllBySchool",
     headers: {auth: ""}
 });
 
