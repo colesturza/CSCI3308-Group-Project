@@ -132,10 +132,9 @@ namespace UHub.CoreLib.Security.Accounts.Tests
 
             try
             {
-                var t = CoreFactory.Singleton.Accounts.TryCreateUser(
+                var result = CoreFactory.Singleton.Accounts.TryCreateUser(
                     tmpUser, 
                     true,
-                    out var resultCode,
                     GeneralFailHandler: (code) =>
                     {
                         if (enableFailCode)
@@ -149,9 +148,9 @@ namespace UHub.CoreLib.Security.Accounts.Tests
                     });
 
 
-                if (!t && enableDetail)
+                if (result != AccountResultCode.Success && enableDetail)
                 {
-                    switch (resultCode)
+                    switch (result)
                     {
                         case AccountResultCode.EmailEmpty: { status = "Email Empty"; break; }
                         case AccountResultCode.EmailInvalid: { status = "Email Invalid"; break; }

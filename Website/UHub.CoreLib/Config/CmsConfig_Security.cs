@@ -56,12 +56,12 @@ namespace UHub.CoreLib.Config
         /// </summary>
         public string AcctPswdUpdateURL { get; set; }
         /// <summary>
-        /// Account password reset link expiration length
+        /// Account password recovery link expiration length
         /// Specify how long users will have to change their passwords after a recovery context is created (0 is infinite)
         /// <para></para>
-        /// Default: 5 days
+        /// Default: 1 day
         /// </summary>
-        public TimeSpan AcctPswdResetExpiration { get; set; } = new TimeSpan(5, 0, 0, 0);
+        public TimeSpan AcctPswdRecoveryExpiration { get; set; } = new TimeSpan(1, 0, 0, 0);
         /// <summary>
         /// Force all site content to use secure SSL protected connections.
         /// An SSL certificate must be configured through IIS in order for this setting to work properly.

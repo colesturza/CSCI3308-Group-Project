@@ -204,21 +204,8 @@ namespace UHub.Controllers
         }
 
 
-        public ActionResult ForgotPassword()
-        {
-            return View();
-        }
-
-
-        [System.Web.Mvc.HttpGet]
-        public ActionResult Recover()
-        {
-            return View();
-        }
-
-
         [System.Web.Mvc.HttpPost]
-        public async Task<ActionResult> Recover(string txt_Email)
+        public async Task<ActionResult> ForgotPassword(string txt_Email)
         {
             if (!txt_Email.IsValidEmail())
             {
@@ -261,9 +248,11 @@ namespace UHub.Controllers
             }
 
 
+            var path = data.RecoveryContext.RecoveryURL;
+
             var recoveryMessage = new UHub.CoreLib.SmtpInterop.SmtpMessage_ForgotPswd("UHub Account Recovery", "UHub", txt_Email)
             {
-                RecoveryURL = CoreFactory.Singleton.Properties.AcctPswdRecoveryURL,
+                RecoveryURL = path,
                 RecoveryKey = data.RecoveryKey
             };
 
@@ -280,6 +269,52 @@ namespace UHub.Controllers
                 ViewBag.Message = mailResult.ToString();
                 return View();
             }
+        }
+
+
+
+        [System.Web.Mvc.HttpGet]
+        public ActionResult Recover()
+        {
+
+            return View();
+        }
+
+        
+        public async Task<ActionResult> Recover(string txt_RecoveryKey, string txt_NewPswd, string txt_ConfirmPswd)
+        {
+            var idObj = Url.RequestContext.RouteData.Values["id"];
+            var recoveryID = idObj?.ToString() ?? "";
+
+            if(recoveryID.IsEmpty() || recoveryID.Length > 200)
+            {
+                return View();
+            }
+
+            if (txt_RecoveryKey.Length > 200)
+            {
+                return View();
+            }
+
+            if(txt_NewPswd != txt_ConfirmPswd)
+            {
+                ViewBag.Message = "Passwords must match";
+            }
+
+
+            var context = System.Web.HttpContext.Current;
+            var result = await CoreFactory.Singleton.Accounts.TryRecoverPasswordAsync(
+                recoveryID,
+                txt_RecoveryKey,
+                txt_NewPswd,
+                true,
+                context);
+
+
+            ViewBag.Message = result.ToString();
+
+
+            return View();
         }
 
 

@@ -18,6 +18,7 @@ namespace UHub.CoreLib.Entities.Users
     public sealed partial class User : DBEntityBase, IUserCredential, IUser_C_Public, IUser_R_Private, IUser_U_Private
     {
         private const short USER_VERSION_LENGTH = 10;
+        private const string CONFIRMATION_URL_FORMAT = "{0}/{1}";
 
 
         [DataProperty]
@@ -91,7 +92,10 @@ namespace UHub.CoreLib.Entities.Users
             {
                 return "/";
             }
-            return CoreFactory.Singleton.Properties.AcctConfirmURL + $"/{this.RefUID}";
+
+            var url = CoreFactory.Singleton.Properties.AcctConfirmURL;
+            
+            return string.Format(CONFIRMATION_URL_FORMAT, url, this.RefUID);
         }
 
         public IUserRecoveryContext GetRecoveryContext()

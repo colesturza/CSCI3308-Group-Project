@@ -85,11 +85,32 @@ namespace UHub.CoreLib.Security.Accounts.Interfaces
 
 
 
+
+        /// <summary>
+        /// Attempt to recover account password using a recovery context ID and key
+        /// </summary>
+        /// <param name="RecoveryContextID"></param>
+        /// <param name="RecoveryKey"></param>
+        /// <param name="NewPassword"></param>
+        /// <param name="DeviceLogout"></param>
+        /// <param name="GeneralFailHandler"></param>
+        /// <returns></returns>
+        Task<AccountResultCode> TryRecoverPasswordAsync(
+            string RecoveryContextID,
+            string RecoveryKey,
+            string NewPassword,
+            bool DeviceLogout,
+            HttpContext Context,
+            Action<Guid> GeneralFailHandler = null);
+
+
+
         /// <summary>
         /// Attempt to update a user password. Requires validation against the current password. User will be signed out of all locations upon completion
         /// </summary>
         /// <param name="UserEmail">User email</param>
         /// <param name="NewPassword">New user password</param>
+        /// <param name="DeviceLogout"></param>
         /// <param name="GeneralFailHandler">Error handler in case DB cannot be reached or there is other unknown error</param>
         /// <exception cref="SystemDisabledException"></exception>
         /// <exception cref="InvalidOperationException"></exception>
@@ -97,6 +118,7 @@ namespace UHub.CoreLib.Security.Accounts.Interfaces
         Task<AccountResultCode> TryResetPasswordAsync(
             string UserEmail,
             string NewPassword,
+            bool DeviceLogout,
             HttpContext Context,
             Action<Guid> GeneralFailHandler = null);
 
@@ -107,6 +129,7 @@ namespace UHub.CoreLib.Security.Accounts.Interfaces
         /// </summary>
         /// <param name="UserUID">User UID</param>
         /// <param name="NewPassword">New password</param>
+        /// <param name="DeviceLogout"></param>
         /// <param name="GeneralFailHandler">Error handler in case DB cannot be reached or there is other unknown error</param>
         /// <exception cref="SystemDisabledException"></exception>
         /// <exception cref="InvalidOperationException"></exception>
@@ -114,6 +137,7 @@ namespace UHub.CoreLib.Security.Accounts.Interfaces
         Task<AccountResultCode> TryResetPasswordAsync(
             long UserID,
             string NewPassword,
+            bool DeviceLogout,
             HttpContext Context,
             Action<Guid> GeneralFailHandler = null);
 

@@ -98,7 +98,7 @@ namespace UHub.CoreLib.Management
             Properties.EnablePswdRecovery = cmsConfig.Security.EnablePswdRecovery;
             Properties.AcctPswdRecoveryURL = getDynamicURL(cmsConfig.Security.AcctPswdRecoveryURL);
             Properties.AcctPswdUpdateURL = getDynamicURL(cmsConfig.Security.AcctPswdUpdateURL);
-            Properties.AcctPswdResetExpiration = cmsConfig.Security.AcctPswdResetExpiration;
+            Properties.AcctPswdRecoveryExpiration = cmsConfig.Security.AcctPswdRecoveryExpiration;
             Properties.ForceHTTPS = cmsConfig.Security.ForceHTTPS;
             Properties.ForceSecureCookies = cmsConfig.Security.ForceSecureCookies;
             Properties.CookieDomain = cmsConfig.Security.CookieDomain;
@@ -273,7 +273,7 @@ namespace UHub.CoreLib.Management
         /// Account password reset link expiration length
         /// Specify how long users will have to change their passwords after a reset context is created (0 is infinite)
         /// </summary>
-        public TimeSpan AcctPswdResetExpiration { get; private set; }
+        public TimeSpan AcctPswdRecoveryExpiration { get; private set; }
         /// <summary>
         /// Force all site content to use secure SSL protected connections.
         /// An SSL certificate must be configured through IIS in order for this setting to work properly.

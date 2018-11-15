@@ -67,7 +67,7 @@ namespace UHub.CoreLib.Security.Accounts
                 return AccountResultCode.EmailEmpty;
             }
             //check for valid email length
-            if (NewUser.Email.Length < minEmailLen || NewUser.Email.Length > maxEmailLen)
+            if (NewUser.Email.Length < EMAIL_MIN_LEN || NewUser.Email.Length > EMAIL_MAX_LEN)
             {
                 return AccountResultCode.EmailInvalid;
             }
@@ -133,7 +133,7 @@ namespace UHub.CoreLib.Security.Accounts
             //set property constants
             bool isConfirmed = CoreFactory.Singleton.Properties.AutoConfirmNewAccounts;
             bool isApproved = CoreFactory.Singleton.Properties.AutoApproveNewAccounts;
-            string userVersion = SysSec.Membership.GeneratePassword(USER_VERSION_LENGTH, 0);
+            string userVersion = SysSec.Membership.GeneratePassword(USER_VERSION_LEN, 0);
             //sterilize for token processing
             userVersion = userVersion.Replace('|', '0');
 
@@ -159,7 +159,7 @@ namespace UHub.CoreLib.Security.Accounts
                 //if failed, then purge the remaining CMS account components so user can try again
 
 
-                var salt = SysSec.Membership.GeneratePassword(SALT_LENGTH, 0);
+                var salt = SysSec.Membership.GeneratePassword(SALT_LEN, 0);
                 string pswdHash = null;
                 try
                 {
@@ -449,7 +449,7 @@ namespace UHub.CoreLib.Security.Accounts
                 }
 
                 //try to change password
-                var salt = SysSec.Membership.GeneratePassword(SALT_LENGTH, 0);
+                var salt = SysSec.Membership.GeneratePassword(SALT_LEN, 0);
                 string hashedPsd = null;
                 try
                 {
@@ -505,6 +505,76 @@ namespace UHub.CoreLib.Security.Accounts
             }
         }
 
+
+
+        /// <summary>
+        /// Attempt to recover account password using a recovery context ID and key
+        /// </summary>
+        /// <param name="RecoveryContextID"></param>
+        /// <param name="RecoveryKey"></param>
+        /// <param name="NewPassword"></param>
+        /// <param name="DeviceLogout"></param>
+        /// <param name="GeneralFailHandler"></param>
+        /// <returns></returns>
+        public async Task<AccountResultCode> TryRecoverPasswordAsync(
+            string RecoveryContextID,
+            string RecoveryKey,
+            string NewPassword,
+            bool DeviceLogout,
+            HttpContext Context,
+            Action<Guid> GeneralFailHandler = null)
+        {
+            //TODO: fix side channel attack vector that would allow attacker to bypass attempt limit with large number of simultaneous requests
+            //Possible solution:
+            //Use string interning + thread lock to prevent concurrent threads using the same ContextID
+            //Each call would get a shared string reference using string.intern
+            //This shared reference can be used as a lock object
+
+            if (!CoreFactory.Singleton.IsEnabled)
+            {
+                throw new SystemDisabledException();
+            }
+
+            if (!CoreFactory.Singleton.Properties.EnablePswdRecovery)
+            {
+                throw new InvalidOperationException("Password resets are not enabled");
+            }
+
+
+
+
+            var recoveryContext = await UserReader.GetRecoveryContextAsync(RecoveryContextID);
+
+            if (recoveryContext == null)
+            {
+                return AccountResultCode.RecoveryContextInvalid;
+            }
+
+
+            var resultCode = recoveryContext.ValidateRecoveryKey(RecoveryKey);
+
+
+            if (resultCode != AccountResultCode.Success)
+            {
+                await recoveryContext.IncrementAttemptCountAsync();
+                return resultCode;
+            }
+
+
+            var userID = recoveryContext.UserID;
+
+            return await TryResetPasswordAsync(
+                userID,
+                NewPassword,
+                DeviceLogout,
+                Context,
+                GeneralFailHandler);
+        }
+
+
+
+
+
         /// <summary>
         /// Attempt to update a user password. Requires validation against the current password. User will be signed out of all locations upon completion
         /// </summary>
@@ -517,6 +587,7 @@ namespace UHub.CoreLib.Security.Accounts
         public async Task<AccountResultCode> TryResetPasswordAsync(
             string UserEmail,
             string NewPassword,
+            bool DeviceLogout,
             HttpContext Context,
             Action<Guid> GeneralFailHandler = null)
         {
@@ -547,6 +618,7 @@ namespace UHub.CoreLib.Security.Accounts
             return await TryResetPasswordAsync(
                 ID.Value,
                 NewPassword,
+                DeviceLogout,
                 Context,
                 GeneralFailHandler);
         }
@@ -563,6 +635,7 @@ namespace UHub.CoreLib.Security.Accounts
         public async Task<AccountResultCode> TryResetPasswordAsync(
             long UserID,
             string NewPassword,
+            bool DeviceLogout,
             HttpContext Context,
             Action<Guid> GeneralFailHandler = null)
         {
@@ -598,7 +671,7 @@ namespace UHub.CoreLib.Security.Accounts
 
 
                 //try to change password
-                var salt = SysSec.Membership.GeneratePassword(SALT_LENGTH, 0);
+                var salt = SysSec.Membership.GeneratePassword(SALT_LEN, 0);
                 string hashedPsd = null;
                 try
                 {
@@ -787,7 +860,7 @@ namespace UHub.CoreLib.Security.Accounts
 
 
                 var hashType = CoreFactory.Singleton.Properties.PswdHashType;
-                string recoveryKey = SysSec.Membership.GeneratePassword(R_KEY_LENGTH, 5);
+                string recoveryKey = SysSec.Membership.GeneratePassword(R_KEY_LEN, 5);
                 string hashedKey = recoveryKey.GetCryptoHash(hashType);
 
 
