@@ -11,7 +11,7 @@ using UHub.CoreLib.Entities.Users.Interfaces;
 
 namespace UHub.CoreLib.Entities.Users.Management
 {
-    internal static partial class UserReader
+    public static partial class UserReader
     {
 
         public static IUserRecoveryContext GetRecoveryContext(long UserID)

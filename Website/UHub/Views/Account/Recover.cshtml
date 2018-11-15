@@ -5,19 +5,27 @@
 <h2>Account Recovery</h2>
 
 
-@using (Html.BeginForm())
-{
-    <label for="txt_Email">Please input your email</label>
-    <input type="email" name="txt_Email" placeholder="Email:"/>
-    
-    
-    <p>@ViewBag.Message</p>
+@{
+    Html.BeginForm();
+}
 
-    @{
-        Html.RenderPartial("~/Views/Security/_RecaptchaPartial.cshtml", new UHub.Models.Security.RecaptchaLoginViewModel
-        {
-            SubmitValue = "Send Recovery Email",
-            SubmitClass = "CSS_CLASS",
-        });
-    }
+
+<label for="txt_Email">Please input your email</label>
+<input type="email" name="txt_Email" placeholder="Email:" />
+
+
+<p>@ViewBag.Message</p>
+
+@{
+
+    Html.RenderPartial("~/Views/Security/_RecaptchaPartial.cshtml", new UHub.Models.Security.RecaptchaLoginViewModel
+    {
+        SubmitValue = "Send Recovery Email",
+        SubmitClass = "CSS_CLASS",
+    });
+}
+
+
+@{
+    Html.EndForm();
 }

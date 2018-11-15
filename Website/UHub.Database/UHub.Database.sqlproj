@@ -63,7 +63,6 @@
     <Folder Include="dbo\Tables\" />
     <Folder Include="dbo\Views\" />
     <Folder Include="dbo\Stored Procedures\" />
-    <Folder Include="DataLoaders" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="dbo\Tables\EntPropertyXRef.sql" />
@@ -208,22 +207,7 @@
     <Build Include="dbo\Stored Procedures\User_GetValidClubMemberships_Light.sql" />
     <Build Include="dbo\Stored Procedures\Posts_GetClusteredCountsBySchool.sql" />
     <Build Include="dbo\Stored Procedures\Posts_GetClusteredCounts.sql" />
-    <Build Include="DataLoaders\dbo.Users.Table.sql" />
-    <Build Include="DataLoaders\dbo.DataTypes.Table.sql" />
-    <Build Include="DataLoaders\dbo.EntChildMap.Table.sql" />
-    <Build Include="DataLoaders\dbo.EntFollowMap.Table.sql" />
-    <Build Include="DataLoaders\dbo.Entities.Table.sql" />
-    <Build Include="DataLoaders\dbo.EntityTypes.Table.sql" />
-    <Build Include="DataLoaders\dbo.EntLikeMap.Table.sql" />
-    <Build Include="DataLoaders\dbo.EntMemberMap.Table.sql" />
-    <Build Include="DataLoaders\dbo.EntProperties.Table.sql" />
-    <Build Include="DataLoaders\dbo.EntPropertyMap.Table.sql" />
-    <Build Include="DataLoaders\dbo.EntPropertyRevisionMap.Table.sql" />
-    <Build Include="DataLoaders\dbo.EntTagMap.Table.sql" />
-    <Build Include="DataLoaders\dbo.SchemaVersioning.Table.sql" />
     <Build Include="dbo\Tables\Users_1.sql" />
     <Build Include="dbo\Tables\Entities_1.sql" />
-    <Build Include="DataLoaders\schoolMajorsClubs.sql" />
-    <Build Include="DataLoaders\schoolMajor.sql" />
   </ItemGroup>
 </Project>

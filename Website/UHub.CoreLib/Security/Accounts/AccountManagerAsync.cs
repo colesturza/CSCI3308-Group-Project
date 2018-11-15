@@ -233,7 +233,7 @@ namespace UHub.CoreLib.Security.Accounts
                         ConfirmationURL = cmsUser.GetConfirmationURL()
                     };
 
-                    if (!SmtpManager.TrySendMessage(msg))
+                    if (!CoreFactory.Singleton.Mail.TrySendMessage(msg))
                     {
 
                         var errCode = "AEBDE62B-31D5-4B48-8D26-3123AA5219A3";
