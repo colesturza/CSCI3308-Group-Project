@@ -241,7 +241,7 @@ namespace UHub.CoreLib.Security.Accounts
                         ConfirmationURL = cmsUser.GetConfirmationURL()
                     };
 
-                    if (!SmtpManager.TrySendMessage(msg))
+                    if (!CoreFactory.Singleton.Mail.TrySendMessage(msg))
                     {
                         ResultCode = AccountResultCode.UnknownError;
 

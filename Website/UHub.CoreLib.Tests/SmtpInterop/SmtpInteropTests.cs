@@ -30,7 +30,7 @@ namespace UHub.CoreLib.SmtpInterop.Tests
             };
 
             start = FailoverDateTimeOffset.UtcNow;
-            var val1 = SmtpManager.TrySendMessageAsync(msg).Result;
+            var val1 = CoreFactory.Singleton.Mail.TrySendMessageAsync(msg).Result;
             end = FailoverDateTimeOffset.UtcNow;
 
             Console.WriteLine($"{(end - start).TotalMilliseconds}ms");
