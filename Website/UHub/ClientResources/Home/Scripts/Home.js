@@ -7,15 +7,23 @@ $.ajax({
     },
     statusCode: {
         401: function () {
-            alert("Unauthorized");
             communityRequest = null;
         }
     }
 });
 
-var homePosts = $.ajax({
+var homePosts;
+$.ajax({
     method: "POST",
-    url: "/uhubapi/posts/GetAllBySchool"
+    url: "/uhubapi/posts/GetAllBySchool",
+    success: function (data) {
+        homePosts = data;
+    },
+    statusCode: {
+        401: function () {
+            homePosts = null;
+        }
+    }
 });
 
 var communityDropdown = new Vue({
