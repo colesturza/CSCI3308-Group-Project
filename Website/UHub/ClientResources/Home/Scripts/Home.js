@@ -1,12 +1,12 @@
 var communityRequest = $.ajax({
     method: "POST",
-    url: "https://" + window.location.hostname + "/uhubapi/schoolclubs/GetAllBySchool",
+    url: "/uhubapi/schoolclubs/GetAllBySchool",
     headers: {auth: ""}
 });
 
 var homePosts = $.ajax({
     method: "POST",
-    url: "https://" + window.location.hostname +  "/uhubapi/posts/GetAllBySchool",
+    url: "/uhubapi/posts/GetAllBySchool",
     headers: {auth: ""}
 });
 
@@ -19,9 +19,6 @@ var communityDropdown = new Vue({
         getCommunities(){
             this.communities = communityRequest;
             console.log(this.communities);
-        },
-        goToClubPage(id) {
-            window.location.href = "http://" + window.location.hostname + "/SchoolClub/" + id;
         }
     },
     beforeMount(){
