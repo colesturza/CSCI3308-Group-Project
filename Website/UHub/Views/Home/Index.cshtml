@@ -55,8 +55,8 @@
 <div id="body-content" class="container mt-4">
     <div>
         <ul id="post-list" class="list-group list-group-flush w-70 float-md-left">
-            <li class="list-group-item mb-3" v-for="post in posts" v-bind=post>
-                <h4> {{ post.Name }} </h4>
+            <li class="list-group-item mb-3" v-for="post in posts">
+                <h4 v-bind:href="'/Posts/' + post.ID"> {{ post.Name }} </h4>
                 <p> {{ post.Content }} </p>
             </li>
         </ul>
@@ -64,9 +64,7 @@
     <div id="community-block" class="border bg-white p-3 w-25 float-md-right">
         <h5 class="mx-auto d-flex justify-content-center p-2">Home</h5>
         <div class="container">
-            <span class="m-1">
-                You can find the most popular posts here.
-            </span>
+            <span class="m-1">You can find the most popular posts here.</span>
         </div>
     </div>
 </div>
