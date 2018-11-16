@@ -11,3 +11,9 @@ center_LR {
     left: 50%;
     transform: translate(-50%, 0);
 }
+
+.scrollable-menu {
+    height: auto;
+    max-height: 200px;
+    overflow-x: hidden;
+}
