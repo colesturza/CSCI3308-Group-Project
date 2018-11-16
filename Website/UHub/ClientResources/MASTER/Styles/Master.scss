@@ -5,3 +5,9 @@
 .w-70 {
     width: 70%;
 }
+
+center_LR {
+    position: relative;
+    left: 50%;
+    transform: translate(-50%, 0);
+}

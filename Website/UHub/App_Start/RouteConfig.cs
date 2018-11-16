@@ -14,31 +14,34 @@ namespace UHub
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
             routes.IgnoreRoute(CoreLib.Common.API_ROUTE_PREFIX + "/*");
 
+            //Action for a specified controller
+            //Will default to Index when only controller is specified
             routes.MapRoute(
-                name: "ErrorHandler",
-                url: "Error/{id}",
-                defaults: new { controller = "Error", action = "Index", id = UrlParameter.Optional }
+                name: "Controller_DefaultAction",
+                url: "{controller}",
+                defaults: new { action = "Index"}
             );
 
 
+            //Action for a controller and ID
+            //Will default to Index controller and ID are specified
+            //Only works if ID is a number
             routes.MapRoute(
-                name: "DefaultHomePage",
-                url: "",
-                defaults: new { controller = "Account", action = "Login"}
-            );
-
-            routes.MapRoute(
-                name: "DefaultControllerAction",
+                name: "ControllerWithID",
                 url: "{controller}/{id}",
-                defaults: new { action = "Index", id = UrlParameter.Optional }
+                defaults: new { action = "Index" },
+                constraints: new { id = @"\d+" }
             );
 
+
+            //Fully specified path
+            //Establishes default home page (Account/Login)
             routes.MapRoute(
-                name: "DefaultController",
+                name: "StandardBehavior",
                 url: "{controller}/{action}/{id}",
-                defaults: new {id = UrlParameter.Optional }
+                defaults: new { controller = "Account", action = "Login", id = UrlParameter.Optional },
+                constraints: new { action = @"\D.*" }
             );
-
 
         }
     }

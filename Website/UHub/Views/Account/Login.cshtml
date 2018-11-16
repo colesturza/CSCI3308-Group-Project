@@ -32,7 +32,7 @@
 
 
 @Html.LabelFor(x => x.Password)
-@Html.PasswordFor(x => x.Password, new { placeholder = "Password:" })
+@Html.PasswordFor(x => x.Password, new { placeholder = "Password:", @class = "form-control" })
 <br />
 @Html.ValidationMessageFor(x => x.Password)
 @{Html.ValidateFor(x => x.Password);}
@@ -52,22 +52,24 @@
     Html.RenderPartial("~/Views/Security/_RecaptchaPartial.cshtml", new UHub.Models.Security.RecaptchaLoginViewModel
     {
         SubmitValue = "Login",
-        SubmitClass = "btn-outline-dark",
+        SubmitClass = "btn-outline-dark center_LR",
     });
 }
-</div>
 
 <p></p>
-OR
-@Html.RouteLink("Create an Account", new RouteValueDictionary {
+@Html.RouteLink("Or Create an Account", new RouteValueDictionary {
     ["controller"] = "Account",
     ["action"] = "Create"
 })
 <p></p>
-Trouble Logging in? @Html.RouteLink("Reset your password here", new RouteValueDictionary {
+Trouble Logging in? <br />
+@Html.RouteLink("Reset your password here", new RouteValueDictionary {
 ["controller"] = "Account",
 ["action"] = "ForgotPassword"
 })
+
+</div>
+
 
 
 @Scripts.Render("~/bundles/jquery")
