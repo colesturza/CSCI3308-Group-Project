@@ -204,6 +204,12 @@ namespace UHub.Controllers
         }
 
 
+        [System.Web.Mvc.HttpGet]
+        public ActionResult ForgotPassword()
+        {
+            return View();
+        }
+
         [System.Web.Mvc.HttpPost]
         public async Task<ActionResult> ForgotPassword(string txt_Email)
         {
@@ -276,7 +282,6 @@ namespace UHub.Controllers
         [System.Web.Mvc.HttpGet]
         public ActionResult Recover()
         {
-
             return View();
         }
 
