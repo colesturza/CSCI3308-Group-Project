@@ -3,6 +3,7 @@ $.ajax({
     method: "POST",
     url: "/uhubapi/schoolclubs/GetAllBySchool",
     success: function (data) {
+        console.log(data);
         communityRequest = data;
     },
     statusCode: {
@@ -17,6 +18,7 @@ $.ajax({
     method: "POST",
     url: "/uhubapi/posts/GetAllBySchool",
     success: function (data) {
+        console.log(data);
         homePosts = data;
     },
     statusCode: {
