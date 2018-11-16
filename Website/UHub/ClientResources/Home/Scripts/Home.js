@@ -1,11 +1,29 @@
-var communityRequest = $.ajax({
+var communityRequest;
+$.ajax({
     method: "POST",
-    url: "/uhubapi/schoolclubs/GetAllBySchool"
+    url: "/uhubapi/schoolclubs/GetAllBySchool",
+    success: function (data) {
+        communityRequest = data;
+    },
+    statusCode: {
+        401: function () {
+            communityRequest = null;
+        }
+    }
 });
 
-var homePosts = $.ajax({
+var homePosts;
+$.ajax({
     method: "POST",
-    url: "/uhubapi/posts/GetAllBySchool"
+    url: "/uhubapi/posts/GetAllBySchool",
+    success: function (data) {
+        homePosts = data;
+    },
+    statusCode: {
+        401: function () {
+            homePosts = null;
+        }
+    }
 });
 
 var communityDropdown = new Vue({

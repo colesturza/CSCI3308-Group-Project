@@ -31,7 +31,9 @@ var createUser = new Vue({
                 method: "POST",
                 url: "/uhubapi/account/createuser",
                 data: createUser.sendObj,
-            })
+            }).error(function() {
+                alert("Error during user creation");
+            });
         }
     }
 });
@@ -43,15 +45,15 @@ $("#email").blur(function(){
     var majorList = $.ajax({
         method: "GET",
         data: $("#email").valueOf()[0].value
-    });
-
-    for(var index=0; index<majorList.length; index++){
-        if(majorList[index].IsEnabled){
-            majornames.push(majorList[index].Name);
+    }).success(function() {
+        for(var index=0; index<majorList.length; index++){
+            if(majorList[index].IsEnabled){
+                majornames.push(majorList[index].Name);
+            }
         }
-    }
 
-    $("#autocomplete").autocomplete({
-        source: majornames,
+        $("#autocomplete").autocomplete({
+            source: majornames,
+        });
     });
 });
