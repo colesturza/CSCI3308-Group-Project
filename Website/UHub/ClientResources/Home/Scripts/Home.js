@@ -1,13 +1,11 @@
 var communityRequest = $.ajax({
     method: "POST",
-    url: "/uhubapi/schoolclubs/GetAllBySchool",
-    headers: {auth: ""}
+    url: "/uhubapi/schoolclubs/GetAllBySchool"
 });
 
 var homePosts = $.ajax({
     method: "POST",
-    url: "/uhubapi/posts/GetAllBySchool",
-    headers: {auth: ""}
+    url: "/uhubapi/posts/GetAllBySchool"
 });
 
 var communityDropdown = new Vue({
