@@ -2,8 +2,11 @@
   "ExpandedNodes": [
     "",
     "\\Website",
-    "\\Website\\UHub.CoreLib"
+    "\\Website\\UHub",
+    "\\Website\\UHub.CoreLib",
+    "\\Website\\UHub\\ClientResources",
+    "\\Website\\UHub\\ClientResources\\SampleUHUB"
   ],
-  "SelectedNode": "\\Website\\UHub.sln",
+  "SelectedNode": "\\Website\\UHub\\ClientResources\\SampleUHUB\\postPage.html",
   "PreviewInSolutionExplorer": false
 }

@@ -1,13 +1,29 @@
-var communityRequest = $.ajax({
+var communityRequest;
+$.ajax({
     method: "POST",
-    url: "https://" + window.location.hostname + "/uhubapi/schoolclubs/GetAllBySchool",
-    headers: {auth: ""}
+    url: "/uhubapi/schoolclubs/GetAllBySchool",
+    success: function (data) {
+        communityRequest = data;
+    },
+    statusCode: {
+        401: function () {
+            communityRequest = null;
+        }
+    }
 });
 
-var homePosts = $.ajax({
+var homePosts;
+$.ajax({
     method: "POST",
-    url: "https://" + window.location.hostname +  "/uhubapi/posts/GetAllBySchool",
-    headers: {auth: ""}
+    url: "/uhubapi/posts/GetAllBySchool",
+    success: function (data) {
+        homePosts = data;
+    },
+    statusCode: {
+        401: function () {
+            homePosts = null;
+        }
+    }
 });
 
 var communityDropdown = new Vue({
@@ -19,9 +35,6 @@ var communityDropdown = new Vue({
         getCommunities(){
             this.communities = communityRequest;
             console.log(this.communities);
-        },
-        goToClubPage(id) {
-            window.location.href = "http://" + window.location.hostname + "/SchoolClub/" + id;
         }
     },
     beforeMount(){

@@ -16,10 +16,9 @@
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Communities
                     </a>
-                    <div id="communityDrop" class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                    <div id="communityDrop" class="dropdown-menu" v-if="communities != null" aria-labelledby="navbarDropdownMenuLink">
                         <a class="dropdown-item" 
-                           href="javascript:void(0)"
-                           onclick="goToClubPage(community.ID)"
+                           href="'/SchoolClub/'community.ID"
                            v-for="community in communities" 
                            v-bind=community.ID> {{ community.Name }} 
                         </a>
@@ -53,7 +52,7 @@
     </ul>
 </div>
 
-<div id="body-content" class="container mt-4">
+<div id="body-content" class="container mt-4" v-if="posts != null">
     <div>
         <ul id="post-list" class="list-group list-group-flush w-70 float-md-left">
             <li class="list-group-item mb-3"  v-for="post in posts">
