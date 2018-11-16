@@ -3,13 +3,10 @@ var communityDropdown = new Vue({
     data() {
         var communityRequest = $.ajax({
             method: "POST",
-            url: "/uhubapi/schoolclubs/GetAllBySchool",
-            statusCode: {
-                401: function () {
-                    communityRequest = [];
-                }
-            }
+            url: "/uhubapi/schoolclubs/GetAllBySchool"
         });
+
+        console.log(communityRequest);
 
         return {
             communities: communityRequest
@@ -22,13 +19,11 @@ var postList = new Vue({
     data() {
         var homePosts = $.ajax({
             method: "POST",
-            url: "/uhubapi/posts/GetAllBySchool",
-            statusCode: {
-                401: function () {
-                    homePosts = [];
-                }
-            }
+            url: "/uhubapi/posts/GetAllBySchool"
         });
+
+        console.log(homePosts);
+
         return {
             posts: homePosts
         }
