@@ -120,7 +120,7 @@ namespace UHub.CoreLib.Tests
                     AcctConfirmURL = "https://u-hub.life/Account/Confirm",
                     AcctPswdRecoveryURL = "https://u-hub.life/Account/ResetPassword",
                     AcctPswdUpdateURL = "https://u-hub.life/Account/UpdatePassword",
-                    AcctPswdResetExpiration = new TimeSpan(0, 0, 30, 0),
+                    AcctPswdRecoveryExpiration = new TimeSpan(0, 0, 30, 0),
                     EnableRecaptcha = false,                //CAPTCHA
                     RecaptchaPublicKey = captchaPublicKey,
                     RecaptchaPrivateKey = captchaPrivateKey,

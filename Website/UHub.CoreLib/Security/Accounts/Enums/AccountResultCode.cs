@@ -25,6 +25,13 @@ namespace UHub.CoreLib.Security.Accounts
         PswdEmpty,
         PswdNotChanged,
 
+        RecoveryContextInvalid,
+        RecoveryContextDisabled,
+        RecoveryContextExpired,
+        RecoveryContextDestroyed,
+        RecoveryKeyInvalid,
+
+
         LoginFailed,
     }
 }

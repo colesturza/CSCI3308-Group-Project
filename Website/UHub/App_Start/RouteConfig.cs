@@ -28,11 +28,16 @@ namespace UHub
                 defaults: new { controller = "Account", action = "Login"}
             );
 
-
             routes.MapRoute(
                 name: "DefaultControllerAction",
-                url: "{controller}/{action}/{id}",
+                url: "{controller}/{id}",
                 defaults: new { action = "Index", id = UrlParameter.Optional }
+            );
+
+            routes.MapRoute(
+                name: "DefaultController",
+                url: "{controller}/{action}/{id}",
+                defaults: new {id = UrlParameter.Optional }
             );
 
 

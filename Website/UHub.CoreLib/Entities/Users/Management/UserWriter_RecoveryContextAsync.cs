@@ -29,7 +29,7 @@ namespace UHub.CoreLib.Entities.Users.Management
 
             if (IsTemporary)
             {
-                var span = CoreFactory.Singleton.Properties.AcctPswdResetExpiration;
+                var span = CoreFactory.Singleton.Properties.AcctPswdRecoveryExpiration;
                 if (span.Ticks == 0)
                 {
                     resetExpiration = DateTimeOffset.MaxValue;

@@ -148,7 +148,7 @@ namespace UHub
                     AcctConfirmURL = "~/Account/Confirm",
                     AcctPswdRecoveryURL = "~/Account/Recover",
                     AcctPswdUpdateURL = "~/Account/UpdatePassword",
-                    AcctPswdResetExpiration = new TimeSpan(0, 0, 30, 0),
+                    AcctPswdRecoveryExpiration = new TimeSpan(0, 0, 30, 0),
                     EnableRecaptcha = true,                //CAPTCHA
                     RecaptchaPublicKey = captchaPublicKey,
                     RecaptchaPrivateKey = captchaPrivateKey,
@@ -289,7 +289,7 @@ namespace UHub
                     AcctConfirmURL = "~/Account/Confirm",
                     AcctPswdRecoveryURL = "~/Account/Recover",
                     AcctPswdUpdateURL = "~/Account/UpdatePassword",
-                    AcctPswdResetExpiration = new TimeSpan(0, 0, 30, 0),
+                    AcctPswdRecoveryExpiration = new TimeSpan(0, 0, 30, 0),
                     EnableRecaptcha = false,                //CAPTCHA
                     RecaptchaPublicKey = captchaPublicKey,
                     RecaptchaPrivateKey = captchaPrivateKey,
