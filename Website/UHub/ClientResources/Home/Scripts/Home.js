@@ -1,31 +1,39 @@
 var communityDropdown = new Vue({
     el: "#communityDrop",
-    data() {
-        var communityRequest = $.ajax({
+    data: {
+        communities: []
+    },
+    mounted: function () {
+        var self = this;
+        $.ajax({
             method: "POST",
-            url: "/uhubapi/schoolclubs/GetAllBySchool"
+            url: "/uhubapi/schoolclubs/GetAllBySchool",
+            success: function (data) {
+                self.communities = data;
+            },
+            error: function (error) {
+                console.log(error);
+            }
         });
-
-        console.log(communityRequest);
-
-        return {
-            communities: communityRequest
-        }
     }
 });
 
 var postList = new Vue({
     el: "#post-list",
-    data() {
-        var homePosts = $.ajax({
+    data: {
+        posts: []
+    },
+    mounted: function () {
+        var self = this;
+        $.ajax({
             method: "POST",
-            url: "/uhubapi/posts/GetAllBySchool"
+            url: "/uhubapi/posts/GetAllBySchool",
+            success: function (data) {
+                self.post = data;
+            },
+            error: function (error) {
+                console.log(error);
+            }
         });
-
-        console.log(homePosts);
-
-        return {
-            posts: homePosts
-        }
     }
 });
