@@ -34,36 +34,24 @@ namespace UHub.CoreLib.Attributes
                     authToken = valueSet.FirstOrDefault();
                 }
 
-                
-                var context = System.Web.HttpContext.Current;
-
                 if (authToken.IsEmpty())
                 {
                     //test for cookie auth
-                    var authResult = CoreFactory.Singleton.Auth.IsUserLoggedInAsync(context).Result;
-                    isLoggedIn = authResult.StatusFlag;
+                    isLoggedIn = CoreFactory.Singleton.Auth.IsUserLoggedIn();
                 }
                 else
                 {
                     //test for token auth
-                    var authResult = CoreFactory.Singleton.Auth.TrySetRequestUserAsync(authToken, context).Result;
-                    isLoggedIn = authResult.StatusFlag;
+                    isLoggedIn = CoreFactory.Singleton.Auth.TrySetRequestUser(authToken,out _);
                 }
 
-                if(!isLoggedIn)
+                if (!isLoggedIn)
                 {
                     return false;
                 }
 
 
-                var userResult = CoreFactory.Singleton.Auth.GetCurrentUserAsync(context).Result;
-
-                if(userResult.TokenStatus != TokenValidationStatus.Success)
-                {
-                    return false;
-                }
-
-                var cmsUser = userResult.CmsUser;
+                var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser();
 
                 return cmsUser.ID != null && cmsUser.IsEnabled && (!RequireAdmin || cmsUser.IsAdmin);
             }
@@ -77,6 +65,67 @@ namespace UHub.CoreLib.Attributes
                 return false;
             }
         }
+
+
+
+
+        //protected override bool IsAuthorized(HttpActionContext actionContext)
+        //{
+        //    try
+        //    {
+        //        bool isLoggedIn = false;
+        //        var isValid = actionContext.Request.Headers.TryGetValues(Common.AUTH_HEADER_TOKEN, out var valueSet);
+
+
+        //        string authToken = "";
+        //        if (isValid && valueSet != null)
+        //        {
+        //            authToken = valueSet.FirstOrDefault();
+        //        }
+
+
+        //        var context = System.Web.HttpContext.Current;
+
+        //        if (authToken.IsEmpty())
+        //        {
+        //            //test for cookie auth
+        //            var authResult = CoreFactory.Singleton.Auth.IsUserLoggedInAsync(context).Result;
+        //            isLoggedIn = authResult.StatusFlag;
+        //        }
+        //        else
+        //        {
+        //            //test for token auth
+        //            var authResult = CoreFactory.Singleton.Auth.TrySetRequestUserAsync(authToken, context).Result;
+        //            isLoggedIn = authResult.StatusFlag;
+        //        }
+
+        //        if(!isLoggedIn)
+        //        {
+        //            return false;
+        //        }
+
+
+        //        var userResult = CoreFactory.Singleton.Auth.GetCurrentUserAsync(context).Result;
+
+        //        if(userResult.TokenStatus != TokenValidationStatus.Success)
+        //        {
+        //            return false;
+        //        }
+
+        //        var cmsUser = userResult.CmsUser;
+
+        //        return cmsUser.ID != null && cmsUser.IsEnabled && (!RequireAdmin || cmsUser.IsAdmin);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        var errCode = "EA1A7A06-36FD-4276-9D7D-095A83C2E513";
+        //        Exception ex_outer = new Exception(errCode, ex);
+
+        //        CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
+
+        //        return false;
+        //    }
+        //}
 
     }
 }
