@@ -19,7 +19,7 @@
                     <div id="communityDrop" class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                         <a class="dropdown-item" 
                            href="'/SchoolClub/'community.ID"
-                           v-for="community in communityDropdown.communities" 
+                           v-for="community in communities" 
                            v-bind=community.ID> {{ community.Name }} 
                         </a>
                     </div>
@@ -55,7 +55,7 @@
 <div id="body-content" class="container mt-4">
     <div>
         <ul id="post-list" class="list-group list-group-flush w-70 float-md-left">
-            <li class="list-group-item mb-3"  v-for="post in postList.posts">
+            <li class="list-group-item mb-3"  v-for="post in posts">
                 <h4> {{ post.Name }} </h4>
                 <p> {{ post.Content }} </p>
             </li>

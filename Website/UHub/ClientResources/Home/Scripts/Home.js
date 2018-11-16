@@ -5,6 +5,7 @@ $.ajax({
     success: function (data) {
         console.log(data);
         communityRequest = data;
+        console.log(communityRequest);
     },
     statusCode: {
         401: function () {
@@ -20,6 +21,7 @@ $.ajax({
     success: function (data) {
         console.log(data);
         homePosts = data;
+        console.log(homePosts);
     },
     statusCode: {
         401: function () {
