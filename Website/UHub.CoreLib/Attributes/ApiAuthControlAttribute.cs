@@ -10,6 +10,7 @@ using System.Web.Http.Filters;
 using UHub.CoreLib.Management;
 using UHub.CoreLib.Extensions;
 using System.Web;
+using UHub.CoreLib.Security.Authentication;
 
 namespace UHub.CoreLib.Attributes
 {
@@ -38,14 +39,14 @@ namespace UHub.CoreLib.Attributes
                 if (authToken.IsEmpty())
                 {
                     //test for cookie auth
-                    var result = CoreFactory.Singleton.Auth.IsUserLoggedInAsync(context).Result;
-                    isLoggedIn = result.StatusFlag;
+                    var authResult = CoreFactory.Singleton.Auth.IsUserLoggedInAsync(context).Result;
+                    isLoggedIn = authResult.StatusFlag;
                 }
                 else
                 {
                     //test for token auth
-                    var result = CoreFactory.Singleton.Auth.TrySetRequestUserAsync(authToken, context).Result;
-                    isLoggedIn = result.StatusFlag;
+                    var authResult = CoreFactory.Singleton.Auth.TrySetRequestUserAsync(authToken, context).Result;
+                    isLoggedIn = authResult.StatusFlag;
                 }
 
                 if(!isLoggedIn)
@@ -54,8 +55,15 @@ namespace UHub.CoreLib.Attributes
                 }
 
 
-                var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser();
-                
+                var userResult = CoreFactory.Singleton.Auth.GetCurrentUserAsync(context).Result;
+
+                if(userResult.TokenStatus != TokenValidationStatus.Success)
+                {
+                    return false;
+                }
+
+                var cmsUser = userResult.CmsUser;
+
                 return cmsUser.ID != null && cmsUser.IsEnabled && (!RequireAdmin || cmsUser.IsAdmin);
             }
             catch (Exception ex)
