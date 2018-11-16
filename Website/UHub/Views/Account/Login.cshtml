@@ -15,13 +15,15 @@
     </nav>
 </div>
 
+<div class="container w-25">
+
 <h2>Login</h2>
 
 @{
     Html.BeginForm();
 }
 
-<div class="container w-25">
+
 
 @Html.LabelFor(x => x.Email)
 @Html.TextBoxFor(x => x.Email, new { placeholder = "Email:", @class = "form-control" })
