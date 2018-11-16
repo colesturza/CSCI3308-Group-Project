@@ -53,7 +53,10 @@ namespace UHub.CoreLib.Attributes
                 var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser();
 
 
-                var isValid = cmsUser.ID != null && cmsUser.IsEnabled && (!RequireAdmin || cmsUser.IsAdmin);
+                var isValid = 
+                    cmsUser.ID != null 
+                    && cmsUser.IsEnabled 
+                    && (!RequireAdmin || cmsUser.IsAdmin);
 
 
                 if (!isValid)

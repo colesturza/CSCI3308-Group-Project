@@ -222,14 +222,15 @@ namespace UHub.CoreLib.Security.Authentication
             }
 
             var context = HttpContext.Current;
+
             string sessionID = GetAdjustedSessionID(token.IsPersistent, context);
 
-
-            if (!TokenManager.IsTokenValid(token, sessionID, out var tempStatus))
+            var tempTokenStatus = TokenManager.IsTokenValid(token, sessionID);
+            if (tempTokenStatus != TokenValidationStatus.Success)
             {
                 errorHandler?.Invoke();
                 CmsUser = UserReader.GetAnonymousUser();
-                tokenStatus = tempStatus;
+                tokenStatus = tempTokenStatus;
                 return false;
             }
 
@@ -356,8 +357,12 @@ namespace UHub.CoreLib.Security.Authentication
             }
             else
             {
+                var sessionCookie = CoreFactory.Singleton.Properties.SessionIDCookieName;
 
-                sessionID = Context?.Session?.SessionID ?? "";
+                //get session directly from cookie because Context.Session is not initialized yet
+                sessionID = 
+                    Context?.Request?.Cookies?.Get(sessionCookie)?.Value
+                    ?? "";
             }
 
             //sterilize for token processing

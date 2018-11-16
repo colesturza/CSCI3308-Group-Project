@@ -163,6 +163,7 @@ namespace UHub.CoreLib.Security.Authentication
                 return (CmsUser, TokenValidationStatus.TokenNotFound);
             }
 
+
             string sessionID = GetAdjustedSessionID(token.IsPersistent, Context);
 
 

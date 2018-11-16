@@ -100,7 +100,7 @@ namespace UHub.CoreLib.Security.Authentication
         /// <param name="SessionID"></param>
         /// <param name="tokenStatus"></param>
         /// <returns></returns>
-        internal static bool IsTokenValid(AuthenticationToken token, string SessionID, out TokenValidationStatus tokenStatus)
+        internal static TokenValidationStatus IsTokenValid(AuthenticationToken token, string SessionID)
         {
 
             var now = FailoverDateTimeOffset.UtcNow;
@@ -109,33 +109,28 @@ namespace UHub.CoreLib.Security.Authentication
 
             if (validator == null)
             {
-                tokenStatus = TokenValidationStatus.TokenValidatorNotFound;
-                return false;
+                return TokenValidationStatus.TokenValidatorNotFound;
             }
             //check revocation
             if (!validator.IsValid)
             {
-                tokenStatus = TokenValidationStatus.TokenValidatorRevoked;
-                return false;
+                return TokenValidationStatus.TokenValidatorRevoked;
             }
             //check for date cohesion
             if (token.IssueDate != validator.IssueDate)
             {
-                tokenStatus = TokenValidationStatus.TokenValidatorInvalid;
-                return false;
+                return TokenValidationStatus.TokenValidatorInvalid;
             }
             //ensure that the issue date has already passed
             if (token.IssueDate.UtcDateTime > now)
             {
-                tokenStatus = TokenValidationStatus.TokenInvalid;
-                return false;
+                return TokenValidationStatus.TokenInvalid;
             }
             //ensure that the expiration date is in the future
             //ensure that the MaxAge is in the future
             if (token.ExpirationDate.UtcDateTime < now || validator.MaxExpirationDate < now)
             {
-                tokenStatus = TokenValidationStatus.TokenExpired;
-                return false;
+                return TokenValidationStatus.TokenExpired;
             }
             //ensure token/validator cohesion
             //hash
@@ -144,20 +139,18 @@ namespace UHub.CoreLib.Security.Authentication
             //requestToken
             if (token.GetTokenHash() != validator.TokenHash || token.SessionID != validator.SessionID || token.IsPersistent != validator.IsPersistent)
             {
-                tokenStatus = TokenValidationStatus.TokenValidatorMismatch;
-                return false;
+                return TokenValidationStatus.TokenValidatorMismatch;
             }
             //ensure that the token is still pinned to the proper client session
             //only important is token is not persistent
+
             if (!token.IsPersistent && token.SessionID != SessionID)
             {
-                tokenStatus = TokenValidationStatus.TokenSessionMismatch;
-                return false;
+                return TokenValidationStatus.TokenSessionMismatch;
             }
 
 
-            tokenStatus = TokenValidationStatus.Success;
-            return true;
+            return TokenValidationStatus.Success;
         }
 
 

@@ -54,10 +54,10 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
 
             var count = 0L;
 
-            foreach(var counter in taskGetCountSet.Result)
+            foreach (var counter in taskGetCountSet.Result)
             {
                 count += counter.PublicPostCount;
-                if(counter.SchoolClubID != null && membershipHash.Contains(counter.SchoolClubID.Value))
+                if (counter.SchoolClubID != null && membershipHash.Contains(counter.SchoolClubID.Value))
                 {
                     count += counter.PrivatePostCount;
                 }
@@ -128,11 +128,10 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
         }
 
 
-
         [HttpPost()]
         [Route("GetAllBySchool")]
         [ApiAuthControl]
-        public IHttpActionResult GetAllBySchool()
+        public async Task<IHttpActionResult> GetAllBySchool()
         {
             string status = "";
             HttpStatusCode statCode = HttpStatusCode.BadRequest;
@@ -141,12 +140,12 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
                 return Content(statCode, status);
             }
 
-
             var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser();
+
             var schoolID = cmsUser.SchoolID.Value;
 
 
-            var posts = PostReader.GetPostsBySchool(schoolID);
+            var posts = await PostReader.GetPostsBySchoolAsync(schoolID);
 
 
             var sanitizerMode = CoreFactory.Singleton.Properties.HtmlSanitizerMode;
@@ -176,55 +175,6 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             return Ok(outSet);
 
         }
-
-
-        //[HttpPost()]
-        //[Route("GetAllBySchool")]
-        //[ApiAuthControl]
-        //public async Task<IHttpActionResult> GetAllBySchool()
-        //{
-        //    string status = "";
-        //    HttpStatusCode statCode = HttpStatusCode.BadRequest;
-        //    if (!this.ValidateSystemState(out status, out statCode))
-        //    {
-        //        return Content(statCode, status);
-        //    }
-
-
-        //    var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser();
-        //    var schoolID = cmsUser.SchoolID.Value;
-
-
-        //    var posts = await PostReader.GetPostsBySchoolAsync(schoolID);
-
-
-        //    var sanitizerMode = CoreFactory.Singleton.Properties.HtmlSanitizerMode;
-        //    var shouldSanitize = (sanitizerMode & HtmlSanitizerMode.OnRead) != 0;
-
-
-        //    IEnumerable<Post_R_PublicDTO> outSet = null;
-        //    if (shouldSanitize)
-        //    {
-        //        outSet = posts
-        //            .Select(x =>
-        //            {
-        //                x.Content = x.Content.SanitizeHtml();
-        //                return x.ToDto<Post_R_PublicDTO>();
-        //            });
-        //    }
-        //    else
-        //    {
-        //        outSet = posts
-        //            .Select(x =>
-        //            {
-        //                return x.ToDto<Post_R_PublicDTO>();
-        //            });
-        //    }
-
-
-        //    return Ok(outSet);
-
-        //}
 
         [HttpPost()]
         [Route("GetPageBySchool")]

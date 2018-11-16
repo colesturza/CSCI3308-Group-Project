@@ -1,13 +1,13 @@
 ﻿@model UHub.CoreLib.Entities.Users.DTOs.User_CredentialDTO
 @using UHub.CoreLib.Extensions
-
-@{
-Layout = "~/Views/Shared/_Layout.cshtml";
-}
-
 @{
     ViewBag.Title = "Login";
 }
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
 
 <div id="mainNav" class="container-fullwidth">
     <nav class="navbar navbar-expand navbar-dark bg-dark">
@@ -17,11 +17,11 @@ Layout = "~/Views/Shared/_Layout.cshtml";
 
 <h2>Login</h2>
 
-<div class="container w-25">
 @{
     Html.BeginForm();
 }
 
+<div class="container w-25">
 
 @Html.LabelFor(x => x.Email)
 @Html.TextBoxFor(x => x.Email, new { placeholder = "Email:", @class = "form-control" })
