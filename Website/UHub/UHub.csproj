@@ -282,7 +282,6 @@
     <Content Include="Views\Account\Recover.cshtml" />
     <Content Include="Views\SchoolClub\Index.cshtml" />
     <Content Include="Views\SchoolClub\CreatePost.cshtml" />
-    <Content Include="Views\Account\Create.cshtml" />
     <Content Include="Views\Account\Find.cshtml" />
     <Content Include="Views\School\Index.cshtml" />
     <Content Include="Views\School\CreatePost.cshtml" />
@@ -292,6 +291,7 @@
     <Content Include="Views\SchoolClub\ModEdit.cshtml" />
     <Content Include="Views\Account\_AccountLinkMenuPartial.cshtml" />
     <Content Include="Views\Account\UpdatePassword.cshtml" />
+    <Content Include="Views\Account\Create.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

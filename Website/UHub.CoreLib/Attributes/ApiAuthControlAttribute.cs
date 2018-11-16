@@ -34,6 +34,7 @@ namespace UHub.CoreLib.Attributes
                     authToken = valueSet.FirstOrDefault();
                 }
 
+                
                 var context = System.Web.HttpContext.Current;
 
                 if (authToken.IsEmpty())
