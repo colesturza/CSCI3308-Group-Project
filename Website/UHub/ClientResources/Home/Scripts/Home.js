@@ -1,6 +1,16 @@
-var communityRequest = $.ajax({
+var communityRequest;
+$.ajax({
     method: "POST",
-    url: "/uhubapi/schoolclubs/GetAllBySchool"
+    url: "/uhubapi/schoolclubs/GetAllBySchool",
+    success: function (data) {
+        communityRequest = data;
+    },
+    statusCode: {
+        401: function () {
+            alert("Unauthorized");
+            communityRequest = null;
+        }
+    }
 });
 
 var homePosts = $.ajax({

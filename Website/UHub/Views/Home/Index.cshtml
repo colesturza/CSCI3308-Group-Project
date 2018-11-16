@@ -16,7 +16,7 @@
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Communities
                     </a>
-                    <div id="communityDrop" class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                    <div id="communityDrop" class="dropdown-menu" v-if="communities != null" aria-labelledby="navbarDropdownMenuLink">
                         <a class="dropdown-item" 
                            href="'/SchoolClub/'community.ID"
                            v-for="community in communities" 
