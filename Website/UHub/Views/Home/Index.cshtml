@@ -19,8 +19,8 @@
                     <div id="communityDrop" class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                         <a class="dropdown-item"
                            v-for="community in communities"
-                           href="'/SchoolClub/'{{ community.ID }}" 
-                           v-bind=community> {{ community.Name }} 
+                           v-bind:href="'/SchoolClub/' + community.ID"> 
+                           {{ community.Name }} 
                         </a>
                     </div>
                 </li>
