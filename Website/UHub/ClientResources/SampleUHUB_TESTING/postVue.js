@@ -1,5 +1,5 @@
-var string1 = "https://u-hub.life/schoolclubs/21"
-var seperated = string1.split('/')
+var url = window.location.href
+var seperated = url.split('/')
 console.log(seperated)
 new Vue({
   el: '#enterInfo',
