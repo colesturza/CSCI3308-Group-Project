@@ -33,16 +33,19 @@ namespace UHub.CoreLib.Attributes
                     authToken = valueSet.FirstOrDefault();
                 }
 
+                var context = System.Web.HttpContext.Current;
 
                 if (authToken.IsEmpty())
                 {
                     //test for cookie auth
-                    isLoggedIn = CoreFactory.Singleton.Auth.IsUserLoggedIn(out _, out _);
+                    var result = CoreFactory.Singleton.Auth.IsUserLoggedInAsync(context).Result;
+                    isLoggedIn = result.StatusFlag;
                 }
                 else
                 {
                     //test for token auth
-                    isLoggedIn = CoreFactory.Singleton.Auth.TrySetRequestUser(authToken, out _);
+                    var result = CoreFactory.Singleton.Auth.TrySetRequestUserAsync(authToken, context).Result;
+                    isLoggedIn = result.StatusFlag;
                 }
 
                 if(!isLoggedIn)

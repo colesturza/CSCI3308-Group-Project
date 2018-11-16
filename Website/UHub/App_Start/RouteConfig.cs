@@ -18,7 +18,6 @@ namespace UHub
                 name: "ErrorHandler",
                 url: "Error/{id}",
                 defaults: new { controller = "Error", action = "Index", id = UrlParameter.Optional }
-
             );
 
 

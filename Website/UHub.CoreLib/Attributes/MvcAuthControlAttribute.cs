@@ -19,7 +19,7 @@ namespace UHub.CoreLib.Attributes
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
     public sealed class MvcAuthControlAttribute : System.Web.Mvc.AuthorizeAttribute
     {
-        public bool RequireAdmin { get; set; }
+        public bool RequireAdmin { get; set; } = false;
 
 
         public override void OnAuthorization(AuthorizationContext filterContext)
