@@ -5,16 +5,22 @@
     ViewBag.Title = "Login";
 }
 
+<div id="mainNav" class="container-fullwidth">
+    <nav class="navbar navbar-expand navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">UHUB</a>
+    </nav>
+</div>
+
 <h2>Login</h2>
 
-
+<div class="container w-25">
 @{
     Html.BeginForm();
 }
 
 
 @Html.LabelFor(x => x.Email)
-@Html.TextBoxFor(x => x.Email, new { placeholder = "Email:", @class = "CSS_CLASS" })
+@Html.TextBoxFor(x => x.Email, new { placeholder = "Email:", @class = "form-control" })
 <br />
 @Html.ValidationMessageFor(x => x.Email)
 @{Html.ValidateFor(x => x.Email);}
@@ -31,8 +37,8 @@
 @{
     if (!string.IsNullOrWhiteSpace(ViewBag.ErrorMsg))
     {
-        <p></p>
-        <label>@ViewBag.ErrorMsg</label>
+    <p></p>
+    <label>@ViewBag.ErrorMsg</label>
     }
 }
 
@@ -42,9 +48,10 @@
     Html.RenderPartial("~/Views/Security/_RecaptchaPartial.cshtml", new UHub.Models.Security.RecaptchaLoginViewModel
     {
         SubmitValue = "Login",
-        SubmitClass = "CSS_CLASS",
+        SubmitClass = "btn-outline-dark",
     });
 }
+</div>
 
 <p></p>
 OR
