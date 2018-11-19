@@ -19,6 +19,7 @@ using UHub.CoreLib.Entities.Users;
 using UHub.CoreLib.Entities.SchoolMajors.Management;
 using UHub.CoreLib.Entities.Schools.Management;
 using UHub.CoreLib.Security.Accounts.Interfaces;
+using UHub.CoreLib.Security.Authentication;
 
 namespace UHub.CoreLib.Security.Accounts
 {
@@ -445,8 +446,8 @@ namespace UHub.CoreLib.Security.Accounts
                 }
 
 
-                var isAuthValid = CoreFactory.Singleton.Auth.TryAuthenticateUser(modUser.Email, OldPassword);
-                if (!isAuthValid)
+                var authStatusCode = CoreFactory.Singleton.Auth.TryAuthenticateUser(modUser.Email, OldPassword);
+                if (authStatusCode != AuthResultCode.Success)
                 {
                     return AcctPswdResultCode.LoginFailed;
                 }

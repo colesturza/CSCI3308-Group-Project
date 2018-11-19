@@ -96,7 +96,7 @@ namespace UHub.CoreLib.Security.Authentication
         /// <summary>
         /// Get user auth data from cookie and load as the CurrentUser identity
         /// </summary>
-        internal void ValidateAuthCookie(out User CmsUser, out TokenValidationStatus TokenStatus, Action ErrorHandler = null)
+        internal TokenValidationStatus ValidateAuthCookie(out User CmsUser, Action ErrorHandler = null)
         {
             var authTknCookieName = CoreFactory.Singleton.Properties.AuthTknCookieName;
 
@@ -109,16 +109,14 @@ namespace UHub.CoreLib.Security.Authentication
             {
                 ErrorHandler?.Invoke();
                 CmsUser = UserReader.GetAnonymousUser();
-                TokenStatus = TokenValidationStatus.TokenNotFound;
-                return;
+                return TokenValidationStatus.TokenNotFound;
             }
 
             if (authCookie.Value.IsEmpty())
             {
                 ErrorHandler?.Invoke();
                 CmsUser = UserReader.GetAnonymousUser();
-                TokenStatus = TokenValidationStatus.TokenNotFound;
-                return;
+                return TokenValidationStatus.TokenNotFound;
             }
 
 
@@ -140,7 +138,7 @@ namespace UHub.CoreLib.Security.Authentication
                 };
 
 
-            ValidateAuthToken(authCookie.Value, out CmsUser, out TokenStatus, ErrorHandler, succHandler);
+            return ValidateAuthToken(authCookie.Value, out CmsUser, ErrorHandler, succHandler);
 
         }
 
@@ -153,10 +151,9 @@ namespace UHub.CoreLib.Security.Authentication
         /// <param name="errorHandler"></param>
         /// <param name="SuccessHandler"></param>
         /// <returns></returns>
-        internal bool ValidateAuthToken(
+        internal TokenValidationStatus ValidateAuthToken(
             string tokenStr,
             out User CmsUser,
-            out TokenValidationStatus tokenStatus,
             Action errorHandler = null,
             Action<AuthenticationToken> SuccessHandler = null)
         {
@@ -164,13 +161,12 @@ namespace UHub.CoreLib.Security.Authentication
             if (tokenStr.IsEmpty())
             {
                 CmsUser = UserReader.GetAnonymousUser();
-                tokenStatus = TokenValidationStatus.TokenNotFound;
                 try
                 {
                     errorHandler?.Invoke();
                 }
                 catch { }
-                return false;
+                return TokenValidationStatus.TokenNotFound;
             }
             //get token
             AuthenticationToken authToken = null;
@@ -182,16 +178,16 @@ namespace UHub.CoreLib.Security.Authentication
             {
                 CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex);
                 CmsUser = UserReader.GetAnonymousUser();
-                tokenStatus = TokenValidationStatus.TokenAESFailure;
                 try
                 {
                     errorHandler?.Invoke();
                 }
                 catch { }
-                return false;
+                return TokenValidationStatus.TokenAESFailure;
             }
 
-            return ValidateAuthToken(authToken, out CmsUser, out tokenStatus, errorHandler, SuccessHandler);
+
+            return ValidateAuthToken(authToken, out CmsUser, errorHandler, SuccessHandler);
         }
 
         /// <summary>
@@ -203,10 +199,9 @@ namespace UHub.CoreLib.Security.Authentication
         /// <param name="errorHandler"></param>
         /// <param name="SuccessHandler"></param>
         /// <returns></returns>
-        private protected bool ValidateAuthToken(
+        private protected TokenValidationStatus ValidateAuthToken(
             AuthenticationToken token,
             out User CmsUser,
-            out TokenValidationStatus tokenStatus,
             Action errorHandler = null,
             Action<AuthenticationToken> SuccessHandler = null)
         {
@@ -216,8 +211,7 @@ namespace UHub.CoreLib.Security.Authentication
             {
                 errorHandler?.Invoke();
                 CmsUser = UserReader.GetAnonymousUser();
-                tokenStatus = TokenValidationStatus.TokenNotFound;
-                return false;
+                return TokenValidationStatus.TokenNotFound;
             }
 
             var context = HttpContext.Current;
@@ -229,8 +223,7 @@ namespace UHub.CoreLib.Security.Authentication
             {
                 errorHandler?.Invoke();
                 CmsUser = UserReader.GetAnonymousUser();
-                tokenStatus = tempTokenStatus;
-                return false;
+                return tempTokenStatus;
             }
 
             if
@@ -241,8 +234,7 @@ namespace UHub.CoreLib.Security.Authentication
             {
                 errorHandler?.Invoke();
                 CmsUser = UserReader.GetAnonymousUser();
-                tokenStatus = TokenValidationStatus.TokenVersionMismatch;
-                return false;
+                return TokenValidationStatus.TokenVersionMismatch;
             }
 
 
@@ -261,8 +253,7 @@ namespace UHub.CoreLib.Security.Authentication
 
                 errorHandler?.Invoke();
                 CmsUser = UserReader.GetAnonymousUser();
-                tokenStatus = TokenValidationStatus.TokenUserError;
-                return false;
+                return TokenValidationStatus.TokenUserError;
             }
 
             //validate CMS specific user
@@ -270,8 +261,7 @@ namespace UHub.CoreLib.Security.Authentication
             {
                 errorHandler?.Invoke();
                 CmsUser = UserReader.GetAnonymousUser();
-                tokenStatus = TokenValidationStatus.TokenUserError;
-                return false;
+                return TokenValidationStatus.TokenUserError;
             }
 
             //check user version
@@ -282,8 +272,7 @@ namespace UHub.CoreLib.Security.Authentication
                 {
                     errorHandler?.Invoke();
                     CmsUser = UserReader.GetAnonymousUser();
-                    tokenStatus = TokenValidationStatus.TokenVersionMismatch;
-                    return false;
+                    return TokenValidationStatus.TokenVersionMismatch;
                 }
             }
 
@@ -292,15 +281,13 @@ namespace UHub.CoreLib.Security.Authentication
             {
                 errorHandler?.Invoke();
                 CmsUser = UserReader.GetAnonymousUser();
-                tokenStatus = TokenValidationStatus.TokenUserNotConfirmed;
-                return false;
+                return TokenValidationStatus.TokenUserNotConfirmed;
             }
             if (!cmsUser_local.IsApproved)
             {
                 errorHandler?.Invoke();
                 CmsUser = UserReader.GetAnonymousUser();
-                tokenStatus = TokenValidationStatus.TokenUserNotApproved;
-                return false;
+                return TokenValidationStatus.TokenUserNotApproved;
             }
 
             //user disabled for some other reason
@@ -309,8 +296,7 @@ namespace UHub.CoreLib.Security.Authentication
             {
                 errorHandler?.Invoke();
                 CmsUser = UserReader.GetAnonymousUser();
-                tokenStatus = TokenValidationStatus.TokenUserDisabled;
-                return false;
+                return TokenValidationStatus.TokenUserDisabled;
             }
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -319,8 +305,7 @@ namespace UHub.CoreLib.Security.Authentication
 
             SuccessHandler?.Invoke(token);
             CmsUser = cmsUser_local;
-            tokenStatus = TokenValidationStatus.Success;
-            return true;
+            return TokenValidationStatus.Success;
 
         }
 

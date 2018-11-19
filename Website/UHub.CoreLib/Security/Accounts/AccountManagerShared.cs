@@ -78,14 +78,14 @@ namespace UHub.CoreLib.Security.Accounts
 
 
                 //check for valid username
-                if (NewUser.Username.RgxIsMatch(RgxPatterns.User.USERNAME_B))
+                if (!NewUser.Username.RgxIsMatch(RgxPatterns.User.USERNAME_B))
                 {
                     return AcctCreateResultCode.UsernameInvalid;
                 }
 
 
                 //check for invalid user name
-                if (NewUser.Name.RgxIsMatch(RgxPatterns.User.NAME_B))
+                if (!NewUser.Name.RgxIsMatch(RgxPatterns.User.NAME_B))
                 {
                     return AcctCreateResultCode.NameInvalid;
                 }

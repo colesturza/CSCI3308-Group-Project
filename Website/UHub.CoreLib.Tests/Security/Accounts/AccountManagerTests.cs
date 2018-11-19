@@ -161,6 +161,8 @@ namespace UHub.CoreLib.Security.Accounts.Tests
                         case AcctCreateResultCode.PswdEmpty: { status = "Password Empty"; break; }
                         case AcctCreateResultCode.PswdInvalid: { status = "Password Invalid"; break; }
                     }
+
+                    Console.WriteLine(result.ToString());
                 }
 
 

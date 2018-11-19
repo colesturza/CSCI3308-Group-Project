@@ -78,13 +78,13 @@ namespace UHub.Controllers
             var pswd = creds.Password;
 
             var statusMsg = "An unknown authentication error has occured";
-            var isValid = CoreFactory.Singleton.Auth.TrySetClientAuthToken(
+            var ResultCode = CoreFactory.Singleton.Auth.TrySetClientAuthToken(
                 email,
                 pswd,
                 false,
-                out var ResultCode,
                 GeneralFailHandler: (id) => { });
 
+            var isValid = (ResultCode == AuthResultCode.Success);
 
             switch (ResultCode)
             {
