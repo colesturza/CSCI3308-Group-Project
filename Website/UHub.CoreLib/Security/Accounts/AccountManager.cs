@@ -44,7 +44,7 @@ namespace UHub.CoreLib.Security.Accounts
         /// <param name="GeneralFailHandler">Error handler in case DB cannot be reached or there is other unknown error</param>
         /// <param name="SuccessHandler">Args: new user object, auto login [T|F]</param>
         /// <returns>Status Flag</returns>
-        public AccountResultCode TryCreateUser(
+        public AcctCreateResultCode TryCreateUser(
             User NewUser,
             bool AttemptAutoLogin,
             Action<Guid> GeneralFailHandler = null,
@@ -57,7 +57,7 @@ namespace UHub.CoreLib.Security.Accounts
 
             if (NewUser == null)
             {
-                return AccountResultCode.UserInvalid;
+                return AcctCreateResultCode.UserInvalid;
             }
 
 
@@ -71,36 +71,30 @@ namespace UHub.CoreLib.Security.Accounts
             //ensure email is populated
             if (NewUser.Email.IsEmpty())
             {
-                return AccountResultCode.EmailEmpty;
+                return AcctCreateResultCode.EmailEmpty;
             }
             //check for valid email length
             if (NewUser.Email.Length < EMAIL_MIN_LEN || NewUser.Email.Length > EMAIL_MAX_LEN)
             {
-                return AccountResultCode.EmailInvalid;
+                return AcctCreateResultCode.EmailInvalid;
             }
             //check for valid email format
             if (!NewUser.Email.IsValidEmail())
             {
-                return AccountResultCode.EmailInvalid;
+                return AcctCreateResultCode.EmailInvalid;
             }
 
 
             //check for valid username
             if (!NewUser.Username.RgxIsMatch(RgxPatterns.User.USERNAME_B))
             {
-                return AccountResultCode.UsernameInvalid;
-            }
-
-            //check for invalid user name
-            if (!NewUser.Name.RgxIsMatch(RgxPatterns.User.NAME))
-            {
-                return AccountResultCode.NameInvalid;
+                return AcctCreateResultCode.UsernameInvalid;
             }
 
             //check for invalid user name
             if (!NewUser.Name.RgxIsMatch(RgxPatterns.User.NAME_B))
             {
-                return AccountResultCode.NameInvalid;
+                return AcctCreateResultCode.NameInvalid;
             }
 
             //TODO: finalize attr validation
@@ -109,19 +103,19 @@ namespace UHub.CoreLib.Security.Accounts
             //ensure pswd is populated
             if (NewUser.Password.IsEmpty())
             {
-                return AccountResultCode.PswdEmpty;
+                return AcctCreateResultCode.PswdEmpty;
             }
             //check for valid password
             if (!Regex.IsMatch(NewUser.Password, CoreFactory.Singleton.Properties.PswdStrengthRegex))
             {
-                return AccountResultCode.PswdInvalid;
+                return AcctCreateResultCode.PswdInvalid;
             }
 
 
             //check for duplicate email
             if (UserReader.DoesUserExist(NewUser.Email))
             {
-                return AccountResultCode.EmailDuplicate;
+                return AcctCreateResultCode.EmailDuplicate;
             }
 
             //Validate user domain and school
@@ -130,7 +124,7 @@ namespace UHub.CoreLib.Security.Accounts
             var tmpSchool = SchoolReader.GetSchoolByDomain(domain);
             if (tmpSchool == null || tmpSchool.ID == null)
             {
-                return AccountResultCode.EmailDomainInvalid;
+                return AcctCreateResultCode.EmailDomainInvalid;
             }
             NewUser.SchoolID = tmpSchool.ID;
 
@@ -138,7 +132,7 @@ namespace UHub.CoreLib.Security.Accounts
             //check for duplicate username
             if (UserReader.DoesUserExist(NewUser.Username, domain))
             {
-                return AccountResultCode.UsernameDuplicate;
+                return AcctCreateResultCode.UsernameDuplicate;
             }
 
 
@@ -151,7 +145,7 @@ namespace UHub.CoreLib.Security.Accounts
 
             if (!majorValidationSet.Contains(major))
             {
-                return AccountResultCode.MajorInvalid;
+                return AcctCreateResultCode.MajorInvalid;
             }
 
 
@@ -177,7 +171,7 @@ namespace UHub.CoreLib.Security.Accounts
                 if (userID == null)
                 {
                     GeneralFailHandler?.Invoke(new Guid("CE1989AB-3C46-4810-B4F8-432D752C85A1"));
-                    return AccountResultCode.UnknownError;
+                    return AcctCreateResultCode.UnknownError;
                 }
 
 
@@ -246,7 +240,7 @@ namespace UHub.CoreLib.Security.Accounts
                         CoreFactory.Singleton.Logging.CreateErrorLogAsync(errCode);
 
                         SuccessHandler?.Invoke(cmsUser, false);
-                        return AccountResultCode.Success;
+                        return AcctCreateResultCode.Success;
                     }
                 }
                 else if (!CoreFactory.Singleton.Properties.AutoConfirmNewAccounts)
@@ -264,17 +258,17 @@ namespace UHub.CoreLib.Security.Accounts
                         CoreFactory.Singleton.Logging.CreateErrorLogAsync(errCode);
                         GeneralFailHandler?.Invoke(new Guid(errCode));
 
-                        return AccountResultCode.UnknownError;
+                        return AcctCreateResultCode.UnknownError;
                     }
                 }
 
 
                 SuccessHandler?.Invoke(cmsUser, canLogin);
-                return AccountResultCode.Success;
+                return AcctCreateResultCode.Success;
             }
             catch (DuplicateNameException)
             {
-                return AccountResultCode.EmailDuplicate;
+                return AcctCreateResultCode.EmailDuplicate;
             }
             catch (Exception ex)
             {
@@ -284,7 +278,7 @@ namespace UHub.CoreLib.Security.Accounts
 
                 CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
                 GeneralFailHandler?.Invoke(new Guid(errCode));
-                return AccountResultCode.UnknownError;
+                return AcctCreateResultCode.UnknownError;
             }
         }
 
@@ -407,7 +401,7 @@ namespace UHub.CoreLib.Security.Accounts
         /// <param name="ResultCode">Code returned to indicate process status</param>
         /// <param name="GeneralFailHandler">Error handler in case DB cannot be reached or there is other unknown error</param>
         /// <returns>Status flag</returns>
-        public AccountResultCode TryUpdatePassword(
+        public AcctPswdResultCode TryUpdatePassword(
             string UserEmail,
             string OldPassword,
             string NewPassword,
@@ -417,7 +411,7 @@ namespace UHub.CoreLib.Security.Accounts
 
             if (UserEmail.IsEmpty())
             {
-                return AccountResultCode.EmailEmpty;
+                return AcctPswdResultCode.EmailEmpty;
             }
 
             UserEmail = UserEmail.Trim();
@@ -425,7 +419,7 @@ namespace UHub.CoreLib.Security.Accounts
             var ID = UserReader.GetUserID(UserEmail);
             if (ID == null)
             {
-                return AccountResultCode.UserInvalid;
+                return AcctPswdResultCode.UserInvalid;
             }
 
             return TryUpdatePassword(
@@ -446,7 +440,7 @@ namespace UHub.CoreLib.Security.Accounts
         /// <param name="ResultCode">Code returned to indicate process status</param>
         /// <param name="GeneralFailHandler">Error handler in case DB cannot be reached or there is other unknown error</param>
         /// <returns>Status flag</returns>
-        public AccountResultCode TryUpdatePassword(
+        public AcctPswdResultCode TryUpdatePassword(
             long UserID,
             string OldPassword,
             string NewPassword,
@@ -464,30 +458,30 @@ namespace UHub.CoreLib.Security.Accounts
 
             if (OldPassword.IsEmpty())
             {
-                return AccountResultCode.PswdEmpty;
+                return AcctPswdResultCode.PswdEmpty;
             }
 
             if (NewPassword.IsEmpty())
             {
-                return AccountResultCode.PswdEmpty;
+                return AcctPswdResultCode.PswdEmpty;
             }
 
 
             if (!Regex.IsMatch(OldPassword, pswdStrength))
             {
-                return AccountResultCode.PswdInvalid;
+                return AcctPswdResultCode.PswdInvalid;
             }
 
             //check for valid NEW password
             if (!Regex.IsMatch(NewPassword, pswdStrength))
             {
-                return AccountResultCode.PswdInvalid;
+                return AcctPswdResultCode.PswdInvalid;
             }
 
             //check to see if the new password is the same as the old password
             if (OldPassword == NewPassword)
             {
-                return AccountResultCode.PswdNotChanged;
+                return AcctPswdResultCode.PswdNotChanged;
             }
 
 
@@ -495,20 +489,20 @@ namespace UHub.CoreLib.Security.Accounts
             {
                 if (!UserReader.DoesUserExist(UserID))
                 {
-                    return AccountResultCode.UserInvalid;
+                    return AcctPswdResultCode.UserInvalid;
                 }
 
                 var modUser = UserReader.GetUser(UserID);
                 if (modUser == null || modUser.ID == null)
                 {
-                    return AccountResultCode.UserInvalid;
+                    return AcctPswdResultCode.UserInvalid;
                 }
 
 
                 var isAuthValid = CoreFactory.Singleton.Auth.TryAuthenticateUser(modUser.Email, OldPassword);
                 if (!isAuthValid)
                 {
-                    return AccountResultCode.LoginFailed;
+                    return AcctPswdResultCode.LoginFailed;
                 }
 
                 //try to change password
@@ -521,12 +515,12 @@ namespace UHub.CoreLib.Security.Accounts
                 catch
                 {
                     GeneralFailHandler?.Invoke(new Guid("B6877027-52A2-41D4-949F-E47578305C44"));
-                    return AccountResultCode.UnknownError;
+                    return AcctPswdResultCode.UnknownError;
                 }
                 if (hashedPsd.IsEmpty())
                 {
                     GeneralFailHandler?.Invoke(new Guid("F70C21AA-2469-477A-9518-7CBFA7BC6F88"));
-                    return AccountResultCode.UnknownError;
+                    return AcctPswdResultCode.UnknownError;
                 }
                 try
                 {
@@ -535,7 +529,7 @@ namespace UHub.CoreLib.Security.Accounts
                 catch
                 {
                     GeneralFailHandler?.Invoke(new Guid("6D23ECC3-1D36-4F81-8EE6-9F334E97265F"));
-                    return AccountResultCode.UnknownError;
+                    return AcctPswdResultCode.UnknownError;
                 }
 
 
@@ -553,7 +547,7 @@ namespace UHub.CoreLib.Security.Accounts
                 //remove any recovery contexts
                 modUser.GetRecoveryContext()?.Delete();
 
-                return AccountResultCode.Success;
+                return AcctPswdResultCode.Success;
 
             }
             catch (Exception ex)
@@ -563,7 +557,7 @@ namespace UHub.CoreLib.Security.Accounts
 
                 CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
                 GeneralFailHandler?.Invoke(new Guid(errCode));
-                return AccountResultCode.UnknownError;
+                return AcctPswdResultCode.UnknownError;
             }
         }
 
@@ -577,7 +571,7 @@ namespace UHub.CoreLib.Security.Accounts
         /// <param name="DeviceLogout"></param>
         /// <param name="GeneralFailHandler"></param>
         /// <returns></returns>
-        public AccountResultCode TryRecoverPassword(
+        public AcctRecoveryResultCode TryRecoverPassword(
             string RecoveryContextID,
             string RecoveryKey,
             string NewPassword,
@@ -607,14 +601,14 @@ namespace UHub.CoreLib.Security.Accounts
 
             if (recoveryContext == null)
             {
-                return AccountResultCode.RecoveryContextInvalid;
+                return AcctRecoveryResultCode.RecoveryContextInvalid;
             }
 
 
             var resultCode = recoveryContext.ValidateRecoveryKey(RecoveryKey);
 
 
-            if (resultCode != AccountResultCode.Success)
+            if (resultCode != AcctRecoveryResultCode.Success)
             {
                 recoveryContext.IncrementAttemptCount();
                 return resultCode;
@@ -643,7 +637,7 @@ namespace UHub.CoreLib.Security.Accounts
         /// <exception cref="SystemDisabledException"></exception>
         /// <exception cref="InvalidOperationException"></exception>
         /// <returns>Status flag</returns>
-        public AccountResultCode TryResetPassword(
+        public AcctRecoveryResultCode TryResetPassword(
             string UserEmail,
             string NewPassword,
             bool DeviceLogout,
@@ -661,7 +655,7 @@ namespace UHub.CoreLib.Security.Accounts
 
             if (UserEmail.IsEmpty())
             {
-                return AccountResultCode.EmailEmpty;
+                return AcctRecoveryResultCode.EmailEmpty;
             }
 
             UserEmail = UserEmail.Trim();
@@ -669,7 +663,7 @@ namespace UHub.CoreLib.Security.Accounts
             var ID = UserReader.GetUserID(UserEmail);
             if (ID == null)
             {
-                return AccountResultCode.UserInvalid;
+                return AcctRecoveryResultCode.UserInvalid;
             }
 
             return TryResetPassword(
@@ -689,7 +683,7 @@ namespace UHub.CoreLib.Security.Accounts
         /// <exception cref="SystemDisabledException"></exception>
         /// <exception cref="InvalidOperationException"></exception>
         /// <returns>Status flag</returns>
-        public AccountResultCode TryResetPassword(
+        public AcctRecoveryResultCode TryResetPassword(
             long UserID,
             string NewPassword,
             bool DeviceLogout,
@@ -708,7 +702,7 @@ namespace UHub.CoreLib.Security.Accounts
             //check for valid password
             if (!Regex.IsMatch(NewPassword, CoreFactory.Singleton.Properties.PswdStrengthRegex))
             {
-                return AccountResultCode.PswdInvalid;
+                return AcctRecoveryResultCode.PswdInvalid;
             }
 
 
@@ -716,13 +710,13 @@ namespace UHub.CoreLib.Security.Accounts
             {
                 if (!UserReader.DoesUserExist(UserID))
                 {
-                    return AccountResultCode.UserInvalid;
+                    return AcctRecoveryResultCode.UserInvalid;
                 }
 
                 var modUser = UserReader.GetUser(UserID);
                 if (modUser == null || modUser.ID == null)
                 {
-                    return AccountResultCode.UserInvalid;
+                    return AcctRecoveryResultCode.UserInvalid;
                 }
 
 
@@ -739,12 +733,12 @@ namespace UHub.CoreLib.Security.Accounts
                     CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex1);
                     GeneralFailHandler?.Invoke(new Guid("AA3E2DB3-5CCF-400D-8046-1D982E723F58"));
 
-                    return AccountResultCode.UnknownError;
+                    return AcctRecoveryResultCode.UnknownError;
                 }
                 if (hashedPsd.IsEmpty())
                 {
                     GeneralFailHandler?.Invoke(new Guid("798206EE-253A-41F8-BF1F-D5FAC1608D54"));
-                    return AccountResultCode.UnknownError;
+                    return AcctRecoveryResultCode.UnknownError;
                 }
                 try
                 {
@@ -753,7 +747,7 @@ namespace UHub.CoreLib.Security.Accounts
                 catch
                 {
                     GeneralFailHandler?.Invoke(new Guid("7A6840DA-B08B-4972-B85F-11B45B45E3B0"));
-                    return AccountResultCode.UnknownError;
+                    return AcctRecoveryResultCode.UnknownError;
                 }
 
                 //if everything worked, increment user version to force global re auth
@@ -781,7 +775,7 @@ namespace UHub.CoreLib.Security.Accounts
                 modUser.GetRecoveryContext()?.Delete();
 
 
-                return AccountResultCode.Success;
+                return AcctRecoveryResultCode.Success;
 
 
             }
@@ -793,7 +787,7 @@ namespace UHub.CoreLib.Security.Accounts
                 CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
                 GeneralFailHandler?.Invoke(new Guid(errCode));
 
-                return AccountResultCode.UnknownError;
+                return AcctRecoveryResultCode.UnknownError;
             }
         }
 
@@ -863,7 +857,7 @@ namespace UHub.CoreLib.Security.Accounts
         /// <param name="IsOptional">Specify whether or not user will be forced to update password</param>
         /// <param name="GeneralFailHandler">Error handler in case DB cannot be reached or there is other unknown error</param>
         /// <returns></returns>
-        public (AccountResultCode ResultCode, IUserRecoveryContext RecoveryContext, string RecoveryKey) TryCreateUserRecoveryContext(
+        public (AcctRecoveryResultCode ResultCode, IUserRecoveryContext RecoveryContext, string RecoveryKey) TryCreateUserRecoveryContext(
             string UserEmail,
             bool IsOptional,
             Action<Guid> GeneralFailHandler = null)
@@ -871,7 +865,7 @@ namespace UHub.CoreLib.Security.Accounts
             //check for valid email format
             if (!UserEmail.IsValidEmail())
             {
-                return (AccountResultCode.EmailInvalid, null, null);
+                return (AcctRecoveryResultCode.EmailInvalid, null, null);
             }
 
 
@@ -879,7 +873,7 @@ namespace UHub.CoreLib.Security.Accounts
 
             if (id == null)
             {
-                return (AccountResultCode.UserInvalid, null, null);
+                return (AcctRecoveryResultCode.UserInvalid, null, null);
             }
 
 
@@ -896,7 +890,7 @@ namespace UHub.CoreLib.Security.Accounts
         /// <param name="IsOptional">Specify whether or not user will be forced to update password</param>
         /// <param name="GeneralFailHandler">Error handler in case DB cannot be reached or there is other unknown error</param>
         /// <returns></returns>
-        public (AccountResultCode ResultCode, IUserRecoveryContext RecoveryContext, string RecoveryKey) TryCreateUserRecoveryContext(
+        public (AcctRecoveryResultCode ResultCode, IUserRecoveryContext RecoveryContext, string RecoveryKey) TryCreateUserRecoveryContext(
             long UserID,
             bool IsOptional,
             Action<Guid> GeneralFailHandler = null)
@@ -907,7 +901,7 @@ namespace UHub.CoreLib.Security.Accounts
 
                 if (cmsUser == null || cmsUser.ID == null)
                 {
-                    return (AccountResultCode.UserInvalid, null, null);
+                    return (AcctRecoveryResultCode.UserInvalid, null, null);
                 }
 
 
@@ -916,7 +910,7 @@ namespace UHub.CoreLib.Security.Accounts
                 var recoveryContext = cmsUser.GetRecoveryContext();
                 if (recoveryContext != null && !recoveryContext.IsOptional)
                 {
-                    return (AccountResultCode.UserInvalid, null, null);
+                    return (AcctRecoveryResultCode.UserInvalid, null, null);
                 }
 
                 string recoveryKey = SysSec.Membership.GeneratePassword(R_KEY_LEN, 5);
@@ -928,16 +922,16 @@ namespace UHub.CoreLib.Security.Accounts
                 if (context == null)
                 {
                     GeneralFailHandler?.Invoke(new Guid("B2AA0C33-A7A5-4026-ADC1-687C8406E8F8"));
-                    return (AccountResultCode.UnknownError, null, null);
+                    return (AcctRecoveryResultCode.UnknownError, null, null);
                 }
 
 
 
-                return (AccountResultCode.Success, context, recoveryKey);
+                return (AcctRecoveryResultCode.Success, context, recoveryKey);
             }
             catch
             {
-                return (AccountResultCode.UserInvalid, null, null);
+                return (AcctRecoveryResultCode.UserInvalid, null, null);
             }
 
         }

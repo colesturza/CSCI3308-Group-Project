@@ -151,7 +151,6 @@
     <Compile Include="Config\CmsConfig_Security.cs" />
     <Compile Include="Config\CmsConfig_Storage.cs" />
     <Compile Include="Config\SchemaVersion.cs" />
-    <Compile Include="DataInterop\DataReaderConverters_TEST.cs" />
     <Compile Include="DataInterop\DataConverterGenerator.cs">
       <DependentUpon>DataConverterGenerator.tt</DependentUpon>
       <DesignTime>True</DesignTime>
@@ -319,7 +318,10 @@
     <Compile Include="Security\Accounts\AccountManagerAsync.cs" />
     <Compile Include="Security\Accounts\AccountManager.cs" />
     <Compile Include="Security\Accounts\APIControllers\AccountController.cs" />
-    <Compile Include="Security\Accounts\Enums\AccountResultCode.cs" />
+    <Compile Include="Security\Accounts\Enums\AcctPswdResultCode.cs" />
+    <Compile Include="Security\Accounts\Enums\AcctCreateResultCode.cs" />
+    <Compile Include="Security\Accounts\Enums\AcctRecoveryResultCode.cs" />
+    <Compile Include="Security\Accounts\Enums\AcctResultCode.cs" />
     <Compile Include="Security\Accounts\Interfaces\IAccountManagerAsync.cs" />
     <Compile Include="Security\Accounts\Interfaces\IAccountManager.cs" />
     <Compile Include="Security\Authentication\APIControllers\AuthenticationController.cs" />

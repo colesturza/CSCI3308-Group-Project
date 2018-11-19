@@ -237,7 +237,7 @@ namespace UHub.Controllers
                     GeneralFailHandler: null);
 
 
-            if (data.ResultCode != AccountResultCode.Success)
+            if (data.ResultCode != AcctRecoveryResultCode.Success)
             {
                 //*/
                 ViewBag.Message = data.ResultCode.ToString();

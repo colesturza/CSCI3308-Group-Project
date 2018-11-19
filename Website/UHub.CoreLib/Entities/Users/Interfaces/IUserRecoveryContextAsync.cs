@@ -16,7 +16,7 @@ namespace UHub.CoreLib.Entities.Users.Interfaces
         /// <summary>
         /// Increment the attempt count in DB
         /// </summary>
-        Task<AccountResultCode> IncrementAttemptCountAsync();
+        Task<AcctRecoveryResultCode> IncrementAttemptCountAsync();
 
 
         /// <summary>
