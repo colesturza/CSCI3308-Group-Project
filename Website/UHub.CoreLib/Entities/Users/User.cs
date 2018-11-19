@@ -32,9 +32,6 @@ namespace UHub.CoreLib.Entities.Users
         [DataProperty]
         public bool IsReadOnly { get; set; }
 
-        //[DataProperty]
-        //public string RefUID { get; private set; }
-
         [DataProperty]
         public bool IsConfirmed { get; set; }
 

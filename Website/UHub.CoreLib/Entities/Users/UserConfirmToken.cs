@@ -27,7 +27,7 @@ namespace UHub.CoreLib.Entities.Users
         public DateTimeOffset CreatedDate { get; set; }
 
         [DataProperty]
-        public DateTimeOffset ConfirmedDate{ get; set; }
+        public DateTimeOffset? ConfirmedDate{ get; set; }
 
         [DataProperty]
         public bool IsConfirmed { get; set; }

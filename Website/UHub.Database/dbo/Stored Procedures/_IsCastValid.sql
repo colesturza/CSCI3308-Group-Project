@@ -10,6 +10,15 @@ begin
 	--validate datatype to prevent injection attacks
 	if(@Type in (select [Name] from dbo.DataTypes))
 	begin
+
+		--NULL value will pass conversion to any data type
+		--No need to run complicated eval code
+		if(@Value is NULL)
+		begin
+			return 1;
+		end
+
+
 		begin try
 			--try to cast @Value into variable
 			--if the cast is successful, return True

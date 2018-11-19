@@ -14,7 +14,7 @@ namespace UHub.CoreLib.Entities.Users.Interfaces
 
         DateTimeOffset CreatedDate { get; set; }
 
-        DateTimeOffset ConfirmedDate { get; set; }
+        DateTimeOffset? ConfirmedDate { get; set; }
 
         bool IsConfirmed { get; set; }
 
