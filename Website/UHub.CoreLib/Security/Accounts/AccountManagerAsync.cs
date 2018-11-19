@@ -60,43 +60,20 @@ namespace UHub.CoreLib.Security.Accounts
 
             //TODO: finalize trims
             //TODO: validate year against list
-            NewUser.Year = NewUser.Year?.Trim();
-            NewUser.Company = NewUser.Company?.Trim();
-            NewUser.Email = NewUser.Email?.Trim();
+            Shared.TryCreate_HandleAttrTrim(ref NewUser);
 
 
-            //ensure email is populated
-            if (NewUser.Email.IsEmpty())
+            var attrValidation = Shared.TryCreate_ValidateUserAttributes(NewUser);
+            if (attrValidation != AcctCreateResultCode.Success)
             {
-                return AcctCreateResultCode.EmailEmpty;
-            }
-            //check for valid email length
-            if (NewUser.Email.Length < EMAIL_MIN_LEN || NewUser.Email.Length > EMAIL_MAX_LEN)
-            {
-                return AcctCreateResultCode.EmailInvalid;
-            }
-            //check for valid email format
-            if (!NewUser.Email.IsValidEmail())
-            {
-                return AcctCreateResultCode.EmailInvalid;
+                return attrValidation;
             }
 
-
-            //check for valid username
-            if (NewUser.Username.RgxIsMatch(RgxPatterns.User.USERNAME_B))
+            var pswdValidation = Shared.ValidateUserPswd(NewUser);
+            if (pswdValidation != (int)AcctCreateResultCode.Success)
             {
-                return AcctCreateResultCode.UsernameInvalid;
+                return (AcctCreateResultCode)pswdValidation;
             }
-
-
-            //check for invalid user name
-            if(NewUser.Name.RgxIsMatch(RgxPatterns.User.NAME_B))
-            {
-                return AcctCreateResultCode.NameInvalid;
-            }
-
-            //TODO: finalize attr validation
-
 
 
             //Validate user domain and school
@@ -105,16 +82,6 @@ namespace UHub.CoreLib.Security.Accounts
             var taskDoesUsernameExist = UserReader.DoesUserExistAsync(NewUser.Username, domain);
 
 
-            //ensure pswd is populated
-            if (NewUser.Password.IsEmpty())
-            {
-                return AcctCreateResultCode.PswdEmpty;
-            }
-            //check for valid password
-            if (!Regex.IsMatch(NewUser.Password, CoreFactory.Singleton.Properties.PswdStrengthRegex))
-            {
-                return AcctCreateResultCode.PswdInvalid;
-            }
 
             //check for duplicate email
             if (await taskDoesEmailExist)
@@ -150,18 +117,8 @@ namespace UHub.CoreLib.Security.Accounts
                 return AcctCreateResultCode.MajorInvalid;
             }
 
+            Shared.TryCreate_HandleUserDefaults(ref NewUser);
 
-            //set property constants
-            bool isConfirmed = CoreFactory.Singleton.Properties.AutoConfirmNewAccounts;
-            bool isApproved = CoreFactory.Singleton.Properties.AutoApproveNewAccounts;
-            string userVersion = SysSec.Membership.GeneratePassword(USER_VERSION_LEN, 0);
-            //sterilize for token processing
-            userVersion = userVersion.Replace('|', '0');
-
-
-            NewUser.IsConfirmed = isConfirmed;
-            NewUser.IsApproved = isApproved;
-            NewUser.Version = userVersion;
 
             try
             {
@@ -171,7 +128,7 @@ namespace UHub.CoreLib.Security.Accounts
 
                 if (userID == null)
                 {
-                    GeneralFailHandler?.Invoke(new Guid("CE1989AB-3C46-4810-B4F8-432D752C85A1"));
+                    GeneralFailHandler?.Invoke(new Guid("8ED72683-F21D-4E24-9899-473B20782B33"));
                     return AcctCreateResultCode.UnknownError;
                 }
 
@@ -238,9 +195,8 @@ namespace UHub.CoreLib.Security.Accounts
                     {
                         //account creating, but auto login failed
                         //should only ever occur during tests
-                        var errCode = "A275649B-AD89-43E3-8DE2-B81B6F47FE6A";
+                        var errCode = "F475C097-FC34-45E8-BEEF-EF37C9BC48B0";
                         CoreFactory.Singleton.Logging.CreateErrorLogAsync(errCode);
-
 
                         SuccessHandler?.Invoke(cmsUser, false);
                         return AcctCreateResultCode.Success;
@@ -256,10 +212,10 @@ namespace UHub.CoreLib.Security.Accounts
                         ConfirmationURL = confirmToken.GetURL()
                     };
 
-                    if (!CoreFactory.Singleton.Mail.TrySendMessage(msg))
+                    var emailSendStatus = await CoreFactory.Singleton.Mail.TrySendMessageAsync(msg);
+                    if (emailSendStatus != SmtpResultCode.Success)
                     {
-
-                        var errCode = "AEBDE62B-31D5-4B48-8D26-3123AA5219A3";
+                        var errCode = "0ADC52B0-89BB-4346-84F3-1F6CAC63DACF";
                         CoreFactory.Singleton.Logging.CreateErrorLogAsync(errCode);
                         GeneralFailHandler?.Invoke(new Guid(errCode));
 
@@ -277,7 +233,7 @@ namespace UHub.CoreLib.Security.Accounts
             }
             catch (Exception ex)
             {
-                var errCode = "A983AFB8-920A-4850-9197-3DDE7F6E89CC";
+                var errCode = "87C1806A-32DE-4077-ABE4-DA08C9493B6D";
                 Exception ex_outer = new Exception(errCode, ex);
 
                 CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
@@ -433,29 +389,18 @@ namespace UHub.CoreLib.Security.Accounts
             var taskGetRequestedUser = UserReader.GetUserAsync(UserID);
 
             //check for valid OLD password
-            var pswdStrength = CoreFactory.Singleton.Properties.PswdStrengthRegex;
-
-            if (OldPassword.IsEmpty())
+            var pswdValidation = Shared.ValidateUserPswd(OldPassword);
+            if (pswdValidation != (int)AcctResultCode.Success)
             {
-                return AcctPswdResultCode.PswdEmpty;
+                return pswdValidation;
             }
-
-            if (NewPassword.IsEmpty())
-            {
-                return AcctPswdResultCode.PswdEmpty;
-            }
-
-
-            if (!Regex.IsMatch(OldPassword, pswdStrength))
-            {
-                return AcctPswdResultCode.PswdInvalid;
-            }
-
             //check for valid NEW password
-            if (!Regex.IsMatch(NewPassword, pswdStrength))
+            pswdValidation = Shared.ValidateUserPswd(NewPassword);
+            if (pswdValidation != (int)AcctResultCode.Success)
             {
-                return AcctPswdResultCode.PswdInvalid;
+                return pswdValidation;
             }
+
 
             //check to see if the new password is the same as the old password
             if (OldPassword == NewPassword)
@@ -491,21 +436,21 @@ namespace UHub.CoreLib.Security.Accounts
                 }
                 catch
                 {
-                    GeneralFailHandler?.Invoke(new Guid("B6877027-52A2-41D4-949F-E47578305C44"));
+                    GeneralFailHandler?.Invoke(new Guid("C8CB51BB-E26F-46FF-A3F7-3762AD1708AC"));
                     return AcctPswdResultCode.UnknownError;
                 }
                 if (hashedPsd.IsEmpty())
                 {
-                    GeneralFailHandler?.Invoke(new Guid("F70C21AA-2469-477A-9518-7CBFA7BC6F88"));
+                    GeneralFailHandler?.Invoke(new Guid("E552CE2C-34C2-45EE-9D39-3E346A1FBFBF"));
                     return AcctPswdResultCode.UnknownError;
                 }
                 try
                 {
-                    UpdateUserPassword_DB(modUser.ID.Value, hashedPsd, salt);
+                    await UpdateUserPassword_DBAsync(modUser.ID.Value, hashedPsd, salt);
                 }
                 catch
                 {
-                    GeneralFailHandler?.Invoke(new Guid("6D23ECC3-1D36-4F81-8EE6-9F334E97265F"));
+                    GeneralFailHandler?.Invoke(new Guid("06C6E47C-69AD-4A3D-866C-DB797B645364"));
                     return AcctPswdResultCode.UnknownError;
                 }
 
@@ -530,7 +475,7 @@ namespace UHub.CoreLib.Security.Accounts
             }
             catch (Exception ex)
             {
-                var errCode = "B9932471-7779-4710-A97E-BB1FA147A995";
+                var errCode = "17A42823-0767-4BA4-9F24-6A868509558B";
                 Exception ex_outer = new Exception(errCode, ex);
 
                 CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
@@ -688,9 +633,10 @@ namespace UHub.CoreLib.Security.Accounts
 
 
             //check for valid password
-            if (!Regex.IsMatch(NewPassword, CoreFactory.Singleton.Properties.PswdStrengthRegex))
+            var pswdValidation = Shared.ValidateUserPswd(NewPassword);
+            if (pswdValidation != (int)AcctResultCode.Success)
             {
-                return AcctRecoveryResultCode.PswdInvalid;
+                return (AcctRecoveryResultCode)pswdValidation;
             }
 
 
@@ -715,23 +661,23 @@ namespace UHub.CoreLib.Security.Accounts
                 catch (Exception ex1)
                 {
                     CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex1);
-                    GeneralFailHandler?.Invoke(new Guid("AA3E2DB3-5CCF-400D-8046-1D982E723F58"));
+                    GeneralFailHandler?.Invoke(new Guid("87C7EC81-811A-480F-B132-7963FE0D657C"));
 
                     return AcctRecoveryResultCode.UnknownError;
                 }
                 if (hashedPsd.IsEmpty())
                 {
-                    GeneralFailHandler?.Invoke(new Guid("798206EE-253A-41F8-BF1F-D5FAC1608D54"));
+                    GeneralFailHandler?.Invoke(new Guid("A3A419C1-60D1-46D4-A8E5-13B2C6A1AF20"));
 
                     return AcctRecoveryResultCode.UnknownError;
                 }
                 try
                 {
-                    UpdateUserPassword_DB(modUser.ID.Value, hashedPsd, salt);
+                    await UpdateUserPassword_DBAsync(modUser.ID.Value, hashedPsd, salt);
                 }
                 catch
                 {
-                    GeneralFailHandler?.Invoke(new Guid("7A6840DA-B08B-4972-B85F-11B45B45E3B0"));
+                    GeneralFailHandler?.Invoke(new Guid("A36CA901-8A1F-4E73-ACE5-9DE68CF3B15A"));
 
                     return AcctRecoveryResultCode.UnknownError;
                 }
@@ -746,21 +692,21 @@ namespace UHub.CoreLib.Security.Accounts
                 }
                 catch
                 {
-                    CoreFactory.Singleton.Logging.CreateErrorLogAsync("6B11B5D6-6B8D-419C-B45D-0444EE23EA32");
+                    CoreFactory.Singleton.Logging.CreateErrorLogAsync("5F537D00-DB22-4C72-8D52-9FC557BAEED2");
                 }
 
                 //remove any recovery contexts
                 modUser.GetRecoveryContext()?.Delete();
 
 
-                
+
                 return AcctRecoveryResultCode.Success;
 
 
             }
             catch (Exception ex2)
             {
-                var errCode = "8641F1E3-B29B-4CC1-ABA5-90B8693625EE";
+                var errCode = "347A406B-85D2-4C6D-B966-3B3D81120DC3";
                 Exception ex_outer = new Exception(errCode, ex2);
 
                 CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
@@ -821,7 +767,7 @@ namespace UHub.CoreLib.Security.Accounts
             }
             catch (Exception ex)
             {
-                var errCode = "54879964-C1BD-420C-B54D-BFBECFB71A52";
+                var errCode = "7AA4C25A-458D-4184-A50A-C85779E5DDAF";
                 Exception ex_outer = new Exception(errCode, ex);
 
                 CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
@@ -902,7 +848,7 @@ namespace UHub.CoreLib.Security.Accounts
 
                 if (context == null)
                 {
-                    GeneralFailHandler?.Invoke(new Guid("B2AA0C33-A7A5-4026-ADC1-687C8406E8F8"));
+                    GeneralFailHandler?.Invoke(new Guid("17849D2D-07D7-4BC4-939A-51CD1D4D0707"));
                     return (AcctRecoveryResultCode.UnknownError, null, null);
                 }
 

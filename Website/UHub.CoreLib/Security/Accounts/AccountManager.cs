@@ -63,52 +63,19 @@ namespace UHub.CoreLib.Security.Accounts
 
             //TODO: finalize trims
             //TODO: validate year against list
-            NewUser.Year = NewUser.Year?.Trim();
-            NewUser.Company = NewUser.Company?.Trim();
-            NewUser.Email = NewUser.Email?.Trim();
+            Shared.TryCreate_HandleAttrTrim(ref NewUser);
 
 
-            //ensure email is populated
-            if (NewUser.Email.IsEmpty())
+            var attrValidation = Shared.TryCreate_ValidateUserAttributes(NewUser);
+            if (attrValidation != AcctCreateResultCode.Success)
             {
-                return AcctCreateResultCode.EmailEmpty;
-            }
-            //check for valid email length
-            if (NewUser.Email.Length < EMAIL_MIN_LEN || NewUser.Email.Length > EMAIL_MAX_LEN)
-            {
-                return AcctCreateResultCode.EmailInvalid;
-            }
-            //check for valid email format
-            if (!NewUser.Email.IsValidEmail())
-            {
-                return AcctCreateResultCode.EmailInvalid;
+                return attrValidation;
             }
 
-
-            //check for valid username
-            if (!NewUser.Username.RgxIsMatch(RgxPatterns.User.USERNAME_B))
+            var pswdValidation = Shared.ValidateUserPswd(NewUser);
+            if (pswdValidation != (int)AcctResultCode.Success)
             {
-                return AcctCreateResultCode.UsernameInvalid;
-            }
-
-            //check for invalid user name
-            if (!NewUser.Name.RgxIsMatch(RgxPatterns.User.NAME_B))
-            {
-                return AcctCreateResultCode.NameInvalid;
-            }
-
-            //TODO: finalize attr validation
-
-
-            //ensure pswd is populated
-            if (NewUser.Password.IsEmpty())
-            {
-                return AcctCreateResultCode.PswdEmpty;
-            }
-            //check for valid password
-            if (!Regex.IsMatch(NewUser.Password, CoreFactory.Singleton.Properties.PswdStrengthRegex))
-            {
-                return AcctCreateResultCode.PswdInvalid;
+                return (AcctCreateResultCode)pswdValidation;
             }
 
 
@@ -148,19 +115,8 @@ namespace UHub.CoreLib.Security.Accounts
                 return AcctCreateResultCode.MajorInvalid;
             }
 
+            Shared.TryCreate_HandleUserDefaults(ref NewUser);
 
-
-            //set property constants
-            bool isConfirmed = CoreFactory.Singleton.Properties.AutoConfirmNewAccounts;
-            bool isApproved = CoreFactory.Singleton.Properties.AutoApproveNewAccounts;
-            string userVersion = SysSec.Membership.GeneratePassword(USER_VERSION_LEN, 0);
-            //sterilize for token processing
-            userVersion = userVersion.Replace('|', '0');
-
-
-            NewUser.IsConfirmed = isConfirmed;
-            NewUser.IsApproved = isApproved;
-            NewUser.Version = userVersion;
 
             try
             {
@@ -236,6 +192,7 @@ namespace UHub.CoreLib.Security.Accounts
                     catch
                     {
                         //account creating, but auto login failed
+                        //should only ever occur during tests
                         var errCode = "A275649B-AD89-43E3-8DE2-B81B6F47FE6A";
                         CoreFactory.Singleton.Logging.CreateErrorLogAsync(errCode);
 
@@ -252,7 +209,8 @@ namespace UHub.CoreLib.Security.Accounts
                         ConfirmationURL = confirmToken.GetURL()
                     };
 
-                    if (!CoreFactory.Singleton.Mail.TrySendMessage(msg))
+                    var emailSendStatus = CoreFactory.Singleton.Mail.TrySendMessage(msg);
+                    if (emailSendStatus != SmtpResultCode.Success)
                     {
                         var errCode = "AEBDE62B-31D5-4B48-8D26-3123AA5219A3";
                         CoreFactory.Singleton.Logging.CreateErrorLogAsync(errCode);
@@ -454,28 +412,16 @@ namespace UHub.CoreLib.Security.Accounts
             }
 
             //check for valid OLD password
-            var pswdStrength = CoreFactory.Singleton.Properties.PswdStrengthRegex;
-
-            if (OldPassword.IsEmpty())
+            var pswdValidation = Shared.ValidateUserPswd(OldPassword);
+            if (pswdValidation != (int)AcctResultCode.Success)
             {
-                return AcctPswdResultCode.PswdEmpty;
+                return pswdValidation;
             }
-
-            if (NewPassword.IsEmpty())
-            {
-                return AcctPswdResultCode.PswdEmpty;
-            }
-
-
-            if (!Regex.IsMatch(OldPassword, pswdStrength))
-            {
-                return AcctPswdResultCode.PswdInvalid;
-            }
-
             //check for valid NEW password
-            if (!Regex.IsMatch(NewPassword, pswdStrength))
+            pswdValidation = Shared.ValidateUserPswd(NewPassword);
+            if (pswdValidation != (int)AcctResultCode.Success)
             {
-                return AcctPswdResultCode.PswdInvalid;
+                return pswdValidation;
             }
 
             //check to see if the new password is the same as the old password
@@ -700,9 +646,10 @@ namespace UHub.CoreLib.Security.Accounts
             }
 
             //check for valid password
-            if (!Regex.IsMatch(NewPassword, CoreFactory.Singleton.Properties.PswdStrengthRegex))
+            var pswdValidation = Shared.ValidateUserPswd(NewPassword);
+            if (pswdValidation != (int)AcctResultCode.Success)
             {
-                return AcctRecoveryResultCode.PswdInvalid;
+                return (AcctRecoveryResultCode)pswdValidation;
             }
 
 

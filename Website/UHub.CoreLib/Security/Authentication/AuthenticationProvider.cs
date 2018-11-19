@@ -33,10 +33,9 @@ namespace UHub.CoreLib.Security.Authentication
         /// <param name="GeneralFailHandler">Error handler in case DB cannot be reached or there is other unknown error</param>
         /// <param name="UserTokenHandler">Success handler to handle user token distribution</param>
         /// <returns>Status Flag</returns>
-        abstract internal bool TryAuthenticateUser(
+        abstract internal AuthResultCode TryAuthenticateUser(
             string userEmail, 
             string userPassword,
-            out AuthResultCode ResultCode,
             Action<Guid> GeneralFailHandler = null,
             Func<User, bool> UserTokenHandler = null);
 

@@ -322,6 +322,7 @@
     <Compile Include="Security\Accounts\Enums\AcctCreateResultCode.cs" />
     <Compile Include="Security\Accounts\Enums\AcctRecoveryResultCode.cs" />
     <Compile Include="Security\Accounts\Enums\AcctResultCode.cs" />
+    <Compile Include="Security\Accounts\AccountManagerShared.cs" />
     <Compile Include="Security\Accounts\Interfaces\IAccountManagerAsync.cs" />
     <Compile Include="Security\Accounts\Interfaces\IAccountManager.cs" />
     <Compile Include="Security\Authentication\APIControllers\AuthenticationController.cs" />
@@ -336,6 +337,7 @@
     <Compile Include="Security\Authentication\Enums\UserLoginScope.cs" />
     <Compile Include="Security\Authentication\FormsAuthProviderAsync.cs" />
     <Compile Include="Security\Authentication\FormsAuthProvider.cs" />
+    <Compile Include="Security\Authentication\FormsAuthProviderShared.cs" />
     <Compile Include="Security\Authentication\Interfaces\IAuthenticationManagerAsync.cs" />
     <Compile Include="Security\Authentication\Interfaces\IAuthenticationManager.cs" />
     <Compile Include="Security\Authentication\TokenManagerAsync.cs" />
