@@ -117,6 +117,11 @@ namespace UHub.CoreLib.Entities.Schools.Management
             }
 
 
+            if (!Domain.IsValidEmailDomain())
+            {
+                return null;
+            }
+
             return SqlWorker.ExecBasicQuery<School>(
                 _dbConn,
                 "[dbo].[School_GetByDomain]",
@@ -149,11 +154,7 @@ namespace UHub.CoreLib.Entities.Schools.Management
         public static bool IsDomainValid(string Domain)
         {
 
-            if(Domain.IsEmpty())
-            {
-                return false;
-            }
-            if(!Domain.StartsWith("@"))
+            if (!Domain.IsValidEmailDomain())
             {
                 return false;
             }

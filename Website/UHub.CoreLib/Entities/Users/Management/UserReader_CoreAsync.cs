@@ -55,6 +55,11 @@ namespace UHub.CoreLib.Entities.Users.Management
                 throw new SystemDisabledException();
             }
 
+            if (!Email.IsValidEmail())
+            {
+                return false;
+            }
+
 
             try
             {
@@ -82,6 +87,12 @@ namespace UHub.CoreLib.Entities.Users.Management
             {
                 throw new SystemDisabledException();
             }
+
+            if (!Domain.IsValidEmailDomain())
+            {
+                return false;
+            }
+
 
             try
             {
@@ -120,6 +131,12 @@ namespace UHub.CoreLib.Entities.Users.Management
                 throw new SystemDisabledException();
             }
 
+            if (!Email.IsValidEmail())
+            {
+                return null;
+            }
+
+
             try
             {
                 return await SqlWorker.ExecScalarAsync<long>(
@@ -152,6 +169,10 @@ namespace UHub.CoreLib.Entities.Users.Management
                 throw new SystemDisabledException();
             }
 
+            if (!Domain.IsValidEmailDomain())
+            {
+                return null;
+            }
 
             try
             {
@@ -222,6 +243,12 @@ namespace UHub.CoreLib.Entities.Users.Management
                 throw new SystemDisabledException();
             }
 
+            if (!Email.IsValidEmail())
+            {
+                return null;
+            }
+
+
             try
             {
                 var temp = await SqlWorker.ExecBasicQueryAsync<User>(
@@ -255,6 +282,12 @@ namespace UHub.CoreLib.Entities.Users.Management
             {
                 throw new SystemDisabledException();
             }
+
+            if (!Domain.IsValidEmailDomain())
+            {
+                return null;
+            }
+
 
             try
             {

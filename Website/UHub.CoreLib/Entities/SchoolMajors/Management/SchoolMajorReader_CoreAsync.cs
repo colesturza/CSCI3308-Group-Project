@@ -95,6 +95,10 @@ namespace UHub.CoreLib.Entities.SchoolMajors.Management
                 throw new SystemDisabledException();
             }
 
+            if (!Email.IsValidEmail())
+            {
+                return Enumerable.Empty<SchoolMajor>();
+            }
 
             return await SqlWorker.ExecBasicQueryAsync<SchoolMajor>(
                 _dbConn,
@@ -118,6 +122,10 @@ namespace UHub.CoreLib.Entities.SchoolMajors.Management
                 throw new SystemDisabledException();
             }
 
+            if (!Domain.IsValidEmailDomain())
+            {
+                return Enumerable.Empty<SchoolMajor>();
+            }
 
             return await SqlWorker.ExecBasicQueryAsync<SchoolMajor>(
                 _dbConn,

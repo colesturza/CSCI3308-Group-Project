@@ -116,6 +116,11 @@ namespace UHub.CoreLib.Entities.Schools.Management
                 throw new SystemDisabledException();
             }
 
+            if (!Domain.IsValidEmailDomain())
+            {
+                return null;
+            }
+
             var temp = await SqlWorker.ExecBasicQueryAsync<School>(
                 _dbConn,
                 "[dbo].[School_GetByDomain]",
@@ -150,12 +155,7 @@ namespace UHub.CoreLib.Entities.Schools.Management
 
         public static async Task<bool> IsDomainValidAsync(string Domain)
         {
-
-            if (Domain.IsEmpty())
-            {
-                return false;
-            }
-            if (!Domain.StartsWith("@"))
+            if(!Domain.IsValidEmailDomain())
             {
                 return false;
             }

@@ -98,6 +98,10 @@ namespace UHub.CoreLib.Entities.SchoolMajors.Management
                 throw new SystemDisabledException();
             }
 
+            if (!Email.IsValidEmail())
+            {
+                return Enumerable.Empty<SchoolMajor>();
+            }
 
             return SqlWorker.ExecBasicQuery<SchoolMajor>(
                 _dbConn,
@@ -120,6 +124,10 @@ namespace UHub.CoreLib.Entities.SchoolMajors.Management
                 throw new SystemDisabledException();
             }
 
+            if (!Domain.IsValidEmailDomain())
+            {
+                return Enumerable.Empty<SchoolMajor>();
+            }
 
             return SqlWorker.ExecBasicQuery<SchoolMajor>(
                 _dbConn,
