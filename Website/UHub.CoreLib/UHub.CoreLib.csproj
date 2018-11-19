@@ -251,8 +251,10 @@
     <Compile Include="Entities\Schools\School.cs" />
     <Compile Include="Entities\Users\APIControllers\UserController.cs" />
     <Compile Include="Entities\Users\DTOs\User_CredentialDTO.cs" />
+    <Compile Include="Entities\Users\Interfaces\IUserConfirmToken.cs" />
     <Compile Include="Entities\Users\Interfaces\IUserCredential.cs" />
     <Compile Include="Entities\Users\Interfaces\IUserRecoveryContextAsync.cs" />
+    <Compile Include="Entities\Users\Management\UserReader_ConfirmTokenAsync.cs" />
     <Compile Include="Entities\Users\Management\UserReader_CoreAsync.cs" />
     <Compile Include="Entities\Users\Management\UserReader_EntClubAsync.cs" />
     <Compile Include="Entities\Users\Management\UserReader_EntClub.cs" />
@@ -262,12 +264,14 @@
     <Compile Include="Entities\Users\Management\UserReader_EntClubMods.cs" />
     <Compile Include="Entities\Users\Management\UserReader_EntPostsAsync.cs" />
     <Compile Include="Entities\Users\Management\UserReader_EntPosts.cs" />
+    <Compile Include="Entities\Users\Management\UserReader_ConfirmToken.cs" />
     <Compile Include="Entities\Users\Management\UserReader_RecoveryContextAsync.cs" />
     <Compile Include="Entities\Users\Management\UserWriterAsync.cs" />
     <Compile Include="Entities\Users\Management\UserWriter_Core.cs" />
     <Compile Include="Entities\Users\Management\UserWriter_RecoveryContext.cs" />
     <Compile Include="Entities\Users\Management\UserWriter_RecoveryContextAsync.cs" />
     <Compile Include="Entities\Users\UserAsync.cs" />
+    <Compile Include="Entities\Users\UserConfirmToken.cs" />
     <Compile Include="Entities\Users\UserRecoveryContextAsync.cs" />
     <Compile Include="ErrorHandling\Exceptions\AccessForbiddenException.cs" />
     <Compile Include="ErrorHandling\Exceptions\ConfigBootstrapException.cs" />

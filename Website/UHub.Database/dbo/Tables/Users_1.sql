@@ -1,6 +1,5 @@
 ﻿CREATE TABLE [dbo].[Users] (
     [EntID]       BIGINT         NOT NULL,
-    [RefUID]      NVARCHAR (100) CONSTRAINT [DF_Users_RefUID] DEFAULT (replace(concat(newid(),newid(),newid()),'-','')) NOT NULL,
     [Email]       NVARCHAR (250) NOT NULL,
     [Domain]      NVARCHAR (250) NULL,
     [Username]    NVARCHAR (100) NOT NULL,
@@ -13,14 +12,15 @@
 );
 
 
+
+
 GO
 CREATE UNIQUE NONCLUSTERED INDEX [IX_Users_Uname_Domain]
     ON [dbo].[Users]([Username] ASC, [Domain] ASC);
 
 
 GO
-CREATE NONCLUSTERED INDEX [IX_Users_RefUID]
-    ON [dbo].[Users]([RefUID] ASC);
+
 
 
 GO

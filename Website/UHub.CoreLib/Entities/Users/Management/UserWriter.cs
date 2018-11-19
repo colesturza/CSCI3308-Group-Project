@@ -129,7 +129,8 @@ namespace UHub.CoreLib.Entities.Users.Management
         /// Confirm user account
         /// </summary>
         /// <param name="RefUID"></param>
-        internal static bool ConfirmUser(string RefUID)
+        /// <param name="MinCreatedDate">If the confirmation token is create before this time, then it is expired</param>
+        internal static bool ConfirmUser(string RefUID, DateTimeOffset MinCreatedDate)
         {
             if (!CoreFactory.Singleton.IsEnabled)
             {
@@ -145,6 +146,7 @@ namespace UHub.CoreLib.Entities.Users.Management
                         (cmd) =>
                         {
                             cmd.Parameters.Add("@RefUID", SqlDbType.NVarChar).Value = RefUID;
+                            cmd.Parameters.Add("@MinCreatedDate", SqlDbType.DateTimeOffset).Value = MinCreatedDate;
                         });
             }
             catch (Exception ex)

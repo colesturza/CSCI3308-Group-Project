@@ -14,18 +14,20 @@ namespace UHub.CoreLib.Entities.Users.Management
     public static partial class UserReader
     {
 
-        public static IUserRecoveryContext GetRecoveryContext(long UserID)
+        public static async Task<IUserConfirmToken> GetConfirmTokenAsync(long UserID)
         {
             try
             {
-                return SqlWorker.ExecBasicQuery<UserRecoveryContext>(
+                var temp = await SqlWorker.ExecBasicQueryAsync<UserConfirmToken>(
                     _dbConn,
-                    "[dbo].[User_GetRecoveryContextByUserID]",
+                    "[dbo].[User_GetConfirmTokenByUserID]",
                     (cmd) =>
                     {
                         cmd.Parameters.Add("@UserID", SqlDbType.BigInt).Value = UserID;
-                    })
-                    .SingleOrDefault();
+                    });
+
+                return temp.SingleOrDefault();
+
             }
             catch (Exception ex)
             {
@@ -34,18 +36,20 @@ namespace UHub.CoreLib.Entities.Users.Management
             }
         }
 
-        public static IUserRecoveryContext GetRecoveryContext(string RecoveryID)
+        public static async Task<IUserConfirmToken> GetConfirmTokenAsync(string RefUID)
         {
             try
             {
-                return SqlWorker.ExecBasicQuery<UserRecoveryContext>(
+                var temp = await SqlWorker.ExecBasicQueryAsync<UserConfirmToken>(
                     _dbConn,
-                    "[dbo].[User_GetRecoveryContextByID]",
+                    "[dbo].[User_GetConfirmTokenByID]",
                     (cmd) =>
                     {
-                        cmd.Parameters.Add("@RecoveryID", SqlDbType.NVarChar).Value = RecoveryID;
-                    })
-                    .SingleOrDefault();
+                        cmd.Parameters.Add("@RefUID", SqlDbType.NVarChar).Value = RefUID;
+                    });
+
+
+                return temp.SingleOrDefault();
             }
             catch (Exception ex)
             {

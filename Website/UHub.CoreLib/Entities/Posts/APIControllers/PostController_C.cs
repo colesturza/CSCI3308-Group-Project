@@ -46,7 +46,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser();
 
 
-            
+
             var taskIsValidParent = UserReader.ValidatePostParentAsync((long)cmsUser.ID, tmpPost.ParentID);
             var taskIsUserBanned = SchoolClubReader.IsUserBannedAsync(post.ParentID, cmsUser.ID.Value);
 
@@ -74,6 +74,9 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
 
             try
             {
+                tmpPost.Name = tmpPost.Name.Trim();
+                tmpPost.Content = tmpPost.Content.Trim();
+
                 var sanitizerMode = CoreFactory.Singleton.Properties.HtmlSanitizerMode;
                 if ((sanitizerMode & HtmlSanitizerMode.OnWrite) != 0)
                 {

@@ -61,7 +61,13 @@ namespace UHub.CoreLib.Security.Accounts
             }
 
 
+            //TODO: finalize trims
+            //TODO: validate year against list
+            NewUser.Year = NewUser.Year?.Trim();
+            NewUser.Company = NewUser.Company?.Trim();
             NewUser.Email = NewUser.Email?.Trim();
+
+
             //ensure email is populated
             if (NewUser.Email.IsEmpty())
             {
@@ -78,6 +84,28 @@ namespace UHub.CoreLib.Security.Accounts
                 return AccountResultCode.EmailInvalid;
             }
 
+
+            //check for valid username
+            if (!NewUser.Username.RgxIsMatch(RgxPatterns.User.USERNAME_B))
+            {
+                return AccountResultCode.UsernameInvalid;
+            }
+
+            //check for invalid user name
+            if (!NewUser.Name.RgxIsMatch(RgxPatterns.User.NAME))
+            {
+                return AccountResultCode.NameInvalid;
+            }
+
+            //check for invalid user name
+            if (!NewUser.Name.RgxIsMatch(RgxPatterns.User.NAME_B))
+            {
+                return AccountResultCode.NameInvalid;
+            }
+
+            //TODO: finalize attr validation
+
+
             //ensure pswd is populated
             if (NewUser.Password.IsEmpty())
             {
@@ -88,6 +116,7 @@ namespace UHub.CoreLib.Security.Accounts
             {
                 return AccountResultCode.PswdInvalid;
             }
+
 
             //check for duplicate email
             if (UserReader.DoesUserExist(NewUser.Email))
@@ -189,12 +218,13 @@ namespace UHub.CoreLib.Security.Accounts
 
                 //get cms user
                 var cmsUser = UserReader.GetUser(userID.Value);
+                var confirmToken = UserReader.GetConfirmToken(userID.Value);
 
 
                 //attempt autologin
                 //autoconfirm user -> auto login
-                bool canLogin = 
-                    AttemptAutoLogin 
+                bool canLogin =
+                    AttemptAutoLogin
                     && CoreFactory.Singleton.Properties.AutoConfirmNewAccounts
                     && CoreFactory.Singleton.Properties.AutoApproveNewAccounts;
 
@@ -225,7 +255,7 @@ namespace UHub.CoreLib.Security.Accounts
 
                     var msg = new SmtpMessage_ConfirmAcct($"{siteName} Account Confirmation", siteName, NewUser.Email)
                     {
-                        ConfirmationURL = cmsUser.GetConfirmationURL()
+                        ConfirmationURL = confirmToken.GetURL()
                     };
 
                     if (!CoreFactory.Singleton.Mail.TrySendMessage(msg))
@@ -307,9 +337,29 @@ namespace UHub.CoreLib.Security.Accounts
                 return false;
             }
 
-            Status = "Success";
-            UserWriter.ConfirmUser(RefUID);
-            return true;
+            //get Today - ConfLifespan 
+            //Determine the earliest date that a confirmation email could be created and still be valid
+            //If ConfLifespan is 0, then allow infinite time
+            DateTimeOffset minCreatedDate = DateTimeOffset.MinValue;
+            var confLifespan = CoreFactory.Singleton.Properties.AcctConfirmLifespan;
+            if (confLifespan != TimeSpan.Zero)
+            {
+                minCreatedDate = DateTimeOffset.UtcNow - confLifespan;
+            }
+
+
+            var isValid = UserWriter.ConfirmUser(RefUID, minCreatedDate);
+
+            if (isValid)
+            {
+                Status = "Success";
+                return true;
+            }
+            else
+            {
+                Status = "Confirmation Token Not Valid";
+                return false;
+            }
         }
 
 
@@ -554,8 +604,8 @@ namespace UHub.CoreLib.Security.Accounts
 
 
             var recoveryContext = UserReader.GetRecoveryContext(RecoveryContextID);
-            
-            if(recoveryContext == null)
+
+            if (recoveryContext == null)
             {
                 return AccountResultCode.RecoveryContextInvalid;
             }
@@ -564,7 +614,7 @@ namespace UHub.CoreLib.Security.Accounts
             var resultCode = recoveryContext.ValidateRecoveryKey(RecoveryKey);
 
 
-            if(resultCode != AccountResultCode.Success)
+            if (resultCode != AccountResultCode.Success)
             {
                 recoveryContext.IncrementAttemptCount();
                 return resultCode;
@@ -688,7 +738,7 @@ namespace UHub.CoreLib.Security.Accounts
                 {
                     CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex1);
                     GeneralFailHandler?.Invoke(new Guid("AA3E2DB3-5CCF-400D-8046-1D982E723F58"));
-                    
+
                     return AccountResultCode.UnknownError;
                 }
                 if (hashedPsd.IsEmpty())
@@ -882,7 +932,7 @@ namespace UHub.CoreLib.Security.Accounts
                 }
 
 
-                
+
                 return (AccountResultCode.Success, context, recoveryKey);
             }
             catch

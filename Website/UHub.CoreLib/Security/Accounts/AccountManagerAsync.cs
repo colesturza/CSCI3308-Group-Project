@@ -60,7 +60,13 @@ namespace UHub.CoreLib.Security.Accounts
 
 
 
+            //TODO: finalize trims
+            //TODO: validate year against list
+            NewUser.Year = NewUser.Year?.Trim();
+            NewUser.Company = NewUser.Company?.Trim();
             NewUser.Email = NewUser.Email?.Trim();
+
+
             //ensure email is populated
             if (NewUser.Email.IsEmpty())
             {
@@ -76,6 +82,23 @@ namespace UHub.CoreLib.Security.Accounts
             {
                 return AccountResultCode.EmailInvalid;
             }
+
+
+            //check for valid username
+            if (NewUser.Username.RgxIsMatch(RgxPatterns.User.USERNAME_B))
+            {
+                return AccountResultCode.UsernameInvalid;
+            }
+
+
+            //check for invalid user name
+            if(NewUser.Name.RgxIsMatch(RgxPatterns.User.NAME_B))
+            {
+                return AccountResultCode.NameInvalid;
+            }
+
+            //TODO: finalize attr validation
+
 
 
             //Validate user domain and school
@@ -192,6 +215,7 @@ namespace UHub.CoreLib.Security.Accounts
 
                 //get cms user
                 var cmsUser = UserReader.GetUser(userID.Value);
+                var taskConfirmToken = UserReader.GetConfirmTokenAsync(userID.Value);
 
 
                 //attempt autologin
@@ -227,10 +251,11 @@ namespace UHub.CoreLib.Security.Accounts
                 else if (!CoreFactory.Singleton.Properties.AutoConfirmNewAccounts)
                 {
                     var siteName = CoreFactory.Singleton.Properties.SiteFriendlyName;
+                    var confirmToken = await taskConfirmToken;
 
                     var msg = new SmtpMessage_ConfirmAcct($"{siteName} Account Confirmation", siteName, NewUser.Email)
                     {
-                        ConfirmationURL = cmsUser.GetConfirmationURL()
+                        ConfirmationURL = confirmToken.GetURL()
                     };
 
                     if (!CoreFactory.Singleton.Mail.TrySendMessage(msg))
@@ -287,17 +312,28 @@ namespace UHub.CoreLib.Security.Accounts
                 return (false, $"Invalid {nameof(RefUID)} format");
             }
 
+
+            //get Today - ConfLifespan 
+            //Determine the earliest date that a confirmation email could be created and still be valid
+            //If ConfLifespan is 0, then allow infinite time
+            DateTimeOffset minCreatedDate = DateTimeOffset.MinValue;
+            var confLifespan = CoreFactory.Singleton.Properties.AcctConfirmLifespan;
+            if (confLifespan != TimeSpan.Zero)
+            {
+                minCreatedDate = DateTimeOffset.UtcNow - confLifespan;
+            }
+
             try
             {
-                var result = await UserWriter.ConfirmUserAsync(RefUID);
+                var isValid = await UserWriter.ConfirmUserAsync(RefUID, minCreatedDate);
 
-                if (result)
+                if (isValid)
                 {
-                    return (result, "Success");
+                    return (true, "Success");
                 }
                 else
                 {
-                    return (false, "Uknown Error");
+                    return (false, "Confirmation Token Not Valid");
                 }
             }
             catch

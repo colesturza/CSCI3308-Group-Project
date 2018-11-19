@@ -28,7 +28,7 @@ namespace UHub.CoreLib.Entities.Users.Management
 
             if (IsTemporary)
             {
-                var span = CoreFactory.Singleton.Properties.AcctPswdRecoveryExpiration;
+                var span = CoreFactory.Singleton.Properties.AcctPswdRecoveryLifespan;
                 if (span.Ticks == 0)
                 {
                     resetExpiration = DateTimeOffset.MaxValue;

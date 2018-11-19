@@ -132,13 +132,13 @@ namespace UHub.CoreLib.Config
 
 
             //SECURITY
-            ValidateObject(Security.MaxPswdAge, nameof(Security.MaxPswdAge));
+            ValidateTimeSpan_NonNeg(Security.AcctPswdRecoveryLifespan, nameof(Security.AcctPswdRecoveryLifespan));
+            ValidateTimeSpan_NonNeg(Security.AcctConfirmLifespan, nameof(Security.AcctConfirmLifespan));
+            ValidateTimeSpan_NonNeg(Security.MaxPswdAge, nameof(Security.MaxPswdAge));
+            ValidateTimeSpan_NonNeg(Security.MaxAuthTokenLifespan, nameof(Security.MaxAuthTokenLifespan));
+            ValidateTimeSpan_Pos(Security.AuthTokenTimeout, nameof(Security.AuthTokenTimeout));
 
-            if (Security.MaxPswdAge != null && Security.MaxPswdAge.Ticks < 0)
-            {
-                string err = $"{nameof(Security.MaxPswdAge)} cannot be less than 0.";
-                throw new ArgumentException(err);
-            }
+            
             if (Security.MaxPswdAge != null && Security.MaxPswdAge.Ticks > 0)
             {
                 if (!Security.EnablePswdRecovery)
@@ -162,10 +162,8 @@ namespace UHub.CoreLib.Config
                 ValidateString(Security.RecaptchaPrivateKey, nameof(Security.RecaptchaPrivateKey));
                 ValidateString(Security.RecaptchaPublicKey, nameof(Security.RecaptchaPublicKey));
             }
-            ValidateObject(Security.MaxAuthTokenLifespan, nameof(Security.MaxAuthTokenLifespan));
-            ValidateTimeSpan(Security.AuthTokenTimeout, nameof(Security.AuthTokenTimeout));
-            //make sure the token timeout is longer than the token max age
-            //mut ensure max lifespan is not infinite
+            //check if the token timeout is longer than the token max age
+            //but ensure max lifespan is not infinite
             if (Security.AuthTokenTimeout.Ticks > Security.MaxAuthTokenLifespan.Ticks && Security.MaxAuthTokenLifespan.Ticks > 0)
             {
                 string err = nameof(Security.AuthTokenTimeout) + " must be greater than " + nameof(Security.MaxAuthTokenLifespan);
@@ -216,8 +214,8 @@ namespace UHub.CoreLib.Config
 
                 //make sure that MailClient/Pswd reset meta is set if the proxy address is set
                 ValidateObject(Mail.NoReplyMailConfig, nameof(Mail.NoReplyMailConfig));
-                ValidateTimeSpan(Security.PswdAttemptPeriod, nameof(Security.PswdAttemptPeriod));
-                ValidateTimeSpan(Security.PswdLockResetPeriod, nameof(Security.PswdLockResetPeriod));
+                ValidateTimeSpan_Pos(Security.PswdAttemptPeriod, nameof(Security.PswdAttemptPeriod));
+                ValidateTimeSpan_Pos(Security.PswdLockResetPeriod, nameof(Security.PswdLockResetPeriod));
             }
 
             if (Security.ForceHTTPS)
@@ -234,12 +232,12 @@ namespace UHub.CoreLib.Config
             //CACHING
             if (Caching.EnableDBPageCaching)
             {
-                ValidateTimeSpan(Caching.MaxDBCacheAge, nameof(Caching.MaxDBCacheAge));
+                ValidateTimeSpan_Pos(Caching.MaxDBCacheAge, nameof(Caching.MaxDBCacheAge));
             }
             if (Caching.EnableIISPageCaching)
             {
-                ValidateTimeSpan(Caching.MaxStaticCacheAge, nameof(Caching.MaxStaticCacheAge));
-                ValidateTimeSpan(Caching.MaxDynamicCacheAge, nameof(Caching.MaxDynamicCacheAge));
+                ValidateTimeSpan_Pos(Caching.MaxStaticCacheAge, nameof(Caching.MaxStaticCacheAge));
+                ValidateTimeSpan_Pos(Caching.MaxDynamicCacheAge, nameof(Caching.MaxDynamicCacheAge));
             }
 
             //API
@@ -307,15 +305,41 @@ namespace UHub.CoreLib.Config
         }
 
         /// <summary>
-        /// Ensure that timespan is not null/empty/0
+        /// Ensure that timespan is not null/empty
         /// </summary>
         /// <param name="tSpan">Timespan to test</param>
         /// <param name="argName">Name of timespan variable</param>
         private void ValidateTimeSpan(TimeSpan tSpan, string argName)
         {
-            if (tSpan == null || tSpan == TimeSpan.Zero)
+            if (tSpan == null)
             {
-                throw new ArgumentException(argName + " cannot be null or empty.");
+                throw new ArgumentException(argName + " cannot be null.");
+            }
+        }
+
+        /// <summary>
+        /// Ensure that timespan is not null/empty/less than 1
+        /// </summary>
+        /// <param name="tSpan">Timespan to test</param>
+        /// <param name="argName">Name of timespan variable</param>
+        private void ValidateTimeSpan_Pos(TimeSpan tSpan, string argName)
+        {
+            if (tSpan == null || tSpan.Ticks < 1)
+            {
+                throw new ArgumentException(argName + " cannot be null or less than 1.");
+            }
+        }
+
+        /// <summary>
+        /// Ensure that timespan is not null/empty/negative
+        /// </summary>
+        /// <param name="tSpan">Timespan to test</param>
+        /// <param name="argName">Name of timespan variable</param>
+        private void ValidateTimeSpan_NonNeg(TimeSpan tSpan, string argName)
+        {
+            if (tSpan == null || tSpan.Ticks < 0)
+            {
+                throw new ArgumentException(argName + " cannot be null or negative.");
             }
         }
 

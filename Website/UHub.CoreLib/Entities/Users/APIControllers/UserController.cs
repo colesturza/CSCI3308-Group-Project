@@ -42,8 +42,9 @@ namespace UHub.CoreLib.Entities.Users.APIControllers
 
             var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser();
 
+            var dtoUser = cmsUser.ToDto<User_R_PrivateDTO>();
 
-            return Ok(cmsUser.ToDto<User_R_PrivateDTO>());
+            return Ok();
 
         }
 
