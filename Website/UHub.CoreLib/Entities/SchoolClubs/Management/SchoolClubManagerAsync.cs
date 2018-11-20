@@ -25,6 +25,10 @@ namespace UHub.CoreLib.Entities.SchoolClubs.Management
 
 
             var id = await SchoolClubWriter.TryCreateClubAsync(NewClub);
+            if (id == null)
+            {
+                return (id, SchoolClubResultCode.UnknownError);
+            }
             return (id, SchoolClubResultCode.Success);
 
         }

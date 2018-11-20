@@ -69,6 +69,11 @@ namespace UHub.CoreLib.Entities.Comments.APIControllers
                     status = "Comment created.";
                     statCode = HttpStatusCode.OK;
                 }
+                else if(ResultCode == CommentResultCode.UnknownError)
+                {
+                    status = "Unknown server error";
+                    statCode = HttpStatusCode.InternalServerError;
+                }
                 else
                 {
                     status = "Invalid Field - " + ResultCode.ToString();

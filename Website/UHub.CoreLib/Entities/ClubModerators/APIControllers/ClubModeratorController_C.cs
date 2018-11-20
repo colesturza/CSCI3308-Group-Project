@@ -88,6 +88,11 @@ namespace UHub.CoreLib.Entities.ClubModerators.APIControllers
                     status = "Club moderator created";
                     statCode = HttpStatusCode.OK;
                 }
+                else if(ResultCode == ClubModeratorResultCode.UnknownError)
+                {
+                    status = "Unknown server error";
+                    statCode = HttpStatusCode.InternalServerError;
+                }
                 else
                 {
                     status = "Invalid Field - " + ResultCode.ToString();

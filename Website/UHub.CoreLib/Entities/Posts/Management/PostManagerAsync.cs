@@ -28,6 +28,10 @@ namespace UHub.CoreLib.Entities.Posts.Management
 
 
             var id = await PostWriter.TryCreatePostAsync(NewPost);
+            if (id == null)
+            {
+                return (id, PostResultCode.UnknownError);
+            }
             return (id, PostResultCode.Success);
 
         }

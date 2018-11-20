@@ -25,6 +25,10 @@ namespace UHub.CoreLib.Entities.Comments.Management
 
 
             var id = CommentWriter.TryCreateComment(NewComment);
+            if (id == null)
+            {
+                return (id, CommentResultCode.UnknownError);
+            }
             return (id, CommentResultCode.Success);
 
         }

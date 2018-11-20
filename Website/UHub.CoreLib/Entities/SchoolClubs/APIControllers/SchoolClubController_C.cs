@@ -66,6 +66,11 @@ namespace UHub.CoreLib.Entities.SchoolClubs.APIControllers
                     status = "Club Created";
                     statCode = HttpStatusCode.OK;
                 }
+                else if (ResultCode == SchoolClubResultCode.UnknownError)
+                {
+                    status = "Unknown server error";
+                    statCode = HttpStatusCode.InternalServerError;
+                }
                 else
                 {
                     status = "Invalid Field - " + ResultCode.ToString();

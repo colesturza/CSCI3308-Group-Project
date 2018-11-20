@@ -14,6 +14,11 @@ namespace UHub.CoreLib.Entities.ClubModerators.Management
         {
             var id = ClubModeratorWriter.TryCreateClubModerator(NewModerator, ParentID);
 
+            if (id == null)
+            {
+                return (id, ClubModeratorResultCode.UnknownError);
+            }
+
             return (id, ClubModeratorResultCode.Success);
         }
 

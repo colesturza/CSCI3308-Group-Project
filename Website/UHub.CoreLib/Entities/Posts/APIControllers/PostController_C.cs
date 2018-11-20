@@ -86,6 +86,11 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
                     status = "Post created";
                     statCode = HttpStatusCode.OK;
                 }
+                else if (ResultCode == PostResultCode.UnknownError)
+                {
+                    status = "Unknown server error";
+                    statCode = HttpStatusCode.InternalServerError;
+                }
                 else
                 {
                     status = "Invalid Field - " + ResultCode.ToString();
