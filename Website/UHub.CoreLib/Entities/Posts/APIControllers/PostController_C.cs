@@ -99,7 +99,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
                 Exception ex_outer = new Exception(errCode, ex);
                 CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
 
-                return Content(HttpStatusCode.InternalServerError, status);
+                statCode = HttpStatusCode.InternalServerError;
             }
 
 
