@@ -12,7 +12,6 @@ using UHub.CoreLib.Management;
 
 namespace UHub.CoreLib.Entities.SchoolMajors.DataInterop
 {
-    [Obsolete("Should not be used directly.  Use SchoolMajorManager instead.")]
     internal static partial class SchoolMajorWriter
     {
         /// <summary>
@@ -42,8 +41,8 @@ namespace UHub.CoreLib.Entities.SchoolMajors.DataInterop
             try
             {
 
-                long? schoolMajorID = SqlWorker.ExecScalar<long?>
-                    (CoreFactory.Singleton.Properties.CmsDBConfig,
+                long? schoolMajorID = SqlWorker.ExecScalar<long?>(
+                    _dbConn,
                     "[dbo].[SchoolMajor_Create]",
                     (cmd) =>
                     {

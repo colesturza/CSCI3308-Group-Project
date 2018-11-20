@@ -14,7 +14,6 @@ using UHub.CoreLib.Extensions;
 
 namespace UHub.CoreLib.Entities.Users.DataInterop
 {
-    [Obsolete("Should not be used directly.  Use AccountManager instead.")]
     internal static partial class UserWriter
     {
         /// <summary>

@@ -13,15 +13,8 @@ using static UHub.CoreLib.DataInterop.SqlConverters;
 
 namespace UHub.CoreLib.Entities.SchoolClubs.DataInterop
 {
-    [Obsolete("Should not be used directly.  Use SchoolClubManager instead.")]
     internal static partial class SchoolClubWriter
     {
-        private static string _dbConn = null;
-
-        static SchoolClubWriter()
-        {
-            _dbConn = CoreFactory.Singleton.Properties.CmsDBConfig;
-        }
 
         public static long? TryCreateClub(SchoolClub Club) => TryCreateClub(Club, out _);
 
@@ -40,8 +33,8 @@ namespace UHub.CoreLib.Entities.SchoolClubs.DataInterop
             try
             {
 
-                long? clubID = SqlWorker.ExecScalar<long?>
-                    (CoreFactory.Singleton.Properties.CmsDBConfig,
+                long? clubID = SqlWorker.ExecScalar<long?>(
+                    _dbConn,
                     "[dbo].[SchoolClub_Create]",
                     (cmd) =>
                     {

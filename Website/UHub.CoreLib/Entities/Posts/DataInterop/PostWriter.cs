@@ -12,7 +12,6 @@ using UHub.CoreLib.Management;
 
 namespace UHub.CoreLib.Entities.Posts.DataInterop
 {
-    [Obsolete("Should not be used directly.  Use PostManager instead.")]
     internal static partial class PostWriter
     {
         /// <summary>
@@ -39,8 +38,8 @@ namespace UHub.CoreLib.Entities.Posts.DataInterop
             try
             {
 
-                long? PostID = SqlWorker.ExecScalar<long?>
-                    (CoreFactory.Singleton.Properties.CmsDBConfig,
+                long? PostID = SqlWorker.ExecScalar<long?>(
+                    _dbConn,
                     "[dbo].[Post_Create]",
                     (cmd) =>
                     {

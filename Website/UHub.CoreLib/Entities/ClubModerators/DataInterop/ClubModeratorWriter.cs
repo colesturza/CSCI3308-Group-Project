@@ -39,8 +39,8 @@ namespace UHub.CoreLib.Entities.ClubModerators.DataInterop
             try
             {
 
-                long? ClubModeratorID = SqlWorker.ExecScalar<long?>
-                    (CoreFactory.Singleton.Properties.CmsDBConfig,
+                long? ClubModeratorID = SqlWorker.ExecScalar<long?>(
+                    _dbConn,
                     "[dbo].[SchoolClubModerator_Create]",
                     (cmd) =>
                     {

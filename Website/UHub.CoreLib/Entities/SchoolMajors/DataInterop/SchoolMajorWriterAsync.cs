@@ -31,8 +31,8 @@ namespace UHub.CoreLib.Entities.SchoolMajors.DataInterop
             try
             {
 
-                long? schoolMajorID = await SqlWorker.ExecScalarAsync<long?>
-                    (CoreFactory.Singleton.Properties.CmsDBConfig,
+                long? schoolMajorID = await SqlWorker.ExecScalarAsync<long?>(
+                    _dbConn,
                     "[dbo].[SchoolMajor_Create]",
                     (cmd) =>
                     {

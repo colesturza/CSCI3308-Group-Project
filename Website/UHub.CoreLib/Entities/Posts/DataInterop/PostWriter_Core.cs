@@ -9,21 +9,18 @@ using static UHub.CoreLib.DataInterop.SqlConverters;
 using UHub.CoreLib.DataInterop;
 using UHub.CoreLib.ErrorHandling.Exceptions;
 using UHub.CoreLib.Management;
-using UHub.CoreLib.Entities.Users.Interfaces;
-using UHub.CoreLib.Extensions;
 
-namespace UHub.CoreLib.Entities.Users.DataInterop
+namespace UHub.CoreLib.Entities.Posts.DataInterop
 {
-    [Obsolete("Should not be used directly.  Use AccountManager instead.")]
-    internal static partial class UserWriter
+    [Obsolete("Should not be used directly.  Use PostManager instead.")]
+    internal static partial class PostWriter
     {
         private static string _dbConn = null;
 
-        static UserWriter()
+        static PostWriter()
         {
             _dbConn = CoreFactory.Singleton.Properties.CmsDBConfig;
         }
-
 
     }
 }

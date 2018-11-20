@@ -31,8 +31,8 @@ namespace UHub.CoreLib.Entities.Comments.DataInterop
             try
             {
 
-                long? CommentID = await SqlWorker.ExecScalarAsync<long?>
-                    (CoreFactory.Singleton.Properties.CmsDBConfig,
+                long? CommentID = await SqlWorker.ExecScalarAsync<long?>(
+                    _dbConn,
                     "[dbo].[Comment_Create]",
                     (cmd) =>
                     {

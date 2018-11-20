@@ -12,7 +12,6 @@ using UHub.CoreLib.Management;
 
 namespace UHub.CoreLib.Entities.Comments.DataInterop
 {
-    [Obsolete("Should not be used directly.  Use CommentManager instead.")]
     internal static partial class CommentWriter
     {
         /// <summary>
@@ -39,8 +38,8 @@ namespace UHub.CoreLib.Entities.Comments.DataInterop
             try
             {
 
-                long? CommentID = SqlWorker.ExecScalar<long?>
-                    (CoreFactory.Singleton.Properties.CmsDBConfig,
+                long? CommentID = SqlWorker.ExecScalar<long?>(
+                    _dbConn,
                     "[dbo].[Comment_Create]",
                     (cmd) =>
                     {

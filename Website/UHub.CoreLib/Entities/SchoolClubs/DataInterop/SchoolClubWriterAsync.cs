@@ -31,8 +31,8 @@ namespace UHub.CoreLib.Entities.SchoolClubs.DataInterop
             try
             {
 
-                long? clubID = await SqlWorker.ExecScalarAsync<long?>
-                    (CoreFactory.Singleton.Properties.CmsDBConfig,
+                long? clubID = await SqlWorker.ExecScalarAsync<long?>(
+                    _dbConn,
                     "[dbo].[SchoolClub_Create]",
                     (cmd) =>
                     {

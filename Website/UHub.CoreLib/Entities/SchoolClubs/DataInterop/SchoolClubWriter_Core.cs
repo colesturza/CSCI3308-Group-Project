@@ -5,25 +5,22 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UHub.CoreLib.ClientFriendly;
-using static UHub.CoreLib.DataInterop.SqlConverters;
 using UHub.CoreLib.DataInterop;
 using UHub.CoreLib.ErrorHandling.Exceptions;
-using UHub.CoreLib.Management;
-using UHub.CoreLib.Entities.Users.Interfaces;
 using UHub.CoreLib.Extensions;
+using UHub.CoreLib.Management;
+using static UHub.CoreLib.DataInterop.SqlConverters;
 
-namespace UHub.CoreLib.Entities.Users.DataInterop
+namespace UHub.CoreLib.Entities.SchoolClubs.DataInterop
 {
-    [Obsolete("Should not be used directly.  Use AccountManager instead.")]
-    internal static partial class UserWriter
+    [Obsolete("Should not be used directly.  Use SchoolClubManager instead.")]
+    internal static partial class SchoolClubWriter
     {
         private static string _dbConn = null;
 
-        static UserWriter()
+        static SchoolClubWriter()
         {
             _dbConn = CoreFactory.Singleton.Properties.CmsDBConfig;
         }
-
-
     }
 }

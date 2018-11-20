@@ -9,21 +9,18 @@ using static UHub.CoreLib.DataInterop.SqlConverters;
 using UHub.CoreLib.DataInterop;
 using UHub.CoreLib.ErrorHandling.Exceptions;
 using UHub.CoreLib.Management;
-using UHub.CoreLib.Entities.Users.Interfaces;
-using UHub.CoreLib.Extensions;
 
-namespace UHub.CoreLib.Entities.Users.DataInterop
+namespace UHub.CoreLib.Entities.SchoolMajors.DataInterop
 {
-    [Obsolete("Should not be used directly.  Use AccountManager instead.")]
-    internal static partial class UserWriter
+    [Obsolete("Should not be used directly.  Use SchoolMajorManager instead.")]
+    internal static partial class SchoolMajorWriter
     {
+
         private static string _dbConn = null;
 
-        static UserWriter()
+        static SchoolMajorWriter()
         {
             _dbConn = CoreFactory.Singleton.Properties.CmsDBConfig;
         }
-
-
     }
 }

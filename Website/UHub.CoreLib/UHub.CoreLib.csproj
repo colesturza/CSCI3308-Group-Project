@@ -178,6 +178,7 @@
     <Compile Include="DataInterop\SqlWorker.cs" />
     <Compile Include="Entities\ClubModerators\APIControllers\ClubModeratorController_Core.cs" />
     <Compile Include="Entities\ClubModerators\APIControllers\ClubModeratorController_C.cs" />
+    <Compile Include="Entities\ClubModerators\DataInterop\ClubModeratorWriter_Core.cs" />
     <Compile Include="Entities\ClubModerators\DTOs\ClubModerator_C_PublicDTO.cs" />
     <Compile Include="Entities\ClubModerators\Interfaces\IClubModerator_C_Public.cs" />
     <Compile Include="Entities\ClubModerators\DataInterop\ClubModeratorWriterAsync.cs" />
@@ -187,6 +188,7 @@
     <Compile Include="Entities\Comments\APIControllers\CommentController_R_ByParent.cs" />
     <Compile Include="Entities\Comments\APIControllers\CommentController_R_ByPost.cs" />
     <Compile Include="Entities\Comments\Comment.cs" />
+    <Compile Include="Entities\Comments\DataInterop\CommentWriter_Core.cs" />
     <Compile Include="Entities\Comments\DTOs\Comment_C_PublicDTO.cs" />
     <Compile Include="Entities\Comments\DTOs\Comment_R_PublicDTO.cs" />
     <Compile Include="Entities\Comments\Enums\CommentResultCode.cs" />
@@ -199,8 +201,10 @@
     <Compile Include="Entities\Comments\Management\CommentManagerAsync.cs" />
     <Compile Include="Entities\Comments\Management\CommentManagerShared.cs" />
     <Compile Include="Entities\Comments\Management\CommentManager.cs" />
+    <Compile Include="Entities\Files\DataInterop\FileWriter_Core.cs" />
     <Compile Include="Entities\Files\File.cs" />
     <Compile Include="Entities\Files\DataInterop\FileReader_Core.cs" />
+    <Compile Include="Entities\Images\DataInterop\ImageWriter_Core.cs" />
     <Compile Include="Entities\Images\Image.cs" />
     <Compile Include="Entities\Images\DataInterop\ImageReader_Core.cs" />
     <Compile Include="Entities\Posts\APIControllers\PostController_C.cs" />
@@ -209,6 +213,7 @@
     <Compile Include="Entities\Posts\APIControllers\PostController_R_ByParent.cs" />
     <Compile Include="Entities\Posts\APIControllers\PostController_R_ByClub.cs" />
     <Compile Include="Entities\Posts\APIControllers\PostController_R_BySchool.cs" />
+    <Compile Include="Entities\Posts\DataInterop\PostWriter_Core.cs" />
     <Compile Include="Entities\Posts\DTOs\Post_C_PublicDTO.cs" />
     <Compile Include="Entities\Posts\DTOs\Post_R_PublicDTO.cs" />
     <Compile Include="Entities\Posts\Enums\PostResultCode.cs" />
@@ -232,6 +237,7 @@
     <Compile Include="Entities\SchoolClubs\APIControllers\SchoolClubController_C.cs" />
     <Compile Include="Entities\SchoolClubs\APIControllers\SchoolClubController_Core.cs" />
     <Compile Include="Entities\SchoolClubs\APIControllers\SchoolClubController_R.cs" />
+    <Compile Include="Entities\SchoolClubs\DataInterop\SchoolClubWriter_Core.cs" />
     <Compile Include="Entities\SchoolClubs\DTOs\SchoolClub_C_PublicDTO.cs" />
     <Compile Include="Entities\SchoolClubs\Enums\SchoolClubResultCode.cs" />
     <Compile Include="Entities\SchoolClubs\Interfaces\ISchoolClub_R_Public.cs" />
@@ -248,6 +254,7 @@
     <Compile Include="Entities\SchoolClubs\Management\SchoolClubManager.cs" />
     <Compile Include="Entities\SchoolClubs\SchoolClub.cs" />
     <Compile Include="Entities\SchoolMajors\APIControllers\SchoolMajorController.cs" />
+    <Compile Include="Entities\SchoolMajors\DataInterop\SchoolMajorWriter_Core.cs" />
     <Compile Include="Entities\SchoolMajors\DTOs\SchoolMajor_R_PublicDTO.cs" />
     <Compile Include="Entities\SchoolMajors\Interfaces\ISchoolMajor_R_Public.cs" />
     <Compile Include="Entities\SchoolMajors\DataInterop\SchoolMajorReader_CoreAsync.cs" />
@@ -256,6 +263,7 @@
     <Compile Include="Entities\SchoolMajors\DataInterop\SchoolMajorReader_Core.cs" />
     <Compile Include="Entities\SchoolMajors\SchoolMajor.cs" />
     <Compile Include="Entities\Schools\APIControllers\SchoolController.cs" />
+    <Compile Include="Entities\Schools\DataInterop\SchoolWriter_Core.cs" />
     <Compile Include="Entities\Schools\DTOs\School_R_PublicDTO.cs" />
     <Compile Include="Entities\Schools\Interfaces\ISchool_R_Public.cs" />
     <Compile Include="Entities\Schools\DataInterop\SchoolReader_CoreAsync.cs" />

@@ -30,8 +30,8 @@ namespace UHub.CoreLib.Entities.Posts.DataInterop
             try
             {
 
-                long? PostID = await SqlWorker.ExecScalarAsync<long?>
-                    (CoreFactory.Singleton.Properties.CmsDBConfig,
+                long? PostID = await SqlWorker.ExecScalarAsync<long?>(
+                    _dbConn,
                     "[dbo].[Post_Create]",
                     (cmd) =>
                     {
