@@ -64,8 +64,8 @@
     <div>
         <ul id="post-list" class="list-group list-group-flush w-70 float-md-left">
             <li class="list-group-item mb-3" v-for="post in posts" v-bind:href="'/Posts/' + post.ID">
-                {{ post.Name }}
-                {{ post.Content }}
+                <h4>{{ post.Name }}</h4>
+                <p>{{ post.Content }}</p>
             </li>
         </ul>
     </div>

@@ -30,7 +30,6 @@ var postList = new Vue({
             url: "/uhubapi/posts/GetAllBySchool",
             success: function (data) {
                 self.posts = data;
-                console.log(self.posts);
             },
             error: function (error) {
                 console.log(error);
