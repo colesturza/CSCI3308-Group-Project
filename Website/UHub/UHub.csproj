@@ -293,12 +293,12 @@
     <Content Include="Views\Account\_AccountLinkMenuPartial.cshtml" />
     <Content Include="Views\Account\UpdatePassword.cshtml" />
     <Content Include="Views\Account\Create.cshtml" />
+    <Content Include="Views\Post\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="ClientResources\Imgs\" />
     <Folder Include="Models\Account\" />
-    <Folder Include="Views\Post\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
