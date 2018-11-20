@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace UHub.CoreLib.Regex.Patterns
 {
-    public static class User
+    public static class EntUser
     {
         public const string USERNAME = @"\S{3,50}";
         public const string USERNAME_B = @"^\S{3,50}$";

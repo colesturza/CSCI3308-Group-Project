@@ -23,6 +23,7 @@ using UHub.CoreLib.Entities.Schools.DataInterop;
 using UHub.CoreLib.Security.Accounts.Interfaces;
 using UHub.CoreLib.Security.Authentication;
 
+
 namespace UHub.CoreLib.Security.Accounts
 {
     /// <summary>
@@ -30,7 +31,6 @@ namespace UHub.CoreLib.Security.Accounts
     /// </summary>
     public partial class AccountManager : IAccountManager
     {
-
         /// <summary>
         /// Try to create a new user in the CMS system
         /// </summary>
@@ -64,14 +64,14 @@ namespace UHub.CoreLib.Security.Accounts
             Shared.TryCreate_HandleAttrTrim(ref NewUser);
 
 
-            var attrValidation = Shared.TryCreate_ValidateUserAttributes(NewUser);
-            if (attrValidation != AcctCreateResultCode.Success)
+            var attrValidation = Shared.TryCreate_ValidateUserAttrs(NewUser);
+            if (attrValidation != 0)
             {
                 return attrValidation;
             }
 
             var pswdValidation = Shared.ValidateUserPswd(NewUser);
-            if (pswdValidation != (int)AcctCreateResultCode.Success)
+            if (pswdValidation != 0)
             {
                 return (AcctCreateResultCode)pswdValidation;
             }
@@ -262,7 +262,7 @@ namespace UHub.CoreLib.Security.Accounts
                 return (false, $"Invalid {nameof(RefUID)} format");
             }
 
-            if (!RefUID.RgxIsMatch(RgxPtrn.User.REF_UID_B))
+            if (!RefUID.RgxIsMatch(RgxPtrn.EntUser.REF_UID_B))
             {
                 return (false, $"Invalid {nameof(RefUID)} format");
             }
@@ -391,13 +391,13 @@ namespace UHub.CoreLib.Security.Accounts
 
             //check for valid OLD password
             var pswdValidation = Shared.ValidateUserPswd(OldPassword);
-            if (pswdValidation != (int)AcctResultCode.Success)
+            if (pswdValidation != 0)
             {
                 return pswdValidation;
             }
             //check for valid NEW password
             pswdValidation = Shared.ValidateUserPswd(NewPassword);
-            if (pswdValidation != (int)AcctResultCode.Success)
+            if (pswdValidation != 0)
             {
                 return pswdValidation;
             }
@@ -421,9 +421,7 @@ namespace UHub.CoreLib.Security.Accounts
 
 
                 var authResult = await CoreFactory.Singleton.Auth.TryAuthenticateUserAsync(modUser.Email, OldPassword);
-                var isAuthValid = (authResult == AuthResultCode.Success);
-
-                if (!isAuthValid)
+                if (authResult != 0)
                 {
                     return AcctPswdResultCode.LoginFailed;
                 }
@@ -532,9 +530,7 @@ namespace UHub.CoreLib.Security.Accounts
 
 
             var resultCode = recoveryContext.ValidateRecoveryKey(RecoveryKey);
-
-
-            if (resultCode != AcctRecoveryResultCode.Success)
+            if (resultCode != 0)
             {
                 await recoveryContext.IncrementAttemptCountAsync();
                 return resultCode;
@@ -635,7 +631,7 @@ namespace UHub.CoreLib.Security.Accounts
 
             //check for valid password
             var pswdValidation = Shared.ValidateUserPswd(NewPassword);
-            if (pswdValidation != (int)AcctResultCode.Success)
+            if (pswdValidation != 0)
             {
                 return (AcctRecoveryResultCode)pswdValidation;
             }

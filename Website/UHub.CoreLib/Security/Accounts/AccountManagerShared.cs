@@ -30,7 +30,7 @@ namespace UHub.CoreLib.Security.Accounts
             }
 
 
-            internal static AcctPswdResultCode ValidateUserPswd(User NewUser)
+            internal static AcctPswdResultCode ValidateUserPswd(in User NewUser)
             {
                 //ensure pswd is populated
                 if (NewUser.Password.IsEmpty())
@@ -46,7 +46,7 @@ namespace UHub.CoreLib.Security.Accounts
                 return AcctPswdResultCode.Success;
             }
 
-            internal static AcctPswdResultCode ValidateUserPswd(string UserPswd)
+            internal static AcctPswdResultCode ValidateUserPswd(in string UserPswd)
             {
                 //ensure pswd is populated
                 if (UserPswd.IsEmpty())
@@ -63,7 +63,7 @@ namespace UHub.CoreLib.Security.Accounts
             }
 
 
-            internal static AcctCreateResultCode TryCreate_ValidateUserAttributes(User NewUser)
+            internal static AcctCreateResultCode TryCreate_ValidateUserAttrs(in User NewUser)
             {
                 //ensure email is populated
                 if (NewUser.Email.IsEmpty())
@@ -87,7 +87,7 @@ namespace UHub.CoreLib.Security.Accounts
                 {
                     return AcctCreateResultCode.UserNameEmpty;
                 }
-                if (!NewUser.Username.RgxIsMatch(RgxPtrn.User.USERNAME_B))
+                if (!NewUser.Username.RgxIsMatch(RgxPtrn.EntUser.USERNAME_B))
                 {
                     return AcctCreateResultCode.UsernameInvalid;
                 }
@@ -98,7 +98,7 @@ namespace UHub.CoreLib.Security.Accounts
                 {
                     return AcctCreateResultCode.NameEmpty;
                 }
-                if (!NewUser.Name.RgxIsMatch(RgxPtrn.User.NAME_B))
+                if (!NewUser.Name.RgxIsMatch(RgxPtrn.EntUser.NAME_B))
                 {
                     return AcctCreateResultCode.NameInvalid;
                 }
@@ -107,7 +107,7 @@ namespace UHub.CoreLib.Security.Accounts
                 //check for invalid phone #
                 if (NewUser.PhoneNumber.IsNotEmpty())
                 {
-                    if (!NewUser.PhoneNumber.RgxIsMatch(RgxPtrn.User.PHONE_B))
+                    if (!NewUser.PhoneNumber.RgxIsMatch(RgxPtrn.EntUser.PHONE_B))
                     {
                         return AcctCreateResultCode.PhoneInvalid;
                     }
@@ -123,7 +123,7 @@ namespace UHub.CoreLib.Security.Accounts
                 //check for invalid year
                 if (NewUser.Year.IsNotEmpty())
                 {
-                    if (!NewUser.Year.RgxIsMatch(RgxPtrn.User.YEAR_B))
+                    if (!NewUser.Year.RgxIsMatch(RgxPtrn.EntUser.YEAR_B))
                     {
                         return AcctCreateResultCode.YearInvalid;
                     }
@@ -133,7 +133,7 @@ namespace UHub.CoreLib.Security.Accounts
                 //Check for invalid Grad Date
                 if (NewUser.GradDate.IsNotEmpty())
                 {
-                    if (!NewUser.GradDate.RgxIsMatch(RgxPtrn.User.GRAD_DATE_B))
+                    if (!NewUser.GradDate.RgxIsMatch(RgxPtrn.EntUser.GRAD_DATE_B))
                     {
                         return AcctCreateResultCode.GradDateInvalid;
                     }
@@ -143,7 +143,7 @@ namespace UHub.CoreLib.Security.Accounts
                 //check for invalid company
                 if (NewUser.Company.IsNotEmpty())
                 {
-                    if (!NewUser.Company.RgxIsMatch(RgxPtrn.User.COMPANY_B))
+                    if (!NewUser.Company.RgxIsMatch(RgxPtrn.EntUser.COMPANY_B))
                     {
                         return AcctCreateResultCode.CompanyInvalid;
                     }
@@ -153,7 +153,7 @@ namespace UHub.CoreLib.Security.Accounts
                 //check for invalid job title
                 if (NewUser.JobTitle.IsNotEmpty())
                 {
-                    if (!NewUser.JobTitle.RgxIsMatch(RgxPtrn.User.JOB_TITLE_B))
+                    if (!NewUser.JobTitle.RgxIsMatch(RgxPtrn.EntUser.JOB_TITLE_B))
                     {
                         return AcctCreateResultCode.JobTitleInvalid;
                     }

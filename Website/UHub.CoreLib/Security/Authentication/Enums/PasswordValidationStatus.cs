@@ -8,11 +8,11 @@ namespace UHub.CoreLib.Security.Authentication
 {
     internal enum PasswordValidationStatus
     {
-        Success,
-        NotFound,
-        InvalidUser,
-        HashMismatch,
-        PswdExpired,
-        UnknownError
+        Success = 0,
+        NotFound = 1,
+        InvalidUser = 2,
+        HashMismatch = 3,
+        PswdExpired = 4,
+        UnknownError = 5
     }
 }

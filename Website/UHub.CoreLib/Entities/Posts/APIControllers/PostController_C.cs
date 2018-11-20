@@ -18,7 +18,7 @@ using UHub.CoreLib.Extensions;
 using UHub.CoreLib.Management;
 using UHub.CoreLib.Security;
 using UHub.CoreLib.Tools;
-
+using UHub.CoreLib.Entities.Posts.Management;
 
 namespace UHub.CoreLib.Entities.Posts.APIControllers
 {
@@ -74,23 +74,22 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
 
             try
             {
-                tmpPost.Name = tmpPost.Name.Trim();
-                tmpPost.Content = tmpPost.Content.Trim();
-
-                var sanitizerMode = CoreFactory.Singleton.Properties.HtmlSanitizerMode;
-                if ((sanitizerMode & HtmlSanitizerMode.OnWrite) != 0)
-                {
-                    tmpPost.Content = tmpPost.Content.SanitizeHtml();
-                }
                 tmpPost.CreatedBy = cmsUser.ID.Value;
 
 
-                long? PostID = await PostWriter.TryCreatePostAsync(tmpPost);
+                var postResult = await PostManager.TryCreatePostAsync(tmpPost);
+                var ResultCode = postResult.ResultCode;
+                var PostID = postResult.PostID;
 
-                if (PostID != null)
+                if (ResultCode == 0)
                 {
-                    status = "Post created.";
+                    status = "Post created";
                     statCode = HttpStatusCode.OK;
+                }
+                else
+                {
+                    status = "Invalid Field - " + ResultCode.ToString();
+                    statCode = HttpStatusCode.BadRequest;
                 }
 
             }

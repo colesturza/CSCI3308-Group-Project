@@ -8,24 +8,24 @@ namespace UHub.CoreLib.Security.Authentication
 {
     public enum AuthResultCode
     {
-        Success,
-        UnknownError,
+        Success = 0,
+        UnknownError = 1,
 
-        UserInvalid,
-        UserLocked,
-        UserDisabled,
-        CredentialsInvalid,
+        UserInvalid = 10,
+        UserLocked = 11,
+        UserDisabled = 12,
+        CredentialsInvalid = 13,
 
-        EmailInvalid,
-        EmailEmpty,
-        EmailDuplicate,
+        EmailInvalid = 20,
+        EmailEmpty = 21,
+        EmailDuplicate = 22,
 
-        PswdInvalid,
-        PswdEmpty,
-        PswdNotChanged,
-        PswdExpired,
+        PswdInvalid = 30,
+        PswdEmpty = 31,
+        PswdNotChanged = 32,
+        PswdExpired = 33,
 
-        PendingConfirmation,
-        PendingApproval,
+        PendingConfirmation = 40,
+        PendingApproval = 41,
     }
 }

@@ -72,7 +72,7 @@ namespace UHub.CoreLib.SmtpInterop
         protected override bool ValidateInner()
         {
 
-            if (!this.Name.RgxIsMatch($@"^{RgxPtrn.User.NAME}$"))
+            if (!this.Name.RgxIsMatch($@"^{RgxPtrn.EntUser.NAME}$"))
             {
                 throw new ArgumentException("Name is invalid");
             }
@@ -80,7 +80,7 @@ namespace UHub.CoreLib.SmtpInterop
             {
                 throw new ArgumentException("Email is invalid");
             }
-            if (!this.PhoneNumber.RgxIsMatch($@"^{RgxPtrn.User.PHONE}$"))
+            if (!this.PhoneNumber.RgxIsMatch($@"^{RgxPtrn.EntUser.PHONE}$"))
             {
                 throw new ArgumentException("Phone number is invalid");
             }

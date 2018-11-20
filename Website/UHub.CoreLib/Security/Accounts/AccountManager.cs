@@ -68,14 +68,14 @@ namespace UHub.CoreLib.Security.Accounts
             Shared.TryCreate_HandleAttrTrim(ref NewUser);
 
 
-            var attrValidation = Shared.TryCreate_ValidateUserAttributes(NewUser);
-            if (attrValidation != AcctCreateResultCode.Success)
+            var attrValidation = Shared.TryCreate_ValidateUserAttrs(NewUser);
+            if (attrValidation != 0)
             {
                 return attrValidation;
             }
 
             var pswdValidation = Shared.ValidateUserPswd(NewUser);
-            if (pswdValidation != (int)AcctResultCode.Success)
+            if (pswdValidation != 0)
             {
                 return (AcctCreateResultCode)pswdValidation;
             }
@@ -285,7 +285,7 @@ namespace UHub.CoreLib.Security.Accounts
                 return false;
             }
 
-            if (!RefUID.RgxIsMatch(RgxPtrn.User.REF_UID_B))
+            if (!RefUID.RgxIsMatch(RgxPtrn.EntUser.REF_UID_B))
             {
                 Status = $"Invalid {nameof(RefUID)} format";
                 return false;
@@ -415,13 +415,13 @@ namespace UHub.CoreLib.Security.Accounts
 
             //check for valid OLD password
             var pswdValidation = Shared.ValidateUserPswd(OldPassword);
-            if (pswdValidation != (int)AcctResultCode.Success)
+            if (pswdValidation != 0)
             {
                 return pswdValidation;
             }
             //check for valid NEW password
             pswdValidation = Shared.ValidateUserPswd(NewPassword);
-            if (pswdValidation != (int)AcctResultCode.Success)
+            if (pswdValidation != 0)
             {
                 return pswdValidation;
             }
@@ -448,7 +448,7 @@ namespace UHub.CoreLib.Security.Accounts
 
 
                 var authStatusCode = CoreFactory.Singleton.Auth.TryAuthenticateUser(modUser.Email, OldPassword);
-                if (authStatusCode != AuthResultCode.Success)
+                if (authStatusCode != 0)
                 {
                     return AcctPswdResultCode.LoginFailed;
                 }
@@ -554,9 +554,7 @@ namespace UHub.CoreLib.Security.Accounts
 
 
             var resultCode = recoveryContext.ValidateRecoveryKey(RecoveryKey);
-
-
-            if (resultCode != AcctRecoveryResultCode.Success)
+            if (resultCode != 0)
             {
                 recoveryContext.IncrementAttemptCount();
                 return resultCode;
@@ -649,7 +647,7 @@ namespace UHub.CoreLib.Security.Accounts
 
             //check for valid password
             var pswdValidation = Shared.ValidateUserPswd(NewPassword);
-            if (pswdValidation != (int)AcctResultCode.Success)
+            if (pswdValidation != 0)
             {
                 return (AcctRecoveryResultCode)pswdValidation;
             }

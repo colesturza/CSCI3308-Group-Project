@@ -206,6 +206,7 @@
     <Compile Include="Entities\Posts\APIControllers\PostController_R_BySchool.cs" />
     <Compile Include="Entities\Posts\DTOs\Post_C_PublicDTO.cs" />
     <Compile Include="Entities\Posts\DTOs\Post_R_PublicDTO.cs" />
+    <Compile Include="Entities\Posts\Enums\PostResultCode.cs" />
     <Compile Include="Entities\Posts\Interfaces\IPost_C_Public.cs" />
     <Compile Include="Entities\Posts\Interfaces\IPost_R_Public.cs" />
     <Compile Include="Entities\Posts\DataInterop\PostReader_CoreAsync.cs" />
@@ -214,6 +215,9 @@
     <Compile Include="Entities\Posts\DataInterop\PostWriterAsync.cs" />
     <Compile Include="Entities\Posts\DataInterop\PostWriter.cs" />
     <Compile Include="Entities\Posts\DataInterop\PostReader_Core.cs" />
+    <Compile Include="Entities\Posts\Management\PostManagerAsync.cs" />
+    <Compile Include="Entities\Posts\Management\PostManagerShared.cs" />
+    <Compile Include="Entities\Posts\Management\PostManager.cs" />
     <Compile Include="Entities\Posts\Post.cs" />
     <Compile Include="Entities\ClubModerators\DTOs\ClubModerator_R_PublicDTO.cs" />
     <Compile Include="Entities\ClubModerators\Interfaces\IClubModerator_R_Public.cs" />
@@ -318,9 +322,10 @@
     <Compile Include="Regex\Patterns\Config.cs" />
     <Compile Include="Regex\Patterns\Cookie.cs" />
     <Compile Include="Regex\Patterns\Entity.cs" />
+    <Compile Include="Regex\Patterns\EntPost.cs" />
     <Compile Include="Regex\Patterns\FileUpload.cs" />
     <Compile Include="Regex\Patterns\HttpError.cs" />
-    <Compile Include="Regex\Patterns\User.cs" />
+    <Compile Include="Regex\Patterns\EntUser.cs" />
     <Compile Include="Regex\Patterns\Util.cs" />
     <Compile Include="Security\Accounts\AccountManagerAsync.cs" />
     <Compile Include="Security\Accounts\AccountManager.cs" />
@@ -416,7 +421,6 @@
     <Folder Include="Entities\Images\DTOs\" />
     <Folder Include="Entities\Images\Enums\" />
     <Folder Include="Entities\Images\Interfaces\" />
-    <Folder Include="Entities\Posts\Enums\" />
     <Folder Include="Entities\SchoolClubs\Enums\" />
     <Folder Include="Entities\SchoolMajors\Enums\" />
     <Folder Include="Entities\Schools\Enums\" />

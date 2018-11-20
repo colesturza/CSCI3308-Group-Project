@@ -60,7 +60,7 @@ namespace UHub.CoreLib.Extensions
                 return false;
             }
 
-            if (!RgxIsMatch(email, RgxPtrn.User.EMAIL_B))
+            if (!RgxIsMatch(email, RgxPtrn.EntUser.EMAIL_B))
             {
                 return false;
             }
@@ -94,7 +94,7 @@ namespace UHub.CoreLib.Extensions
                 return false;
             }
 
-            return RgxIsMatch(domain, RgxPtrn.User.EMAIL_DOMAIN_B);
+            return RgxIsMatch(domain, RgxPtrn.EntUser.EMAIL_DOMAIN_B);
 
         }
         /// <summary>

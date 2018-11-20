@@ -12,6 +12,7 @@ using UHub.CoreLib.Management;
 
 namespace UHub.CoreLib.Entities.Posts.DataInterop
 {
+    [Obsolete("Should not be used directly.  Use PostManager instead.")]
     internal static partial class PostWriter
     {
         /// <summary>

@@ -42,7 +42,7 @@ namespace UHub.CoreLib.Security.Authentication
 
 
             var attrIsValid = Shared.TryAuthenticate_ValidateFields(UserEmail, UserPassword);
-            if (attrIsValid != AuthResultCode.Success)
+            if (attrIsValid != 0)
             {
                 return attrIsValid;
             }

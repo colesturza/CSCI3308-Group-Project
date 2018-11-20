@@ -14,70 +14,70 @@ namespace UHub.CoreLib.Security.Authentication
         /// <summary>
         /// Token validation succeeded
         /// </summary>
-        Success,
+        Success = 0,
         /// <summary>
         /// Token was processed, but returned an anonymous user
         /// </summary>
-        AnonUser,
+        AnonUser = 1,
         /// <summary>
         /// Client token not found
         /// </summary>
-        TokenNotFound,
+        TokenNotFound = 100,
         /// <summary>
         /// Client token could not be validated
         /// </summary>
-        TokenInvalid,
+        TokenInvalid = 101,
         /// <summary>
         /// Client token could not be decrypted
         /// </summary>
-        TokenAESFailure,
+        TokenAESFailure = 102,
         /// <summary>
         /// Client token has expired
         /// </summary>
-        TokenExpired,
+        TokenExpired = 103,
         /// <summary>
         /// Client token does not have current expected version
         /// </summary>
-        TokenVersionMismatch,
+        TokenVersionMismatch = 104,
         /// <summary>
         /// Client token has been revoked
         /// </summary>
-        TokenValidatorRevoked,
+        TokenValidatorRevoked = 200,
         /// <summary>
         /// Client token does not have a DB validator
         /// </summary>
-        TokenValidatorNotFound,
+        TokenValidatorNotFound = 201,
         /// <summary>
         /// Client token does not match expected validator
         /// </summary>
-        TokenValidatorMismatch,
+        TokenValidatorMismatch = 202,
         /// <summary>
         /// Token validator could be validated
         /// </summary>
-        TokenValidatorInvalid,
+        TokenValidatorInvalid = 203,
         /// <summary>
         /// Client token does not match current client session
         /// </summary>
-        TokenSessionMismatch,
+        TokenSessionMismatch = 300,
         /// <summary>
         /// The user encapsulated by the token could not be validated
         /// </summary>
-        TokenUserError,
+        TokenUserError = 400,
         /// <summary>
         /// The user encapsulated by the token is not allowed to login
         /// </summary>
-        TokenUserForbidden,
+        TokenUserForbidden = 401,
         /// <summary>
         /// The user encapsulated by the token is not confirmed
         /// </summary>
-        TokenUserNotConfirmed,
+        TokenUserNotConfirmed = 402,
         /// <summary>
         /// The user encapsulated by the token is not approved
         /// </summary>
-        TokenUserNotApproved,
+        TokenUserNotApproved = 403,
         /// <summary>
         /// The user encapsulated by the token has been disabled
         /// </summary>
-        TokenUserDisabled
+        TokenUserDisabled = 404
     }
 }
