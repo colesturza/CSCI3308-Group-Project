@@ -12,7 +12,7 @@ using System.Web.Http.Filters;
 using UHub.CoreLib.APIControllers;
 using UHub.CoreLib.Extensions;
 using UHub.CoreLib.Attributes;
-using UHub.CoreLib.Entities.SchoolMajors.Management;
+using UHub.CoreLib.Entities.SchoolMajors.DataInterop;
 using UHub.CoreLib.Entities.SchoolMajors.DTOs;
 
 namespace UHub.CoreLib.Entities.SchoolMajors.APIControllers

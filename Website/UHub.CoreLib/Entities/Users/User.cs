@@ -9,7 +9,7 @@ using UHub.CoreLib.DataInterop;
 using UHub.CoreLib.Extensions;
 using UHub.CoreLib.Management;
 using UHub.CoreLib.Entities.Users.Interfaces;
-using UHub.CoreLib.Entities.Users.Management;
+using UHub.CoreLib.Entities.Users.DataInterop;
 
 namespace UHub.CoreLib.Entities.Users
 {

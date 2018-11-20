@@ -10,7 +10,7 @@ using UHub.CoreLib.Management;
 using UHub.CoreLib.Tools;
 using UHub.CoreLib.Entities.Users;
 using UHub.CoreLib.Entities.Users.Interfaces;
-using UHub.CoreLib.Entities.Users.Management;
+using UHub.CoreLib.Entities.Users.DataInterop;
 using System.Text.RegularExpressions;
 
 namespace UHub.CoreLib.Security.Authentication

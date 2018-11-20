@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using UHub.CoreLib.Attributes;
 using UHub.CoreLib.Entities.Comments.DTOs;
-using UHub.CoreLib.Entities.Comments.Management;
+using UHub.CoreLib.Entities.Comments.DataInterop;
 using UHub.CoreLib.Management;
 
 namespace UHub.CoreLib.Entities.Comments.APIControllers

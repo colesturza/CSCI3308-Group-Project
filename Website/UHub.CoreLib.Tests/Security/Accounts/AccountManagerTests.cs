@@ -7,10 +7,10 @@ using System.Text;
 using System.Threading.Tasks;
 using UHub.CoreLib.Entities.Users.DTOs;
 using UHub.CoreLib.Entities.Users;
-using UHub.CoreLib.Entities.Schools.Management;
+using UHub.CoreLib.Entities.Schools.DataInterop;
 using UHub.CoreLib.Management;
 using UHub.CoreLib.Tests;
-using UHub.CoreLib.Entities.Users.Management;
+using UHub.CoreLib.Entities.Users.DataInterop;
 
 namespace UHub.CoreLib.Security.Accounts.Tests
 {

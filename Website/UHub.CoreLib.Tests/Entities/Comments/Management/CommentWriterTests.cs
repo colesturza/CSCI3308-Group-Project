@@ -3,10 +3,10 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using UHub.CoreLib.Entities.Comments.DTOs;
 using UHub.CoreLib.Entities.Posts;
 using UHub.CoreLib.Entities.Posts.DTOs;
-using UHub.CoreLib.Entities.Posts.Management;
+using UHub.CoreLib.Entities.Posts.DataInterop;
 using UHub.CoreLib.Tests;
 
-namespace UHub.CoreLib.Entities.Comments.Management.Tests
+namespace UHub.CoreLib.Entities.Comments.DataInterop.Tests
 {
     [TestClass]
     public partial class CommentWriterTests

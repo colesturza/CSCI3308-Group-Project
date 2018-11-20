@@ -1,16 +1,16 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using UHub.CoreLib.Entities.SchoolClubs.Management;
+using UHub.CoreLib.Entities.SchoolClubs.DataInterop;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UHub.CoreLib.Tests;
-using UHub.CoreLib.Entities.Users.Management;
+using UHub.CoreLib.Entities.Users.DataInterop;
 using UHub.CoreLib.Entities.SchoolClubs.DTOs;
 using UHub.CoreLib.Management;
 
-namespace UHub.CoreLib.Entities.SchoolClubs.Management.Tests
+namespace UHub.CoreLib.Entities.SchoolClubs.DataInterop.Tests
 {
     [TestClass()]
     public class SchoolClubReaderTests

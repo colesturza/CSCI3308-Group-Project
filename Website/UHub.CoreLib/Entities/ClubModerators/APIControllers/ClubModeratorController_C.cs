@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using UHub.CoreLib.Attributes;
 using UHub.CoreLib.Entities.ClubModerators.DTOs;
-using UHub.CoreLib.Entities.ClubModerators.Management;
-using UHub.CoreLib.Entities.SchoolClubs.Management;
-using UHub.CoreLib.Entities.Users.Management;
+using UHub.CoreLib.Entities.ClubModerators.DataInterop;
+using UHub.CoreLib.Entities.SchoolClubs.DataInterop;
+using UHub.CoreLib.Entities.Users.DataInterop;
 using UHub.CoreLib.Management;
 using UHub.CoreLib.Tools;
 

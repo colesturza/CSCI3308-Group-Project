@@ -15,10 +15,10 @@ using UHub.CoreLib.Management;
 using UHub.CoreLib.ClientFriendly;
 using UHub.CoreLib.SmtpInterop;
 using UHub.CoreLib.Tools;
-using UHub.CoreLib.Entities.Users.Management;
+using UHub.CoreLib.Entities.Users.DataInterop;
 using UHub.CoreLib.Entities.Users;
-using UHub.CoreLib.Entities.SchoolMajors.Management;
-using UHub.CoreLib.Entities.Schools.Management;
+using UHub.CoreLib.Entities.SchoolMajors.DataInterop;
+using UHub.CoreLib.Entities.Schools.DataInterop;
 using UHub.CoreLib.Security.Accounts.Interfaces;
 using UHub.CoreLib.Security.Authentication;
 
