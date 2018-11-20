@@ -32,9 +32,19 @@ namespace UHub.CoreLib.Entities.SchoolClubs.Management
                 {
                     return SchoolClubResultCode.NameEmpty;
                 }
-                if (!NewClub.Name.RgxIsMatch(RgxPtrn.EntPost.CONTENT_B))
+                if (!NewClub.Name.RgxIsMatch(RgxPtrn.EntSchoolClub.NAME_B))
                 {
                     return SchoolClubResultCode.NameInvalid;
+                }
+
+
+                //validate description
+                if(NewClub.Description.IsNotEmpty())
+                {
+                    if(!NewClub.Description.RgxIsMatch(RgxPtrn.EntSchoolClub.DESCRIPTION_B))
+                    {
+                        return SchoolClubResultCode.DescriptionInvalid;
+                    }
                 }
 
 

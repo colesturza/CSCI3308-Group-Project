@@ -31,7 +31,7 @@ namespace UHub.CoreLib.Entities.Comments.Management
                 {
                     return CommentResultCode.ContentEmpty;
                 }
-                if (!NewComment.Content.RgxIsMatch(RgxPtrn.EntPost.CONTENT_B))
+                if (!NewComment.Content.RgxIsMatch(RgxPtrn.EntComment.CONTENT_B))
                 {
                     return CommentResultCode.ContentInvalid;
                 }
