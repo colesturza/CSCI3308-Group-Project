@@ -89,16 +89,22 @@ begin
 			set @CreatedBy = 0
 		end
 
+		declare @CreatedDate datetimeoffset(7) = sysDateTimeOffset()
+
+
+
 		--insert item into ent table
 		insert into dbo.Entities
 		(
 			EntTypeID,
-			CreatedBy
+			CreatedBy,
+			CreatedDate
 		)
 		values
 		( 
 			@_entTypeID,
-			@CreatedBy
+			@CreatedBy,
+			@CreatedDate
 		)
 
 
@@ -144,6 +150,7 @@ begin
 			@PropID = 2,
 			@PropValue = @Name,
 			@ModifiedBy = @CreatedBy,
+			@ModifiedDate = @CreatedDate,
 			@IsNewRecord = @_isNew
 
 		--ViewCount [14]
@@ -153,6 +160,7 @@ begin
 			@PropID = 14,
 			@PropValue = NULL,
 			@ModifiedBy = @CreatedBy,
+			@ModifiedDate = @CreatedDate,
 			@IsNewRecord = @_isNew
 
 		--FilePath [23]
@@ -162,6 +170,7 @@ begin
 			@PropID = 12,
 			@PropValue = @FilePath,
 			@ModifiedBy = @CreatedBy,
+			@ModifiedDate = @CreatedDate,
 			@IsNewRecord = @_isNew
 
 		--Description [24]
@@ -171,6 +180,7 @@ begin
 			@PropID = 24,
 			@PropValue = @Description,
 			@ModifiedBy = @CreatedBy,
+			@ModifiedDate = @CreatedDate,
 			@IsNewRecord = @_isNew
 
 		--FileHash_SHA256 [25]
@@ -180,6 +190,7 @@ begin
 			@PropID = 25,
 			@PropValue = @FileHash_SHA256,
 			@ModifiedBy = @CreatedBy,
+			@ModifiedDate = @CreatedDate,
 			@IsNewRecord = @_isNew
 
 		--SourceName [26]
@@ -189,6 +200,7 @@ begin
 			@PropID = 26,
 			@PropValue = @SourceName,
 			@ModifiedBy = @CreatedBy,
+			@ModifiedDate = @CreatedDate,
 			@IsNewRecord = @_isNew
 
 		--SourceType [28]
@@ -198,6 +210,7 @@ begin
 			@PropID = 28,
 			@PropValue = @SourceType,
 			@ModifiedBy = @CreatedBy,
+			@ModifiedDate = @CreatedDate,
 			@IsNewRecord = @_isNew
 
 		--DownloadName [29]
@@ -207,6 +220,7 @@ begin
 			@PropID = 29,
 			@PropValue = @DownloadName,
 			@ModifiedBy = @CreatedBy,
+			@ModifiedDate = @CreatedDate,
 			@IsNewRecord = @_isNew
 
 		select @_entID

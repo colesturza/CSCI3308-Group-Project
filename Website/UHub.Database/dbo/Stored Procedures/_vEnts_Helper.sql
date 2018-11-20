@@ -6,6 +6,7 @@ CREATE procedure [dbo].[_vEnts_Helper]
 	@PropID int,
 	@PropValue nvarchar(max),
 	@ModifiedBy bigint,
+	@ModifiedDate datetimeoffset(7) = SysDateTimeOffset,
 	@IsNewRecord bit
 
 as
@@ -135,7 +136,7 @@ begin
 					set 
 						PropValue = @PropValue,
 						ModifiedBy = @ModifiedBy,
-						ModifiedDate = sysdatetimeoffset()
+						ModifiedDate = @ModifiedDate
 					where
 						EntTypeID = @EntTypeID
 						AND EntID = @EntID
@@ -163,9 +164,9 @@ begin
 				set @_canWriteToHistory = 1
 				--insert standard property
 				insert into dbo.EntPropertyXRef
-					(EntID, EntTypeID, PropID, PropValue, CreatedBy, ModifiedBy)
+					(EntID, EntTypeID, PropID, PropValue, CreatedBy, CreatedDate, ModifiedBy)
 				values
-					(@EntID, @EntTypeID, @PropID, @PropValue, @ModifiedBy, @ModifiedBy)
+					(@EntID, @EntTypeID, @PropID, @PropValue, @ModifiedBy, @ModifiedDate, @ModifiedBy)
 			
 			
 			--end
@@ -178,9 +179,9 @@ begin
 			begin
 
 				insert into dbo.EntPropertyRevisionXRef
-					(EntID, EntTypeID, PropID, PropValue, CreatedBy)
+					(EntID, EntTypeID, PropID, PropValue, CreatedBy, CreatedDate)
 				values
-					(@EntID, @EntTypeID, @PropID, @PropValue, @ModifiedBy)
+					(@EntID, @EntTypeID, @PropID, @PropValue, @ModifiedBy, @ModifiedDate)
 
 			end
 		end
