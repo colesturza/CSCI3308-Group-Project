@@ -61,11 +61,11 @@
 </div>
 
 <div id="body-content" class="container mt-4">
-    <div id="post-list">
-        <ul class="list-group list-group-flush w-70 float-md-left">
+    <div>
+        <ul id="post-list" class="list-group list-group-flush w-70 float-md-left">
             <li class="list-group-item mb-3" v-for="post in posts" v-bind:href="'/Posts/' + post.ID">
-                <h4> {{ post.Name }} </h4>
-                <p> {{ post.Content }} </p>
+                {{ post.Name }}
+                {{ post.Content }}
             </li>
         </ul>
     </div>
