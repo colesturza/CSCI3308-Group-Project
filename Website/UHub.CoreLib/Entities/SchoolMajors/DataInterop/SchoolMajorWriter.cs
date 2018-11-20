@@ -12,6 +12,7 @@ using UHub.CoreLib.Management;
 
 namespace UHub.CoreLib.Entities.SchoolMajors.DataInterop
 {
+    [Obsolete("Should not be used directly.  Use SchoolMajorManager instead.")]
     internal static partial class SchoolMajorWriter
     {
         /// <summary>

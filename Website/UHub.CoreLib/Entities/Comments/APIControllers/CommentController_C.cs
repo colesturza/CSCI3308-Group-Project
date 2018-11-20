@@ -14,6 +14,7 @@ using UHub.CoreLib.Entities.Users.DataInterop;
 using UHub.CoreLib.Extensions;
 using UHub.CoreLib.Management;
 using UHub.CoreLib.Tools;
+using UHub.CoreLib.Entities.Comments.Management;
 
 namespace UHub.CoreLib.Entities.Comments.APIControllers
 {
@@ -56,16 +57,22 @@ namespace UHub.CoreLib.Entities.Comments.APIControllers
 
             try
             {
-                tmpComment.Content = tmpComment.Content.Trim();
-                tmpComment.Content = tmpComment.Content.SanitizeHtml();
                 tmpComment.CreatedBy = cmsUser.ID.Value;
 
-                long? PostID = await CommentWriter.TryCreateCommentAsync(tmpComment);
+                var PostResult = await CommentManager.TryCreateCommentAsync(tmpComment);
+                long? PostID = PostResult.CommentID;
+                var ResultCode = PostResult.ResultCode;
 
-                if (PostID != null)
+
+                if (ResultCode == 0)
                 {
                     status = "Comment created.";
                     statCode = HttpStatusCode.OK;
+                }
+                else
+                {
+                    status = "Invalid Field - " + ResultCode.ToString();
+                    statCode = HttpStatusCode.BadRequest;
                 }
 
             }

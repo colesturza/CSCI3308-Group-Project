@@ -188,12 +188,16 @@
     <Compile Include="Entities\Comments\Comment.cs" />
     <Compile Include="Entities\Comments\DTOs\Comment_C_PublicDTO.cs" />
     <Compile Include="Entities\Comments\DTOs\Comment_R_PublicDTO.cs" />
+    <Compile Include="Entities\Comments\Enums\CommentResultCode.cs" />
     <Compile Include="Entities\Comments\Interfaces\IComment_C_Public.cs" />
     <Compile Include="Entities\Comments\Interfaces\IComment_R_Public.cs" />
     <Compile Include="Entities\Comments\DataInterop\CommentReader_CoreAsync.cs" />
     <Compile Include="Entities\Comments\DataInterop\CommentWriterAsync.cs" />
     <Compile Include="Entities\Comments\DataInterop\CommentWriter.cs" />
     <Compile Include="Entities\Comments\DataInterop\CommentReader_Core.cs" />
+    <Compile Include="Entities\Comments\Management\CommentManagerAsync.cs" />
+    <Compile Include="Entities\Comments\Management\CommentManagerShared.cs" />
+    <Compile Include="Entities\Comments\Management\CommentManager.cs" />
     <Compile Include="Entities\Files\File.cs" />
     <Compile Include="Entities\Files\DataInterop\FileReader_Core.cs" />
     <Compile Include="Entities\Images\Image.cs" />
@@ -321,6 +325,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Regex\Patterns\Config.cs" />
     <Compile Include="Regex\Patterns\Cookie.cs" />
+    <Compile Include="Regex\Patterns\EntComment.cs" />
     <Compile Include="Regex\Patterns\Entity.cs" />
     <Compile Include="Regex\Patterns\EntPost.cs" />
     <Compile Include="Regex\Patterns\FileUpload.cs" />
@@ -412,7 +417,6 @@
   <ItemGroup>
     <Folder Include="APIControllers\Enums\" />
     <Folder Include="Entities\ClubModerators\Enums\" />
-    <Folder Include="Entities\Comments\Enums\" />
     <Folder Include="Entities\Files\APIControllers\" />
     <Folder Include="Entities\Files\DTOs\" />
     <Folder Include="Entities\Files\Enums\" />

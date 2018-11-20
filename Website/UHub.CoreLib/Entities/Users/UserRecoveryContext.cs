@@ -112,6 +112,7 @@ namespace UHub.CoreLib.Entities.Users
         /// </summary>
         public AcctRecoveryResultCode IncrementAttemptCount()
         {
+#pragma warning disable 612, 618
             if (AttemptCount >= CoreFactory.Singleton.Properties.AcctPswdResetMaxAttemptCount)
             {
                 this.Delete();
@@ -129,6 +130,8 @@ namespace UHub.CoreLib.Entities.Users
             this.AttemptCount++;
             UserWriter.LogFailedRecoveryContextAttempt(this.RecoveryID);
             return AcctRecoveryResultCode.Success;
+
+#pragma warning restore
         }
 
         /// <summary>
@@ -136,7 +139,9 @@ namespace UHub.CoreLib.Entities.Users
         /// </summary>
         public void Delete()
         {
+#pragma warning disable 612, 618
             UserWriter.DeleteRecoveryContext(this.RecoveryID);
+#pragma warning restore
         }
 
     }

@@ -123,8 +123,10 @@ namespace UHub.CoreLib.Security.Accounts
 
             try
             {
+#pragma warning disable 612, 618
                 //create CMS user
                 var userID = await UserWriter.TryCreateUserAsync(NewUser);
+#pragma warning restore
 
 
                 if (userID == null)
@@ -138,6 +140,7 @@ namespace UHub.CoreLib.Security.Accounts
                 //if failed, then purge the remaining CMS account components so user can try again
 
 
+#pragma warning disable 612, 618
                 var salt = SysSec.Membership.GeneratePassword(SALT_LEN, 0);
                 string pswdHash = null;
                 try
@@ -165,7 +168,7 @@ namespace UHub.CoreLib.Security.Accounts
                     await UserWriter.TryPurgeUserAsync((long)userID);
                     throw new Exception(ResponseStrings.AccountError.ACCOUNT_FAIL);
                 }
-
+#pragma warning restore
 
 
 
@@ -280,7 +283,10 @@ namespace UHub.CoreLib.Security.Accounts
 
             try
             {
+#pragma warning disable 612, 618
                 var isValid = await UserWriter.ConfirmUserAsync(RefUID, minCreatedDate);
+#pragma warning restore
+
 
                 if (isValid)
                 {
@@ -305,6 +311,7 @@ namespace UHub.CoreLib.Security.Accounts
         /// <param name="IsApproved">Approval Status</param>
         public async Task<bool> TryUpdateUserApprovalStatusAsync(long UserID, bool IsApproved)
         {
+#pragma warning disable 612, 618
             if (!CoreFactory.Singleton.IsEnabled)
             {
                 throw new SystemDisabledException();
@@ -320,6 +327,7 @@ namespace UHub.CoreLib.Security.Accounts
             {
                 return false;
             }
+#pragma warning restore
         }
 
 
@@ -722,7 +730,7 @@ namespace UHub.CoreLib.Security.Accounts
         public async Task DeleteUserAsync(long UserID)
         {
             var modUser = await UserReader.GetUserAsync(UserID);
-            _deleteUserAsync(modUser);
+            await _deleteUserAsync(modUser);
         }
 
         /// <summary>
@@ -732,7 +740,7 @@ namespace UHub.CoreLib.Security.Accounts
         public async Task DeleteUserAsync(string Email)
         {
             var modUser = await UserReader.GetUserAsync(Email);
-            _deleteUserAsync(modUser);
+            await _deleteUserAsync(modUser);
         }
 
         /// <summary>
@@ -743,7 +751,7 @@ namespace UHub.CoreLib.Security.Accounts
         public async Task DeleteUserAsync(string Username, string Domain)
         {
             var modUser = UserReader.GetUser(Username, Domain);
-            _deleteUserAsync(modUser);
+            await _deleteUserAsync(modUser);
         }
 
         /// <summary>
@@ -753,6 +761,7 @@ namespace UHub.CoreLib.Security.Accounts
         /// <param name="CmsUser"></param>
         private async Task _deleteUserAsync(User CmsUser)
         {
+#pragma warning disable 612, 618
             try
             {
                 if (CmsUser != null && CmsUser.ID != null)
@@ -770,6 +779,7 @@ namespace UHub.CoreLib.Security.Accounts
                 CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
                 throw new Exception();
             }
+#pragma warning restore
         }
 
         /// <summary>
@@ -840,8 +850,10 @@ namespace UHub.CoreLib.Security.Accounts
                 string recoveryKey = SysSec.Membership.GeneratePassword(R_KEY_LEN, 5);
                 string hashedKey = recoveryKey.GetCryptoHash(hashType);
 
-
+#pragma warning disable 612, 618
                 var context = await UserWriter.CreateRecoveryContextAsync(UserID, hashedKey, true, true);
+#pragma warning restore
+
 
                 if (context == null)
                 {

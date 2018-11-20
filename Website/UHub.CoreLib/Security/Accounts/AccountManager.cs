@@ -123,8 +123,9 @@ namespace UHub.CoreLib.Security.Accounts
             try
             {
                 //create CMS user
+#pragma warning disable 612, 618
                 var userID = UserWriter.TryCreateUser(NewUser);
-
+#pragma warning restore
 
                 if (userID == null)
                 {
@@ -139,6 +140,7 @@ namespace UHub.CoreLib.Security.Accounts
 
                 var salt = SysSec.Membership.GeneratePassword(SALT_LEN, 0);
                 string pswdHash = null;
+#pragma warning disable 612, 618
                 try
                 {
                     var hashType = CoreFactory.Singleton.Properties.PswdHashType;
@@ -164,7 +166,7 @@ namespace UHub.CoreLib.Security.Accounts
                     UserWriter.TryPurgeUser((long)userID);
                     throw new Exception(ResponseStrings.AccountError.ACCOUNT_FAIL);
                 }
-
+#pragma warning restore
 
 
 
@@ -301,8 +303,9 @@ namespace UHub.CoreLib.Security.Accounts
                 minCreatedDate = DateTimeOffset.UtcNow - confLifespan;
             }
 
-
+#pragma warning disable 612, 618
             var isValid = UserWriter.ConfirmUser(RefUID, minCreatedDate);
+#pragma warning restore
 
             if (isValid)
             {
@@ -324,8 +327,10 @@ namespace UHub.CoreLib.Security.Accounts
         /// <param name="IsApproved">Approval Status</param>
         public bool TryUpdateApprovalStatus(long UserID, bool IsApproved)
         {
+#pragma warning disable 612, 618
             try
             {
+
                 UserWriter.UpdateUserApproval(UserID, IsApproved);
                 return true;
             }
@@ -333,6 +338,7 @@ namespace UHub.CoreLib.Security.Accounts
             {
                 return false;
             }
+#pragma warning restore
         }
 
         /// <summary>
@@ -342,12 +348,14 @@ namespace UHub.CoreLib.Security.Accounts
         /// <param name="IsApproved">Approval Status</param>
         public void UpdateUserApprovalStatus(long UserID, bool IsApproved)
         {
+#pragma warning disable 612, 618
             if (!CoreFactory.Singleton.IsEnabled)
             {
                 throw new SystemDisabledException();
             }
 
             UserWriter.UpdateUserApproval(UserID, IsApproved);
+#pragma warning restore
         }
 
 
@@ -778,6 +786,7 @@ namespace UHub.CoreLib.Security.Accounts
         /// <param name="CmsUser"></param>
         private void _deleteUser(User CmsUser)
         {
+#pragma warning disable 612, 618
             try
             {
                 if (CmsUser != null && CmsUser.ID != null)
@@ -795,6 +804,7 @@ namespace UHub.CoreLib.Security.Accounts
                 CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
                 throw new Exception();
             }
+#pragma warning restore
         }
 
         /// <summary>
@@ -864,7 +874,10 @@ namespace UHub.CoreLib.Security.Accounts
                 string hashedKey = recoveryKey.GetCryptoHash(CoreFactory.Singleton.Properties.PswdHashType);
 
 
+#pragma warning disable 612, 618
                 var context = UserWriter.CreateRecoveryContext(UserID, hashedKey, true, true);
+#pragma warning restore
+
 
                 if (context == null)
                 {

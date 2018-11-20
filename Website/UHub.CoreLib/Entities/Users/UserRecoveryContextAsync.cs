@@ -23,6 +23,7 @@ namespace UHub.CoreLib.Entities.Users
         /// </summary>
         public async Task<AcctRecoveryResultCode> IncrementAttemptCountAsync()
         {
+#pragma warning disable 612, 618
             if (AttemptCount >= CoreFactory.Singleton.Properties.AcctPswdResetMaxAttemptCount)
             {
                 this.Delete();
@@ -40,6 +41,7 @@ namespace UHub.CoreLib.Entities.Users
             this.AttemptCount++;
             await UserWriter.TryLogFailedRecoveryContextAttemptAsync(this.RecoveryID);
             return AcctRecoveryResultCode.Success;
+#pragma warning restore
         }
 
 
@@ -48,7 +50,9 @@ namespace UHub.CoreLib.Entities.Users
         /// </summary>
         public async Task DeleteAsync()
         {
+#pragma warning disable 612, 618
             await UserWriter.TryDeleteRecoveryContextAsync(this.RecoveryID);
+#pragma warning restore
         }
 
     }

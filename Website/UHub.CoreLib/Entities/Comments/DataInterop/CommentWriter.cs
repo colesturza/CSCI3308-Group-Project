@@ -12,6 +12,7 @@ using UHub.CoreLib.Management;
 
 namespace UHub.CoreLib.Entities.Comments.DataInterop
 {
+    [Obsolete("Should not be used directly.  Use CommentManager instead.")]
     internal static partial class CommentWriter
     {
         /// <summary>

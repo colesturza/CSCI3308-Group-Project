@@ -114,8 +114,8 @@ namespace UHub.CoreLib.Security.Authentication
                 }
                 else
                 {
-                    return AuthResultCode.UnknownError;
                     GeneralFailHandler?.Invoke(new Guid("FC5D3DDB-A48B-49C9-922E-7A96CB53CA7E"));
+                    return AuthResultCode.UnknownError;
                 }
             }
 

@@ -14,11 +14,8 @@ namespace UHub.CoreLib.Entities.Posts.Management
 
     public static partial class PostManager
     {
+
         public static (long? PostID, PostResultCode ResultCode) TryCreatePost(Post NewPost)
-            => TryCreatePost(NewPost, out _);
-
-
-        public static (long? PostID, PostResultCode ResultCode) TryCreatePost(Post NewPost, string ErrMsg)
         {
             Shared.TryCreate_HandleAttrTrim(ref NewPost);
 

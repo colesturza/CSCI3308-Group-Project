@@ -13,33 +13,24 @@ using UHub.CoreLib.Entities.Users.DataInterop;
 
 namespace UHub.CoreLib.Entities.Users
 {
-
     public partial class User
     {
-       
+
         public async Task<IUserRecoveryContext> GetRecoveryContextAsync()
         {
-            if(this.ID == null)
+            if (this.ID == null)
             {
                 throw new InvalidOperationException("Cannot get recovery context of anon user");
             }
             return await UserReader.GetRecoveryContextAsync(this.ID.Value);
         }
 
-        public async Task<bool> SaveAsync()
-        {
-            if (this.ID == null)
-            {
-                throw new InvalidOperationException("Cannot save anon user");
-            }
 
-            return await UserWriter.TryUpdateUserInfoAsync(this);
-
-        }
+#pragma warning disable 612, 618
 
         public async Task UpdateVersionAsync()
         {
-            if(ID == null)
+            if (ID == null)
             {
                 throw new InvalidOperationException("Cannot update version of anon user");
             }
@@ -52,4 +43,5 @@ namespace UHub.CoreLib.Entities.Users
 
         }
     }
+#pragma warning restore
 }

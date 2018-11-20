@@ -90,11 +90,7 @@ namespace UHub.CoreLib.Entities.Users
             return UserReader.GetRecoveryContext(this.ID.Value);
         }
 
-        public void Save()
-        {
-            throw new NotImplementedException();
-        }
-
+#pragma warning disable 612, 618
         public void UpdateVersion()
         {
             if(ID == null)
@@ -110,4 +106,6 @@ namespace UHub.CoreLib.Entities.Users
 
         }
     }
+#pragma warning restore
+
 }

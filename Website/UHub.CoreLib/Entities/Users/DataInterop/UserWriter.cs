@@ -14,10 +14,9 @@ using UHub.CoreLib.Extensions;
 
 namespace UHub.CoreLib.Entities.Users.DataInterop
 {
+    [Obsolete("Should not be used directly.  Use AccountManager instead.")]
     internal static partial class UserWriter
     {
-
-
         /// <summary>
         /// Attempts to create a new CMS user in the database and returns the UserUID if successful
         /// </summary>

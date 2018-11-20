@@ -59,7 +59,7 @@ namespace UHub.CoreLib.Entities.Posts.Management
                 var sanitizerMode = CoreFactory.Singleton.Properties.HtmlSanitizerMode;
                 if ((sanitizerMode & HtmlSanitizerMode.OnWrite) != 0)
                 {
-                    NewPost.Content = NewPost.Content.SanitizeHtml();
+                    NewPost.Content = NewPost.Content?.SanitizeHtml();
                 }
 
             }

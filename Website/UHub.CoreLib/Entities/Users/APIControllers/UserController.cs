@@ -30,7 +30,7 @@ namespace UHub.CoreLib.Entities.Users.APIControllers
         [Route("GetMe")]
         [HttpPost]
         [ApiAuthControl]
-        public async Task<IHttpActionResult> GetMe()
+        public IHttpActionResult GetMe()
         {
             string status = "";
             HttpStatusCode statCode = HttpStatusCode.BadRequest;

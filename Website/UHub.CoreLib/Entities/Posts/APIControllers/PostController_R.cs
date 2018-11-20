@@ -33,29 +33,27 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
                 return Content(statCode, status);
             }
 
-            var postInternal = PostReader.GetPost(postID);
+
+            var postInternal = await PostReader.GetPostAsync(postID);
             if (postInternal == null)
             {
                 return NotFound();
             }
+
             var parentID = postInternal.ParentID;
-            bool IsUserBanned = true;
-            bool IsUserMember = false;
-            SchoolClub postClub = null;
             var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser();
 
 
-            TaskList tasks = new TaskList();
-            tasks.Add(() => { postClub = SchoolClubReader.GetClub(parentID); });
-            tasks.Add(() => { IsUserBanned = SchoolClubReader.IsUserBanned(parentID, cmsUser.ID.Value); });
-            tasks.Add(() => { IsUserMember = SchoolClubReader.ValidateMembership(parentID, cmsUser.ID.Value); });
-            tasks.ExecuteAll();
 
+            var taskPostClub = SchoolClubReader.GetClubAsync(parentID);
+            var taskIsUserBanned = SchoolClubReader.IsUserBannedAsync(parentID, cmsUser.ID.Value);
+            var taskIsUserMember = SchoolClubReader.ValidateMembershipAsync(parentID, cmsUser.ID.Value);
 
 
 
             var postPublic = postInternal.ToDto<Post_R_PublicDTO>();
 
+            var postClub = await taskPostClub;
             if (postClub != null)
             {
                 //verify same school
@@ -64,6 +62,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
                     return NotFound();
                 }
 
+                var IsUserBanned = await taskIsUserBanned;
                 //ensure not banned
                 if (IsUserBanned)
                 {
@@ -77,6 +76,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
                 }
 
 
+                var IsUserMember = await taskIsUserMember;
                 //check for member status
                 if (IsUserMember)
                 {
