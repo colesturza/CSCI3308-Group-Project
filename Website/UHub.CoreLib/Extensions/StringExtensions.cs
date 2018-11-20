@@ -83,6 +83,11 @@ namespace UHub.CoreLib.Extensions
                 return false;
             }
 
+            if (!domain.StartsWith("@"))
+            {
+                return false;
+            }
+
             return RgxIsMatch(domain, RgxPatterns.User.EMAIL_DOMAIN_B);
 
         }

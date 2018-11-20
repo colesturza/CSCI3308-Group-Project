@@ -47,6 +47,12 @@ namespace UHub.CoreLib.Entities.Users.Management
                 throw new SystemDisabledException();
             }
 
+            if (!Email.IsValidEmail())
+            {
+                return false;
+            }
+
+
             return SqlWorker.ExecScalar<bool>(
                 _dbConn,
                 "[dbo].[User_DoesExistByEmail]",
@@ -61,6 +67,11 @@ namespace UHub.CoreLib.Entities.Users.Management
             if (!CoreFactory.Singleton.IsEnabled)
             {
                 throw new SystemDisabledException();
+            }
+
+            if (!Domain.IsValidEmailDomain())
+            {
+                return false;
             }
 
             return SqlWorker.ExecScalar<bool>(
@@ -87,6 +98,11 @@ namespace UHub.CoreLib.Entities.Users.Management
                 throw new SystemDisabledException();
             }
 
+            if (!Email.IsValidEmail())
+            {
+                return null;
+            }
+
             return SqlWorker.ExecScalar<long>(
                 _dbConn,
                 "[dbo].[User_GetIDByEmail]",
@@ -107,6 +123,12 @@ namespace UHub.CoreLib.Entities.Users.Management
             {
                 throw new SystemDisabledException();
             }
+
+            if (!Domain.IsValidEmailDomain())
+            {
+                return null;
+            }
+
 
             return SqlWorker.ExecScalar<long>(
                 _dbConn,
@@ -153,6 +175,12 @@ namespace UHub.CoreLib.Entities.Users.Management
                 throw new SystemDisabledException();
             }
 
+            if (!Email.IsValidEmail())
+            {
+                return null;
+            }
+
+
 
             return SqlWorker.ExecBasicQuery<User>(
                 _dbConn,
@@ -175,6 +203,12 @@ namespace UHub.CoreLib.Entities.Users.Management
             {
                 throw new SystemDisabledException();
             }
+
+            if (!Domain.IsValidEmailDomain())
+            {
+                return null;
+            }
+
 
             return SqlWorker.ExecBasicQuery<User>(
                 _dbConn,

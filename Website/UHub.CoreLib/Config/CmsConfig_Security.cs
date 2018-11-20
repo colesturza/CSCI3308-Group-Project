@@ -61,7 +61,7 @@ namespace UHub.CoreLib.Config
         /// <para></para>
         /// Default: 1 day
         /// </summary>
-        public TimeSpan AcctPswdRecoveryExpiration { get; set; } = new TimeSpan(1, 0, 0, 0);
+        public TimeSpan AcctPswdRecoveryLifespan { get; set; } = new TimeSpan(1, 0, 0, 0);
         /// <summary>
         /// Force all site content to use secure SSL protected connections.
         /// An SSL certificate must be configured through IIS in order for this setting to work properly.
@@ -136,6 +136,12 @@ namespace UHub.CoreLib.Config
         /// Users will use this link + RefID to confirm their accounts
         /// </summary>
         public string AcctConfirmURL { get; set; }
+        /// <summary>
+        /// The longest that a confirmation token can be valid (0 is infinite)
+        /// <para></para>
+        /// Default: 5 days
+        /// </summary>
+        public TimeSpan AcctConfirmLifespan { get; set; } = new TimeSpan(5, 0, 0, 0);
         /// <summary>
         /// Flag for whether or not ReCaptcha should be checked at various user auth pages.
         /// Also requires client-side recaptcha configuration

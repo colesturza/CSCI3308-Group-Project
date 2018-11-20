@@ -148,19 +148,21 @@ namespace UHub.CoreLib.Security.Accounts.Tests
                     });
 
 
-                if (result != AccountResultCode.Success && enableDetail)
+                if (result != AcctCreateResultCode.Success && enableDetail)
                 {
                     switch (result)
                     {
-                        case AccountResultCode.EmailEmpty: { status = "Email Empty"; break; }
-                        case AccountResultCode.EmailInvalid: { status = "Email Invalid"; break; }
-                        case AccountResultCode.EmailDuplicate: { status = "Email Duplicate"; break; }
-                        case AccountResultCode.EmailDomainInvalid: { status = "Email Domain Not Supported"; break; }
-                        case AccountResultCode.UsernameDuplicate: { status = "Username Duplicate"; break; }
-                        case AccountResultCode.MajorInvalid: { status = "Major Invalid"; break; }
-                        case AccountResultCode.PswdEmpty: { status = "Password Empty"; break; }
-                        case AccountResultCode.PswdInvalid: { status = "Password Invalid"; break; }
+                        case AcctCreateResultCode.EmailEmpty: { status = "Email Empty"; break; }
+                        case AcctCreateResultCode.EmailInvalid: { status = "Email Invalid"; break; }
+                        case AcctCreateResultCode.EmailDuplicate: { status = "Email Duplicate"; break; }
+                        case AcctCreateResultCode.EmailDomainInvalid: { status = "Email Domain Not Supported"; break; }
+                        case AcctCreateResultCode.UsernameDuplicate: { status = "Username Duplicate"; break; }
+                        case AcctCreateResultCode.MajorInvalid: { status = "Major Invalid"; break; }
+                        case AcctCreateResultCode.PswdEmpty: { status = "Password Empty"; break; }
+                        case AcctCreateResultCode.PswdInvalid: { status = "Password Invalid"; break; }
                     }
+
+                    Console.WriteLine(result.ToString());
                 }
 
 

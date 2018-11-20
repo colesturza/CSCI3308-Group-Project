@@ -226,6 +226,9 @@ begin
 			@IsNewRecord = @_isNew
 
 
+		exec [dbo].[User_CreateConfirmToken]
+			@UserID = @_entID
+
 
 		select @_entID
 

@@ -64,24 +64,24 @@ namespace UHub.CoreLib.Entities.Users
         #endregion Constructors
 
 
-        public AccountResultCode ValidateRecoveryKey(string Key)
+        public AcctRecoveryResultCode ValidateRecoveryKey(string Key)
         {
 
             if (this.EffFromDate > DateTimeOffset.Now || this.EffToDate < DateTimeOffset.Now)
             {
                 this.Delete();
-                return AccountResultCode.RecoveryContextExpired;
+                return AcctRecoveryResultCode.RecoveryContextExpired;
             }
 
             if (!this.IsEnabled)
             {
-                return AccountResultCode.RecoveryContextDisabled;
+                return AcctRecoveryResultCode.RecoveryContextDisabled;
             }
 
             if (this.AttemptCount > CoreFactory.Singleton.Properties.AcctPswdResetMaxAttemptCount)
             {
                 this.Delete();
-                return AccountResultCode.RecoveryContextDestroyed;
+                return AcctRecoveryResultCode.RecoveryContextDestroyed;
             }
 
 
@@ -98,11 +98,11 @@ namespace UHub.CoreLib.Entities.Users
 
             if (isValid)
             {
-                return AccountResultCode.Success;
+                return AcctRecoveryResultCode.Success;
             }
             else
             {
-                return AccountResultCode.RecoveryKeyInvalid;
+                return AcctRecoveryResultCode.RecoveryKeyInvalid;
             }
         }
 
@@ -110,25 +110,25 @@ namespace UHub.CoreLib.Entities.Users
         /// <summary>
         /// Increment the attempt count in DB
         /// </summary>
-        public AccountResultCode IncrementAttemptCount()
+        public AcctRecoveryResultCode IncrementAttemptCount()
         {
             if (AttemptCount >= CoreFactory.Singleton.Properties.AcctPswdResetMaxAttemptCount)
             {
                 this.Delete();
-                return AccountResultCode.RecoveryContextDestroyed;
+                return AcctRecoveryResultCode.RecoveryContextDestroyed;
             }
 
             //Forced reset does not respect attempt count
             //But no error should be reported
             if (!this.IsOptional)
             {
-                return AccountResultCode.Success;
+                return AcctRecoveryResultCode.Success;
             }
 
 
             this.AttemptCount++;
             UserWriter.LogFailedRecoveryContextAttempt(this.RecoveryID);
-            return AccountResultCode.Success;
+            return AcctRecoveryResultCode.Success;
         }
 
         /// <summary>

@@ -15,13 +15,6 @@ namespace UHub.CoreLib.DataInterop
     /// </summary>
     public static partial class SqlWorker
     {
-        internal enum ExecutionModes
-        {
-            ScalarFunc,
-            NonQuery,
-            Query_Basic,
-            Query_Advanced
-        }
 
         /// <summary>
         /// Wrap a common protocol for performing DB lookups against sProcs.  Use for scalar function calls with a single return value.
@@ -755,7 +748,9 @@ namespace UHub.CoreLib.DataInterop
                 //throw original exception
                 //reset stack trace
                 else
+                {
                     throw;
+                }
             }
         }
     }

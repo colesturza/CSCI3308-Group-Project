@@ -19,25 +19,12 @@ namespace UHub.CoreLib.Security.Authentication.Interfaces
         /// <param name="UserEmail">Email address associated with the user account</param>
         /// <param name="UserPassword">Password associated with the user account</param>
         /// <param name="IsPersistent">Flag to set token persistence status</param>
-        /// <param name="GeneralFailHandler">Error handler in case DB cannot be reached or there is other unknown error</param>
-        bool TrySetClientAuthToken(
-            string UserEmail,
-            string UserPassword,
-            bool IsPersistent,
-            Action<Guid> GeneralFailHandler = null);
-        /// <summary>
-        /// Validate user credentials then set authentication token via cookie
-        /// </summary>
-        /// <param name="UserEmail">Email address associated with the user account</param>
-        /// <param name="UserPassword">Password associated with the user account</param>
-        /// <param name="IsPersistent">Flag to set token persistence status</param>
         /// <param name="ResultCode">Result code to indicate process status</param>
         /// <param name="GeneralFailHandler">Error handler in case DB cannot be reached or there is other unknown error</param>
-        bool TrySetClientAuthToken(
+        AuthResultCode TrySetClientAuthToken(
             string UserEmail,
             string UserPassword,
             bool IsPersistent,
-            out AuthResultCode ResultCode,
             Action<Guid> GeneralFailHandler = null);
         /// <summary>
         /// Validate user credentials then return encrypted authentication token
@@ -79,24 +66,12 @@ namespace UHub.CoreLib.Security.Authentication.Interfaces
         /// </summary>
         /// <param name="UserEmail">Email address associated with the user account</param>
         /// <param name="UserPassword">Password associated with the user account</param>
-        /// <param name="GeneralFailHandler">Error handler in case DB cannot be reached or there is other unknown error</param>
-        /// <returns></returns>
-        bool TryAuthenticateUser(
-            string UserEmail,
-            string UserPassword,
-            Action<Guid> GeneralFailHandler = null);
-        /// <summary>
-        /// Try to authenticate a user account using the supplied account credentials
-        /// </summary>
-        /// <param name="UserEmail">Email address associated with the user account</param>
-        /// <param name="UserPassword">Password associated with the user account</param>
         /// <param name="ResultCode">Result code to indicate process status</param>
         /// <param name="GeneralFailHandler">Error handler in case DB cannot be reached or there is other unknown error</param>
         /// <returns></returns>
-        bool TryAuthenticateUser(
+        AuthResultCode TryAuthenticateUser(
             string UserEmail,
             string UserPassword,
-            out AuthResultCode ResultCode,
             Action<Guid> GeneralFailHandler = null);
 
 
@@ -119,9 +94,7 @@ namespace UHub.CoreLib.Security.Authentication.Interfaces
         /// <param name="tokenStr">Auth token in string form</param>
         /// <param name="tokenStatus">Returns token validation status</param>
         /// <returns>Status flag</returns>
-        bool TrySetRequestUser(
-            string tokenStr,
-            out TokenValidationStatus tokenStatus);
+        TokenValidationStatus TrySetRequestUser(string tokenStr);
 
         /// <summary>
         /// Ensure that auth token is valid and user is logged in
@@ -130,10 +103,7 @@ namespace UHub.CoreLib.Security.Authentication.Interfaces
         /// <param name="CmsUser">User encapsulated by auth token (if valid)</param>
         /// <param name="tokenStatus">Returns token validation status</param>
         /// <returns></returns>
-        bool ValidateAuthToken(
-            string tokenStr,
-            out User CmsUser,
-            out TokenValidationStatus tokenStatus);
+        TokenValidationStatus ValidateAuthToken(string tokenStr, out User CmsUser);
 
 
 

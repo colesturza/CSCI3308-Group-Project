@@ -1,4 +1,4 @@
-﻿create proc [dbo].[User_PurgeByEmail]
+﻿CREATE proc [dbo].[User_PurgeByEmail]
 
 	
 	@Email nvarchar(250)
@@ -61,6 +61,13 @@ begin
 				dbo.EntPropertyRevisionXRef
 			where
 				EntID = @_userID
+
+
+			--delete user confirmation tokens
+			delete from
+				dbo.UserConfirmation
+			where
+				UserID = @_userID
 
 
 			--delete user psd info

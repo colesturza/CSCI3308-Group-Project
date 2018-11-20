@@ -95,6 +95,11 @@ namespace UHub.CoreLib.Entities.SchoolClubs.Management
                 throw new SystemDisabledException();
             }
 
+            if (!Email.IsValidEmail())
+            {
+                return Enumerable.Empty<SchoolClub>();
+            }
+
 
             return await SqlWorker.ExecBasicQueryAsync<SchoolClub>(
                 _dbConn,
@@ -116,6 +121,11 @@ namespace UHub.CoreLib.Entities.SchoolClubs.Management
             if (!CoreFactory.Singleton.IsEnabled)
             {
                 throw new SystemDisabledException();
+            }
+
+            if (!Domain.IsValidEmailDomain())
+            {
+                return Enumerable.Empty<SchoolClub>();
             }
 
 

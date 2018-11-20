@@ -151,7 +151,6 @@
     <Compile Include="Config\CmsConfig_Security.cs" />
     <Compile Include="Config\CmsConfig_Storage.cs" />
     <Compile Include="Config\SchemaVersion.cs" />
-    <Compile Include="DataInterop\DataReaderConverters_TEST.cs" />
     <Compile Include="DataInterop\DataConverterGenerator.cs">
       <DependentUpon>DataConverterGenerator.tt</DependentUpon>
       <DesignTime>True</DesignTime>
@@ -251,8 +250,10 @@
     <Compile Include="Entities\Schools\School.cs" />
     <Compile Include="Entities\Users\APIControllers\UserController.cs" />
     <Compile Include="Entities\Users\DTOs\User_CredentialDTO.cs" />
+    <Compile Include="Entities\Users\Interfaces\IUserConfirmToken.cs" />
     <Compile Include="Entities\Users\Interfaces\IUserCredential.cs" />
     <Compile Include="Entities\Users\Interfaces\IUserRecoveryContextAsync.cs" />
+    <Compile Include="Entities\Users\Management\UserReader_ConfirmTokenAsync.cs" />
     <Compile Include="Entities\Users\Management\UserReader_CoreAsync.cs" />
     <Compile Include="Entities\Users\Management\UserReader_EntClubAsync.cs" />
     <Compile Include="Entities\Users\Management\UserReader_EntClub.cs" />
@@ -262,12 +263,14 @@
     <Compile Include="Entities\Users\Management\UserReader_EntClubMods.cs" />
     <Compile Include="Entities\Users\Management\UserReader_EntPostsAsync.cs" />
     <Compile Include="Entities\Users\Management\UserReader_EntPosts.cs" />
+    <Compile Include="Entities\Users\Management\UserReader_ConfirmToken.cs" />
     <Compile Include="Entities\Users\Management\UserReader_RecoveryContextAsync.cs" />
     <Compile Include="Entities\Users\Management\UserWriterAsync.cs" />
     <Compile Include="Entities\Users\Management\UserWriter_Core.cs" />
     <Compile Include="Entities\Users\Management\UserWriter_RecoveryContext.cs" />
     <Compile Include="Entities\Users\Management\UserWriter_RecoveryContextAsync.cs" />
     <Compile Include="Entities\Users\UserAsync.cs" />
+    <Compile Include="Entities\Users\UserConfirmToken.cs" />
     <Compile Include="Entities\Users\UserRecoveryContextAsync.cs" />
     <Compile Include="ErrorHandling\Exceptions\AccessForbiddenException.cs" />
     <Compile Include="ErrorHandling\Exceptions\ConfigBootstrapException.cs" />
@@ -315,7 +318,11 @@
     <Compile Include="Security\Accounts\AccountManagerAsync.cs" />
     <Compile Include="Security\Accounts\AccountManager.cs" />
     <Compile Include="Security\Accounts\APIControllers\AccountController.cs" />
-    <Compile Include="Security\Accounts\Enums\AccountResultCode.cs" />
+    <Compile Include="Security\Accounts\Enums\AcctPswdResultCode.cs" />
+    <Compile Include="Security\Accounts\Enums\AcctCreateResultCode.cs" />
+    <Compile Include="Security\Accounts\Enums\AcctRecoveryResultCode.cs" />
+    <Compile Include="Security\Accounts\Enums\AcctResultCode.cs" />
+    <Compile Include="Security\Accounts\AccountManagerShared.cs" />
     <Compile Include="Security\Accounts\Interfaces\IAccountManagerAsync.cs" />
     <Compile Include="Security\Accounts\Interfaces\IAccountManager.cs" />
     <Compile Include="Security\Authentication\APIControllers\AuthenticationController.cs" />
@@ -330,6 +337,7 @@
     <Compile Include="Security\Authentication\Enums\UserLoginScope.cs" />
     <Compile Include="Security\Authentication\FormsAuthProviderAsync.cs" />
     <Compile Include="Security\Authentication\FormsAuthProvider.cs" />
+    <Compile Include="Security\Authentication\FormsAuthProviderShared.cs" />
     <Compile Include="Security\Authentication\Interfaces\IAuthenticationManagerAsync.cs" />
     <Compile Include="Security\Authentication\Interfaces\IAuthenticationManager.cs" />
     <Compile Include="Security\Authentication\TokenManagerAsync.cs" />

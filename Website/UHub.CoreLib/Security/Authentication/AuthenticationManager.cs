@@ -31,19 +31,6 @@ namespace UHub.CoreLib.Security.Authentication
             authWorker = new FormsAuthProvider();
         }
 
-        /// <summary>
-        /// Validate user credentials then set authentication token via cookie
-        /// </summary>
-        /// <param name="UserEmail">Email address associated with the user account</param>
-        /// <param name="UserPassword">Password associated with the user account</param>
-        /// <param name="IsPersistent">Flag to set token persistence status</param>
-        /// <param name="GeneralFailHandler">Error handler in case DB cannot be reached or there is other unknown error</param>
-        public bool TrySetClientAuthToken(
-            string UserEmail,
-            string UserPassword,
-            bool IsPersistent,
-            Action<Guid> GeneralFailHandler = null) => TrySetClientAuthToken(UserEmail, UserPassword, IsPersistent, out _, GeneralFailHandler);
-
 
         /// <summary>
         /// Validate user credentials then set authentication token via cookie
@@ -53,11 +40,10 @@ namespace UHub.CoreLib.Security.Authentication
         /// <param name="IsPersistent">Flag to set token persistence status</param>
         /// <paramref name="ResultCode">Result code to indicate process status</paramref>
         /// <param name="GeneralFailHandler">Error handler in case DB cannot be reached or there is other unknown error</param>
-        public bool TrySetClientAuthToken(
+        public AuthResultCode TrySetClientAuthToken(
             string UserEmail,
             string UserPassword,
             bool IsPersistent,
-            out AuthResultCode ResultCode,
             Action<Guid> GeneralFailHandler = null)
         {
             if (!CoreFactory.Singleton.IsEnabled)
@@ -91,14 +77,12 @@ namespace UHub.CoreLib.Security.Authentication
             }
 
 
-            var status = authWorker.TryAuthenticateUser(
+            return authWorker.TryAuthenticateUser(
                 UserEmail,
                 UserPassword,
-                out ResultCode,
                 GeneralFailHandler,
                 userTokenHandler);
 
-            return status;
         }
 
         /// <summary>
@@ -154,10 +138,9 @@ namespace UHub.CoreLib.Security.Authentication
             }
 
 
-            var success = authWorker.TryAuthenticateUser(
+            ResultCode = authWorker.TryAuthenticateUser(
                 UserEmail,
                 UserPassword,
-                out ResultCode,
                 GeneralFailHandler,
                 userTokenHandler);
 
@@ -195,7 +178,7 @@ namespace UHub.CoreLib.Security.Authentication
                 newToken = authToken.Encrypt();
             }
 
-            authWorker.ValidateAuthToken(token, out _, out TokenStatus, () => { TryLogOut(5); }, succHandler);
+            TokenStatus = authWorker.ValidateAuthToken(token, out _, () => { TryLogOut(5); }, succHandler);
 
             return newToken;
         }
@@ -206,25 +189,12 @@ namespace UHub.CoreLib.Security.Authentication
         /// </summary>
         /// <param name="UserEmail">Email address associated with the user account</param>
         /// <param name="UserPassword">Password associated with the user account</param>
-        /// <param name="GeneralFailHandler">Error handler in case DB cannot be reached or there is other unknown error</param>
-        /// <returns></returns>
-        public bool TryAuthenticateUser(
-            string UserEmail,
-            string UserPassword,
-            Action<Guid> GeneralFailHandler = null) => TryAuthenticateUser(UserEmail, UserPassword, out _, GeneralFailHandler);
-
-        /// <summary>
-        /// Try to authenticate a user account using the supplied account credentials
-        /// </summary>
-        /// <param name="UserEmail">Email address associated with the user account</param>
-        /// <param name="UserPassword">Password associated with the user account</param>
         /// <paramref name="ResultCode">Result code to indicate process status</paramref>
         /// <param name="GeneralFailHandler">Error handler in case DB cannot be reached or there is other unknown error</param>
         /// <returns></returns>
-        public bool TryAuthenticateUser(
+        public AuthResultCode TryAuthenticateUser(
             string UserEmail,
             string UserPassword,
-            out AuthResultCode ResultCode,
             Action<Guid> GeneralFailHandler = null)
         {
             if (!CoreFactory.Singleton.IsEnabled)
@@ -235,7 +205,6 @@ namespace UHub.CoreLib.Security.Authentication
             return authWorker.TryAuthenticateUser(
                 UserEmail,
                 UserPassword,
-                out ResultCode,
                 GeneralFailHandler,
                 null);
         }
@@ -308,19 +277,19 @@ namespace UHub.CoreLib.Security.Authentication
         /// <param name="tokenStr">AuthToken in string form</param>
         /// <param name="tokenStatus">Returns token validation status</param>
         /// <returns>Status flag</returns>
-        public bool TrySetRequestUser(string tokenStr, out TokenValidationStatus tokenStatus)
+        public TokenValidationStatus TrySetRequestUser(string tokenStr)
         {
             if (!CoreFactory.Singleton.IsEnabled)
             {
                 throw new SystemDisabledException();
             }
 
-            var isValid = ValidateAuthToken(tokenStr, out User cmsUser, out tokenStatus);
-            if (!isValid)
+            var tokenStatus = ValidateAuthToken(tokenStr, out User cmsUser);
+            if (tokenStatus != TokenValidationStatus.Success)
             {
                 cmsUser = UserReader.GetAnonymousUser();
                 HttpContext.Current.Items[AuthenticationManager.REQUEST_CURRENT_USER] = cmsUser;
-                return false;
+                return tokenStatus;
             }
 
 
@@ -328,13 +297,13 @@ namespace UHub.CoreLib.Security.Authentication
             {
                 cmsUser = UserReader.GetAnonymousUser();
                 HttpContext.Current.Items[AuthenticationManager.REQUEST_CURRENT_USER] = cmsUser;
-                return false;
+                return TokenValidationStatus.AnonUser;
             }
 
 
             HttpContext.Current.Items[AuthenticationManager.REQUEST_CURRENT_USER] = cmsUser;
 
-            return cmsUser.ID != null;
+            return TokenValidationStatus.Success;
         }
 
         /// <summary>
@@ -344,7 +313,7 @@ namespace UHub.CoreLib.Security.Authentication
         /// <param name="CmsUser">User encapsulated by auth token (if valid)</param>
         /// <param name="tokenStatus">Return auth token validation status</param>
         /// <returns></returns>
-        public bool ValidateAuthToken(string tokenStr, out User CmsUser, out TokenValidationStatus tokenStatus)
+        public TokenValidationStatus ValidateAuthToken(string tokenStr, out User CmsUser)
         {
             if (!CoreFactory.Singleton.IsEnabled)
             {
@@ -352,7 +321,8 @@ namespace UHub.CoreLib.Security.Authentication
             }
 
 
-            return authWorker.ValidateAuthToken(tokenStr, out CmsUser, out tokenStatus, null);
+            var tokenStatus = authWorker.ValidateAuthToken(tokenStr, out CmsUser, null);
+            return tokenStatus;
         }
 
         /// <summary>
@@ -406,7 +376,7 @@ namespace UHub.CoreLib.Security.Authentication
             else
             {
                 //get user info from tkn (if it exists)
-                authWorker.ValidateAuthCookie(out CmsUser, out tokenStatus);
+                tokenStatus = authWorker.ValidateAuthCookie(out CmsUser);
 
                 if (CmsUser == null || CmsUser.ID == null)
                 {
@@ -472,7 +442,7 @@ namespace UHub.CoreLib.Security.Authentication
                 else
                 {
                     //get user info from tkt (if it exists)
-                    authWorker.ValidateAuthCookie(out User cmsUser, out tokenStatus);
+                    tokenStatus = authWorker.ValidateAuthCookie(out User cmsUser);
 
 
                     if (cmsUser == null || cmsUser.ID == null)

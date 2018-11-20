@@ -78,7 +78,8 @@ namespace UHub.CoreLib.APIControllers
             else
             {
                 //test for token auth
-                isLoggedIn = CoreFactory.Singleton.Auth.TrySetRequestUser(authToken, out tokenStatus);
+                tokenStatus = CoreFactory.Singleton.Auth.TrySetRequestUser(authToken);
+                isLoggedIn = (tokenStatus != TokenValidationStatus.Success);
             }
 
             currentUser = CoreFactory.Singleton.Auth.GetCurrentUser();

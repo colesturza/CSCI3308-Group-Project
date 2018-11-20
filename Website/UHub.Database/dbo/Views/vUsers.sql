@@ -10,6 +10,7 @@
 
 
 
+
 CREATE view [dbo].[vUsers]
 as
 
@@ -21,7 +22,6 @@ as
 		ent.EntTypeID,
 		cast(case when (u.IsConfirmed = 1 AND u.IsApproved = 1 AND ent.IsEnabled = 1 AND ent.IsDeleted = 0) then 1 else 0 end as bit) as IsEnabled,
 		ent.IsReadOnly,
-		u.RefUID,
 		u.Email,
 		u.Domain,
 		u.Username,

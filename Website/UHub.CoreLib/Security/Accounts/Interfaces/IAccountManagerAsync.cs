@@ -20,7 +20,7 @@ namespace UHub.CoreLib.Security.Accounts.Interfaces
         /// <param name="GeneralFailHandler">Error handler in case DB cannot be reached or there is other unknown error</param>
         /// <param name="SuccessHandler">Args: new user object, auto login [T|F]</param>
         /// <returns>Status Flag</returns>
-        Task<AccountResultCode> TryCreateUserAsync(
+        Task<AcctCreateResultCode> TryCreateUserAsync(
             User NewUser,
             bool AttemptAutoLogin,
             Action<Guid> GeneralFailHandler = null,
@@ -56,7 +56,7 @@ namespace UHub.CoreLib.Security.Accounts.Interfaces
         /// <param name="DeviceLogout">If true, user will be logged out of all other devices</param>
         /// <param name="GeneralFailHandler">Error handler in case DB cannot be reached or there is other unknown error</param>
         /// <returns>Status flag</returns>
-        Task<AccountResultCode> TryUpdatePasswordAsync(
+        Task<AcctPswdResultCode> TryUpdatePasswordAsync(
             string UserEmail,
             string OldPassword,
             string NewPassword,
@@ -75,7 +75,7 @@ namespace UHub.CoreLib.Security.Accounts.Interfaces
         /// <param name="DeviceLogout">If true, user will be logged out of all other devices</param>
         /// <param name="GeneralFailHandler">Error handler in case DB cannot be reached or there is other unknown error</param>
         /// <returns>Status flag</returns>
-        Task<AccountResultCode> TryUpdatePasswordAsync(
+        Task<AcctPswdResultCode> TryUpdatePasswordAsync(
             long UserID,
             string OldPassword,
             string NewPassword,
@@ -95,7 +95,7 @@ namespace UHub.CoreLib.Security.Accounts.Interfaces
         /// <param name="DeviceLogout"></param>
         /// <param name="GeneralFailHandler"></param>
         /// <returns></returns>
-        Task<AccountResultCode> TryRecoverPasswordAsync(
+        Task<AcctRecoveryResultCode> TryRecoverPasswordAsync(
             string RecoveryContextID,
             string RecoveryKey,
             string NewPassword,
@@ -115,7 +115,7 @@ namespace UHub.CoreLib.Security.Accounts.Interfaces
         /// <exception cref="SystemDisabledException"></exception>
         /// <exception cref="InvalidOperationException"></exception>
         /// <returns>Status flag</returns>
-        Task<AccountResultCode> TryResetPasswordAsync(
+        Task<AcctRecoveryResultCode> TryResetPasswordAsync(
             string UserEmail,
             string NewPassword,
             bool DeviceLogout,
@@ -134,7 +134,7 @@ namespace UHub.CoreLib.Security.Accounts.Interfaces
         /// <exception cref="SystemDisabledException"></exception>
         /// <exception cref="InvalidOperationException"></exception>
         /// <returns>Status flag</returns>
-        Task<AccountResultCode> TryResetPasswordAsync(
+        Task<AcctRecoveryResultCode> TryResetPasswordAsync(
             long UserID,
             string NewPassword,
             bool DeviceLogout,
@@ -170,7 +170,7 @@ namespace UHub.CoreLib.Security.Accounts.Interfaces
         /// <param name="IsOptional">Specify whether or not user will be forced to update password</param>
         /// <param name="GeneralFailHandler">Error handler in case DB cannot be reached or there is other unknown error</param>
         /// <returns></returns>
-        Task<(AccountResultCode ResultCode, IUserRecoveryContext RecoveryContext, string RecoveryKey)> TryCreateUserRecoveryContextAsync(
+        Task<(AcctRecoveryResultCode ResultCode, IUserRecoveryContext RecoveryContext, string RecoveryKey)> TryCreateUserRecoveryContextAsync(
             string UserEmail,
             bool IsOptional,
             Action<Guid> GeneralFailHandler = null);
@@ -183,7 +183,7 @@ namespace UHub.CoreLib.Security.Accounts.Interfaces
         /// <param name="IsOptional">Specify whether or not user will be forced to update password</param>
         /// <param name="GeneralFailHandler">Error handler in case DB cannot be reached or there is other unknown error</param>
         /// <returns></returns>
-        Task<(AccountResultCode ResultCode, IUserRecoveryContext RecoveryContext, string RecoveryKey)> TryCreateUserRecoveryContextAsync(
+        Task<(AcctRecoveryResultCode ResultCode, IUserRecoveryContext RecoveryContext, string RecoveryKey)> TryCreateUserRecoveryContextAsync(
             long UserID,
             bool IsOptional,
             Action<Guid> GeneralFailHandler = null);

@@ -148,7 +148,7 @@ namespace UHub
                     AcctConfirmURL = "~/Account/Confirm",
                     AcctPswdRecoveryURL = "~/Account/Recover",
                     AcctPswdUpdateURL = "~/Account/UpdatePassword",
-                    AcctPswdRecoveryExpiration = new TimeSpan(0, 0, 30, 0),
+                    AcctPswdRecoveryLifespan = new TimeSpan(0, 0, 30, 0),
                     EnableRecaptcha = true,                //CAPTCHA
                     RecaptchaPublicKey = captchaPublicKey,
                     RecaptchaPrivateKey = captchaPrivateKey,
@@ -158,7 +158,7 @@ namespace UHub
                     CookieSameSiteMode = CookieSameSiteModes.Lax,
                     EnablePswdRecovery = true,
                     EnablePersistentAuthTokens = true,
-                    HtmlSanitizerMode = HtmlSanitizerMode.OnWrite | HtmlSanitizerMode.OnRead
+                    HtmlSanitizerMode = HtmlSanitizerMode.Both
                 },
                 Logging = new CmsConfig_Logging
                 {
@@ -289,7 +289,7 @@ namespace UHub
                     AcctConfirmURL = "~/Account/Confirm",
                     AcctPswdRecoveryURL = "~/Account/Recover",
                     AcctPswdUpdateURL = "~/Account/UpdatePassword",
-                    AcctPswdRecoveryExpiration = new TimeSpan(0, 0, 30, 0),
+                    AcctPswdRecoveryLifespan = new TimeSpan(0, 0, 30, 0),
                     EnableRecaptcha = false,                //CAPTCHA
                     RecaptchaPublicKey = captchaPublicKey,
                     RecaptchaPrivateKey = captchaPrivateKey,

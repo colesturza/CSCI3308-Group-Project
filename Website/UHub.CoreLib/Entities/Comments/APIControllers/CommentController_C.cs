@@ -56,6 +56,7 @@ namespace UHub.CoreLib.Entities.Comments.APIControllers
 
             try
             {
+                tmpComment.Content = tmpComment.Content.Trim();
                 tmpComment.Content = tmpComment.Content.SanitizeHtml();
                 tmpComment.CreatedBy = cmsUser.ID.Value;
 

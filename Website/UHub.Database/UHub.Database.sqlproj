@@ -209,5 +209,9 @@
     <Build Include="dbo\Stored Procedures\Posts_GetClusteredCounts.sql" />
     <Build Include="dbo\Tables\Users_1.sql" />
     <Build Include="dbo\Tables\Entities_1.sql" />
+    <Build Include="dbo\Tables\UserConfirmation.sql" />
+    <Build Include="dbo\Stored Procedures\User_GetConfirmTokenByUserID.sql" />
+    <Build Include="dbo\Stored Procedures\User_GetConfirmTokenByID.sql" />
+    <Build Include="dbo\Stored Procedures\User_CreateConfirmToken.sql" />
   </ItemGroup>
 </Project>

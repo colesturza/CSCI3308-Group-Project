@@ -21,25 +21,25 @@ namespace UHub.CoreLib.Entities.Users
         /// <summary>
         /// Increment the attempt count in DB
         /// </summary>
-        public async Task<AccountResultCode> IncrementAttemptCountAsync()
+        public async Task<AcctRecoveryResultCode> IncrementAttemptCountAsync()
         {
             if (AttemptCount >= CoreFactory.Singleton.Properties.AcctPswdResetMaxAttemptCount)
             {
                 this.Delete();
-                return AccountResultCode.RecoveryContextDestroyed;
+                return AcctRecoveryResultCode.RecoveryContextDestroyed;
             }
 
             //Forced reset does not respect attempt count
             //But no error should be reported
             if (!this.IsOptional)
             {
-                return AccountResultCode.Success;
+                return AcctRecoveryResultCode.Success;
             }
 
 
             this.AttemptCount++;
             await UserWriter.TryLogFailedRecoveryContextAttemptAsync(this.RecoveryID);
-            return AccountResultCode.Success;
+            return AcctRecoveryResultCode.Success;
         }
 
 

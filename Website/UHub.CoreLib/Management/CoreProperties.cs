@@ -98,7 +98,7 @@ namespace UHub.CoreLib.Management
             Properties.EnablePswdRecovery = cmsConfig.Security.EnablePswdRecovery;
             Properties.AcctPswdRecoveryURL = getDynamicURL(cmsConfig.Security.AcctPswdRecoveryURL);
             Properties.AcctPswdUpdateURL = getDynamicURL(cmsConfig.Security.AcctPswdUpdateURL);
-            Properties.AcctPswdRecoveryExpiration = cmsConfig.Security.AcctPswdRecoveryExpiration;
+            Properties.AcctPswdRecoveryLifespan = cmsConfig.Security.AcctPswdRecoveryLifespan;
             Properties.ForceHTTPS = cmsConfig.Security.ForceHTTPS;
             Properties.ForceSecureCookies = cmsConfig.Security.ForceSecureCookies;
             Properties.CookieDomain = cmsConfig.Security.CookieDomain;
@@ -110,6 +110,7 @@ namespace UHub.CoreLib.Management
             Properties.LoginURL = getDynamicURL(cmsConfig.Security.LoginURL);
             Properties.DefaultAuthFwdURL = getDynamicURL(cmsConfig.Security.DefaultAuthFwdURL);
             Properties.AcctConfirmURL = getDynamicURL(cmsConfig.Security.AcctConfirmURL);
+            Properties.AcctConfirmLifespan = cmsConfig.Security.AcctConfirmLifespan;
             Properties.EnableRecaptcha = cmsConfig.Security.EnableRecaptcha;
             Properties.RecaptchaPrivateKey = cmsConfig.Security.RecaptchaPrivateKey;
             Properties.RecaptchaPublicKey = cmsConfig.Security.RecaptchaPublicKey;
@@ -273,7 +274,7 @@ namespace UHub.CoreLib.Management
         /// Account password reset link expiration length
         /// Specify how long users will have to change their passwords after a reset context is created (0 is infinite)
         /// </summary>
-        public TimeSpan AcctPswdRecoveryExpiration { get; private set; }
+        public TimeSpan AcctPswdRecoveryLifespan { get; private set; }
         /// <summary>
         /// Force all site content to use secure SSL protected connections.
         /// An SSL certificate must be configured through IIS in order for this setting to work properly.
@@ -331,6 +332,12 @@ namespace UHub.CoreLib.Management
         /// Users will use this link + RefID to confirm their accounts
         /// </summary>
         public string AcctConfirmURL { get; private set; }
+        /// <summary>
+        /// The longest that a confirmation token can be valid (0 is infinite)
+        /// <para></para>
+        /// Default: 5 days
+        /// </summary>
+        public TimeSpan AcctConfirmLifespan { get; set; }
         /// <summary>
         /// Flag for whether or not ReCaptcha should be checked at various user auth pages.
         /// Also requires client-side recaptcha configuration

@@ -53,6 +53,13 @@ begin
 				EntID = @UserID
 
 
+			--delete user confirmation tokens
+			delete from
+				dbo.UserConfirmation
+			where
+				UserID = @UserID
+
+
 			--delete user psd info
 			delete from
 				dbo.UserAuthentication

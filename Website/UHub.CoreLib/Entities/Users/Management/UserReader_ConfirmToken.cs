@@ -14,18 +14,19 @@ namespace UHub.CoreLib.Entities.Users.Management
     public static partial class UserReader
     {
 
-        public static IUserRecoveryContext GetRecoveryContext(long UserID)
+        public static IUserConfirmToken GetConfirmToken(long UserID)
         {
             try
             {
-                return SqlWorker.ExecBasicQuery<UserRecoveryContext>(
+                return SqlWorker.ExecBasicQuery<UserConfirmToken>(
                     _dbConn,
-                    "[dbo].[User_GetRecoveryContextByUserID]",
+                    "[dbo].[User_GetConfirmTokenByUserID]",
                     (cmd) =>
                     {
                         cmd.Parameters.Add("@UserID", SqlDbType.BigInt).Value = UserID;
                     })
                     .SingleOrDefault();
+
             }
             catch (Exception ex)
             {
@@ -34,16 +35,16 @@ namespace UHub.CoreLib.Entities.Users.Management
             }
         }
 
-        public static IUserRecoveryContext GetRecoveryContext(string RecoveryID)
+        public static IUserConfirmToken GetConfirmToken(string RefUID)
         {
             try
             {
-                return SqlWorker.ExecBasicQuery<UserRecoveryContext>(
+                return SqlWorker.ExecBasicQuery<UserConfirmToken>(
                     _dbConn,
-                    "[dbo].[User_GetRecoveryContextByID]",
+                    "[dbo].[User_GetConfirmTokenByID]",
                     (cmd) =>
                     {
-                        cmd.Parameters.Add("@RecoveryID", SqlDbType.NVarChar).Value = RecoveryID;
+                        cmd.Parameters.Add("@RefUID", SqlDbType.NVarChar).Value = RefUID;
                     })
                     .SingleOrDefault();
             }
