@@ -18,6 +18,7 @@ using UHub.CoreLib.Entities.Users.DataInterop;
 using UHub.CoreLib.Extensions;
 using UHub.CoreLib.Management;
 using UHub.CoreLib.Tools;
+using UHub.CoreLib.Entities.SchoolClubs.Management;
 
 namespace UHub.CoreLib.Entities.SchoolClubs.APIControllers
 {
@@ -40,7 +41,7 @@ namespace UHub.CoreLib.Entities.SchoolClubs.APIControllers
                 return Content(statCode, status);
             }
 
-            if(club == null)
+            if (club == null)
             {
                 return BadRequest();
             }
@@ -54,16 +55,22 @@ namespace UHub.CoreLib.Entities.SchoolClubs.APIControllers
                 tmpClub.SchoolID = cmsUser.SchoolID.Value;
                 tmpClub.CreatedBy = cmsUser.ID.Value;
 
-                var clubID = await SchoolClubWriter.TryCreateClubAsync(tmpClub);
+
+                var ClubResult = await SchoolClubManager.TryCreateClubAsync(tmpClub);
+                var ClubID = ClubResult.ClubID;
+                var ResultCode = ClubResult.ResultCode;
 
 
-                if (clubID == null)
+                if (ResultCode == 0)
                 {
-                    return BadRequest();
+                    status = "Club Created";
+                    statCode = HttpStatusCode.OK;
                 }
-
-
-                return Ok();
+                else
+                {
+                    status = "Invalid Field - " + ResultCode.ToString();
+                    statCode = HttpStatusCode.BadRequest;
+                }
             }
             catch (Exception ex)
             {
@@ -71,9 +78,12 @@ namespace UHub.CoreLib.Entities.SchoolClubs.APIControllers
                 Exception ex_outer = new Exception(errCode, ex);
                 CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
 
-                return Content(HttpStatusCode.InternalServerError, status);
+
+                statCode = HttpStatusCode.InternalServerError;
             }
 
+
+            return Content(statCode, status);
         }
 
     }
