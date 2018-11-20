@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Text.RegularExpressions;
 using SysSec = System.Web.Security;
+using System.Web;
+using RgxPtrn = UHub.CoreLib.Regex.Patterns;
 using UHub.CoreLib.DataInterop;
 using UHub.CoreLib.ErrorHandling.Exceptions;
 using UHub.CoreLib.Extensions;
@@ -20,7 +22,6 @@ using UHub.CoreLib.Entities.SchoolMajors.Management;
 using UHub.CoreLib.Entities.Schools.Management;
 using UHub.CoreLib.Security.Accounts.Interfaces;
 using UHub.CoreLib.Security.Authentication;
-using System.Web;
 
 namespace UHub.CoreLib.Security.Accounts
 {
@@ -261,7 +262,7 @@ namespace UHub.CoreLib.Security.Accounts
                 return (false, $"Invalid {nameof(RefUID)} format");
             }
 
-            if (!RefUID.RgxIsMatch(RgxPatterns.User.REF_UID_B))
+            if (!RefUID.RgxIsMatch(RgxPtrn.User.REF_UID_B))
             {
                 return (false, $"Invalid {nameof(RefUID)} format");
             }

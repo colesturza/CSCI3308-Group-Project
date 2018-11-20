@@ -8,6 +8,7 @@ using UHub.CoreLib.Entities.Users;
 using UHub.CoreLib.Extensions;
 using UHub.CoreLib.Management;
 using UHub.CoreLib.Tools;
+using RgxPtrn = UHub.CoreLib.Regex.Patterns;
 
 namespace UHub.CoreLib.Security.Accounts
 {
@@ -19,9 +20,13 @@ namespace UHub.CoreLib.Security.Accounts
 
             internal static void TryCreate_HandleAttrTrim(ref User NewUser)
             {
-                NewUser.Year = NewUser.Year?.Trim();
-                NewUser.Company = NewUser.Company?.Trim();
-                NewUser.Email = NewUser.Email?.Trim();
+                NewUser.Name        = NewUser.Name?.Trim();
+                NewUser.PhoneNumber = NewUser.PhoneNumber?.Trim();
+                NewUser.Year        = NewUser.Year?.Trim();
+                NewUser.GradDate    = NewUser.GradDate?.Trim();
+                NewUser.Company     = NewUser.Company?.Trim();
+                NewUser.JobTitle    = NewUser.JobTitle?.Trim();
+                NewUser.Email       = NewUser.Email?.Trim();
             }
 
 
@@ -78,20 +83,81 @@ namespace UHub.CoreLib.Security.Accounts
 
 
                 //check for valid username
-                if (!NewUser.Username.RgxIsMatch(RgxPatterns.User.USERNAME_B))
+                if(NewUser.Username.IsEmpty())
+                {
+                    return AcctCreateResultCode.UserNameEmpty;
+                }
+                if (!NewUser.Username.RgxIsMatch(RgxPtrn.User.USERNAME_B))
                 {
                     return AcctCreateResultCode.UsernameInvalid;
                 }
 
 
                 //check for invalid user name
-                if (!NewUser.Name.RgxIsMatch(RgxPatterns.User.NAME_B))
+                if (NewUser.Name.IsEmpty())
+                {
+                    return AcctCreateResultCode.NameEmpty;
+                }
+                if (!NewUser.Name.RgxIsMatch(RgxPtrn.User.NAME_B))
                 {
                     return AcctCreateResultCode.NameInvalid;
                 }
 
-                //TODO: finalize attr validation
 
+                //check for invalid phone #
+                if (NewUser.PhoneNumber.IsNotEmpty())
+                {
+                    if (!NewUser.PhoneNumber.RgxIsMatch(RgxPtrn.User.PHONE_B))
+                    {
+                        return AcctCreateResultCode.PhoneInvalid;
+                    }
+                }
+
+                //Check for empty major
+                if (NewUser.Major.IsEmpty())
+                {
+                    return AcctCreateResultCode.MajorEmpty;
+                }
+
+
+                //check for invalid year
+                if (NewUser.Year.IsNotEmpty())
+                {
+                    if (!NewUser.Year.RgxIsMatch(RgxPtrn.User.YEAR_B))
+                    {
+                        return AcctCreateResultCode.YearInvalid;
+                    }
+                }
+
+
+                //Check for invalid Grad Date
+                if (NewUser.GradDate.IsNotEmpty())
+                {
+                    if (!NewUser.GradDate.RgxIsMatch(RgxPtrn.User.GRAD_DATE_B))
+                    {
+                        return AcctCreateResultCode.GradDateInvalid;
+                    }
+                }
+
+
+                //check for invalid company
+                if (NewUser.Company.IsNotEmpty())
+                {
+                    if (!NewUser.Company.RgxIsMatch(RgxPtrn.User.COMPANY_B))
+                    {
+                        return AcctCreateResultCode.CompanyInvalid;
+                    }
+                }
+
+
+                //check for invalid job title
+                if (NewUser.JobTitle.IsNotEmpty())
+                {
+                    if (!NewUser.JobTitle.RgxIsMatch(RgxPtrn.User.JOB_TITLE_B))
+                    {
+                        return AcctCreateResultCode.JobTitleInvalid;
+                    }
+                }
 
                 return AcctCreateResultCode.Success;
             }

@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using UHub.CoreLib.Extensions;
 using UHub.CoreLib.Tools;
+using RgxPtrn = UHub.CoreLib.Regex.Patterns;
+
 
 namespace UHub.CoreLib.SmtpInterop
 {
@@ -70,7 +72,7 @@ namespace UHub.CoreLib.SmtpInterop
         protected override bool ValidateInner()
         {
 
-            if (!this.Name.RgxIsMatch($@"^{RgxPatterns.User.NAME}$"))
+            if (!this.Name.RgxIsMatch($@"^{RgxPtrn.User.NAME}$"))
             {
                 throw new ArgumentException("Name is invalid");
             }
@@ -78,7 +80,7 @@ namespace UHub.CoreLib.SmtpInterop
             {
                 throw new ArgumentException("Email is invalid");
             }
-            if (!this.PhoneNumber.RgxIsMatch($@"^{RgxPatterns.User.PHONE}$"))
+            if (!this.PhoneNumber.RgxIsMatch($@"^{RgxPtrn.User.PHONE}$"))
             {
                 throw new ArgumentException("Phone number is invalid");
             }

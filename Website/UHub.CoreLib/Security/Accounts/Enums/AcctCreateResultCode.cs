@@ -9,6 +9,7 @@
 
         UsernameInvalid = 3000,
         UsernameDuplicate = 3001,
+        UserNameEmpty = 3002,
 
         EmailInvalid = 4000,
         EmailEmpty = 4001,
@@ -19,9 +20,17 @@
         PswdEmpty = 5001,
         PswdNotChanged = 5002,
 
-        NameInvalid = 6000,
-        MajorInvalid = 6001,
-        YearInvalid = 6002,
-        CompanyInvalid = 6003,
+        NameEmpty = 6010,
+        NameInvalid = 6011,
+        MajorInvalid = 6020,
+        MajorEmpty = 6021,
+        YearInvalid = 6030,
+        YearEmpty = 6030,
+        CompanyInvalid = 6040,
+        CompanyEmpty = 6041,
+        JobTitleInvalid = 6050,
+        PhoneInvalid = 6060,
+        GradDateInvalid = 6070,
+
     }
 }

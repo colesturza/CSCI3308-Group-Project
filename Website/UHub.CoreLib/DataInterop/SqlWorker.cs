@@ -7,6 +7,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using UHub.CoreLib.ErrorHandling.Exceptions;
+using UHub.CoreLib.Extensions;
 
 namespace UHub.CoreLib.DataInterop
 {
@@ -74,7 +75,7 @@ namespace UHub.CoreLib.DataInterop
                     if (errMsg.Contains("Invalid request arguments"))
                         throw new ArgumentException(errMsg);
                     //specific argument does not meet requirements
-                    if (Regex.IsMatch(errMsg, "^Invalid [a-zA-Z ]+ argument$"))
+                    if (errMsg.RgxIsMatch("^Invalid [a-zA-Z ]+ argument$"))
                         throw new ArgumentOutOfRangeException("", errMsg);
                     //argument is null/empty
                     else if (errMsg.Contains("cannot be null or empty"))
@@ -174,7 +175,7 @@ namespace UHub.CoreLib.DataInterop
                     if (errMsg.Contains("Invalid request arguments"))
                         throw new ArgumentException(errMsg);
                     //specific argument does not meet requirements
-                    if (Regex.IsMatch(errMsg, "^Invalid [a-zA-Z ]+ argument$"))
+                    if (errMsg.RgxIsMatch("^Invalid [a-zA-Z ]+ argument$"))
                         throw new ArgumentOutOfRangeException("", errMsg);
                     //argument is null/empty
                     else if (errMsg.Contains("cannot be null or empty"))
@@ -280,7 +281,7 @@ namespace UHub.CoreLib.DataInterop
                             if (errMsg.Contains("Invalid request arguments"))
                                 throw new ArgumentException(errMsg);
                             //specific argument does not meet requirements
-                            if (Regex.IsMatch(errMsg, "^Invalid [a-zA-Z ]+ argument$"))
+                            if (errMsg.RgxIsMatch("^Invalid [a-zA-Z ]+ argument$"))
                                 throw new ArgumentOutOfRangeException("", errMsg);
                             //argument is null/empty
                             else if (errMsg.Contains("cannot be null or empty"))
@@ -409,7 +410,7 @@ namespace UHub.CoreLib.DataInterop
                             if (errMsg.Contains("Invalid request arguments"))
                                 throw new ArgumentException(errMsg);
                             //specific argument does not meet requirements
-                            if (Regex.IsMatch(errMsg, "^Invalid [a-zA-Z ]+ argument$"))
+                            if (errMsg.RgxIsMatch("^Invalid [a-zA-Z ]+ argument$"))
                                 throw new ArgumentOutOfRangeException("", errMsg);
                             //argument is null/empty
                             else if (errMsg.Contains("cannot be null or empty"))
@@ -540,7 +541,7 @@ namespace UHub.CoreLib.DataInterop
                             if (errMsg.Contains("Invalid request arguments"))
                                 throw new ArgumentException(errMsg);
                             //specific argument does not meet requirements
-                            if (Regex.IsMatch(errMsg, "^Invalid [a-zA-Z ]+ argument$"))
+                            if (errMsg.RgxIsMatch("^Invalid [a-zA-Z ]+ argument$"))
                                 throw new ArgumentOutOfRangeException("", errMsg);
                             //argument is null/empty
                             else if (errMsg.Contains("cannot be null or empty"))
@@ -708,7 +709,7 @@ namespace UHub.CoreLib.DataInterop
                     if (errMsg.Contains("Invalid request arguments"))
                         throw new ArgumentException(errMsg);
                     //specific argument does not meet requirements
-                    if (Regex.IsMatch(errMsg, "^Invalid [a-zA-Z ]+ argument$"))
+                    if (errMsg.RgxIsMatch("^Invalid [a-zA-Z ]+ argument$"))
                         throw new ArgumentOutOfRangeException("", errMsg);
                     //argument is null/empty
                     else if (errMsg.Contains("cannot be null or empty"))

@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Text.RegularExpressions;
 using SysSec = System.Web.Security;
+using RgxPtrn = UHub.CoreLib.Regex.Patterns;
 using UHub.CoreLib.DataInterop;
 using UHub.CoreLib.ErrorHandling.Exceptions;
 using UHub.CoreLib.Extensions;
@@ -284,7 +285,7 @@ namespace UHub.CoreLib.Security.Accounts
                 return false;
             }
 
-            if (!RefUID.RgxIsMatch(RgxPatterns.User.REF_UID_B))
+            if (!RefUID.RgxIsMatch(RgxPtrn.User.REF_UID_B))
             {
                 Status = $"Invalid {nameof(RefUID)} format";
                 return false;

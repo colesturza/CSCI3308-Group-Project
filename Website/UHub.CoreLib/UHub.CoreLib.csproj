@@ -315,6 +315,13 @@
     <Compile Include="Management\CoreManager.cs" />
     <Compile Include="Management\CoreProperties.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Regex\Patterns\Config.cs" />
+    <Compile Include="Regex\Patterns\Cookie.cs" />
+    <Compile Include="Regex\Patterns\Entity.cs" />
+    <Compile Include="Regex\Patterns\FileUpload.cs" />
+    <Compile Include="Regex\Patterns\HttpError.cs" />
+    <Compile Include="Regex\Patterns\User.cs" />
+    <Compile Include="Regex\Patterns\Util.cs" />
     <Compile Include="Security\Accounts\AccountManagerAsync.cs" />
     <Compile Include="Security\Accounts\AccountManager.cs" />
     <Compile Include="Security\Accounts\APIControllers\AccountController.cs" />
@@ -367,7 +374,6 @@
     <Compile Include="Tools\FileSize.cs" />
     <Compile Include="Tools\HighResolutionDateTime.cs" />
     <Compile Include="Tools\MachineKeyHelper.cs" />
-    <Compile Include="Tools\RgxPatterns.cs" />
     <Compile Include="Entities\Users\DTOs\User_R_PrivateDTO.cs" />
     <Compile Include="Entities\Users\DTOs\User_R_PublicDTO.cs" />
     <Compile Include="Entities\Users\Enums\UserReferenceType.cs" />
