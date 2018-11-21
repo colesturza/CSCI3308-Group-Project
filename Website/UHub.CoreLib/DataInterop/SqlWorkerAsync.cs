@@ -15,7 +15,7 @@ namespace UHub.CoreLib.DataInterop
     /// <summary>
     /// SQL encapsulation provider
     /// </summary>
-    public static partial class SqlWorker
+    internal static partial class SqlWorker
     {
 
         /// <summary>

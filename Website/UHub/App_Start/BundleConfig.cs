@@ -29,18 +29,12 @@ namespace UHub
                       "~/Scripts/bootstrap.js"));
 
 
-            var jsBundle = new ScriptBundle("~/resources/scripts/master").Include(
-                      "~/ClientResources/Master/Scripts/Master.js",
-                      "~/ClientResources/Master/Scripts/Navbar.js");
-            bundles.Add(jsBundle);
+            bundles.Add(new ScriptBundle("~/resources/scripts/master")
+                .IncludeDirectory("~/ClientResources/Master/Scripts", "*.js", true));
 
 
-
-            var scssBundle = new CustomStyleBundle("~/resources/css/master").Include(
-                "~/ClientResources/Master/Styles/Master.scss",
-                "~/ClientResources/Master/Styles/Master_Header.scss",
-                "~/ClientResources/Master/Styles/Master_Footer.scss");
-            bundles.Add(scssBundle);
+            bundles.Add(new CustomStyleBundle("~/resources/css/master")
+                .IncludeDirectory("~/ClientResources/Master/Styles", "*", true));
 
 
             BundleTable.EnableOptimizations = true;
