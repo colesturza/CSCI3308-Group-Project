@@ -455,49 +455,70 @@ namespace UHub.CoreLib.Security.Authentication
         #region UserAuthInfo
         private protected async Task<UserAuthInfo> GetUserAuthInfo_DBAsync(long UserID)
         {
+            try
+            {
 
-            var temp = SqlWorker.ExecBasicQueryAsync<UserAuthInfo>(
-                CoreFactory.Singleton.Properties.CmsDBConfig,
-                "[dbo].[User_GetAuthInfoByID]",
-                (cmd) =>
-                {
-                    cmd.Parameters.Add("@UserID", SqlDbType.BigInt).Value = UserID;
-                });
+                var temp = SqlWorker.ExecBasicQueryAsync<UserAuthInfo>(
+                    CoreFactory.Singleton.Properties.CmsDBConfig,
+                    "[dbo].[User_GetAuthInfoByID]",
+                    (cmd) =>
+                    {
+                        cmd.Parameters.Add("@UserID", SqlDbType.BigInt).Value = UserID;
+                    });
 
 
-            return (await temp).SingleOrDefault();
+                return (await temp).SingleOrDefault();
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         private protected async Task<UserAuthInfo> GetUserAuthInfo_DBAsync(string Email)
         {
+            try
+            {
 
-            var temp = SqlWorker.ExecBasicQueryAsync<UserAuthInfo>(
-                CoreFactory.Singleton.Properties.CmsDBConfig,
-                "[dbo].[User_GetAuthInfoByEmail]",
-                (cmd) =>
-                {
-                    cmd.Parameters.Add("@Email", SqlDbType.NVarChar).Value = Email;
-                });
+                var temp = SqlWorker.ExecBasicQueryAsync<UserAuthInfo>(
+                    CoreFactory.Singleton.Properties.CmsDBConfig,
+                    "[dbo].[User_GetAuthInfoByEmail]",
+                    (cmd) =>
+                    {
+                        cmd.Parameters.Add("@Email", SqlDbType.NVarChar).Value = Email;
+                    });
 
 
-            return (await temp).SingleOrDefault();
+                return (await temp).SingleOrDefault();
+            }
+            catch
+            {
+                return null;
+            }
         }
 
 
         private protected async Task<UserAuthInfo> GetUserAuthInfo_DBAsync(string Username, string Domain)
         {
+            try
+            {
 
-            var temp = SqlWorker.ExecBasicQueryAsync<UserAuthInfo>(
-                CoreFactory.Singleton.Properties.CmsDBConfig,
-                "[dbo].[User_GetAuthInfoByUsername]",
-                (cmd) =>
-                {
-                    cmd.Parameters.Add("@Username", SqlDbType.NVarChar).Value = Username;
-                    cmd.Parameters.Add("@Domain", SqlDbType.NVarChar).Value = Domain;
-                });
+                var temp = SqlWorker.ExecBasicQueryAsync<UserAuthInfo>(
+                    CoreFactory.Singleton.Properties.CmsDBConfig,
+                    "[dbo].[User_GetAuthInfoByUsername]",
+                    (cmd) =>
+                    {
+                        cmd.Parameters.Add("@Username", SqlDbType.NVarChar).Value = Username;
+                        cmd.Parameters.Add("@Domain", SqlDbType.NVarChar).Value = Domain;
+                    });
 
 
-            return (await temp).SingleOrDefault();
+                return (await temp).SingleOrDefault();
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         #endregion UserAuthInfo
