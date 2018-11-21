@@ -73,3 +73,6 @@
         </div>
         `
 })
+
+//Root Instance
+new Vue({ el: '#navbar-uhub' })
