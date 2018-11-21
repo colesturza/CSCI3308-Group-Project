@@ -1,20 +1,5 @@
 ﻿Vue.component('navbar-uhub', {
-    data: {
-        communities: []
-    },
-    mounted: function () {
-        var self = this;
-        $.ajax({
-            method: "POST",
-            url: "/uhubapi/schoolclubs/GetAllBySchool",
-            success: function (data) {
-                self.communities = data;
-            },
-            error: function (error) {
-                console.log(error);
-            }
-        });
-    },
+    props: ['communities'],
     template: 
         `
         <div id="mainNav" class="container-fullwidth">
@@ -75,4 +60,22 @@
 })
 
 //Root Instance
-new Vue({ el: '#navbar-uhub' })
+new Vue({
+    el: '#navbar-uhub',
+    data: {
+        communities: []
+    },
+    mounted: function () {
+        var self = this;
+        $.ajax({
+            method: "POST",
+            url: "/uhubapi/schoolclubs/GetAllBySchool",
+            success: function (data) {
+                self.communities = data;
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+    }
+})
