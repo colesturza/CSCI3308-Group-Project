@@ -1,4 +1,4 @@
-﻿Vue.component('navbar-uhub', {
+﻿Vue.component('navbar-component', {
     props: ['communities'],
     template: 
         `
@@ -61,7 +61,7 @@
 
 //Root Instance
 new Vue({
-    el: '#navbar-uhub',
+    el: "#navbar-uhub",
     data: {
         communities: []
     },
