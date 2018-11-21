@@ -34,7 +34,7 @@ namespace UHub.CoreLib.Security.Authentication
         /// <param name="UserTokenHandler">Success handler to handle user token distribution</param>
         /// <returns>Status Flag</returns>
         abstract internal AuthResultCode TryAuthenticateUser(
-            string userEmail, 
+            string userEmail,
             string userPassword,
             Action<Guid> GeneralFailHandler = null,
             Func<User, bool> UserTokenHandler = null);
@@ -344,7 +344,7 @@ namespace UHub.CoreLib.Security.Authentication
                 var sessionCookie = CoreFactory.Singleton.Properties.SessionIDCookieName;
 
                 //get session directly from cookie because Context.Session is not initialized yet
-                sessionID = 
+                sessionID =
                     Context?.Request?.Cookies?.Get(sessionCookie)?.Value
                     ?? "";
             }
@@ -445,7 +445,7 @@ namespace UHub.CoreLib.Security.Authentication
 
 
             AuthenticationToken authToken = new AuthenticationToken(isPersistent, issue, expiration, ID, sysVersion, userVersion, sessionID);
-            
+
 
             try
             {
@@ -590,42 +590,65 @@ namespace UHub.CoreLib.Security.Authentication
         private protected UserAuthInfo GetUserAuthInfo_DB(long UserID)
         {
 
-            return SqlWorker.ExecBasicQuery<UserAuthInfo>(
-                CoreFactory.Singleton.Properties.CmsDBConfig,
-                "[dbo].[User_GetAuthInfoByID]",
-                (cmd) =>
-                {
-                    cmd.Parameters.Add("@UserID", SqlDbType.BigInt).Value = UserID;
-                })
-                .SingleOrDefault();
+            try
+            {
+                return SqlWorker.ExecBasicQuery<UserAuthInfo>(
+                    CoreFactory.Singleton.Properties.CmsDBConfig,
+                    "[dbo].[User_GetAuthInfoByID]",
+                    (cmd) =>
+                    {
+                        cmd.Parameters.Add("@UserID", SqlDbType.BigInt).Value = UserID;
+                    })
+                    .SingleOrDefault();
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         private protected UserAuthInfo GetUserAuthInfo_DB(string Email)
         {
 
-            return SqlWorker.ExecBasicQuery<UserAuthInfo>(
-                CoreFactory.Singleton.Properties.CmsDBConfig,
-                "[dbo].[User_GetAuthInfoByEmail]",
-                (cmd) =>
-                {
-                    cmd.Parameters.Add("@Email", SqlDbType.NVarChar).Value = Email;
-                })
-                .SingleOrDefault();
+            try
+            {
+
+
+                return SqlWorker.ExecBasicQuery<UserAuthInfo>(
+                    CoreFactory.Singleton.Properties.CmsDBConfig,
+                    "[dbo].[User_GetAuthInfoByEmail]",
+                    (cmd) =>
+                    {
+                        cmd.Parameters.Add("@Email", SqlDbType.NVarChar).Value = Email;
+                    })
+                    .SingleOrDefault();
+            }
+            catch
+            {
+                return null;
+            }
         }
 
 
         private protected UserAuthInfo GetUserAuthInfo_DB(string Username, string Domain)
         {
+            try
+            {
 
-            return SqlWorker.ExecBasicQuery<UserAuthInfo>(
-                CoreFactory.Singleton.Properties.CmsDBConfig,
-                "[dbo].[User_GetAuthInfoByUsername]",
-                (cmd) =>
-                {
-                    cmd.Parameters.Add("@Username", SqlDbType.NVarChar).Value = Username;
-                    cmd.Parameters.Add("@Domain", SqlDbType.NVarChar).Value = Domain;
-                })
-                .SingleOrDefault();
+                return SqlWorker.ExecBasicQuery<UserAuthInfo>(
+                    CoreFactory.Singleton.Properties.CmsDBConfig,
+                    "[dbo].[User_GetAuthInfoByUsername]",
+                    (cmd) =>
+                    {
+                        cmd.Parameters.Add("@Username", SqlDbType.NVarChar).Value = Username;
+                        cmd.Parameters.Add("@Domain", SqlDbType.NVarChar).Value = Domain;
+                    })
+                    .SingleOrDefault();
+            }
+            catch
+            {
+                return null;
+            }
         }
 
         #endregion UserAuthInfo
