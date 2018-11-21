@@ -253,7 +253,7 @@ namespace UHub.CoreLib.Security.Accounts
         /// </summary>
         /// <param name="RefUID">User reference UID</param>
         /// <exception cref="ArgumentException"></exception>
-        public async Task<(bool StatusFlag, string StatusMsg)> TryConfirmUserAsync(string RefUID)
+        public async Task<AcctConfirmResultCode> TryConfirmUserAsync(string RefUID)
         {
             if (!CoreFactory.Singleton.IsEnabled)
             {
@@ -262,12 +262,12 @@ namespace UHub.CoreLib.Security.Accounts
 
             if (RefUID.IsEmpty())
             {
-                return (false, $"Invalid {nameof(RefUID)} format");
+                return AcctConfirmResultCode.RefUIDEmpty;
             }
 
             if (!RefUID.RgxIsMatch(RgxPtrn.EntUser.REF_UID_B))
             {
-                return (false, $"Invalid {nameof(RefUID)} format");
+                return AcctConfirmResultCode.RefUIDInvalid;
             }
 
 
@@ -290,16 +290,16 @@ namespace UHub.CoreLib.Security.Accounts
 
                 if (isValid)
                 {
-                    return (true, "Success");
+                    return AcctConfirmResultCode.Success;
                 }
                 else
                 {
-                    return (false, "Confirmation Token Not Valid");
+                    return AcctConfirmResultCode.ConfirmTokenInvalid;
                 }
             }
             catch
             {
-                return (false, "Uknown Error");
+                return AcctConfirmResultCode.UnknownError;
             }
         }
 

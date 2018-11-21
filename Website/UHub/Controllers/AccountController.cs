@@ -185,14 +185,13 @@ namespace UHub.Controllers
             var idStr = idObj.ToString();
 
             var confResult = await CoreFactory.Singleton.Accounts.TryConfirmUserAsync(idStr);
-            if (confResult.StatusFlag)
+            if (confResult == 0)
             {
-
                 ViewBag.Message = "User account has been successfully confirmed";
             }
             else
             {
-                ViewBag.Message = "User confirmation key is not in a valid format";
+                ViewBag.Message = "User confirmation failed - " + confResult.ToString();
             }
 
             return View();

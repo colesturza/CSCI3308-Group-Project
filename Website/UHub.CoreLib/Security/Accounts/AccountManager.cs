@@ -245,36 +245,13 @@ namespace UHub.CoreLib.Security.Accounts
         }
 
 
-        /// <summary>
-        /// Confirm CMS user in DB
-        /// </summary>
-        /// <param name="RefUID">User reference UID</param>
-        public bool TryConfirmUser(string RefUID) => TryConfirmUser(RefUID, out _);
-
-        /// <summary>
-        /// Confirm CMS user in DB
-        /// </summary>
-        /// <param name="RefUID">User reference UID</param>
-        public bool TryConfirmUser(string RefUID, out string Status)
-        {
-            try
-            {
-                return ConfirmUser(RefUID, out Status);
-            }
-            catch (Exception ex)
-            {
-                Status = ex.Message;
-                return false;
-            }
-        }
-
 
         /// <summary>
         /// Confirm CMS user in DB
         /// </summary>
         /// <param name="RefUID">User reference UID</param>
         /// <exception cref="ArgumentException"></exception>
-        public bool ConfirmUser(string RefUID, out string Status)
+        public AcctConfirmResultCode TryConfirmUser(string RefUID)
         {
             if (!CoreFactory.Singleton.IsEnabled)
             {
@@ -283,39 +260,44 @@ namespace UHub.CoreLib.Security.Accounts
 
             if (RefUID.IsEmpty())
             {
-                Status = $"Invalid {nameof(RefUID)} format";
-                return false;
+                return AcctConfirmResultCode.RefUIDEmpty;
             }
 
             if (!RefUID.RgxIsMatch(RgxPtrn.EntUser.REF_UID_B))
             {
-                Status = $"Invalid {nameof(RefUID)} format";
-                return false;
+                return AcctConfirmResultCode.RefUIDInvalid;
             }
 
-            //get Today - ConfLifespan 
-            //Determine the earliest date that a confirmation email could be created and still be valid
-            //If ConfLifespan is 0, then allow infinite time
-            DateTimeOffset minCreatedDate = DateTimeOffset.MinValue;
-            var confLifespan = CoreFactory.Singleton.Properties.AcctConfirmLifespan;
-            if (confLifespan != TimeSpan.Zero)
+
+            try
             {
-                minCreatedDate = DateTimeOffset.UtcNow - confLifespan;
-            }
+
+                //get Today - ConfLifespan 
+                //Determine the earliest date that a confirmation email could be created and still be valid
+                //If ConfLifespan is 0, then allow infinite time
+                DateTimeOffset minCreatedDate = DateTimeOffset.MinValue;
+                var confLifespan = CoreFactory.Singleton.Properties.AcctConfirmLifespan;
+                if (confLifespan != TimeSpan.Zero)
+                {
+                    minCreatedDate = DateTimeOffset.UtcNow - confLifespan;
+                }
 
 #pragma warning disable 612, 618
-            var isValid = UserWriter.ConfirmUser(RefUID, minCreatedDate);
+                var isValid = UserWriter.ConfirmUser(RefUID, minCreatedDate);
 #pragma warning restore
 
-            if (isValid)
-            {
-                Status = "Success";
-                return true;
+                if (isValid)
+                {
+                    return AcctConfirmResultCode.Success;
+                }
+                else
+                {
+                    return AcctConfirmResultCode.ConfirmTokenInvalid;
+                }
             }
-            else
+            catch
             {
-                Status = "Confirmation Token Not Valid";
-                return false;
+                return AcctConfirmResultCode.UnknownError;
             }
         }
 

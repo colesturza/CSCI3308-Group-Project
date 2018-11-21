@@ -353,6 +353,7 @@
     <Compile Include="Security\Accounts\AccountManagerAsync.cs" />
     <Compile Include="Security\Accounts\AccountManager.cs" />
     <Compile Include="Security\Accounts\APIControllers\AccountController.cs" />
+    <Compile Include="Security\Accounts\Enums\AcctConfirmResultCode.cs" />
     <Compile Include="Security\Accounts\Enums\AcctPswdResultCode.cs" />
     <Compile Include="Security\Accounts\Enums\AcctCreateResultCode.cs" />
     <Compile Include="Security\Accounts\Enums\AcctRecoveryResultCode.cs" />
