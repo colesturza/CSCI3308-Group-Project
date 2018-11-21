@@ -117,12 +117,11 @@ namespace UHub.CoreLib.APIControllers
         /// <summary>
         /// Throw error if Recaptcha status is not valid
         /// </summary>
-        private protected bool HandleRecaptcha(out string result)
+        private protected async Task<(bool IsValid, string Result)> HandleRecaptchaAsync(HttpContext Context)
         {
             if (!CoreFactory.Singleton.Properties.EnableRecaptcha)
             {
-                result = "Recaptcha Not Required";
-                return true;
+                return (true, "Recaptcha Not Required");
             }
 
 
@@ -132,30 +131,30 @@ namespace UHub.CoreLib.APIControllers
 
                 if (captchaResponse == null)
                 {
-                    result = "Recaptcha Failed";
-                    return false;
+                    return (false, "Recaptcha Failed");
                 }
 
                 if (captchaResponse.IsEmpty())
                 {
-                    result = ResponseStrings.RecaptchaError.RECAPTCHA_MISSING;
-                    return false;
-                }
-                if (!CoreFactory.Singleton.Recaptcha.IsCaptchaValid(captchaResponse))
-                {
-                    result = ResponseStrings.RecaptchaError.RECAPTCHA_INVALID;
-                    return false;
+                    return (false, ResponseStrings.RecaptchaError.RECAPTCHA_MISSING);
                 }
 
-                result = "Recaptcha Validated";
-                return true;
+                var isValid = await CoreFactory.Singleton.Recaptcha.IsCaptchaValidAsync(captchaResponse, Context);
+
+                if (!isValid)
+                {
+                    return (false, ResponseStrings.RecaptchaError.RECAPTCHA_INVALID);
+                }
+
+
+                return (true, "Recaptcha Validated");
 
             }
             catch
             {
-                result = "Recaptcha Failed";
                 CoreFactory.Singleton.Logging.CreateErrorLogAsync(new Guid("2773EC77-FA18-4445-9EBB-41780638D993"));
-                return false;
+
+                return (false, "Recaptcha Failed");
             }
 
         }

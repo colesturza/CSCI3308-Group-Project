@@ -53,7 +53,7 @@ namespace UHub.Controllers
 
 
         [System.Web.Mvc.HttpPost]
-        public ActionResult Login([FromBody] User_CredentialDTO creds)
+        public async Task<ActionResult> Login([FromBody] User_CredentialDTO creds)
         {
 
             if (!ModelState.IsValid)
@@ -61,10 +61,10 @@ namespace UHub.Controllers
                 return View();
             }
 
-
+            var context = System.Web.HttpContext.Current;
             if (CoreFactory.Singleton.Properties.EnableRecaptcha)
             {
-                var isCaptchaValid = CoreFactory.Singleton.Recaptcha.IsCaptchaValid();
+                var isCaptchaValid = await CoreFactory.Singleton.Recaptcha.IsCaptchaValidAsync(context);
                 if (!isCaptchaValid)
                 {
                     ViewBag.ErrorMsg = "Captcha is not valid";
@@ -210,12 +210,13 @@ namespace UHub.Controllers
         [MvcAuthControl]
         public async Task<ActionResult> UpdatePassword(string txt_CurrentPswd, string txt_NewPswd, string txt_ConfirmPswd, bool chk_DeviceLogout = false)
         {
+            var context = System.Web.HttpContext.Current;
             if (CoreFactory.Singleton.Properties.EnableRecaptcha)
             {
-                var isCaptchaValid = CoreFactory.Singleton.Recaptcha.IsCaptchaValid();
+                var isCaptchaValid = await CoreFactory.Singleton.Recaptcha.IsCaptchaValidAsync(context);
                 if (!isCaptchaValid)
                 {
-                    ViewBag.Message = "Captcha is not valid";
+                    ViewBag.ErrorMsg = "Captcha is not valid";
                     return View();
                 }
             }
@@ -229,7 +230,6 @@ namespace UHub.Controllers
 
 
             var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser();
-            var context = System.Web.HttpContext.Current;
 
 
             var result = await CoreFactory.Singleton.Accounts.TryUpdatePasswordAsync(
@@ -267,15 +267,17 @@ namespace UHub.Controllers
             }
 
 
+            var context = System.Web.HttpContext.Current;
             if (CoreFactory.Singleton.Properties.EnableRecaptcha)
             {
-                var isCaptchaValid = CoreFactory.Singleton.Recaptcha.IsCaptchaValid();
+                var isCaptchaValid = await CoreFactory.Singleton.Recaptcha.IsCaptchaValidAsync(context);
                 if (!isCaptchaValid)
                 {
-                    ViewBag.Message = "Captcha is not valid";
+                    ViewBag.ErrorMsg = "Captcha is not valid";
                     return View();
                 }
             }
+
 
             var data = await CoreFactory.Singleton.Accounts
                 .TryCreateUserRecoveryContextAsync(
@@ -359,6 +361,18 @@ namespace UHub.Controllers
 
 
             var context = System.Web.HttpContext.Current;
+            if (CoreFactory.Singleton.Properties.EnableRecaptcha)
+            {
+                var isCaptchaValid = await CoreFactory.Singleton.Recaptcha.IsCaptchaValidAsync(context);
+                if (!isCaptchaValid)
+                {
+                    ViewBag.ErrorMsg = "Captcha is not valid";
+                    return View();
+                }
+            }
+
+
+            
             var result = await CoreFactory.Singleton.Accounts.TryRecoverPasswordAsync(
                 recoveryID,
                 txt_RecoveryKey,

@@ -38,9 +38,12 @@ namespace UHub.CoreLib.Security.Accounts.APIControllers
             {
                 return Content(statCode, status);
             }
-            if (!HandleRecaptcha(out status))
+
+            var context = System.Web.HttpContext.Current;
+            var recaptchaResult = await HandleRecaptchaAsync(context);
+            if (!recaptchaResult.IsValid)
             {
-                return Content(statCode, status);
+                return Content(statCode, recaptchaResult.Result);
             }
 
             if (user == null)

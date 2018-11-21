@@ -14,27 +14,20 @@ namespace UHub.CoreLib.Security
 {
     public sealed partial class RecaptchaManager
     {
-        public const string RECAPTCHA_HEADER = "g-recaptcha-response";
-
-        internal RecaptchaManager()
-        {
-
-        }
-
 
         /// <summary>
         /// Validate ReCaptcha token from user
         /// </summary>
         /// <exception cref="InvalidOperationException"></exception>
         /// <returns></returns>
-        public bool IsCaptchaValid()
+        public async Task<bool> IsCaptchaValidAsync(HttpContext Context)
         {
-            var gResponse = HttpContext.Current.Request.Headers[RECAPTCHA_HEADER];
+            var gResponse = Context.Request.Headers[RECAPTCHA_HEADER];
             if (gResponse.IsEmpty())
             {
                 gResponse = HttpContext.Current.Request.Form[RECAPTCHA_HEADER];
             }
-            return IsCaptchaValid(gResponse);
+            return await IsCaptchaValidAsync(gResponse, Context);
         }
 
 
@@ -43,7 +36,7 @@ namespace UHub.CoreLib.Security
         /// </summary>
         /// <exception cref="InvalidOperationException"></exception>
         /// <returns></returns>
-        public bool IsCaptchaValid(string recaptchaResponse)
+        public async Task<bool> IsCaptchaValidAsync(string recaptchaResponse, HttpContext Context)
         {
             if (!CoreFactory.Singleton.IsEnabled)
             {
@@ -63,13 +56,13 @@ namespace UHub.CoreLib.Security
 
                 using (HttpClient client = new HttpClient())
                 {
-                    using (HttpResponseMessage response = client.GetAsync(new Uri(url)).Result)
+                    using (HttpResponseMessage response = await client.GetAsync(new Uri(url)))
                     {
 
                         response.EnsureSuccessStatusCode();
                         using (HttpContent cont = response.Content)
                         {
-                            string result = cont.ReadAsStringAsync().Result;
+                            string result = await cont.ReadAsStringAsync();
                             bool status = Convert.ToBoolean(JObject.Parse(result).GetValue("success"));
 
                             return status;

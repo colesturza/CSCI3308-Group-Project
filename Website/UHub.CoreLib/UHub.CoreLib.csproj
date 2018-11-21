@@ -382,6 +382,7 @@
     <Compile Include="Security\Enums\CookieSameSiteMode.cs" />
     <Compile Include="Security\Enums\CryptoHashType.cs" />
     <Compile Include="Security\Enums\HtmlSanitizerMode.cs" />
+    <Compile Include="Security\RecaptchaManagerAsync.cs" />
     <Compile Include="Security\RecaptchaManager.cs" />
     <Compile Include="SmtpInterop\APIControllers\SmtpController.cs" />
     <Compile Include="SmtpInterop\Enums\SmtpResultCode.cs" />
