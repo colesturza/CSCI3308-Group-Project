@@ -1,36 +1,52 @@
 ﻿@{
-    ViewBag.Title = "Account Recovery";
+    ViewBag.Title = "Forgot Password";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
+
+
+<div id="mainNav" class="container-fullwidth">
+    <nav class="navbar navbar-expand navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">UHUB</a>
+    </nav>
+</div>
+
 
 <h2>Account Recovery</h2>
 
-@{
-    Html.BeginForm();
-}
+
+@using (Html.BeginForm())
+{
 
 
+    <div class="center_LR" style="display:inline-block">
+        <input type="password" name="txt_RecoveryKey" placeholder="Recovery Key:" class="form-control">
+
+        <p></p>
+
+        <input type="password" name="txt_NewPswd" placeholder="New Password:" class="form-control"><br />
+        <input type="password" name="txt_ConfirmPswd" placeholder="Confirm Password:" class="form-control">
+        <p></p>
+        @{
+            Html.RenderPartial(
+                "~/Views/Security/_RecaptchaPartial.cshtml",
+                new UHub.Models.Security.RecaptchaLoginViewModel
+                {
+                    SubmitValue = "Send Recovery Email",
+                    SubmitClass = "btn-outline-dark",
+                });
+        }
+    </div>
+
+    <p>@ViewBag.Message</p>
 
 
-<input type="password" name="txt_RecoveryKey" placeholder="Recovery Key:">
-
-<p></p>
-
-<input type="password" name="txt_NewPswd" placeholder="New Password:"><br />
-<input type="password" name="txt_ConfirmPswd" placeholder="Confirm Password:">
-
-
-<p>@ViewBag.Message</p>
-
-@{
-    Html.RenderPartial("~/Views/Security/_RecaptchaPartial.cshtml", new UHub.Models.Security.RecaptchaLoginViewModel
+    if (ViewBag.CanForward)
     {
-        SubmitValue = "Login",
-        SubmitClass = "btn-outline-dark",
-    });
-}
+        <script>
+            $(function () {
+                window.setTimeout(function () { window.location.href = ""; }, 3000);
+            });
+        </script>
+    }
 
-
-
-@{
-    Html.EndForm();
 }

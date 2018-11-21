@@ -285,13 +285,13 @@ namespace UHub.Controllers
             return View();
         }
 
-        
+
         public async Task<ActionResult> Recover(string txt_RecoveryKey, string txt_NewPswd, string txt_ConfirmPswd)
         {
             var idObj = Url.RequestContext.RouteData.Values["id"];
             var recoveryID = idObj?.ToString() ?? "";
 
-            if(recoveryID.IsEmpty() || recoveryID.Length > 200)
+            if (recoveryID.IsEmpty() || recoveryID.Length > 200)
             {
                 return View();
             }
@@ -301,7 +301,7 @@ namespace UHub.Controllers
                 return View();
             }
 
-            if(txt_NewPswd != txt_ConfirmPswd)
+            if (txt_NewPswd != txt_ConfirmPswd)
             {
                 ViewBag.Message = "Passwords must match";
             }
@@ -317,6 +317,9 @@ namespace UHub.Controllers
 
 
             ViewBag.Message = result.ToString();
+
+            ViewBag.CanForward = (result == AccountResultCode.Success);
+
 
 
             return View();

@@ -2,11 +2,9 @@
 @using UHub.CoreLib.Extensions
 @{
     ViewBag.Title = "Login";
-}
-
-@{
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+
 
 
 <div id="mainNav" class="container-fullwidth">
@@ -17,66 +15,59 @@
 
 <div class="container w-25">
 
-<h2>Login</h2>
+    <h2>Login</h2>
 
-@{
-    Html.BeginForm();
-}
-
-
-
-@Html.LabelFor(x => x.Email)
-@Html.TextBoxFor(x => x.Email, new { placeholder = "Email:", @class = "form-control" })
-<br />
-@Html.ValidationMessageFor(x => x.Email)
-@{Html.ValidateFor(x => x.Email);}
-<p></p>
-
-
-@Html.LabelFor(x => x.Password)
-@Html.PasswordFor(x => x.Password, new { placeholder = "Password:", @class = "form-control" })
-<br />
-@Html.ValidationMessageFor(x => x.Password)
-@{Html.ValidateFor(x => x.Password);}
-
-
-@{
-    if (!string.IsNullOrWhiteSpace(ViewBag.ErrorMsg))
+    @using (Html.BeginForm())
     {
-    <p></p>
-    <label>@ViewBag.ErrorMsg</label>
+
+
+
+
+        @Html.LabelFor(x => x.Email)
+        @Html.TextBoxFor(x => x.Email, new { placeholder = "Email:", @class = "form-control" })
+        <br />
+        @Html.ValidationMessageFor(x => x.Email)
+        Html.ValidateFor(x => x.Email);
+        <p></p>
+
+
+        @Html.LabelFor(x => x.Password)
+        @Html.PasswordFor(x => x.Password, new { placeholder = "Password:", @class = "form-control" })
+        <br />
+        @Html.ValidationMessageFor(x => x.Password)
+        Html.ValidateFor(x => x.Password);
+
+
+
+        if (!string.IsNullOrWhiteSpace(ViewBag.ErrorMsg))
+        {
+            <p></p>
+            <label>@ViewBag.ErrorMsg</label>
+        }
+
+
+        <p></p>
+        Html.RenderPartial("~/Views/Security/_RecaptchaPartial.cshtml", new UHub.Models.Security.RecaptchaLoginViewModel
+        {
+            SubmitValue = "Login",
+            SubmitClass = "btn-outline-dark center_LR",
+        });
+
+        <p></p>
+        @Html.RouteLink("Or Create an Account", new RouteValueDictionary {
+            ["controller"] = "Account",
+            ["action"] = "Create"
+        })
+        <p></p>
+        <text>Trouble Logging in?</text><br />
+        @Html.RouteLink("Reset your password here", new RouteValueDictionary
+           {
+               ["controller"] = "Account",
+               ["action"] = "ForgotPassword"
+           });
+
     }
-}
-
-
-<p></p>
-@{
-    Html.RenderPartial("~/Views/Security/_RecaptchaPartial.cshtml", new UHub.Models.Security.RecaptchaLoginViewModel
-    {
-        SubmitValue = "Login",
-        SubmitClass = "btn-outline-dark center_LR",
-    });
-}
-
-<p></p>
-@Html.RouteLink("Or Create an Account", new RouteValueDictionary {
-    ["controller"] = "Account",
-    ["action"] = "Create"
-})
-<p></p>
-Trouble Logging in? <br />
-@Html.RouteLink("Reset your password here", new RouteValueDictionary {
-["controller"] = "Account",
-["action"] = "ForgotPassword"
-})
-
 </div>
-
-
 
 @Scripts.Render("~/bundles/jquery")
 @Scripts.Render("~/bundles/jqueryval")
-
-@{
-    Html.EndForm();
-}
