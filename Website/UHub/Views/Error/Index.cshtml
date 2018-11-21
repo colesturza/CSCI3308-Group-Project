@@ -1,9 +1,23 @@
-﻿
-<h2>@ViewBag.Title</h2>
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div id="mainNav" class="container-fullwidth">
+    <nav class="navbar navbar-expand navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">UHUB</a>
+    </nav>
+</div>
 
 <p></p>
-@ViewBag.ErrorMessage
-
 <p></p>
 
-<img src="@ViewBag.CatAddr" title="cat" />
+<div class="center_LR" style="display:inline-block">
+    <img src="@ViewBag.CatAddr" title="cat" width="750" height="600" />
+    <p></p>
+    <span class="center_LR" style="display:inline-block">
+        <strong>
+            @ViewBag.ErrorMessage
+        </strong>
+    </span>
+</div>
