@@ -39,14 +39,6 @@
         Html.ValidateFor(x => x.Password);
 
 
-
-        if (!string.IsNullOrWhiteSpace(ViewBag.ErrorMsg))
-        {
-            <p></p>
-            <label>@ViewBag.ErrorMsg</label>
-        }
-
-
         <p></p>
         Html.RenderPartial("~/Views/Security/_RecaptchaPartial.cshtml", new UHub.Models.Security.RecaptchaLoginViewModel
         {
@@ -54,7 +46,9 @@
             SubmitClass = "btn-outline-dark center_LR",
         });
 
-        <p></p>
+        <p>@ViewBag.ErrorMsg</p>
+
+
         @Html.RouteLink("Or Create an Account", new RouteValueDictionary {
             ["controller"] = "Account",
             ["action"] = "Create"

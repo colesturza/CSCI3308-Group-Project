@@ -24,9 +24,8 @@ namespace UHub.CoreLib.Regex.Patterns
         public const string NAME = @"(([ \u00c0-\u01ffA-z'\-])+){2,200}";
         public const string NAME_B = @"^(([ \u00c0-\u01ffA-z'\-])+){2,200}$";
 
-        public const string REF_UID = @"[a-f0-9]{96}";
-        public const string REF_UID_B = @"^[a-f0-9]{96}$";
-
+        public const string REF_UID = @"[a-fA-F0-9]{96}";
+        public const string REF_UID_B = @"^[a-fA-F0-9]{96}$";
 
         public const string PHONE = @"([0-1][ .-])?((\([0-9]{3}\)[ .-]?)|([0-9]{3}[ .-]?))([0-9]{3}[ .-]?)([0-9]{4})";
         public const string PHONE_B = @"^([0-1][ .-])?((\([0-9]{3}\)[ .-]?)|([0-9]{3}[ .-]?))([0-9]{3}[ .-]?)([0-9]{4})$";

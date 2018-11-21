@@ -253,7 +253,7 @@ namespace UHub.CoreLib.Security.Accounts
         /// </summary>
         /// <param name="RefUID">User reference UID</param>
         /// <exception cref="ArgumentException"></exception>
-        public async Task<(bool StatusFlag, string StatusMsg)> ConfirmUserAsync(string RefUID)
+        public async Task<(bool StatusFlag, string StatusMsg)> TryConfirmUserAsync(string RefUID)
         {
             if (!CoreFactory.Singleton.IsEnabled)
             {
