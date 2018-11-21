@@ -194,6 +194,7 @@
     <Content Include="ClientResources\Home\Scripts\Home.js" />
     <Content Include="ClientResources\Home\Scripts\homeVue.js" />
     <Content Include="ClientResources\MASTER\Scripts\Master.js" />
+    <Content Include="ClientResources\School\Scripts\School.js" />
     <Content Include="Content\bootstrap-grid.css" />
     <Content Include="Content\bootstrap-grid.min.css" />
     <Content Include="Content\bootstrap-reboot.css" />
@@ -298,6 +299,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="ClientResources\Imgs\" />
+    <Folder Include="ClientResources\School\Styles\" />
     <Folder Include="Models\Account\" />
   </ItemGroup>
   <ItemGroup>
