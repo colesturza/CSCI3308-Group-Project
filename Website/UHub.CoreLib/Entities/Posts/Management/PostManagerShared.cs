@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using UHub.CoreLib.Entities.Posts.DataInterop;
 using UHub.CoreLib.Extensions;
@@ -32,7 +33,7 @@ namespace UHub.CoreLib.Entities.Posts.Management
                 {
                     return PostResultCode.NameEmpty;
                 }
-                if (!NewPost.Name.RgxIsMatch(RgxPtrn.EntPost.NAME_B))
+                if (!NewPost.Name.RgxIsMatch(RgxPtrn.EntPost.NAME_B, RegexOptions.Singleline))
                 {
                     return PostResultCode.NameInvalid;
                 }

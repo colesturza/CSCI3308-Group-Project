@@ -9,6 +9,7 @@ using UHub.CoreLib.Extensions;
 using UHub.CoreLib.Management;
 using UHub.CoreLib.Tools;
 using RgxPtrn = UHub.CoreLib.Regex.Patterns;
+using System.Text.RegularExpressions;
 
 namespace UHub.CoreLib.Security.Accounts
 {
@@ -87,7 +88,7 @@ namespace UHub.CoreLib.Security.Accounts
                 {
                     return AcctCreateResultCode.UserNameEmpty;
                 }
-                if (!NewUser.Username.RgxIsMatch(RgxPtrn.EntUser.USERNAME_B))
+                if (!NewUser.Username.RgxIsMatch(RgxPtrn.EntUser.USERNAME_B, RegexOptions.Singleline))
                 {
                     return AcctCreateResultCode.UsernameInvalid;
                 }
@@ -98,7 +99,7 @@ namespace UHub.CoreLib.Security.Accounts
                 {
                     return AcctCreateResultCode.NameEmpty;
                 }
-                if (!NewUser.Name.RgxIsMatch(RgxPtrn.EntUser.NAME_B))
+                if (!NewUser.Name.RgxIsMatch(RgxPtrn.EntUser.NAME_B, RegexOptions.Singleline))
                 {
                     return AcctCreateResultCode.NameInvalid;
                 }
@@ -107,7 +108,7 @@ namespace UHub.CoreLib.Security.Accounts
                 //check for invalid phone #
                 if (NewUser.PhoneNumber.IsNotEmpty())
                 {
-                    if (!NewUser.PhoneNumber.RgxIsMatch(RgxPtrn.EntUser.PHONE_B))
+                    if (!NewUser.PhoneNumber.RgxIsMatch(RgxPtrn.EntUser.PHONE_B, RegexOptions.Singleline))
                     {
                         return AcctCreateResultCode.PhoneInvalid;
                     }
@@ -123,7 +124,7 @@ namespace UHub.CoreLib.Security.Accounts
                 //check for invalid year
                 if (NewUser.Year.IsNotEmpty())
                 {
-                    if (!NewUser.Year.RgxIsMatch(RgxPtrn.EntUser.YEAR_B))
+                    if (!NewUser.Year.RgxIsMatch(RgxPtrn.EntUser.YEAR_B, RegexOptions.Singleline))
                     {
                         return AcctCreateResultCode.YearInvalid;
                     }
@@ -133,7 +134,7 @@ namespace UHub.CoreLib.Security.Accounts
                 //Check for invalid Grad Date
                 if (NewUser.GradDate.IsNotEmpty())
                 {
-                    if (!NewUser.GradDate.RgxIsMatch(RgxPtrn.EntUser.GRAD_DATE_B))
+                    if (!NewUser.GradDate.RgxIsMatch(RgxPtrn.EntUser.GRAD_DATE_B, RegexOptions.Singleline))
                     {
                         return AcctCreateResultCode.GradDateInvalid;
                     }
@@ -143,7 +144,7 @@ namespace UHub.CoreLib.Security.Accounts
                 //check for invalid company
                 if (NewUser.Company.IsNotEmpty())
                 {
-                    if (!NewUser.Company.RgxIsMatch(RgxPtrn.EntUser.COMPANY_B))
+                    if (!NewUser.Company.RgxIsMatch(RgxPtrn.EntUser.COMPANY_B, RegexOptions.Singleline))
                     {
                         return AcctCreateResultCode.CompanyInvalid;
                     }
@@ -153,7 +154,7 @@ namespace UHub.CoreLib.Security.Accounts
                 //check for invalid job title
                 if (NewUser.JobTitle.IsNotEmpty())
                 {
-                    if (!NewUser.JobTitle.RgxIsMatch(RgxPtrn.EntUser.JOB_TITLE_B))
+                    if (!NewUser.JobTitle.RgxIsMatch(RgxPtrn.EntUser.JOB_TITLE_B, RegexOptions.Singleline))
                     {
                         return AcctCreateResultCode.JobTitleInvalid;
                     }

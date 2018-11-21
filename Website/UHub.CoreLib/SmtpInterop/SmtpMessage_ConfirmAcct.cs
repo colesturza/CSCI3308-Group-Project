@@ -27,7 +27,7 @@ namespace UHub.CoreLib.SmtpInterop
                 <body>
                     <h3>Account Confirmation</h3>
                     <p>
-                        You have received this message because you recently created an account with {LambdaVar:siteName}.  Please <a href=""{LambdaVar:confirmURL}"">Click Here</a> to confirm your account in order to log in.
+                        You have received this message because you recently created an account with {LambdaVar:siteName}.  Please <a href=""{LambdaVar:confirmURL}"" rel=""notrack"">Click Here</a> to confirm your account in order to log in.
                     </p>
                     <p>
                         If you did not create an account, this email may be safely ignored.

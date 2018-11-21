@@ -26,7 +26,7 @@ namespace UHub.CoreLib.SmtpInterop
                         You have received this message because a password reset was requested for your {LambdaVar:siteName} account.  If you did not request this reset, please ignore this message.
                         If you did request this message, please continue to the recovery link.  You will need the provided recovery key in order to reset your password
                     <p>
-                    <strong><a href=""{LambdaVar:recoveryLink}"">Recovery Link</a></strong>
+                    <strong><a href=""{LambdaVar:recoveryLink}"" rel=""notrack"">Recovery Link</a></strong>
                     <p></p>
                     <strong>Recovery Key:</strong></br>
                     <p>

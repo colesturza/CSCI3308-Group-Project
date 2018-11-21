@@ -33,7 +33,7 @@ namespace UHub.CoreLib.Security.Accounts.Interfaces
         /// </summary>
         /// <param name="RefUID">User reference UID</param>
         /// <exception cref="ArgumentException"></exception>
-        Task<(bool StatusFlag, string StatusMsg)> ConfirmUserAsync(string RefUID);
+        Task<AcctConfirmResultCode> TryConfirmUserAsync(string RefUID);
 
 
 

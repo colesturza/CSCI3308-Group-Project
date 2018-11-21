@@ -172,7 +172,7 @@ namespace UHub.Controllers
 
 
         [System.Web.Mvc.HttpGet]
-        public ActionResult Confirm()
+        public async Task<ActionResult> Confirm()
         {
             var idObj = Url.RequestContext.RouteData.Values["id"];
             if (idObj == null)
@@ -184,13 +184,14 @@ namespace UHub.Controllers
 
             var idStr = idObj.ToString();
 
-            if (CoreFactory.Singleton.Accounts.TryConfirmUser(idStr))
+            var confResult = await CoreFactory.Singleton.Accounts.TryConfirmUserAsync(idStr);
+            if (confResult == 0)
             {
                 ViewBag.Message = "User account has been successfully confirmed";
             }
             else
             {
-                ViewBag.Message = "User confirmation key is not in a valid format";
+                ViewBag.Message = "User confirmation failed - " + confResult.ToString();
             }
 
             return View();
@@ -372,7 +373,7 @@ namespace UHub.Controllers
             }
 
 
-            
+
             var result = await CoreFactory.Singleton.Accounts.TryRecoverPasswordAsync(
                 recoveryID,
                 txt_RecoveryKey,

@@ -30,18 +30,8 @@ namespace UHub.CoreLib.Security.Accounts.Interfaces
         /// Confirm CMS user in DB
         /// </summary>
         /// <param name="RefUID">User reference UID</param>
-        bool TryConfirmUser(string RefUID);
-        /// <summary>
-        /// Confirm CMS user in DB
-        /// </summary>
-        /// <param name="RefUID">User reference UID</param>
-        bool TryConfirmUser(string RefUID, out string Status);
-        /// <summary>
-        /// Confirm CMS user in DB
-        /// </summary>
-        /// <param name="RefUID">User reference UID</param>
         /// <exception cref="ArgumentException"></exception>
-        bool ConfirmUser(string RefUID, out string Status);
+        AcctConfirmResultCode TryConfirmUser(string RefUID);
 
 
 

@@ -37,5 +37,9 @@
         RecoveryContextExpired = 7002,
         RecoveryContextDestroyed = 7003,
         RecoveryKeyInvalid = 7004,
+
+        RefUIDEmpty = 8000,
+        RefUIDInvalid = 8001,
+        ConfirmTokenInvalid = 8002
     }
 }

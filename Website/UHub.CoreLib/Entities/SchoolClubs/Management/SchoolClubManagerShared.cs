@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using UHub.CoreLib.Extensions;
 using UHub.CoreLib.Management;
@@ -32,7 +33,7 @@ namespace UHub.CoreLib.Entities.SchoolClubs.Management
                 {
                     return SchoolClubResultCode.NameEmpty;
                 }
-                if (!NewClub.Name.RgxIsMatch(RgxPtrn.EntSchoolClub.NAME_B))
+                if (!NewClub.Name.RgxIsMatch(RgxPtrn.EntSchoolClub.NAME_B, RegexOptions.Singleline))
                 {
                     return SchoolClubResultCode.NameInvalid;
                 }
