@@ -1,20 +1,9 @@
 ﻿Vue.component('navbar-uhub', {
     data: {
-        communities: [],
-        schoolID: null
+        communities: []
     },
     mounted: function () {
         var self = this;
-        $.ajax({
-            method: "POST",
-            url: "/uhubapi/users/GetMe",
-            success: function (data) {
-                self.schoolID = data.SchoolID;
-            },
-            error: function (error) {
-                console.log(error);
-            }
-        });
         $.ajax({
             method: "POST",
             url: "/uhubapi/schoolclubs/GetAllBySchool",
@@ -30,7 +19,7 @@
         `
         <div id="mainNav" class="container-fullwidth">
             < nav class= "navbar navbar-expand navbar-dark bg-dark" >
-                <a class="navbar-brand" v-bind:href="'/School/'schoolID">UHUB</a>
+                <a class="navbar-brand" href="/School">UHUB</a>
                 <div class="collapse navbar-collapse" id="navbarNavDropdown">
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-item active dropdown">
@@ -57,8 +46,9 @@
                             <button class="btn btn-secondary my-2 my-md-0"
                                 type="submit">
                                 Search
-                        </button>
+                            </button>
                     </form>
+                    <a href="/Account" class="btn btn-secondary my-2 my-md-0">My Account</a>
                 </div>
             </nav>
         </div>

@@ -29,8 +29,10 @@ namespace UHub
                       "~/Scripts/bootstrap.js"));
 
 
-            bundles.Add(new ScriptBundle("~/resources/scripts/master").Include(
-                      "~/ClientResources/Master/Scripts/Master.js"));
+            var jsBundle = new ScriptBundle("~/resources/scripts/master").Include(
+                      "~/ClientResources/Master/Scripts/Master.js",
+                      "~/ClientResources/Master/Scripts/Navbar.js");
+            bundles.Add(jsBundle);
 
 
 
