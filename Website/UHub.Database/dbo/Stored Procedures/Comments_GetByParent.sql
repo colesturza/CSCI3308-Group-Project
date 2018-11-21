@@ -39,7 +39,17 @@ select
 
 from dbo.vComments vu
 
-JOIN dbo.EntChildXRef ON ParentEntID = @ParentID AND ChildEntType = 7
+inner JOIN dbo.EntChildXRef
+ON
+	ChildEntID = vu.ID
+	and ChildEntType = 7
+	and ParentEntID = @ParentID 
+	AND
+	(
+		ParentEntType = 6 --POST TYPE [6]
+		OR ParentEntType = 7 --COMMENT TYPE [7]
+	)
+
 
 end
 
