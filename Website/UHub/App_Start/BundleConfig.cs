@@ -34,7 +34,7 @@ namespace UHub
 
 
             bundles.Add(new CustomStyleBundle("~/resources/css/master")
-                .IncludeDirectory("~/ClientResources/Master/Styles", "*", true));
+                .IncludeDirectory("~/ClientResources/Master/Styles", "*css", true));
 
 
             BundleTable.EnableOptimizations = true;
