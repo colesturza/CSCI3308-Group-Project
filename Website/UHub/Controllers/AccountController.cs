@@ -197,11 +197,56 @@ namespace UHub.Controllers
         }
 
 
+        [System.Web.Mvc.HttpGet]
         [MvcAuthControl]
         public ActionResult UpdatePassword()
         {
+            ViewBag.CanForward = false;
             return View();
         }
+
+
+        [System.Web.Mvc.HttpPost]
+        [MvcAuthControl]
+        public async Task<ActionResult> UpdatePassword(string txt_CurrentPswd, string txt_NewPswd, string txt_ConfirmPswd, bool chk_DeviceLogout = false)
+        {
+            if (CoreFactory.Singleton.Properties.EnableRecaptcha)
+            {
+                var isCaptchaValid = CoreFactory.Singleton.Recaptcha.IsCaptchaValid();
+                if (!isCaptchaValid)
+                {
+                    ViewBag.Message = "Captcha is not valid";
+                    return View();
+                }
+            }
+
+
+            if (txt_NewPswd != txt_ConfirmPswd)
+            {
+                ViewBag.Message = "Passwords must match";
+                return View();
+            }
+
+
+            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser();
+            var context = System.Web.HttpContext.Current;
+
+
+            var result = await CoreFactory.Singleton.Accounts.TryUpdatePasswordAsync(
+                cmsUser.ID.Value,
+                txt_CurrentPswd,
+                txt_NewPswd,
+                chk_DeviceLogout,
+                context);
+
+
+            ViewBag.Message = result.ToString();
+
+            ViewBag.CanForward = (result == 0);
+
+            return View();
+        }
+
 
 
         [System.Web.Mvc.HttpGet]
@@ -209,6 +254,8 @@ namespace UHub.Controllers
         {
             return View();
         }
+
+
 
         [System.Web.Mvc.HttpPost]
         public async Task<ActionResult> ForgotPassword(string txt_Email)
@@ -282,6 +329,7 @@ namespace UHub.Controllers
         [System.Web.Mvc.HttpGet]
         public ActionResult Recover()
         {
+            ViewBag.CanForward = false;
             return View();
         }
 
@@ -293,17 +341,20 @@ namespace UHub.Controllers
 
             if (recoveryID.IsEmpty() || recoveryID.Length > 200)
             {
+                ViewBag.Message = "Invalid Recovery Key";
                 return View();
             }
 
             if (txt_RecoveryKey.Length > 200)
             {
+                ViewBag.Message = "Invalid Recovery Key";
                 return View();
             }
 
             if (txt_NewPswd != txt_ConfirmPswd)
             {
                 ViewBag.Message = "Passwords must match";
+                return View();
             }
 
 
@@ -318,7 +369,7 @@ namespace UHub.Controllers
 
             ViewBag.Message = result.ToString();
 
-            ViewBag.CanForward = (result == AccountResultCode.Success);
+            ViewBag.CanForward = (result == 0);
 
 
 

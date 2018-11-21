@@ -34,6 +34,7 @@
         @Html.LabelFor(x => x.Password)
         @Html.PasswordFor(x => x.Password, new { placeholder = "Password:", @class = "form-control" })
         <br />
+        <br />
         @Html.ValidationMessageFor(x => x.Password)
         Html.ValidateFor(x => x.Password);
 
@@ -49,7 +50,7 @@
         <p></p>
         Html.RenderPartial("~/Views/Security/_RecaptchaPartial.cshtml", new UHub.Models.Security.RecaptchaLoginViewModel
         {
-            SubmitValue = "Login",
+            SubmitText = "Login",
             SubmitClass = "btn-outline-dark center_LR",
         });
 

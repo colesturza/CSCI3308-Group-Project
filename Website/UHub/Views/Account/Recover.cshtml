@@ -19,11 +19,17 @@
 
 
     <div class="center_LR" style="display:inline-block">
+        <label for="txt_RecoveryKey">Please enter your recovery key from the email</label>
+        <br />
         <input type="password" name="txt_RecoveryKey" placeholder="Recovery Key:" class="form-control">
 
-        <p></p>
+        <br />
+        <br />
 
-        <input type="password" name="txt_NewPswd" placeholder="New Password:" class="form-control"><br />
+        <label for="txt_RecoveryKey">Please enter your new password</label>
+        <br />
+        <input type="password" name="txt_NewPswd" placeholder="New Password:" class="form-control">
+        <br />
         <input type="password" name="txt_ConfirmPswd" placeholder="Confirm Password:" class="form-control">
         <p></p>
         @{
@@ -31,20 +37,22 @@
                 "~/Views/Security/_RecaptchaPartial.cshtml",
                 new UHub.Models.Security.RecaptchaLoginViewModel
                 {
-                    SubmitValue = "Send Recovery Email",
+                    SubmitText = "Send Recovery Email",
                     SubmitClass = "btn-outline-dark",
                 });
         }
+
+        <p>@ViewBag.Message</p>
+
     </div>
 
-    <p>@ViewBag.Message</p>
 
 
     if (ViewBag.CanForward)
     {
         <script>
             $(function () {
-                window.setTimeout(function () { window.location.href = ""; }, 3000);
+                window.setTimeout(function () { window.location.href = "/"; }, 1500);
             });
         </script>
     }

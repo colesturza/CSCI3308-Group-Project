@@ -21,11 +21,11 @@
 
     if (UHub.CoreLib.Extensions.StringExtensions.IsEmpty(Model.SubmitPath))
     {
-        <input type="submit" name="btn_Submit" id="btn_Submit" value="@Model.SubmitValue" class="@Model.SubmitClass" />
+        <input type="submit" name="btn_Submit" id="btn_Submit" value="@Model.SubmitText" class="@Model.SubmitClass" />
     }
     else
     {
-        <input type="submit" name="btn_Submit" id="btn_Submit" value="@Model.SubmitValue" class="@Model.SubmitClass" formaction="@Model.SubmitPath" />
+        <input type="submit" name="btn_Submit" id="btn_Submit" value="@Model.SubmitText" class="@Model.SubmitClass" formaction="@Model.SubmitPath" />
     }
 
     //block enter key except for textareas
