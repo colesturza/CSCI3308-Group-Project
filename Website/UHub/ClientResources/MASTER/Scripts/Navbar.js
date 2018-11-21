@@ -1,10 +1,36 @@
 ﻿Vue.component('navbar-uhub', {
-    props['communities'],
+    data: {
+        communities: [],
+        schoolID: null
+    },
+    mounted: function () {
+        var self = this;
+        $.ajax({
+            method: "POST",
+            url: "/uhubapi/users/GetMe",
+            success: function (data) {
+                self.schoolID = data.SchoolID;
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+        $.ajax({
+            method: "POST",
+            url: "/uhubapi/schoolclubs/GetAllBySchool",
+            success: function (data) {
+                self.communities = data;
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+    },
     template: 
         `
         <div id="mainNav" class="container-fullwidth">
             < nav class= "navbar navbar-expand navbar-dark bg-dark" >
-                <a class="navbar-brand" href="/home">UHUB</a>
+                <a class="navbar-brand" v-bind:href="'/School/'schoolID">UHUB</a>
                 <div class="collapse navbar-collapse" id="navbarNavDropdown">
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-item active dropdown">
@@ -18,7 +44,7 @@
                             <div class="dropdown-menu scrollable-menu" aria-labelledby="navbarDropdownMenuLink">
                                 <a class="dropdown-item"
                                     v-for="community in communities"
-                                    v-bind: href="'/SchoolClub/' + community.ID">
+                                    v-bind:href="'/SchoolClub/' + community.ID">
                                 {{ community.Name }}
                                 </a>
                             </div>

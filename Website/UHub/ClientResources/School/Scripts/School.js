@@ -1,24 +1,4 @@
-﻿var communityDropdown = new Vue({
-    el: "#communityDrop",
-    data: {
-        communities: []
-    },
-    mounted: function () {
-        var self = this;
-        $.ajax({
-            method: "POST",
-            url: "/uhubapi/schoolclubs/GetAllBySchool",
-            success: function (data) {
-                self.communities = data;
-            },
-            error: function (error) {
-                console.log(error);
-            }
-        });
-    }
-});
-
-var postList = new Vue({
+﻿var postList = new Vue({
     el: "#post-list",
     data: {
         posts: []
