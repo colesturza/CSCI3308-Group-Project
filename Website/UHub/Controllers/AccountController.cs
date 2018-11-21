@@ -171,7 +171,7 @@ namespace UHub.Controllers
         }
 
 
-
+        [System.Web.Mvc.HttpGet]
         public ActionResult Confirm()
         {
             var idObj = Url.RequestContext.RouteData.Values["id"];

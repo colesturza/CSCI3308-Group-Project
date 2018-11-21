@@ -20,6 +20,7 @@ namespace UHub
     public static class Common
     {
 
+
         public static CmsConfiguration_Grouped GetCmsConfig()
         {
             //ENV
@@ -293,7 +294,7 @@ namespace UHub
                     EnableRecaptcha = false,                //CAPTCHA
                     RecaptchaPublicKey = captchaPublicKey,
                     RecaptchaPrivateKey = captchaPrivateKey,
-                    AutoConfirmNewAccounts = true,
+                    AutoConfirmNewAccounts = false,
                     AutoApproveNewAccounts = true,
                     EnableTokenVersioning = false,           //VERSION
                     CookieSameSiteMode = CookieSameSiteModes.Lax,

@@ -1,8 +1,7 @@
 ﻿@using UHub.CoreLib.Extensions;
-
-
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "My Account";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <h2>My Account</h2>
@@ -12,3 +11,4 @@
 </p>
 
 
+@Html.ActionLink("Update Password", "UpdatePassword", "Account");
