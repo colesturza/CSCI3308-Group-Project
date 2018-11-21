@@ -186,6 +186,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ClientResources\Home\Styles\Home.scss" />
+    <Content Include="ClientResources\MASTER\Scripts\Navbar.js" />
     <Content Include="ClientResources\SampleUHUB_TESTING\homeVue.js" />
     <Content Include="ClientResources\SampleUHUB_TESTING\index.html" />
     <Content Include="ClientResources\SampleUHUB_TESTING\postPage.html" />
