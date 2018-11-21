@@ -9,7 +9,7 @@ using UHub.CoreLib.DataInterop;
 using UHub.CoreLib.Extensions;
 using UHub.CoreLib.Management;
 using UHub.CoreLib.Entities.Users.Interfaces;
-using UHub.CoreLib.Entities.Users.Management;
+using UHub.CoreLib.Entities.Users.DataInterop;
 
 namespace UHub.CoreLib.Entities.Users
 {
@@ -90,11 +90,7 @@ namespace UHub.CoreLib.Entities.Users
             return UserReader.GetRecoveryContext(this.ID.Value);
         }
 
-        public void Save()
-        {
-            throw new NotImplementedException();
-        }
-
+#pragma warning disable 612, 618
         public void UpdateVersion()
         {
             if(ID == null)
@@ -110,4 +106,6 @@ namespace UHub.CoreLib.Entities.Users
 
         }
     }
+#pragma warning restore
+
 }

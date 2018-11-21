@@ -1,5 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using UHub.CoreLib.Entities.Posts.Management;
+using UHub.CoreLib.Entities.Posts.DataInterop;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,15 +7,15 @@ using System.Text;
 using System.Threading.Tasks;
 using UHub.CoreLib.Extensions;
 using UHub.CoreLib.Tests;
-using UHub.CoreLib.Entities.Schools.Management;
-using UHub.CoreLib.Entities.SchoolClubs.Management;
+using UHub.CoreLib.Entities.Schools.DataInterop;
+using UHub.CoreLib.Entities.SchoolClubs.DataInterop;
 using UHub.CoreLib.Entities.Posts.DTOs;
 using UHub.CoreLib.Tools;
 using UHub.CoreLib.DataInterop;
 using UHub.CoreLib.Management;
 using System.Collections.Concurrent;
 
-namespace UHub.CoreLib.Entities.Posts.Management.Tests
+namespace UHub.CoreLib.Entities.Posts.DataInterop.Tests
 {
     public partial class PostReaderTests
     {

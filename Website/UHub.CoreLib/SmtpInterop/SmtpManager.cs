@@ -21,23 +21,11 @@ namespace UHub.CoreLib.SmtpInterop
         /// </summary>
         /// <param name="Message"></param>
         /// <returns></returns>
-        public bool TrySendMessage(SmtpMessage Message)
-        {
-            return TrySendMessage(Message, out _);
-        }
-
-
-        /// <summary>
-        /// Attempt to send an email using the system configuration
-        /// </summary>
-        /// <param name="Message"></param>
-        /// <returns></returns>
-        public bool TrySendMessage(SmtpMessage Message, out SmtpResultCode result)
+        public SmtpResultCode TrySendMessage(SmtpMessage Message)
         {
             if (!Message.Validate())
             {
-                result = SmtpResultCode.ValidationError;
-                return false;
+                return SmtpResultCode.ValidationError;
             }
 
             var from = CoreFactory.Singleton.Properties.NoReplyMailConfig.FromAddress;
@@ -57,14 +45,12 @@ namespace UHub.CoreLib.SmtpInterop
                     try
                     {
                         client.Send(msgOut);
-                        result = SmtpResultCode.Success;
-                        return true;
+                        return SmtpResultCode.Success;
                     }
                     catch (Exception ex)
                     {
-                        result = SmtpResultCode.SendError;
                         CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex);
-                        return false;
+                        return SmtpResultCode.SendError;
                     }
                 }
 

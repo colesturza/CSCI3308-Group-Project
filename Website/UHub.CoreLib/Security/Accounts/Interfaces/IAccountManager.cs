@@ -19,7 +19,7 @@ namespace UHub.CoreLib.Security.Accounts.Interfaces
         /// <param name="GeneralFailHandler">Error handler in case DB cannot be reached or there is other unknown error</param>
         /// <param name="SuccessHandler">Args: new user object, auto login [T|F]</param>
         /// <returns>Status Flag</returns>
-        AccountResultCode TryCreateUser(
+        AcctCreateResultCode TryCreateUser(
             User NewUser,
             bool AttemptAutoLogin,
             Action<Guid> GeneralFailHandler = null,
@@ -69,7 +69,7 @@ namespace UHub.CoreLib.Security.Accounts.Interfaces
         /// <param name="DeviceLogout">If true, user will be logged out of all other devices</param>
         /// <param name="GeneralFailHandler">Error handler in case DB cannot be reached or there is other unknown error</param>
         /// <returns>Status flag</returns>
-        AccountResultCode TryUpdatePassword(
+        AcctPswdResultCode TryUpdatePassword(
             string UserEmail,
             string OldPassword,
             string NewPassword,
@@ -84,7 +84,7 @@ namespace UHub.CoreLib.Security.Accounts.Interfaces
         /// <param name="DeviceLogout">If true, user will be logged out of all other devices</param>
         /// <param name="GeneralFailHandler">Error handler in case DB cannot be reached or there is other unknown error</param>
         /// <returns>Status flag</returns>
-        AccountResultCode TryUpdatePassword(
+        AcctPswdResultCode TryUpdatePassword(
             long UserID,
             string OldPassword,
             string NewPassword,
@@ -102,7 +102,7 @@ namespace UHub.CoreLib.Security.Accounts.Interfaces
         /// <param name="DeviceLogout"></param>
         /// <param name="GeneralFailHandler"></param>
         /// <returns></returns>
-        AccountResultCode TryRecoverPassword(
+        AcctRecoveryResultCode TryRecoverPassword(
             string RecoveryContextID,
             string RecoveryKey,
             string NewPassword,
@@ -121,7 +121,7 @@ namespace UHub.CoreLib.Security.Accounts.Interfaces
         /// <exception cref="SystemDisabledException"></exception>
         /// <exception cref="InvalidOperationException"></exception>
         /// <returns>Status flag</returns>
-        AccountResultCode TryResetPassword(
+        AcctRecoveryResultCode TryResetPassword(
             string UserEmail,
             string NewPassword,
             bool DeviceLogout,
@@ -136,7 +136,7 @@ namespace UHub.CoreLib.Security.Accounts.Interfaces
         /// <exception cref="SystemDisabledException"></exception>
         /// <exception cref="InvalidOperationException"></exception>
         /// <returns>Status flag</returns>
-        AccountResultCode TryResetPassword(
+        AcctRecoveryResultCode TryResetPassword(
             long UserID,
             string NewPassword,
             bool DeviceLogout,
@@ -169,7 +169,7 @@ namespace UHub.CoreLib.Security.Accounts.Interfaces
         /// <param name="IsOptional">Specify whether or not user will be forced to update password</param>
         /// <param name="GeneralFailHandler">Error handler in case DB cannot be reached or there is other unknown error</param>
         /// <returns></returns>
-        (AccountResultCode ResultCode, IUserRecoveryContext RecoveryContext, string RecoveryKey) TryCreateUserRecoveryContext(
+        (AcctRecoveryResultCode ResultCode, IUserRecoveryContext RecoveryContext, string RecoveryKey) TryCreateUserRecoveryContext(
             string UserEmail,
             bool IsOptional,
             Action<Guid> GeneralFailHandler = null);
@@ -182,7 +182,7 @@ namespace UHub.CoreLib.Security.Accounts.Interfaces
         /// <param name="IsOptional">Specify whether or not user will be forced to update password</param>
         /// <param name="GeneralFailHandler">Error handler in case DB cannot be reached or there is other unknown error</param>
         /// <returns></returns>
-        (AccountResultCode ResultCode, IUserRecoveryContext RecoveryContext, string RecoveryKey) TryCreateUserRecoveryContext(
+        (AcctRecoveryResultCode ResultCode, IUserRecoveryContext RecoveryContext, string RecoveryKey) TryCreateUserRecoveryContext(
             long UserID,
             bool IsOptional,
             Action<Guid> GeneralFailHandler = null);

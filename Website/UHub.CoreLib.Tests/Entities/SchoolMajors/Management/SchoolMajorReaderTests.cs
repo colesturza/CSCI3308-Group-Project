@@ -1,5 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using UHub.CoreLib.Entities.SchoolMajors.Management;
+using UHub.CoreLib.Entities.SchoolMajors.DataInterop;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using UHub.CoreLib.Management;
 using UHub.CoreLib.Tests;
 
-namespace UHub.CoreLib.Entities.SchoolMajors.Management.Tests
+namespace UHub.CoreLib.Entities.SchoolMajors.DataInterop.Tests
 {
     [TestClass()]
     public class SchoolMajorReaderTests

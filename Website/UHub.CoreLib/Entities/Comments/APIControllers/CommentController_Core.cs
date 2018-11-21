@@ -8,8 +8,8 @@ using System.Web.Http;
 using UHub.CoreLib.APIControllers;
 using UHub.CoreLib.Attributes;
 using UHub.CoreLib.Entities.Comments.DTOs;
-using UHub.CoreLib.Entities.Comments.Management;
-using UHub.CoreLib.Entities.Users.Management;
+using UHub.CoreLib.Entities.Comments.DataInterop;
+using UHub.CoreLib.Entities.Users.DataInterop;
 using UHub.CoreLib.Extensions;
 using UHub.CoreLib.Management;
 

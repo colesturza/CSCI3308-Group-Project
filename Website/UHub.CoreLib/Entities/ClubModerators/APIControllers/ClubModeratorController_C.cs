@@ -7,11 +7,12 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using UHub.CoreLib.Attributes;
 using UHub.CoreLib.Entities.ClubModerators.DTOs;
-using UHub.CoreLib.Entities.ClubModerators.Management;
-using UHub.CoreLib.Entities.SchoolClubs.Management;
-using UHub.CoreLib.Entities.Users.Management;
+using UHub.CoreLib.Entities.ClubModerators.DataInterop;
+using UHub.CoreLib.Entities.SchoolClubs.DataInterop;
+using UHub.CoreLib.Entities.Users.DataInterop;
 using UHub.CoreLib.Management;
 using UHub.CoreLib.Tools;
+using UHub.CoreLib.Entities.ClubModerators.Management;
 
 namespace UHub.CoreLib.Entities.ClubModerators.APIControllers
 {
@@ -34,7 +35,7 @@ namespace UHub.CoreLib.Entities.ClubModerators.APIControllers
                 return Content(statCode, status);
             }
 
-            if(clubModerator == null)
+            if (clubModerator == null)
             {
                 return BadRequest();
             }
@@ -44,7 +45,7 @@ namespace UHub.CoreLib.Entities.ClubModerators.APIControllers
             var tmpClubModerator = clubModerator.ToInternal<ClubModerator>();
             var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser();
 
-            
+
             var taskIsCurrentUserOwner = UserReader.ValidateClubModeratorAsync(clubID, (long)cmsUser.ID);
             var taskIsCurrentUserBanned = SchoolClubReader.IsUserBannedAsync(clubID, (long)cmsUser.ID);
             var taskIsNewUserBanned = SchoolClubReader.IsUserBannedAsync(clubID, tmpClubModerator.UserID);
@@ -77,12 +78,25 @@ namespace UHub.CoreLib.Entities.ClubModerators.APIControllers
             try
             {
 
-                long? clubModID = await ClubModeratorWriter.TryCreateClubModeratorAsync(tmpClubModerator, clubID);
+                var clubModResult = await ClubModeratorManager.TryCreateClubModeratorAsync(tmpClubModerator, clubID);
+                var clubModID = clubModResult.ClubModID;
+                var ResultCode = clubModResult.ResultCode;
 
-                if (clubModID != null)
+
+                if (ResultCode == 0)
                 {
-                    status = "Club moderator created.";
+                    status = "Club moderator created";
                     statCode = HttpStatusCode.OK;
+                }
+                else if(ResultCode == ClubModeratorResultCode.UnknownError)
+                {
+                    status = "Unknown server error";
+                    statCode = HttpStatusCode.InternalServerError;
+                }
+                else
+                {
+                    status = "Invalid Field - " + ResultCode.ToString();
+                    statCode = HttpStatusCode.BadRequest;
                 }
 
             }
@@ -92,7 +106,7 @@ namespace UHub.CoreLib.Entities.ClubModerators.APIControllers
                 Exception ex_outer = new Exception(errCode, ex);
                 CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
 
-                return Content(HttpStatusCode.InternalServerError, status);
+                statCode = HttpStatusCode.InternalServerError;
             }
 
 

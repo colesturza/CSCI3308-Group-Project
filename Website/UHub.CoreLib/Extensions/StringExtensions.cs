@@ -17,6 +17,8 @@ using System.Globalization;
 using System.Web;
 using UHub.CoreLib.Tools;
 using UHub.CoreLib.Security;
+using RgxPtrn = UHub.CoreLib.Regex.Patterns;
+using System.Runtime.CompilerServices;
 
 namespace UHub.CoreLib.Extensions
 {
@@ -30,6 +32,7 @@ namespace UHub.CoreLib.Extensions
         /// </summary>
         /// <param name="str"></param>
         /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsEmpty(this string str)
         {
             return string.IsNullOrWhiteSpace(str);
@@ -39,6 +42,7 @@ namespace UHub.CoreLib.Extensions
         /// </summary>
         /// <param name="str"></param>
         /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsNotEmpty(this string str)
         {
             return !string.IsNullOrWhiteSpace(str);
@@ -48,6 +52,7 @@ namespace UHub.CoreLib.Extensions
         /// </summary>
         /// <param name="email"></param>
         /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsValidEmail(this string email)
         {
             if (email.IsEmpty())
@@ -55,7 +60,7 @@ namespace UHub.CoreLib.Extensions
                 return false;
             }
 
-            if (!RgxIsMatch(email, RgxPatterns.User.EMAIL_B))
+            if (!RgxIsMatch(email, RgxPtrn.EntUser.EMAIL_B))
             {
                 return false;
             }
@@ -76,6 +81,7 @@ namespace UHub.CoreLib.Extensions
         /// </summary>
         /// <param name="email"></param>
         /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsValidEmailDomain(this string domain)
         {
             if (domain.IsEmpty())
@@ -83,7 +89,12 @@ namespace UHub.CoreLib.Extensions
                 return false;
             }
 
-            return RgxIsMatch(domain, RgxPatterns.User.EMAIL_DOMAIN_B);
+            if (!domain.StartsWith("@"))
+            {
+                return false;
+            }
+
+            return RgxIsMatch(domain, RgxPtrn.EntUser.EMAIL_DOMAIN_B);
 
         }
         /// <summary>
@@ -91,6 +102,7 @@ namespace UHub.CoreLib.Extensions
         /// </summary>
         /// <param name="email"></param>
         /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string GetEmailDomain(this string email)
         {
             if (email.IsEmpty())
@@ -120,6 +132,7 @@ namespace UHub.CoreLib.Extensions
         /// </summary>
         /// <param name="url"></param>
         /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsValidURL(this string url)
         {
             if (url.IsEmpty())
@@ -133,6 +146,7 @@ namespace UHub.CoreLib.Extensions
         /// </summary>
         /// <param name="name"></param>
         /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsValidFileName(this string name)
         {
             name = name.Trim();
@@ -142,13 +156,14 @@ namespace UHub.CoreLib.Extensions
 
             //ensure that the name is a valid char set
             //ensure that the name is more than whitespace
-            return name.RgxIsMatch($@"^{RgxPatterns.FileUpload.FILE_NAME}$") && !name.RgxIsMatch(@"^[\s.\-]*$");
+            return name.RgxIsMatch($@"^{RgxPtrn.FileUpload.FILE_NAME}$") && !name.RgxIsMatch(@"^[\s.\-]*$");
         }
 
         /// <summary>
         /// Removes extra spaces between words
         /// </summary>
         /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string InnerTrim(this string str)
         {
             return string.Join(" ", str.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries));
@@ -160,6 +175,7 @@ namespace UHub.CoreLib.Extensions
         /// <param name="str"></param>
         /// <param name="length"></param>
         /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string TrimToLength(this string str, int length)
         {
             if (str.IsEmpty())
@@ -177,9 +193,10 @@ namespace UHub.CoreLib.Extensions
         /// <param name="str"></param>
         /// <param name="pattern"></param>
         /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool RgxIsMatch(this string str, string pattern)
         {
-            return Regex.IsMatch(str, pattern);
+            return System.Text.RegularExpressions.Regex.IsMatch(str, pattern);
         }
 
         /// <summary>
@@ -189,9 +206,10 @@ namespace UHub.CoreLib.Extensions
         /// <param name="pattern"></param>
         /// <param name="options"></param>
         /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool RgxIsMatch(this string str, string pattern, RegexOptions options)
         {
-            return Regex.IsMatch(str, pattern, options);
+            return System.Text.RegularExpressions.Regex.IsMatch(str, pattern, options);
         }
 
         /// <summary>
@@ -201,9 +219,10 @@ namespace UHub.CoreLib.Extensions
         /// <param name="pattern"></param>
         /// <param name="replacement"></param>
         /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string RgxReplace(this string str, string pattern, string replacement)
         {
-            return Regex.Replace(str, pattern, replacement);
+            return System.Text.RegularExpressions.Regex.Replace(str, pattern, replacement);
         }
 
         /// <summary>
@@ -214,9 +233,10 @@ namespace UHub.CoreLib.Extensions
         /// <param name="replacement"></param>
         /// <param name="options"></param>
         /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string RgxReplace(this string str, string pattern, string replacement, RegexOptions options)
         {
-            return Regex.Replace(str, pattern, replacement, options);
+            return System.Text.RegularExpressions.Regex.Replace(str, pattern, replacement, options);
         }
 
         /// <summary>
@@ -227,32 +247,34 @@ namespace UHub.CoreLib.Extensions
         public static string ToAscii(this string str)
         {
             var strMessage = str;
-            strMessage = Regex.Replace(strMessage, "[éèëêð]", "e");
-            strMessage = Regex.Replace(strMessage, "[ÉÈËÊ]", "E");
-            strMessage = Regex.Replace(strMessage, "[àâä]", "a");
-            strMessage = Regex.Replace(strMessage, "[ÀÁÂÃÄÅ]", "A");
-            strMessage = Regex.Replace(strMessage, "[àáâãäå]", "a");
-            strMessage = Regex.Replace(strMessage, "[ÙÚÛÜ]", "U");
-            strMessage = Regex.Replace(strMessage, "[ùúûüµ]", "u");
-            strMessage = Regex.Replace(strMessage, "[òóôõöø]", "o");
-            strMessage = Regex.Replace(strMessage, "[ÒÓÔÕÖØ]", "O");
-            strMessage = Regex.Replace(strMessage, "[ìíîï]", "i");
-            strMessage = Regex.Replace(strMessage, "[ÌÍÎÏ]", "I");
-            strMessage = Regex.Replace(strMessage, "[š]", "s");
-            strMessage = Regex.Replace(strMessage, "[Š]", "S");
-            strMessage = Regex.Replace(strMessage, "[ñ]", "n");
-            strMessage = Regex.Replace(strMessage, "[Ñ]", "N");
-            strMessage = Regex.Replace(strMessage, "[ç]", "c");
-            strMessage = Regex.Replace(strMessage, "[Ç]", "C");
-            strMessage = Regex.Replace(strMessage, "[ÿ]", "y");
-            strMessage = Regex.Replace(strMessage, "[Ÿ]", "Y");
-            strMessage = Regex.Replace(strMessage, "[ž]", "z");
-            strMessage = Regex.Replace(strMessage, "[Ž]", "Z");
-            strMessage = Regex.Replace(strMessage, "[Ð]", "D");
-            strMessage = Regex.Replace(strMessage, "[œ]", "oe");
-            strMessage = Regex.Replace(strMessage, "[Œ]", "Oe");
-            strMessage = Regex.Replace(strMessage, "[«»\u201C\u201D\u201E\u201F\u2033\u2036]", "\"");
-            strMessage = Regex.Replace(strMessage, "[\u2026]", "...");
+
+            strMessage = System.Text.RegularExpressions.Regex.Replace(strMessage, "[éèëêð]", "e");
+            strMessage = System.Text.RegularExpressions.Regex.Replace(strMessage, "[ÉÈËÊ]", "E");
+            strMessage = System.Text.RegularExpressions.Regex.Replace(strMessage, "[àâä]", "a");
+            strMessage = System.Text.RegularExpressions.Regex.Replace(strMessage, "[ÀÁÂÃÄÅ]", "A");
+            strMessage = System.Text.RegularExpressions.Regex.Replace(strMessage, "[àáâãäå]", "a");
+            strMessage = System.Text.RegularExpressions.Regex.Replace(strMessage, "[ÙÚÛÜ]", "U");
+            strMessage = System.Text.RegularExpressions.Regex.Replace(strMessage, "[ùúûüµ]", "u");
+            strMessage = System.Text.RegularExpressions.Regex.Replace(strMessage, "[òóôõöø]", "o");
+            strMessage = System.Text.RegularExpressions.Regex.Replace(strMessage, "[ÒÓÔÕÖØ]", "O");
+            strMessage = System.Text.RegularExpressions.Regex.Replace(strMessage, "[ìíîï]", "i");
+            strMessage = System.Text.RegularExpressions.Regex.Replace(strMessage, "[ÌÍÎÏ]", "I");
+            strMessage = System.Text.RegularExpressions.Regex.Replace(strMessage, "[š]", "s");
+            strMessage = System.Text.RegularExpressions.Regex.Replace(strMessage, "[Š]", "S");
+            strMessage = System.Text.RegularExpressions.Regex.Replace(strMessage, "[ñ]", "n");
+            strMessage = System.Text.RegularExpressions.Regex.Replace(strMessage, "[Ñ]", "N");
+            strMessage = System.Text.RegularExpressions.Regex.Replace(strMessage, "[ç]", "c");
+            strMessage = System.Text.RegularExpressions.Regex.Replace(strMessage, "[Ç]", "C");
+            strMessage = System.Text.RegularExpressions.Regex.Replace(strMessage, "[ÿ]", "y");
+            strMessage = System.Text.RegularExpressions.Regex.Replace(strMessage, "[Ÿ]", "Y");
+            strMessage = System.Text.RegularExpressions.Regex.Replace(strMessage, "[ž]", "z");
+            strMessage = System.Text.RegularExpressions.Regex.Replace(strMessage, "[Ž]", "Z");
+            strMessage = System.Text.RegularExpressions.Regex.Replace(strMessage, "[Ð]", "D");
+            strMessage = System.Text.RegularExpressions.Regex.Replace(strMessage, "[œ]", "oe");
+            strMessage = System.Text.RegularExpressions.Regex.Replace(strMessage, "[Œ]", "Oe");
+            strMessage = System.Text.RegularExpressions.Regex.Replace(strMessage, "[«»\u201C\u201D\u201E\u201F\u2033\u2036]", "\"");
+            strMessage = System.Text.RegularExpressions.Regex.Replace(strMessage, "[\u2026]", "...");
+
             return strMessage;
         }
 
@@ -261,6 +283,7 @@ namespace UHub.CoreLib.Extensions
         /// </summary>
         /// <param name="str"></param>
         /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string XmlEncode(this string str)
         {
             if (str.IsEmpty())
@@ -277,6 +300,7 @@ namespace UHub.CoreLib.Extensions
         /// </summary>
         /// <param name="str"></param>
         /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string HtmlEncode(this string str)
         {
             return WebUtility.HtmlEncode(str);
@@ -287,6 +311,7 @@ namespace UHub.CoreLib.Extensions
         /// </summary>
         /// <param name="str"></param>
         /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string HtmlDecode(this string str)
         {
             return WebUtility.HtmlEncode(str);
@@ -297,6 +322,7 @@ namespace UHub.CoreLib.Extensions
         /// </summary>
         /// <param name="str"></param>
         /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string UrlEncode(this string str)
         {
             return WebUtility.UrlEncode(str);
@@ -307,6 +333,7 @@ namespace UHub.CoreLib.Extensions
         /// </summary>
         /// <param name="str"></param>
         /// <returns></returns>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string UrlDecode(this string str)
         {
             return WebUtility.UrlDecode(str);

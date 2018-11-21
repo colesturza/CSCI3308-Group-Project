@@ -2,7 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using UHub.CoreLib.Tests;
 
-namespace UHub.CoreLib.Entities.Comments.Management.Tests
+namespace UHub.CoreLib.Entities.Comments.DataInterop.Tests
 {
     [TestClass]
     public partial class CommentReaderTests

@@ -10,7 +10,7 @@ using UHub.CoreLib.Management;
 using UHub.CoreLib.Tools;
 using UHub.CoreLib.Entities.Users;
 using UHub.CoreLib.Entities.Users.Interfaces;
-using UHub.CoreLib.Entities.Users.Management;
+using UHub.CoreLib.Entities.Users.DataInterop;
 using System.Text.RegularExpressions;
 
 namespace UHub.CoreLib.Security.Authentication
@@ -26,10 +26,9 @@ namespace UHub.CoreLib.Security.Authentication
         /// <param name="GeneralFailHandler">Error handler in case DB cannot be reached or there is other unknown error</param>
         /// <param name="UserTokenHandler">Success handler to handle user token distribution</param>
         /// <returns>Status Flag</returns>
-        override internal bool TryAuthenticateUser(
+        override internal AuthResultCode TryAuthenticateUser(
             string UserEmail,
             string UserPassword,
-            out AuthResultCode ResultCode,
             Action<Guid> GeneralFailHandler = null,
             Func<User, bool> UserTokenHandler = null)
         {
@@ -42,32 +41,10 @@ namespace UHub.CoreLib.Security.Authentication
             UserEmail = UserEmail?.Trim();
 
 
-            //validate user email
-            if (UserEmail.IsEmpty())
+            var attrIsValid = Shared.TryAuthenticate_ValidateFields(UserEmail, UserPassword);
+            if (attrIsValid != 0)
             {
-                ResultCode = AuthResultCode.EmailEmpty;
-                return false;
-            }
-
-            if (!UserEmail.IsValidEmail())
-            {
-                ResultCode = AuthResultCode.EmailInvalid;
-                return false;
-            }
-
-
-            //validate password
-            if (UserPassword.IsEmpty())
-            {
-                ResultCode = AuthResultCode.PswdEmpty;
-                return false;
-            }
-
-            //validate password
-            if (!Regex.IsMatch(UserPassword, CoreFactory.Singleton.Properties.PswdStrengthRegex))
-            {
-                ResultCode = AuthResultCode.PswdInvalid;
-                return false;
+                return attrIsValid;
             }
 
 
@@ -79,17 +56,15 @@ namespace UHub.CoreLib.Security.Authentication
             }
             catch (Exception ex)
             {
-                ResultCode = AuthResultCode.UnknownError;
                 CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex);
                 GeneralFailHandler?.Invoke(new Guid("B61DB416-F38E-495C-BFDF-317FDB7F8063"));
-                return false;
+                return AuthResultCode.UnknownError;
             }
 
             //ensure account exists
             if (userAuthInfo == null)
             {
-                ResultCode = AuthResultCode.UserInvalid;
-                return false;
+                return AuthResultCode.UserInvalid;
             }
 
 
@@ -106,8 +81,7 @@ namespace UHub.CoreLib.Security.Authentication
                 }
                 else
                 {
-                    ResultCode = AuthResultCode.UserLocked;
-                    return false;
+                    return AuthResultCode.UserLocked;
                 }
             }
 
@@ -119,34 +93,30 @@ namespace UHub.CoreLib.Security.Authentication
             }
             catch (Exception ex)
             {
-                ResultCode = AuthResultCode.UnknownError;
                 CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex);
                 GeneralFailHandler?.Invoke(new Guid("EE2C6BB0-8E49-4B31-9CB1-8C246C3EFFD9"));
-                return false;
+                return AuthResultCode.UnknownError;
             }
             if (validationStatus != PasswordValidationStatus.Success)
             {
 
                 if (validationStatus == PasswordValidationStatus.PswdExpired)
                 {
-                    ResultCode = AuthResultCode.PswdExpired;
+                    return AuthResultCode.PswdExpired;
                 }
                 else if (validationStatus == PasswordValidationStatus.InvalidUser)
                 {
-                    ResultCode = AuthResultCode.UserInvalid;
+                    return AuthResultCode.UserInvalid;
                 }
                 else if (validationStatus == PasswordValidationStatus.HashMismatch)
                 {
-                    ResultCode = AuthResultCode.CredentialsInvalid;
+                    return AuthResultCode.CredentialsInvalid;
                 }
                 else
                 {
-                    ResultCode = AuthResultCode.UnknownError;
                     GeneralFailHandler?.Invoke(new Guid("FC5D3DDB-A48B-49C9-922E-7A96CB53CA7E"));
+                    return AuthResultCode.UnknownError;
                 }
-
-
-                return false;
             }
 
 
@@ -160,42 +130,17 @@ namespace UHub.CoreLib.Security.Authentication
             }
             catch (Exception ex)
             {
-                ResultCode = AuthResultCode.UnknownError;
 
                 CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex);
                 GeneralFailHandler?.Invoke(new Guid("EC7D4ACA-498F-49DA-994B-099292AA9BD8"));
-                return false;
+                return AuthResultCode.UnknownError;
             }
 
 
-            //validate CMS specific user
-            if (cmsUser == null || cmsUser.ID == null)
+            var userAccessIsValid = Shared.TryAuthenticate_ValidateUserAccess(cmsUser);
+            if (userAccessIsValid != AuthResultCode.Success)
             {
-                ResultCode = AuthResultCode.UserInvalid;
-                return false;
-            }
-
-
-            //user not confirmed
-            if (!cmsUser.IsConfirmed)
-            {
-                ResultCode = AuthResultCode.PendingConfirmation;
-                return false;
-            }
-
-            //user not approved
-            if (!cmsUser.IsApproved)
-            {
-                ResultCode = AuthResultCode.PendingApproval;
-                return false;
-            }
-
-            //user disabled for some other reason
-            //could be disabled by admin
-            if (!cmsUser.IsEnabled)
-            {
-                ResultCode = AuthResultCode.UserDisabled;
-                return false;
+                return userAccessIsValid;
             }
 
 
@@ -204,13 +149,11 @@ namespace UHub.CoreLib.Security.Authentication
             if (status)
             {
                 //CoreFactory.Singleton.Logging.CreateDBActivityLog(ActivityLogType.UserLogin);
-                ResultCode = AuthResultCode.Success;
-                return true;
+                return AuthResultCode.Success;
             }
             else
             {
-                ResultCode = AuthResultCode.UnknownError;
-                return false;
+                return AuthResultCode.UnknownError;
             }
 
         }

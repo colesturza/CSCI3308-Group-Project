@@ -11,7 +11,7 @@ using System.Web.Http;
 using System.Web.Http.Filters;
 using UHub.CoreLib.APIControllers;
 using UHub.CoreLib.Entities.Schools.Interfaces;
-using UHub.CoreLib.Entities.Schools.Management;
+using UHub.CoreLib.Entities.Schools.DataInterop;
 using UHub.CoreLib.Entities.Schools.DTOs;
 using UHub.CoreLib.Extensions;
 using UHub.CoreLib.Entities.Users;

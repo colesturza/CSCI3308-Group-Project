@@ -3,7 +3,7 @@ using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using UHub.CoreLib.Tests;
 
-namespace UHub.CoreLib.Entities.Schools.Management.Tests
+namespace UHub.CoreLib.Entities.Schools.DataInterop.Tests
 {
     [TestClass]
     public class SchoolReaderTests

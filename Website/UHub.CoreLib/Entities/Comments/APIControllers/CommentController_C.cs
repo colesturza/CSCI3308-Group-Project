@@ -8,12 +8,13 @@ using System.Web.Http;
 using UHub.CoreLib.APIControllers;
 using UHub.CoreLib.Attributes;
 using UHub.CoreLib.Entities.Comments.DTOs;
-using UHub.CoreLib.Entities.Comments.Management;
-using UHub.CoreLib.Entities.SchoolClubs.Management;
-using UHub.CoreLib.Entities.Users.Management;
+using UHub.CoreLib.Entities.Comments.DataInterop;
+using UHub.CoreLib.Entities.SchoolClubs.DataInterop;
+using UHub.CoreLib.Entities.Users.DataInterop;
 using UHub.CoreLib.Extensions;
 using UHub.CoreLib.Management;
 using UHub.CoreLib.Tools;
+using UHub.CoreLib.Entities.Comments.Management;
 
 namespace UHub.CoreLib.Entities.Comments.APIControllers
 {
@@ -56,16 +57,27 @@ namespace UHub.CoreLib.Entities.Comments.APIControllers
 
             try
             {
-                tmpComment.Content = tmpComment.Content.Trim();
-                tmpComment.Content = tmpComment.Content.SanitizeHtml();
                 tmpComment.CreatedBy = cmsUser.ID.Value;
 
-                long? PostID = await CommentWriter.TryCreateCommentAsync(tmpComment);
+                var PostResult = await CommentManager.TryCreateCommentAsync(tmpComment);
+                long? PostID = PostResult.CommentID;
+                var ResultCode = PostResult.ResultCode;
 
-                if (PostID != null)
+
+                if (ResultCode == 0)
                 {
                     status = "Comment created.";
                     statCode = HttpStatusCode.OK;
+                }
+                else if(ResultCode == CommentResultCode.UnknownError)
+                {
+                    status = "Unknown server error";
+                    statCode = HttpStatusCode.InternalServerError;
+                }
+                else
+                {
+                    status = "Invalid Field - " + ResultCode.ToString();
+                    statCode = HttpStatusCode.BadRequest;
                 }
 
             }
@@ -75,7 +87,7 @@ namespace UHub.CoreLib.Entities.Comments.APIControllers
                 Exception ex_outer = new Exception(errCode, ex);
                 CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
 
-                return Content(HttpStatusCode.InternalServerError, status);
+                statCode = HttpStatusCode.InternalServerError;
             }
 
 

@@ -10,7 +10,7 @@ using UHub.CoreLib.Management;
 using UHub.CoreLib.Tools;
 using UHub.CoreLib.Entities.Users;
 using UHub.CoreLib.Entities.Users.Interfaces;
-using UHub.CoreLib.Entities.Users.Management;
+using UHub.CoreLib.Entities.Users.DataInterop;
 using System.Text.RegularExpressions;
 using System.Web;
 
@@ -41,31 +41,14 @@ namespace UHub.CoreLib.Security.Authentication
 
             UserEmail = UserEmail?.Trim();
             var taskGetUserAuthInfo = GetUserAuthInfo_DBAsync(UserEmail);
-            
 
-            //validate user email
-            if (UserEmail.IsEmpty())
+
+            var attrIsValid = Shared.TryAuthenticate_ValidateFields(UserEmail, UserPassword);
+            if (attrIsValid != 0)
             {
-                return AuthResultCode.EmailEmpty;
+                return attrIsValid;
             }
 
-            if (!UserEmail.IsValidEmail())
-            {
-                return AuthResultCode.EmailInvalid;
-            }
-
-
-            //validate password
-            if (UserPassword.IsEmpty())
-            {
-                return AuthResultCode.PswdEmpty;
-            }
-
-            //validate password
-            if (!Regex.IsMatch(UserPassword, CoreFactory.Singleton.Properties.PswdStrengthRegex))
-            {
-                return AuthResultCode.PswdInvalid;
-            }
 
 
             //get userAuth info (pswf info)
@@ -142,33 +125,11 @@ namespace UHub.CoreLib.Security.Authentication
             //try to get the real user from CMS DB
             User cmsUser = await taskGetUser;
 
-
-            //validate CMS specific user
-            if (cmsUser == null || cmsUser.ID == null)
+            var userAccessIsValid = Shared.TryAuthenticate_ValidateUserAccess(cmsUser);
+            if (userAccessIsValid != AuthResultCode.Success)
             {
-                return AuthResultCode.UserInvalid;
+                return userAccessIsValid;
             }
-
-
-            //user not confirmed
-            if (!cmsUser.IsConfirmed)
-            {
-                return AuthResultCode.PendingConfirmation;
-            }
-
-            //user not approved
-            if (!cmsUser.IsApproved)
-            {
-                return AuthResultCode.PendingApproval;
-            }
-
-            //user disabled for some other reason
-            //could be disabled by admin
-            if (!cmsUser.IsEnabled)
-            {
-                return AuthResultCode.UserDisabled;
-            }
-
 
 
             var status = true;

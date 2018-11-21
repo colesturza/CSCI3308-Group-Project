@@ -14,6 +14,7 @@ using UHub.CoreLib.DataInterop;
 using UHub.CoreLib.Logging;
 using UHub.CoreLib.Tools;
 using UHub.CoreLib.Util;
+using RgxPtrn = UHub.CoreLib.Regex.Patterns;
 
 namespace UHub.CoreLib.Config
 {
@@ -152,7 +153,7 @@ namespace UHub.CoreLib.Config
                 string err = $"Security Mismatch - {nameof(Security.ForceHTTPS)} and {nameof(Security.ForceSecureCookies)} must be set to the same value.";
                 throw new ArgumentException(err);
             }
-            if (Security.CookieDomain.IsNotEmpty() && !Security.CookieDomain.Split(',').All(dmn => dmn.RgxIsMatch($@"^{RgxPatterns.Cookie.DOMAIN}$", RegexOptions.IgnoreCase)))
+            if (Security.CookieDomain.IsNotEmpty() && !Security.CookieDomain.Split(',').All(dmn => dmn.RgxIsMatch($@"^{RgxPtrn.Cookie.DOMAIN}$", RegexOptions.IgnoreCase)))
             {
                 string err = "Invalid cookie domain format.";
                 throw new ArgumentException(err);
@@ -417,7 +418,7 @@ namespace UHub.CoreLib.Config
         {
             ValidateString(url, argName);
 
-            var isVirtual = url.RgxIsMatch($@"^{RgxPatterns.Config.INTERNAL_URL}$", RegexOptions.IgnoreCase);
+            var isVirtual = url.RgxIsMatch($@"^{RgxPtrn.Config.INTERNAL_URL}$", RegexOptions.IgnoreCase);
             var isPhysical = !url.RgxIsMatch("[?#]") && url.IsValidURL();
 
             if (!isVirtual && !isPhysical)

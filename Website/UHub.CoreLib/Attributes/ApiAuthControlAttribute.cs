@@ -43,7 +43,8 @@ namespace UHub.CoreLib.Attributes
                 else
                 {
                     //test for token auth
-                    isLoggedIn = CoreFactory.Singleton.Auth.TrySetRequestUser(authToken, out _);
+                    var tokenStatus = CoreFactory.Singleton.Auth.TrySetRequestUser(authToken);
+                    isLoggedIn = (tokenStatus == TokenValidationStatus.Success);
                 }
 
                 if (!isLoggedIn)
