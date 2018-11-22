@@ -34,33 +34,33 @@ namespace UHub.CoreLib.Entities.Posts.Management
             {
                 id = await PostWriter.CreatePostAsync(NewPost);
             }
-            catch (AggregateException ex) when (ex.InnerException is ArgumentOutOfRangeException)
+            catch (ArgumentOutOfRangeException)
             {
                 return (null, PostResultCode.InvalidArgument);
             }
-            catch (AggregateException ex) when (ex.InnerException is ArgumentNullException)
+            catch (ArgumentNullException)
             {
                 return (null, PostResultCode.NullArgument);
             }
-            catch (AggregateException ex) when (ex.InnerException is ArgumentException)
+            catch (ArgumentException)
             {
                 return (null, PostResultCode.InvalidArgument);
             }
-            catch (AggregateException ex) when (ex.InnerException is InvalidCastException)
+            catch (InvalidCastException)
             {
                 return (null, PostResultCode.InvalidArgumentType);
             }
-            catch (AggregateException ex) when (ex.InnerException is InvalidOperationException)
+            catch (InvalidOperationException)
             {
                 return (null, PostResultCode.InvalidOperation);
             }
-            catch (AggregateException ex) when (ex.InnerException is AccessForbiddenException)
+            catch (AccessForbiddenException)
             {
                 return (null, PostResultCode.AccessDenied);
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync("02A39800-18D1-4E43-8E3B-A2D6BCF30302", ex);
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("45CB4726-3D28-4D65-A0FE-AB53EFA3C705", ex);
                 return (null, PostResultCode.UnknownError);
             }
 

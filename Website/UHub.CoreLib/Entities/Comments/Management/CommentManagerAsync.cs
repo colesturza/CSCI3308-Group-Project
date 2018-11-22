@@ -31,33 +31,33 @@ namespace UHub.CoreLib.Entities.Comments.Management
             {
                 id = await CommentWriter.CreateCommentAsync(NewComment);
             }
-            catch (AggregateException ex) when (ex.InnerException is ArgumentOutOfRangeException)
+            catch (ArgumentOutOfRangeException)
             {
                 return (null, CommentResultCode.InvalidArgument);
             }
-            catch (AggregateException ex) when (ex.InnerException is ArgumentNullException)
+            catch (ArgumentNullException)
             {
                 return (null, CommentResultCode.NullArgument);
             }
-            catch (AggregateException ex) when (ex.InnerException is ArgumentException)
+            catch (ArgumentException)
             {
                 return (null, CommentResultCode.InvalidArgument);
             }
-            catch (AggregateException ex) when (ex.InnerException is InvalidCastException)
+            catch (InvalidCastException)
             {
                 return (null, CommentResultCode.InvalidArgumentType);
             }
-            catch (AggregateException ex) when (ex.InnerException is InvalidOperationException)
+            catch (InvalidOperationException)
             {
                 return (null, CommentResultCode.InvalidOperation);
             }
-            catch (AggregateException ex) when (ex.InnerException is AccessForbiddenException)
+            catch (AccessForbiddenException)
             {
                 return (null, CommentResultCode.AccessDenied);
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync("8C7BB118-E28E-4E86-8868-537D5DAD155F", ex);
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("82EEC0B9-31CB-4CD2-9B0F-2CD56CAA83C4", ex);
                 return (null, CommentResultCode.UnknownError);
             }
 

@@ -60,17 +60,11 @@ namespace UHub.CoreLib.DataInterop
                     }
                 }
             }
-            catch (AggregateException ex)
+            catch (Exception ex)
             {
-                if (ex.InnerException is SystemDisabledException)
-                {
-                    throw;
-                }
 
-
-                var inner = ex.InnerException;
-                var errCode = inner.Message.Substring(0, 4);
-                var errMsg = inner.Message.Substring(inner.Message.IndexOf(": ") + 2);
+                var errCode = ex.Message.Substring(0, 4);
+                var errMsg = ex.Message.Substring(ex.Message.IndexOf(": ") + 2);
 
 
                 if (errCode == "400:")
@@ -122,10 +116,6 @@ namespace UHub.CoreLib.DataInterop
                     throw;
                 }
 
-            }
-            catch
-            {
-                throw;
             }
 
         }
@@ -167,17 +157,11 @@ namespace UHub.CoreLib.DataInterop
                     }
                 }
             }
-            catch (AggregateException ex)
+            catch (Exception ex)
             {
-                if (ex.InnerException is SystemDisabledException)
-                {
-                    throw;
-                }
 
-
-                var inner = ex.InnerException;
-                var errCode = inner.Message.Substring(0, 4);
-                var errMsg = inner.Message.Substring(inner.Message.IndexOf(": ") + 2);
+                var errCode = ex.Message.Substring(0, 4);
+                var errMsg = ex.Message.Substring(ex.Message.IndexOf(": ") + 2);
 
                 if (errCode == "400:")
                 {
@@ -227,10 +211,6 @@ namespace UHub.CoreLib.DataInterop
                 {
                     throw;
                 }
-            }
-            catch
-            {
-                throw;
             }
         }
 
@@ -285,16 +265,10 @@ namespace UHub.CoreLib.DataInterop
                         }
 
                     }
-                    catch (AggregateException ex)
+                    catch (Exception ex)
                     {
-                        if (ex.InnerException is SystemDisabledException)
-                        {
-                            throw;
-                        }
-
-                        var inner = ex.InnerException;
-                        var errCode = inner.Message.Substring(0, 4);
-                        var errMsg = inner.Message.Substring(inner.Message.IndexOf(": ") + 2);
+                        var errCode = ex.Message.Substring(0, 4);
+                        var errMsg = ex.Message.Substring(ex.Message.IndexOf(": ") + 2);
 
                         if (errCode == "400:")
                         {
@@ -345,10 +319,6 @@ namespace UHub.CoreLib.DataInterop
                             throw;
                         }
 
-                    }
-                    catch
-                    {
-                        throw;
                     }
                 }
             }
@@ -403,16 +373,11 @@ namespace UHub.CoreLib.DataInterop
                         }
 
                     }
-                    catch (AggregateException ex)
+                    catch (Exception ex)
                     {
-                        if (ex.InnerException is SystemDisabledException)
-                        {
-                            throw;
-                        }
 
-                        var inner = ex.InnerException;
-                        var errCode = inner.Message.Substring(0, 4);
-                        var errMsg = inner.Message.Substring(inner.Message.IndexOf(": ") + 2);
+                        var errCode = ex.Message.Substring(0, 4);
+                        var errMsg = ex.Message.Substring(ex.Message.IndexOf(": ") + 2);
 
                         if (errCode == "400:")
                         {
@@ -462,11 +427,6 @@ namespace UHub.CoreLib.DataInterop
                         {
                             throw;
                         }
-
-                    }
-                    catch
-                    {
-                        throw;
 
                     }
                 }
@@ -527,16 +487,11 @@ namespace UHub.CoreLib.DataInterop
                         }
 
                     }
-                    catch (AggregateException ex)
+                    catch (Exception ex)
                     {
-                        if (ex.InnerException is SystemDisabledException)
-                        {
-                            throw;
-                        }
 
-                        var inner = ex.InnerException;
-                        var errCode = inner.Message.Substring(0, 4);
-                        var errMsg = inner.Message.Substring(inner.Message.IndexOf(": ") + 2);
+                        var errCode = ex.Message.Substring(0, 4);
+                        var errMsg = ex.Message.Substring(ex.Message.IndexOf(": ") + 2);
 
                         if (errCode == "400:")
                         {
@@ -586,11 +541,6 @@ namespace UHub.CoreLib.DataInterop
                         {
                             throw;
                         }
-
-                    }
-                    catch
-                    {
-                        throw;
 
                     }
                 }

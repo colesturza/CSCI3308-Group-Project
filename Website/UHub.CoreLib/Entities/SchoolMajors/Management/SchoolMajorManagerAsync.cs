@@ -33,33 +33,33 @@ namespace UHub.CoreLib.Entities.SchoolMajors.Management
             {
                 id = await SchoolMajorWriter.CreateSchoolMajorAsync(NewMajor, ParentID);
             }
-            catch (AggregateException ex) when (ex.InnerException is ArgumentOutOfRangeException)
+            catch (ArgumentOutOfRangeException)
             {
                 return (null, SchoolMajorResultCode.InvalidArgument);
             }
-            catch (AggregateException ex) when (ex.InnerException is ArgumentNullException)
+            catch (ArgumentNullException)
             {
                 return (null, SchoolMajorResultCode.NullArgument);
             }
-            catch (AggregateException ex) when (ex.InnerException is ArgumentException)
+            catch (ArgumentException)
             {
                 return (null, SchoolMajorResultCode.InvalidArgument);
             }
-            catch (AggregateException ex) when (ex.InnerException is InvalidCastException)
+            catch (InvalidCastException)
             {
                 return (null, SchoolMajorResultCode.InvalidArgumentType);
             }
-            catch (AggregateException ex) when (ex.InnerException is InvalidOperationException)
+            catch (InvalidOperationException)
             {
                 return (null, SchoolMajorResultCode.InvalidOperation);
             }
-            catch (AggregateException ex) when (ex.InnerException is AccessForbiddenException)
+            catch (AccessForbiddenException)
             {
                 return (null, SchoolMajorResultCode.AccessDenied);
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync("DB6AC4FD-4FB1-4448-B218-5FBBCFC80739", ex);
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("B19909EB-E344-4A45-97C1-D8A504950D70", ex);
                 return (null, SchoolMajorResultCode.UnknownError);
             }
 
