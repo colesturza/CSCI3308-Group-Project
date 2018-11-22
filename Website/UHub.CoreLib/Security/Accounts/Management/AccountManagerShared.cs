@@ -18,16 +18,22 @@ namespace UHub.CoreLib.Security.Accounts.Management
 
         private static class Shared
         {
+            static Shared()
+            {
+            }
+
+
+
 
             internal static void TryCreate_HandleAttrTrim(ref User NewUser)
             {
-                NewUser.Name        = NewUser.Name?.Trim();
+                NewUser.Name = NewUser.Name?.Trim();
                 NewUser.PhoneNumber = NewUser.PhoneNumber?.Trim();
-                NewUser.Year        = NewUser.Year?.Trim();
-                NewUser.GradDate    = NewUser.GradDate?.Trim();
-                NewUser.Company     = NewUser.Company?.Trim();
-                NewUser.JobTitle    = NewUser.JobTitle?.Trim();
-                NewUser.Email       = NewUser.Email?.Trim();
+                NewUser.Year = NewUser.Year?.Trim();
+                NewUser.GradDate = NewUser.GradDate?.Trim();
+                NewUser.Company = NewUser.Company?.Trim();
+                NewUser.JobTitle = NewUser.JobTitle?.Trim();
+                NewUser.Email = NewUser.Email?.Trim();
             }
 
 
@@ -84,7 +90,7 @@ namespace UHub.CoreLib.Security.Accounts.Management
 
 
                 //check for valid username
-                if(NewUser.Username.IsEmpty())
+                if (NewUser.Username.IsEmpty())
                 {
                     return AcctCreateResultCode.UserNameEmpty;
                 }

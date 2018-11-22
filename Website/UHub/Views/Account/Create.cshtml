@@ -1,7 +1,106 @@
 ﻿
 @{
     ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Create</h2>
+<div id="mainNav" class="container-fullwidth">
+    <nav class="navbar navbar-expand navbar-dark bg-dark">
+        <a class="navbar-brand" href="#">UHUB</a>
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Communities
+                    </a>
+                    <div id="communityDrop" class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <a class="dropdown-item" v-for="community in communities" v-bind=community.url> {{ community.name }} </a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</div>
 
+<div id="auxNav" class="container-fullwidth">
+    <ul class="nav navbar bg-white">
+        <li class="nav-item navbar-brand">
+        </li>
+    </ul>
+</div>
+
+<div id="body-Content" class="container w-70">
+    <div class="px-5 mt-3 bg-white">
+        <div class="py-3">
+            <h4 class="ml-4">Create an account</h4>
+            <form id="userForm" class="">
+                <div class="row form-group">
+                    <div class="col-lg">
+                        <label class="required" for="email">Email:</label>
+                        <input id="email" type="email" class="form-control" id="email" ref="inputEmail">
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-md">
+                        <label class="required" for="usr">Username</label>
+                        <input type="text" class="form-control " id="usr" ref="inputUSR">
+                    </div>
+                    <div class="col-md">
+                        <label class="required" for="pwd">Password</label>
+                        <input type="password" class="form-control " id="pwd" ref="inputPWD">
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-md">
+                        <label class="required" for="firstname">First Name</label>
+                        <input type="text" autocomplete="given-name" class="form-control " id="firstname" ref="inputFirst">
+                    </div>
+                    <div class="col-md">
+                        <label class="required" for="lastname">Last Name</label>
+                        <input type="text" autocomplete="family-name" class="form-control " id="lastname" ref="inputLast">
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-md">
+                        <label class="required" for="autocomplete">Major</label>
+                        <input class="form-control" id="autocomplete" ref="inputMajor">
+                    </div>
+                    <div class="col-md">
+                        <label class="" for="phone">Phone Number</label>
+                        <input type="text" class="form-control " id="phone" ref="inputPhone">
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-md">
+                        <label class="" for="grad-date">Grad Date</label>
+                        <input type="text" class="form-control " id="grad-date" ref="inputGrad">
+                    </div>
+                    <div class="col-md">
+                        <label class="" for="year">Year</label>
+                        <select class="form-control " id="year" ref="inputYear">
+                            <option value="Freshman">Freshman</option>
+                            <option value="Sophomore">Sophomore</option>
+                            <option value="Junior">Junior</option>
+                            <option value="Senior">Senior</option>
+                            <option value="Senior+">Senior+</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div class="col-md">
+                        <label class="" for="company">Company</label>
+                        <input type="text" class="form-control " id="company" ref="inputCompany">
+                    </div>
+                    <div class="col-md">
+                        <label class="" for="job-title">Job Title</label>
+                        <input type="text" class="form-control " id="job-title" ref="inputJob">
+                    </div>
+                </div>
+                <button type="button" class="btn-outline-dark" v-on:click="readRefs(); return false;">Submit</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<script src="/ClientResources/Account/CreateAccount.js"></script>
