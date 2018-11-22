@@ -283,8 +283,7 @@ namespace UHub.Controllers
             var data = await CoreFactory.Singleton.Accounts
                 .TryCreateUserRecoveryContextAsync(
                     UserEmail: txt_Email,
-                    IsOptional: true,
-                    GeneralFailHandler: null);
+                    IsOptional: true);
 
 
             if (data.ResultCode != AcctRecoveryResultCode.Success)

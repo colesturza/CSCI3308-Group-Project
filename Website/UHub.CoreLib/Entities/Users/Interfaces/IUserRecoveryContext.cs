@@ -80,6 +80,6 @@ namespace UHub.CoreLib.Entities.Users.Interfaces
         /// <summary>
         /// Delete this context to prevent it from being used again
         /// </summary>
-        void TryDelete();
+        bool TryDelete();
     }
 }

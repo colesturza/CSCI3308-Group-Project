@@ -478,7 +478,7 @@ namespace UHub.CoreLib.Security.Authentication
                 return;
             }
 
-            modUser.UpdateVersion();
+            CoreFactory.Singleton.Accounts.TryUpdateUserVersion(modUser.ID.Value);
             if (ExcludeCurrent)
             {
                 try
@@ -505,7 +505,7 @@ namespace UHub.CoreLib.Security.Authentication
                 return;
             }
 
-            modUser.UpdateVersion();
+            CoreFactory.Singleton.Accounts.TryUpdateUserVersion(modUser.ID.Value);
             if (ExcludeCurrent)
             {
                 try
@@ -531,7 +531,7 @@ namespace UHub.CoreLib.Security.Authentication
                 return;
             }
 
-            modUser.UpdateVersion();
+            CoreFactory.Singleton.Accounts.TryUpdateUserVersion(modUser.ID.Value);
             if (ExcludeCurrent)
             {
                 try

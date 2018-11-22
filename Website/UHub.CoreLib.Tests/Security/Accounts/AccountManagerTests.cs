@@ -144,46 +144,36 @@ namespace UHub.CoreLib.Security.Accounts.Tests
             string status = "Account Creation Failed";
 
 
-            try
-            {
-                var result = CoreFactory.Singleton.Accounts.TryCreateUser(
-                    tmpUser, 
-                    true,
-                    GeneralFailHandler: (code) =>
-                    {
-                        if (enableFailCode)
-                        {
-                            status = code.ToString();
-                        }
-                    },
-                    SuccessHandler: (newUser, canLogin) =>
-                    {
-                        status = "User Created";
-                    });
 
-
-                if (result != AcctCreateResultCode.Success && enableDetail)
+            var result = CoreFactory.Singleton.Accounts.TryCreateUser(
+                tmpUser,
+                true,
+                SuccessHandler: (newUser, canLogin) =>
                 {
-                    switch (result)
-                    {
-                        case AcctCreateResultCode.EmailEmpty: { status = "Email Empty"; break; }
-                        case AcctCreateResultCode.EmailInvalid: { status = "Email Invalid"; break; }
-                        case AcctCreateResultCode.EmailDuplicate: { status = "Email Duplicate"; break; }
-                        case AcctCreateResultCode.EmailDomainInvalid: { status = "Email Domain Not Supported"; break; }
-                        case AcctCreateResultCode.UsernameDuplicate: { status = "Username Duplicate"; break; }
-                        case AcctCreateResultCode.MajorInvalid: { status = "Major Invalid"; break; }
-                        case AcctCreateResultCode.PswdEmpty: { status = "Password Empty"; break; }
-                        case AcctCreateResultCode.PswdInvalid: { status = "Password Invalid"; break; }
-                    }
+                    status = "User Created";
+                });
 
-                    Console.WriteLine(result.ToString());
+            if (result == AcctCreateResultCode.UnknownError)
+            {
+                return result.ToString();
+            }
+
+
+            if (result != AcctCreateResultCode.Success && enableDetail)
+            {
+                switch (result)
+                {
+                    case AcctCreateResultCode.EmailEmpty: { status = "Email Empty"; break; }
+                    case AcctCreateResultCode.EmailInvalid: { status = "Email Invalid"; break; }
+                    case AcctCreateResultCode.EmailDuplicate: { status = "Email Duplicate"; break; }
+                    case AcctCreateResultCode.EmailDomainInvalid: { status = "Email Domain Not Supported"; break; }
+                    case AcctCreateResultCode.UsernameDuplicate: { status = "Username Duplicate"; break; }
+                    case AcctCreateResultCode.MajorInvalid: { status = "Major Invalid"; break; }
+                    case AcctCreateResultCode.PswdEmpty: { status = "Password Empty"; break; }
+                    case AcctCreateResultCode.PswdInvalid: { status = "Password Invalid"; break; }
                 }
 
-
-            }
-            catch (Exception ex)
-            {
-                throw;
+                Console.WriteLine(result.ToString());
             }
 
 

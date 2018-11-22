@@ -22,6 +22,6 @@ namespace UHub.CoreLib.Entities.Users.Interfaces
         /// <summary>
         /// Delete this context to prevent it from being used again
         /// </summary>
-        Task TryDeleteAsync();
+        Task<bool> TryDeleteAsync();
     }
 }
