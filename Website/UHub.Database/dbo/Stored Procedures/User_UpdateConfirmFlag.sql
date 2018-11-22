@@ -62,4 +62,7 @@ begin
 	where
 		EntID = @userID	
 
+
+	select cast(1 as bit)
+
 end

@@ -213,5 +213,6 @@
     <Build Include="dbo\Stored Procedures\User_GetConfirmTokenByUserID.sql" />
     <Build Include="dbo\Stored Procedures\User_GetConfirmTokenByID.sql" />
     <Build Include="dbo\Stored Procedures\User_CreateConfirmToken.sql" />
+    <Build Include="dbo\Stored Procedures\Post_IncrementViewCount.sql" />
   </ItemGroup>
 </Project>
