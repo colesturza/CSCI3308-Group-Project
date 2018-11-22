@@ -21,59 +21,39 @@ namespace UHub.CoreLib.Entities.Users.DataInterop
         /// Attempts to create a new CMS user in the database and returns the UserUID if successful
         /// </summary>
         /// <returns></returns>
-        internal static async Task<long?> TryCreateUserAsync(User cmsUser)
+        internal static async Task<long?> CreateUserAsync(User cmsUser)
         {
             if (!CoreFactory.Singleton.IsEnabled)
             {
                 throw new SystemDisabledException();
             }
 
-
-            try
-            {
-
-                long? userID = await SqlWorker.ExecScalarAsync<long?>(
-                    _dbConn,
-                    "[dbo].[User_Create]",
-                    (cmd) =>
-                    {
-                        cmd.Parameters.Add("@SchoolID", SqlDbType.BigInt).Value = HandleParamEmpty(cmsUser.SchoolID);
-                        cmd.Parameters.Add("@Email", SqlDbType.NVarChar).Value = HandleParamEmpty(cmsUser.Email);
-                        cmd.Parameters.Add("@Username", SqlDbType.VarChar).Value = HandleParamEmpty(cmsUser.Username);
-                        cmd.Parameters.Add("@Name", SqlDbType.NVarChar).Value = HandleParamEmpty(cmsUser.Name);
-                        cmd.Parameters.Add("@PhoneNumber", SqlDbType.NVarChar).Value = HandleParamEmpty(cmsUser.PhoneNumber);
-                        cmd.Parameters.Add("@Major", SqlDbType.NVarChar).Value = HandleParamEmpty(cmsUser.Major);
-                        cmd.Parameters.Add("@Year", SqlDbType.NVarChar).Value = HandleParamEmpty(cmsUser.Year);
-                        cmd.Parameters.Add("@GradDate", SqlDbType.NVarChar).Value = HandleParamEmpty(cmsUser.GradDate);
-                        cmd.Parameters.Add("@Company", SqlDbType.NVarChar).Value = HandleParamEmpty(cmsUser.Company);
-                        cmd.Parameters.Add("@JobTitle", SqlDbType.NVarChar).Value = HandleParamEmpty(cmsUser.JobTitle);
-                        cmd.Parameters.Add("@IsFinished", SqlDbType.NVarChar).Value = DBNull.Value;
-                        cmd.Parameters.Add("@Version", SqlDbType.NVarChar).Value = HandleParamEmpty(cmsUser.Version);
-                        cmd.Parameters.Add("@IsApproved", SqlDbType.Bit).Value = HandleParamEmpty(cmsUser.IsApproved);
-                        cmd.Parameters.Add("@IsConfirmed", SqlDbType.Bit).Value = HandleParamEmpty(cmsUser.IsConfirmed);
-                        cmd.Parameters.Add("@CreatedBy", SqlDbType.BigInt).Value = DBNull.Value;
-                    });
-
-
-                if (userID == null)
+            long? userID = await SqlWorker.ExecScalarAsync<long?>(
+                _dbConn,
+                "[dbo].[User_Create]",
+                (cmd) =>
                 {
-                    return null;
-                }
+                    cmd.Parameters.Add("@SchoolID", SqlDbType.BigInt).Value = HandleParamEmpty(cmsUser.SchoolID);
+                    cmd.Parameters.Add("@Email", SqlDbType.NVarChar).Value = HandleParamEmpty(cmsUser.Email);
+                    cmd.Parameters.Add("@Username", SqlDbType.VarChar).Value = HandleParamEmpty(cmsUser.Username);
+                    cmd.Parameters.Add("@Name", SqlDbType.NVarChar).Value = HandleParamEmpty(cmsUser.Name);
+                    cmd.Parameters.Add("@PhoneNumber", SqlDbType.NVarChar).Value = HandleParamEmpty(cmsUser.PhoneNumber);
+                    cmd.Parameters.Add("@Major", SqlDbType.NVarChar).Value = HandleParamEmpty(cmsUser.Major);
+                    cmd.Parameters.Add("@Year", SqlDbType.NVarChar).Value = HandleParamEmpty(cmsUser.Year);
+                    cmd.Parameters.Add("@GradDate", SqlDbType.NVarChar).Value = HandleParamEmpty(cmsUser.GradDate);
+                    cmd.Parameters.Add("@Company", SqlDbType.NVarChar).Value = HandleParamEmpty(cmsUser.Company);
+                    cmd.Parameters.Add("@JobTitle", SqlDbType.NVarChar).Value = HandleParamEmpty(cmsUser.JobTitle);
+                    cmd.Parameters.Add("@IsFinished", SqlDbType.NVarChar).Value = DBNull.Value;
+                    cmd.Parameters.Add("@Version", SqlDbType.NVarChar).Value = HandleParamEmpty(cmsUser.Version);
+                    cmd.Parameters.Add("@IsApproved", SqlDbType.Bit).Value = HandleParamEmpty(cmsUser.IsApproved);
+                    cmd.Parameters.Add("@IsConfirmed", SqlDbType.Bit).Value = HandleParamEmpty(cmsUser.IsConfirmed);
+                    cmd.Parameters.Add("@CreatedBy", SqlDbType.BigInt).Value = DBNull.Value;
+                });
 
-                return userID;
-            }
-            catch (Exception ex)
-            {
-                var errCode = "0E94B3A8-CBDA-4EA5-8DDB-1C50D8496763";
-                Exception ex_outer = new Exception(errCode, ex);
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
-
-
-                return null;
-            }
+            return userID;
         }
 
-        internal static async Task<bool> TryUpdateUserInfoAsync(User cmsUser)
+        internal static async Task UpdateUserInfoAsync(User cmsUser)
         {
             if (!CoreFactory.Singleton.IsEnabled)
             {
@@ -85,39 +65,24 @@ namespace UHub.CoreLib.Entities.Users.DataInterop
             }
 
 
-            try
-            {
-
-                //run sproc
-                await SqlWorker.ExecNonQueryAsync(
-                    _dbConn,
-                    "[dbo].[User_UpdateByID]",
-                    (cmd) =>
-                    {
-                        cmd.Parameters.Add("@UserID", SqlDbType.BigInt).Value = HandleParamEmpty(cmsUser.ID);
-                        //-------------------------------------------------
-                        cmd.Parameters.Add("@Name", SqlDbType.NVarChar).Value = HandleParamEmpty(cmsUser.Name);
-                        cmd.Parameters.Add("@PhoneNumber", SqlDbType.NVarChar).Value = HandleParamEmpty(cmsUser.PhoneNumber);
-                        cmd.Parameters.Add("@Major", SqlDbType.NVarChar).Value = HandleParamEmpty(cmsUser.Major);
-                        cmd.Parameters.Add("@Year", SqlDbType.NVarChar).Value = HandleParamEmpty(cmsUser.Year);
-                        cmd.Parameters.Add("@GradDate", SqlDbType.NVarChar).Value = HandleParamEmpty(cmsUser.GradDate);
-                        cmd.Parameters.Add("@Company", SqlDbType.NVarChar).Value = HandleParamEmpty(cmsUser.Company);
-                        cmd.Parameters.Add("@JobTitle", SqlDbType.NVarChar).Value = HandleParamEmpty(cmsUser.JobTitle);
-                        //-------------------------------------------------
-                        cmd.Parameters.Add("@ModifiedBy", SqlDbType.BigInt).Value = DBNull.Value;
-                    });
-
-
-                return true;
-            }
-            catch (Exception ex)
-            {
-                var errCode = "9E176176-3FE8-4739-B071-960647EA2193";
-                Exception ex_outer = new Exception(errCode, ex);
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
-
-                return false;
-            }
+            //run sproc
+            await SqlWorker.ExecNonQueryAsync(
+                _dbConn,
+                "[dbo].[User_UpdateByID]",
+                (cmd) =>
+                {
+                    cmd.Parameters.Add("@UserID", SqlDbType.BigInt).Value = HandleParamEmpty(cmsUser.ID);
+                    //-------------------------------------------------
+                    cmd.Parameters.Add("@Name", SqlDbType.NVarChar).Value = HandleParamEmpty(cmsUser.Name);
+                    cmd.Parameters.Add("@PhoneNumber", SqlDbType.NVarChar).Value = HandleParamEmpty(cmsUser.PhoneNumber);
+                    cmd.Parameters.Add("@Major", SqlDbType.NVarChar).Value = HandleParamEmpty(cmsUser.Major);
+                    cmd.Parameters.Add("@Year", SqlDbType.NVarChar).Value = HandleParamEmpty(cmsUser.Year);
+                    cmd.Parameters.Add("@GradDate", SqlDbType.NVarChar).Value = HandleParamEmpty(cmsUser.GradDate);
+                    cmd.Parameters.Add("@Company", SqlDbType.NVarChar).Value = HandleParamEmpty(cmsUser.Company);
+                    cmd.Parameters.Add("@JobTitle", SqlDbType.NVarChar).Value = HandleParamEmpty(cmsUser.JobTitle);
+                    //-------------------------------------------------
+                    cmd.Parameters.Add("@ModifiedBy", SqlDbType.BigInt).Value = DBNull.Value;
+                });
         }
 
         /// <summary>
@@ -133,26 +98,14 @@ namespace UHub.CoreLib.Entities.Users.DataInterop
             }
 
 
-            try
-            {
-                return await SqlWorker.ExecScalarAsync<bool>(
-                        _dbConn,
-                        "[dbo].[User_UpdateConfirmFlag]",
-                        (cmd) =>
-                        {
-                            cmd.Parameters.Add("@RefUID", SqlDbType.NVarChar).Value = RefUID;
-                            cmd.Parameters.Add("@MinCreatedDate", SqlDbType.DateTimeOffset).Value = MinCreatedDate;
-                        });
-
-            }
-            catch (Exception ex)
-            {
-                var errCode = "65F803F1-5C9E-41AD-84F3-B7CCF6C47873";
-                Exception ex_outer = new Exception(errCode, ex);
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
-
-                return false;
-            }
+            return await SqlWorker.ExecScalarAsync<bool>(
+                    _dbConn,
+                    "[dbo].[User_UpdateConfirmFlag]",
+                    (cmd) =>
+                    {
+                        cmd.Parameters.Add("@RefUID", SqlDbType.NVarChar).Value = RefUID;
+                        cmd.Parameters.Add("@MinCreatedDate", SqlDbType.DateTimeOffset).Value = MinCreatedDate;
+                    });
         }
 
         /// <summary>
@@ -160,30 +113,19 @@ namespace UHub.CoreLib.Entities.Users.DataInterop
         /// </summary>
         /// <param name="UserUID"></param>
         /// <param name="IsApproved"></param>
-        internal static async Task<bool> TryUpdateUserApprovalAsync(long UserUID, bool IsApproved)
+        internal static async Task TryUpdateUserApprovalAsync(long UserUID, bool IsApproved)
         {
-            try
-            {
-                await SqlWorker.ExecNonQueryAsync(
-                    _dbConn,
-                    "[dbo].[User_UpdateApprovalFlag]",
-                    (cmd) =>
-                    {
-                        cmd.Parameters.Add("@UserID", SqlDbType.BigInt).Value = UserUID;
-                        cmd.Parameters.Add("@IsApproved", SqlDbType.Bit).Value = IsApproved;
-                    });
+
+            await SqlWorker.ExecNonQueryAsync(
+                _dbConn,
+                "[dbo].[User_UpdateApprovalFlag]",
+                (cmd) =>
+                {
+                    cmd.Parameters.Add("@UserID", SqlDbType.BigInt).Value = UserUID;
+                    cmd.Parameters.Add("@IsApproved", SqlDbType.Bit).Value = IsApproved;
+                });
 
 
-                return true;
-            }
-            catch (Exception ex)
-            {
-                var errCode = "0EF7E744-5F24-4EB2-9CD5-CF8C604976D9";
-                Exception ex_outer = new Exception(errCode, ex);
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
-
-                return false;
-            }
         }
 
         /// <summary>
@@ -191,31 +133,61 @@ namespace UHub.CoreLib.Entities.Users.DataInterop
         /// </summary>
         /// <param name="UserUID"></param>
         /// <param name="Version"></param>
-        internal static async Task<bool> TryUpdateUserVersionAsync(long UserID, string Version)
+        internal static async Task UpdateUserVersionAsync(long UserID, string Version)
         {
 
-            try
+            await SqlWorker.ExecNonQueryAsync(
+                _dbConn,
+                "[dbo].[User_UpdateVersionByID]",
+                (cmd) =>
+                {
+                    cmd.Parameters.Add("@UserID", SqlDbType.BigInt).Value = UserID;
+                    cmd.Parameters.Add("@Version", SqlDbType.NVarChar).Value = Version;
+                });
+        }
+
+
+
+        internal static async Task UpdateUserPasswordAsync(string UserEmail, string PswdHash, string Salt)
+        {
+            if (!CoreFactory.Singleton.IsEnabled)
             {
-                await SqlWorker.ExecNonQueryAsync(
-                    _dbConn,
-                    "[dbo].[User_UpdateVersionByID]",
-                    (cmd) =>
-                    {
-                        cmd.Parameters.Add("@UserID", SqlDbType.BigInt).Value = UserID;
-                        cmd.Parameters.Add("@Version", SqlDbType.NVarChar).Value = Version;
-                    });
-
-
-                return true;
+                throw new SystemDisabledException();
             }
-            catch (Exception ex)
+            if (UserEmail.IsValidEmail())
             {
-                var errCode = "78485CFC-5709-49EE-BBB4-91A3A9D4B625";
-                Exception ex_outer = new Exception(errCode, ex);
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
-
-                return false;
+                throw new ArgumentException();
             }
+
+            await SqlWorker.ExecNonQueryAsync(
+                CoreFactory.Singleton.Properties.CmsDBConfig,
+                "[dbo].[User_UpdatePasswordByEmail]",
+                (cmd) =>
+                {
+                    cmd.Parameters.Add("@Email", SqlDbType.NVarChar).Value = UserEmail;
+                    cmd.Parameters.Add("@PswdHash", SqlDbType.NVarChar).Value = PswdHash;
+                    cmd.Parameters.Add("@Salt", SqlDbType.NVarChar).Value = Salt;
+                });
+        }
+
+
+        internal static async Task UpdateUserPasswordAsync(long UserID, string PswdHash, string Salt)
+        {
+            if (!CoreFactory.Singleton.IsEnabled)
+            {
+                throw new SystemDisabledException();
+            }
+
+
+            await SqlWorker.ExecNonQueryAsync(
+                CoreFactory.Singleton.Properties.CmsDBConfig,
+                "[dbo].[User_UpdatePasswordByID]",
+                (cmd) =>
+                {
+                    cmd.Parameters.Add("@UserID", SqlDbType.BigInt).Value = UserID;
+                    cmd.Parameters.Add("@PswdHash", SqlDbType.NVarChar).Value = PswdHash;
+                    cmd.Parameters.Add("@Salt", SqlDbType.NVarChar).Value = Salt;
+                });
         }
 
 
@@ -324,7 +296,6 @@ namespace UHub.CoreLib.Entities.Users.DataInterop
                 return false;
             }
         }
-
 
     }
 }

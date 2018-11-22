@@ -42,7 +42,16 @@ namespace UHub.CoreLib.Security.Accounts.Interfaces
         /// </summary>
         /// <param name="UserID">User ID</param>
         /// <param name="IsApproved">Approval Status</param>
-        Task<bool> TryUpdateUserApprovalStatusAsync(long UserID, bool IsApproved);
+        Task<bool> TryUpdateApprovalStatusAsync(long UserID, bool IsApproved);
+
+
+
+        /// <summary>
+        /// Attempt to update the user token version
+        /// </summary>
+        /// <param name="UserID"></param>
+        /// <returns></returns>
+        Task<bool> TryUpdateUserVersionAsync(long UserID);
 
 
 
@@ -137,25 +146,13 @@ namespace UHub.CoreLib.Security.Accounts.Interfaces
 
 
 
+
         /// <summary>
-        /// Delete user by ID.
+        /// Attempt to get a user's active recovery context (if one exists)
         /// </summary>
         /// <param name="UserID"></param>
-        Task<bool> TryDeleteUserAsync(long UserID);
-
-        /// <summary>
-        /// Delete user by Email
-        /// </summary>
-        /// <param name="Email"></param>
-        Task<bool> TryDeleteUserAsync(string Email);
-
-        /// <summary>
-        /// Delete user by Username and Domain
-        /// </summary>
-        /// <param name="Username"></param>
-        /// <param name="Domain"></param>
-        Task<bool> TryDeleteUserAsync(string Username, string Domain);
-
+        /// <returns></returns>
+        Task<IUserRecoveryContext> TryGetActiveRecoveryContextAsync(long UserID);
 
         /// <summary>
         /// Create a user password recovery context. Allows users to create a new password if they forget their old password.  Can be used to force a user to reset their password by setting [IsOptional=TRUE]
@@ -179,5 +176,27 @@ namespace UHub.CoreLib.Security.Accounts.Interfaces
         Task<(AcctRecoveryResultCode ResultCode, IUserRecoveryContext RecoveryContext, string RecoveryKey)> TryCreateUserRecoveryContextAsync(
             long UserID,
             bool IsOptional);
+
+
+
+        /// <summary>
+        /// Delete user by ID.
+        /// </summary>
+        /// <param name="UserID"></param>
+        Task<bool> TryDeleteUserAsync(long UserID);
+
+        /// <summary>
+        /// Delete user by Email
+        /// </summary>
+        /// <param name="Email"></param>
+        Task<bool> TryDeleteUserAsync(string Email);
+
+        /// <summary>
+        /// Delete user by Username and Domain
+        /// </summary>
+        /// <param name="Username"></param>
+        /// <param name="Domain"></param>
+        Task<bool> TryDeleteUserAsync(string Username, string Domain);
+
     }
 }

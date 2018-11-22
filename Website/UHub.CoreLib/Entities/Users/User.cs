@@ -80,32 +80,5 @@ namespace UHub.CoreLib.Entities.Users
         [DataProperty]
         public long CreatedBy { get; set; }
 
-
-        public IUserRecoveryContext GetRecoveryContext()
-        {
-            if(this.ID == null)
-            {
-                throw new InvalidOperationException("Cannot get recovery context of anon user");
-            }
-            return UserReader.GetRecoveryContext(this.ID.Value);
-        }
-
-#pragma warning disable 612, 618
-        public void UpdateVersion()
-        {
-            if(ID == null)
-            {
-                return;
-            }
-
-            var version = Membership.GeneratePassword(USER_VERSION_LENGTH, 0);
-            //sterilize for token processing
-            version = version.Replace('|', '0');
-
-            UserWriter.UpdateUserVersion(this.ID.Value, version);
-
-        }
     }
-#pragma warning restore
-
 }

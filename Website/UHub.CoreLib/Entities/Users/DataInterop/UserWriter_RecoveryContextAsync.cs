@@ -16,23 +16,23 @@ namespace UHub.CoreLib.Entities.Users.DataInterop
 {
     internal static partial class UserWriter
     {
-        
+
         /// <summary>
         /// Create an account recovery context for a specified user
         /// </summary>
         /// <param name="UserUID"></param>
         /// <param name="RecoveryKey"></param>
         /// <returns>RecoveryID for the recovery context</returns>
-        internal static async Task<IUserRecoveryContext> CreateRecoveryContextAsync(long UserID, string RecoveryKey, bool IsTemporary, bool IsOptional)
+        internal static async Task<IUserRecoveryContext> CreateRecoveryContextAsync(long UserID, string RecoveryKey, bool IsOptional)
         {
             DateTimeOffset resetExpiration;
 
-            if (IsTemporary)
+            if (IsOptional)
             {
                 var span = CoreFactory.Singleton.Properties.AcctPswdRecoveryLifespan;
                 if (span.Ticks == 0)
                 {
-                    resetExpiration = DateTimeOffset.MaxValue;
+                    resetExpiration = DateTimeOffset.MaxValue.Date;
                 }
                 else
                 {
@@ -41,117 +41,61 @@ namespace UHub.CoreLib.Entities.Users.DataInterop
             }
             else
             {
-                if (IsOptional)
+                resetExpiration = DateTimeOffset.MaxValue.Date;
+            }
+
+
+            var temp = await SqlWorker.ExecBasicQueryAsync<UserRecoveryContext>(
+                _dbConn,
+                "[dbo].[User_CreateRecoveryContext]",
+                (cmd) =>
                 {
-                    resetExpiration = DateTimeOffset.Now.AddMonths(1);
-                }
-                else
+                    cmd.Parameters.Add("@UserID", SqlDbType.BigInt).Value = HandleParamEmpty(UserID);
+                    cmd.Parameters.Add("@RecoveryKey", SqlDbType.NVarChar).Value = RecoveryKey;
+                    cmd.Parameters.Add("@EffToDate", SqlDbType.DateTimeOffset).Value = resetExpiration;
+                    cmd.Parameters.Add("@IsOptional", SqlDbType.Bit).Value = IsOptional;
+                });
+
+
+            return temp.SingleOrDefault();
+
+        }
+
+        internal static async Task LogFailedRecoveryContextAttemptAsync(string RecoveryID)
+        {
+            await SqlWorker.ExecNonQueryAsync(
+                _dbConn,
+                "[dbo].[User_LogFailedRecoveryContextAttempt]",
+                (cmd) =>
                 {
-                    resetExpiration = DateTimeOffset.MaxValue.Date;
-                }
-            }
+                    cmd.Parameters.Add("@RecoveryID", SqlDbType.NVarChar).Value = RecoveryID;
+                });
+        }
 
-            try
-            {
-                var temp = await SqlWorker.ExecBasicQueryAsync<UserRecoveryContext>(
-                    _dbConn,
-                    "[dbo].[User_CreateRecoveryContext]",
-                    (cmd) =>
-                    {
-                        cmd.Parameters.Add("@UserID", SqlDbType.BigInt).Value = HandleParamEmpty(UserID);
-                        cmd.Parameters.Add("@RecoveryKey", SqlDbType.NVarChar).Value = RecoveryKey;
-                        cmd.Parameters.Add("@EffToDate", SqlDbType.DateTimeOffset).Value = resetExpiration;
-                        cmd.Parameters.Add("@IsOptional", SqlDbType.Bit).Value = IsOptional;
-                    });
+        internal static async Task DeleteRecoveryContextAsync(string RecoveryID)
+        {
 
-
-                return temp.SingleOrDefault();
-            }
-            catch (Exception ex)
-            {
-                var errCode = "2CE3A9C1-DFC0-4AD0-B0F0-B893DAD61695";
-                Exception ex_outer = new Exception(errCode, ex);
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
-
-                return null;
-            }
+            await SqlWorker.ExecNonQueryAsync(
+                _dbConn,
+                "[dbo].[User_DeleteUserRecoveryContextByID]",
+                (cmd) =>
+                {
+                    cmd.Parameters.Add("@RecoveryID", SqlDbType.NVarChar).Value = RecoveryID;
+                });
 
         }
 
-        internal static async Task<bool> TryLogFailedRecoveryContextAttemptAsync(string RecoveryID)
+        internal static async Task TryDeleteRecoveryContextAsync(int UserID)
         {
-            try
-            {
-                await SqlWorker.ExecNonQueryAsync(
-                    _dbConn,
-                    "[dbo].[User_LogFailedRecoveryContextAttempt]",
-                    (cmd) =>
-                    {
-                        cmd.Parameters.Add("@RecoveryID", SqlDbType.NVarChar).Value = RecoveryID;
-                    });
 
+            await SqlWorker.ExecNonQueryAsync(
+                _dbConn,
+                "[dbo].[User_DeleteUserRecoveryContextByUserID]",
+                (cmd) =>
+                {
+                    cmd.Parameters.Add("@UserID", SqlDbType.BigInt).Value = UserID;
+                });
 
-                return true;
-            }
-            catch (Exception ex)
-            {
-                var errCode = "7BF7BD80-7A27-4DEC-9AE1-46FEF34F93FD";
-                Exception ex_outer = new Exception(errCode, ex);
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
-
-
-                return false;
-            }
-        }
-
-        internal static async Task<bool> TryDeleteRecoveryContextAsync(string RecoveryID)
-        {
-            try
-            {
-                await SqlWorker.ExecNonQueryAsync(
-                    _dbConn,
-                    "[dbo].[User_DeleteUserRecoveryContextByID]",
-                    (cmd) =>
-                    {
-                        cmd.Parameters.Add("@RecoveryID", SqlDbType.NVarChar).Value = RecoveryID;
-                    });
-
-                return true;
-            }
-            catch (Exception ex)
-            {
-                var errCode = "5A5DCF9F-2C25-4539-9F74-C7BC99EA192D";
-                Exception ex_outer = new Exception(errCode, ex);
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
-
-                return false;
-            }
-        }
-
-        internal static async Task<bool> TryDeleteRecoveryContextAsync(int UserID)
-        {
-            try
-            {
-                await SqlWorker.ExecNonQueryAsync(
-                    _dbConn,
-                    "[dbo].[User_DeleteUserRecoveryContextByUserID]",
-                    (cmd) =>
-                    {
-                        cmd.Parameters.Add("@UserID", SqlDbType.BigInt).Value = UserID;
-                    });
-
-
-                return true;
-            }
-            catch (Exception ex)
-            {
-                var errCode = "8932F761-80E0-4960-99D9-B0995D6F2C3A";
-                Exception ex_outer = new Exception(errCode, ex);
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
-
-
-                return false;
-            }
         }
 
     }

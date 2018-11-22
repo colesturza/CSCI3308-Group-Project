@@ -159,7 +159,7 @@ namespace UHub.CoreLib.Security.Accounts
             {
                 //create CMS user
 #pragma warning disable 612, 618
-                userID = UserWriter.TryCreateUser(NewUser);
+                userID = UserWriter.CreateUser(NewUser);
 #pragma warning restore
 
             }
@@ -286,7 +286,6 @@ namespace UHub.CoreLib.Security.Accounts
                 if (emailSendStatus != SmtpResultCode.Success)
                 {
                     CoreFactory.Singleton.Logging.CreateErrorLogAsync("AEBDE62B-31D5-4B48-8D26-3123AA5219A3");
-
                     return AcctCreateResultCode.UnknownError;
                 }
             }
@@ -348,8 +347,9 @@ namespace UHub.CoreLib.Security.Accounts
                     return AcctConfirmResultCode.ConfirmTokenInvalid;
                 }
             }
-            catch
+            catch (Exception ex)
             {
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("8E19A36A-57F3-463A-8F7C-BCFDE476D09A", ex);
                 return AcctConfirmResultCode.UnknownError;
             }
         }
@@ -362,47 +362,61 @@ namespace UHub.CoreLib.Security.Accounts
         /// <param name="IsApproved">Approval Status</param>
         public bool TryUpdateApprovalStatus(long UserID, bool IsApproved)
         {
-#pragma warning disable 612, 618
-            try
-            {
-
-                UserWriter.UpdateUserApproval(UserID, IsApproved);
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
-#pragma warning restore
-        }
-
-        /// <summary>
-        /// Update the approval status of a user
-        /// </summary>
-        /// <param name="UserID">User ID</param>
-        /// <param name="IsApproved">Approval Status</param>
-        public bool TryUpdateUserApprovalStatus(long UserID, bool IsApproved)
-        {
-#pragma warning disable 612, 618
             if (!CoreFactory.Singleton.IsEnabled)
             {
                 throw new SystemDisabledException();
             }
 
-
+#pragma warning disable 612, 618
             try
             {
-
                 UserWriter.UpdateUserApproval(UserID, IsApproved);
                 return true;
             }
-            catch
+            catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync("FE482294-6197-4048-99DC-4DE4421823B9");
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("D5D6FADE-9B32-40C3-A576-E1756884FCFD", ex);
                 return false;
             }
 #pragma warning restore
         }
+
+
+
+        /// <summary>
+        /// Attempt to update the user token version
+        /// </summary>
+        /// <param name="UserID"></param>
+        /// <returns></returns>
+        public bool TryUpdateUserVersion(long UserID)
+        {
+            var version = SysSec.Membership.GeneratePassword(USER_VERSION_LEN, 0);
+            //sterilize for token processing
+            version = version.Replace('|', '0');
+
+
+#pragma warning disable 612, 618
+            try
+            {
+                if (!UserReader.DoesUserExist(UserID))
+                {
+                    return false;
+                }
+
+                UserWriter.UpdateUserVersion(UserID, version);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("695B957C-585E-42C2-95B2-1926257732B9", ex);
+                return false;
+            }
+#pragma warning restore
+
+        }
+
+
+
 
 
         /// <summary>
@@ -416,10 +430,10 @@ namespace UHub.CoreLib.Security.Accounts
         /// <param name="GeneralFailHandler">Error handler in case DB cannot be reached or there is other unknown error</param>
         /// <returns>Status flag</returns>
         public AcctPswdResultCode TryUpdatePassword(
-            string UserEmail,
-            string OldPassword,
-            string NewPassword,
-            bool DeviceLogout)
+                string UserEmail,
+                string OldPassword,
+                string NewPassword,
+                bool DeviceLogout)
         {
 
             if (UserEmail.IsEmpty())
@@ -429,7 +443,17 @@ namespace UHub.CoreLib.Security.Accounts
 
             UserEmail = UserEmail.Trim();
 
-            var ID = UserReader.GetUserID(UserEmail);
+            long? ID = null;
+            try
+            {
+                ID = UserReader.GetUserID(UserEmail);
+            }
+            catch (Exception ex)
+            {
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("FE482294-6197-4048-99DC-4DE4421823B9", ex);
+                return AcctPswdResultCode.UnknownError;
+            }
+
             if (ID == null)
             {
                 return AcctPswdResultCode.UserInvalid;
@@ -511,7 +535,11 @@ namespace UHub.CoreLib.Security.Accounts
                 //if everything worked, increment user version to force global re auth
                 if (DeviceLogout)
                 {
-                    modUser.UpdateVersion();
+                    var versionResult = TryUpdateUserVersion(modUser.ID.Value);
+                    if (!versionResult)
+                    {
+                        return AcctPswdResultCode.UnknownError;
+                    }
 
                     //re auth current user to prevent lapse in service
                     CoreFactory.Singleton.Auth.TrySetClientAuthToken(modUser.Email, NewPassword, false);
@@ -519,7 +547,9 @@ namespace UHub.CoreLib.Security.Accounts
 
 
                 //remove any recovery contexts
-                modUser.GetRecoveryContext()?.Delete();
+                var recoverContext = TryGetActiveRecoveryContext(modUser.ID.Value);
+                recoverContext?.TryDelete();
+
 
                 return AcctPswdResultCode.Success;
 
@@ -586,7 +616,7 @@ namespace UHub.CoreLib.Security.Accounts
             {
                 try
                 {
-                    recoveryContext.IncrementAttemptCount();
+                    recoveryContext.TryIncrementAttemptCount();
                 }
                 catch (Exception ex)
                 {
@@ -718,7 +748,11 @@ namespace UHub.CoreLib.Security.Accounts
                 //if everything worked, increment user version to force global re auth
                 if (DeviceLogout)
                 {
-                    modUser.UpdateVersion();
+                    var versionResult = TryUpdateUserVersion(modUser.ID.Value);
+                    if (!versionResult)
+                    {
+                        return AcctRecoveryResultCode.UnknownError;
+                    }
 
                     //re auth current user to prevent lapse in service
                     CoreFactory.Singleton.Auth.TrySetClientAuthToken(modUser.Email, NewPassword, false);
@@ -737,7 +771,8 @@ namespace UHub.CoreLib.Security.Accounts
                 }
 
                 //remove any recovery contexts
-                modUser.GetRecoveryContext()?.Delete();
+                var recoverContext = TryGetActiveRecoveryContext(modUser.ID.Value);
+                recoverContext?.TryDelete();
 
 
                 return AcctRecoveryResultCode.Success;
@@ -753,65 +788,26 @@ namespace UHub.CoreLib.Security.Accounts
 
 
 
+
+
         /// <summary>
-        /// Delete user by ID.
+        /// Attempt to get a user's active recovery context (if one exists)
         /// </summary>
         /// <param name="UserID"></param>
-        public bool TryDeleteUser(long UserID)
+        /// <returns></returns>
+        public IUserRecoveryContext TryGetActiveRecoveryContext(long UserID)
         {
-            var modUser = UserReader.GetUser(UserID);
-            return _deleteUser(modUser);
-        }
-
-        /// <summary>
-        /// Delete user by Email
-        /// </summary>
-        /// <param name="Email"></param>
-        public bool TryDeleteUser(string Email)
-        {
-            var modUser = UserReader.GetUser(Email);
-            return _deleteUser(modUser);
-        }
-
-        /// <summary>
-        /// Delete user by Username and Domain
-        /// </summary>
-        /// <param name="Username"></param>
-        /// <param name="Domain"></param>
-        public bool TryDeleteUser(string Username, string Domain)
-        {
-            var modUser = UserReader.GetUser(Username, Domain);
-            return _deleteUser(modUser);
-        }
-
-        /// <summary>
-        /// Delete user
-        /// </summary>
-        /// <param name="RequestedBy"></param>
-        /// <param name="CmsUser"></param>
-        private bool _deleteUser(User CmsUser)
-        {
-#pragma warning disable 612, 618
             try
             {
-                if (CmsUser == null || CmsUser.ID == null)
-                {
-                    return false;
-                }
-
-
-                CmsUser.UpdateVersion();
-                UserWriter.DeleteUser((long)CmsUser.ID);
-
-                return true;
+                return UserReader.GetRecoveryContext(UserID);
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync("54879964-C1BD-420C-B54D-BFBECFB71A52", ex);
-                return false;
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("8CA322D4-FAD2-4C03-9290-47BED6C9C89B", ex);
+                return null;
             }
-#pragma warning restore
         }
+
 
         /// <summary>
         /// Create a user password recovery context. Allows users to create a new password if they forget their old password.  Can be used to force a user to reset their password by setting [IsOptional=TRUE]
@@ -876,10 +872,11 @@ namespace UHub.CoreLib.Security.Accounts
 
                 //prevent a new recovery context from being made if the user already has an active forced reset
                 //a new recovery context would override the prior and allow a bypass
-                var recoveryContext = cmsUser.GetRecoveryContext();
+                //Allow user to create new context in case the previous was lost
+                var recoveryContext = UserReader.GetRecoveryContext(cmsUser.ID.Value);
                 if (recoveryContext != null && !recoveryContext.IsOptional)
                 {
-                    return (AcctRecoveryResultCode.UserInvalid, null, null);
+                    IsOptional = false;
                 }
 
                 string recoveryKey = SysSec.Membership.GeneratePassword(R_KEY_LEN, 5);
@@ -887,7 +884,9 @@ namespace UHub.CoreLib.Security.Accounts
 
 
 #pragma warning disable 612, 618
-                var context = UserWriter.CreateRecoveryContext(UserID, hashedKey, true, true);
+                //will attempt to delete all old recovery contexts and create a new one
+                //any failures will result in system state rollback
+                var context = UserWriter.CreateRecoveryContext(UserID, hashedKey, IsOptional);
 #pragma warning restore
 
 
@@ -912,8 +911,83 @@ namespace UHub.CoreLib.Security.Accounts
 
 
 
+
+
+        /// <summary>
+        /// Delete user by ID.
+        /// </summary>
+        /// <param name="UserID"></param>
+        public bool TryDeleteUser(long UserID)
+        {
+            var modUser = UserReader.GetUser(UserID);
+            return _deleteUser(modUser);
+        }
+
+        /// <summary>
+        /// Delete user by Email
+        /// </summary>
+        /// <param name="Email"></param>
+        public bool TryDeleteUser(string Email)
+        {
+            var modUser = UserReader.GetUser(Email);
+            return _deleteUser(modUser);
+        }
+
+        /// <summary>
+        /// Delete user by Username and Domain
+        /// </summary>
+        /// <param name="Username"></param>
+        /// <param name="Domain"></param>
+        public bool TryDeleteUser(string Username, string Domain)
+        {
+            var modUser = UserReader.GetUser(Username, Domain);
+            return _deleteUser(modUser);
+        }
+
+        /// <summary>
+        /// Delete user
+        /// </summary>
+        /// <param name="RequestedBy"></param>
+        /// <param name="CmsUser"></param>
+        private bool _deleteUser(User CmsUser)
+        {
+#pragma warning disable 612, 618
+            try
+            {
+                if (CmsUser == null || CmsUser.ID == null)
+                {
+                    return false;
+                }
+
+
+                TryUpdateUserVersion(CmsUser.ID.Value);
+                UserWriter.DeleteUser(CmsUser.ID.Value);
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("54879964-C1BD-420C-B54D-BFBECFB71A52", ex);
+                return false;
+            }
+#pragma warning restore
+        }
+
+
+
+
+
+
+
+        /// <summary>
+        /// Handle password hash/write logic
+        /// </summary>
+        /// <param name="UserID"></param>
+        /// <param name="UserPswd"></param>
+        /// <returns></returns>
         private static bool DoPasswordWork(long UserID, string UserPswd)
         {
+#pragma warning disable 612, 618
             var salt = SysSec.Membership.GeneratePassword(SALT_LEN, 0);
             string pswdHash = null;
             try
@@ -934,7 +1008,7 @@ namespace UHub.CoreLib.Security.Accounts
             try
             {
                 //SET DB PASSWORD
-                UpdateUserPassword_DB(UserID, pswdHash, salt);
+                UserWriter.UpdateUserPassword(UserID, pswdHash, salt);
             }
             catch (Exception ex)
             {
@@ -943,54 +1017,10 @@ namespace UHub.CoreLib.Security.Accounts
             }
 
             return true;
+#pragma warning restore
         }
 
 
-        private static void UpdateUserPassword_DB(string UserEmail, string Password, string Salt)
-        {
-            if (!CoreFactory.Singleton.IsEnabled)
-            {
-                throw new SystemDisabledException();
-            }
 
-            if (!UserReader.DoesUserExist(UserEmail))
-            {
-                throw new InvalidOperationException("User does not exist");
-            }
-
-            SqlWorker.ExecNonQuery(
-                CoreFactory.Singleton.Properties.CmsDBConfig,
-                "[dbo].[User_UpdatePasswordByEmail]",
-                (cmd) =>
-                {
-                    cmd.Parameters.Add("@Email", SqlDbType.NVarChar).Value = UserEmail;
-                    cmd.Parameters.Add("@PswdHash", SqlDbType.NVarChar).Value = Password;
-                    cmd.Parameters.Add("@Salt", SqlDbType.NVarChar).Value = Salt;
-                });
-        }
-
-
-        private static void UpdateUserPassword_DB(long UserID, string Password, string Salt)
-        {
-            if (!CoreFactory.Singleton.IsEnabled)
-            {
-                throw new SystemDisabledException();
-            }
-
-            if (!UserReader.DoesUserExist(UserID))
-            {
-                throw new InvalidOperationException("User does not exist");
-            }
-
-            SqlWorker.ExecNonQuery(
-                CoreFactory.Singleton.Properties.CmsDBConfig,
-                "[dbo].[User_UpdatePasswordByID]",
-                (cmd) =>
-                {
-                    cmd.Parameters.Add("@UserID", SqlDbType.BigInt).Value = UserID;
-                    cmd.Parameters.Add("@PswdHash", SqlDbType.NVarChar).Value = Password;
-                    cmd.Parameters.Add("@Salt", SqlDbType.NVarChar).Value = Salt;
-                });
-        }
     }
 }

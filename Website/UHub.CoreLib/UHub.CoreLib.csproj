@@ -293,7 +293,6 @@
     <Compile Include="Entities\Users\DataInterop\UserWriter_Core.cs" />
     <Compile Include="Entities\Users\DataInterop\UserWriter_RecoveryContext.cs" />
     <Compile Include="Entities\Users\DataInterop\UserWriter_RecoveryContextAsync.cs" />
-    <Compile Include="Entities\Users\UserAsync.cs" />
     <Compile Include="Entities\Users\UserConfirmToken.cs" />
     <Compile Include="Entities\Users\UserRecoveryContextAsync.cs" />
     <Compile Include="ErrorHandling\Exceptions\AccessForbiddenException.cs" />

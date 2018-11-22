@@ -75,11 +75,11 @@ namespace UHub.CoreLib.Entities.Users.Interfaces
         /// <summary>
         /// Update the failed attempt count
         /// </summary>
-        AcctRecoveryResultCode IncrementAttemptCount();
+        AcctRecoveryResultCode TryIncrementAttemptCount();
 
         /// <summary>
         /// Delete this context to prevent it from being used again
         /// </summary>
-        void Delete();
+        void TryDelete();
     }
 }

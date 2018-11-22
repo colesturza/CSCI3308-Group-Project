@@ -40,12 +40,15 @@ namespace UHub.CoreLib.Security.Accounts.Interfaces
         /// <param name="UserID">User ID</param>
         /// <param name="IsApproved">Approval Status</param>
         bool TryUpdateApprovalStatus(long UserID, bool IsApproved);
+
+
+
         /// <summary>
-        /// Update the approval status of a user
+        /// Attempt to update the user token version
         /// </summary>
-        /// <param name="UserID">User ID</param>
-        /// <param name="IsApproved">Approval Status</param>
-        bool TryUpdateUserApprovalStatus(long UserID, bool IsApproved);
+        /// <param name="UserID"></param>
+        /// <returns></returns>
+        bool TryUpdateUserVersion(long UserID);
 
 
 
@@ -129,21 +132,11 @@ namespace UHub.CoreLib.Security.Accounts.Interfaces
 
 
         /// <summary>
-        /// Delete user by ID.
+        /// Attempt to get a user's active recovery context (if one exists)
         /// </summary>
         /// <param name="UserID"></param>
-        bool TryDeleteUser(long UserID);
-        /// <summary>
-        /// Delete user by Email
-        /// </summary>
-        /// <param name="Email"></param>
-        bool TryDeleteUser(string Email);
-        /// <summary>
-        /// Delete user by Username and Domain
-        /// </summary>
-        /// <param name="Username"></param>
-        /// <param name="Domain"></param>
-        bool TryDeleteUser(string Username, string Domain);
+        /// <returns></returns>
+        IUserRecoveryContext TryGetActiveRecoveryContext(long UserID);
 
 
         /// <summary>
@@ -168,5 +161,24 @@ namespace UHub.CoreLib.Security.Accounts.Interfaces
         (AcctRecoveryResultCode ResultCode, IUserRecoveryContext RecoveryContext, string RecoveryKey) TryCreateUserRecoveryContext(
             long UserID,
             bool IsOptional);
+
+
+
+        /// <summary>
+        /// Delete user by ID.
+        /// </summary>
+        /// <param name="UserID"></param>
+        bool TryDeleteUser(long UserID);
+        /// <summary>
+        /// Delete user by Email
+        /// </summary>
+        /// <param name="Email"></param>
+        bool TryDeleteUser(string Email);
+        /// <summary>
+        /// Delete user by Username and Domain
+        /// </summary>
+        /// <param name="Username"></param>
+        /// <param name="Domain"></param>
+        bool TryDeleteUser(string Username, string Domain);
     }
 }

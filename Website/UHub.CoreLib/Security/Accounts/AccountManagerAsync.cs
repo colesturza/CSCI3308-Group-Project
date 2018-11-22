@@ -159,7 +159,7 @@ namespace UHub.CoreLib.Security.Accounts
             try
             {
 #pragma warning disable 612, 618
-                userID = await UserWriter.TryCreateUserAsync(NewUser);
+                userID = await UserWriter.CreateUserAsync(NewUser);
 #pragma warning restore
             }
             catch (AggregateException ex)
@@ -366,8 +366,9 @@ namespace UHub.CoreLib.Security.Accounts
                     return AcctConfirmResultCode.ConfirmTokenInvalid;
                 }
             }
-            catch
+            catch (Exception ex)
             {
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("1BFDCBB0-48F6-4CE1-8393-EE308281F321", ex);
                 return AcctConfirmResultCode.UnknownError;
             }
         }
@@ -378,7 +379,7 @@ namespace UHub.CoreLib.Security.Accounts
         /// </summary>
         /// <param name="UserID">User ID</param>
         /// <param name="IsApproved">Approval Status</param>
-        public async Task<bool> TryUpdateUserApprovalStatusAsync(long UserID, bool IsApproved)
+        public async Task<bool> TryUpdateApprovalStatusAsync(long UserID, bool IsApproved)
         {
 #pragma warning disable 612, 618
             if (!CoreFactory.Singleton.IsEnabled)
@@ -388,17 +389,52 @@ namespace UHub.CoreLib.Security.Accounts
 
             try
             {
-                var result = await UserWriter.TryUpdateUserApprovalAsync(UserID, IsApproved);
-
-                return result;
+                await UserWriter.TryUpdateUserApprovalAsync(UserID, IsApproved);
+                return true;
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync("FC19EE94-D93C-4198-BAE2-A857B5B2F0CD");
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("FC19EE94-D93C-4198-BAE2-A857B5B2F0CD", ex);
                 return false;
             }
 #pragma warning restore
         }
+
+
+
+        /// <summary>
+        /// Attempt to update the user token version
+        /// </summary>
+        /// <param name="UserID"></param>
+        /// <returns></returns>
+        public async Task<bool> TryUpdateUserVersionAsync(long UserID)
+        {
+            var version = SysSec.Membership.GeneratePassword(USER_VERSION_LEN, 0);
+            //sterilize for token processing
+            version = version.Replace('|', '0');
+
+
+#pragma warning disable 612, 618
+            try
+            {
+                var doesExist = await UserReader.DoesUserExistAsync(UserID);
+                if (!doesExist)
+                {
+                    return false;
+                }
+
+                await UserWriter.UpdateUserVersionAsync(UserID, version);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("695B957C-585E-42C2-95B2-1926257732B9", ex);
+                return false;
+            }
+#pragma warning restore
+
+        }
+
 
 
         /// <summary>
@@ -425,7 +461,17 @@ namespace UHub.CoreLib.Security.Accounts
 
             UserEmail = UserEmail.Trim();
 
-            var ID = UserReader.GetUserID(UserEmail);
+            long? ID = null;
+            try
+            {
+                ID = UserReader.GetUserID(UserEmail);
+            }
+            catch (Exception ex)
+            {
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("B124CF3B-0E9D-45B8-9051-31FC6E979D96", ex);
+                return AcctPswdResultCode.UnknownError;
+            }
+
             if (ID == null)
             {
                 return AcctPswdResultCode.UserInvalid;
@@ -513,7 +559,11 @@ namespace UHub.CoreLib.Security.Accounts
                 //if everything worked, increment user version to force global re auth
                 if (DeviceLogout)
                 {
-                    modUser.UpdateVersion();
+                    var versionResult = await TryUpdateUserVersionAsync(modUser.ID.Value);
+                    if (!versionResult)
+                    {
+                        return AcctPswdResultCode.UnknownError;
+                    }
 
                     //re auth current user to prevent lapse in service
                     await CoreFactory.Singleton.Auth.TrySetClientAuthTokenAsync(modUser.Email, NewPassword, false, Context);
@@ -521,7 +571,8 @@ namespace UHub.CoreLib.Security.Accounts
 
 
                 //remove any recovery contexts
-                modUser.GetRecoveryContext()?.DeleteAsync();
+                var recoverContext = await TryGetActiveRecoveryContextAsync(modUser.ID.Value);
+                await recoverContext?.TryDeleteAsync();
 
 
                 return AcctPswdResultCode.Success;
@@ -593,7 +644,7 @@ namespace UHub.CoreLib.Security.Accounts
             {
                 try
                 {
-                    await recoveryContext.IncrementAttemptCountAsync();
+                    await recoveryContext.TryIncrementAttemptCountAsync();
                 }
                 catch (Exception ex)
                 {
@@ -727,7 +778,11 @@ namespace UHub.CoreLib.Security.Accounts
 
 
                 //if everything worked, increment user version to force global re auth
-                modUser.UpdateVersion();
+                var versionResult = await TryUpdateUserVersionAsync(modUser.ID.Value);
+                if (!versionResult)
+                {
+                    return AcctRecoveryResultCode.UnknownError;
+                }
 
                 //re auth current user to prevent lapse in service
                 try
@@ -740,13 +795,12 @@ namespace UHub.CoreLib.Security.Accounts
                 }
 
                 //remove any recovery contexts
-                modUser.GetRecoveryContext()?.Delete();
+                var recoverContext = await TryGetActiveRecoveryContextAsync(modUser.ID.Value);
+                await recoverContext?.TryDeleteAsync();
 
 
 
                 return AcctRecoveryResultCode.Success;
-
-
             }
             catch (Exception ex)
             {
@@ -754,6 +808,127 @@ namespace UHub.CoreLib.Security.Accounts
                 return AcctRecoveryResultCode.UnknownError;
 
             }
+        }
+
+
+        /// <summary>
+        /// Attempt to get a user's active recovery context (if one exists)
+        /// </summary>
+        /// <param name="UserID"></param>
+        /// <returns></returns>
+        public async Task<IUserRecoveryContext> TryGetActiveRecoveryContextAsync(long UserID)
+        {
+            try
+            {
+                return await UserReader.GetRecoveryContextAsync(UserID);
+            }
+            catch (Exception ex)
+            {
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("38B20395-27C9-4852-853E-55163968F93E", ex);
+                return null;
+            }
+        }
+
+
+        /// <summary>
+        /// Create a user password recovery context. Allows users to create a new password if they forget their old password.  Can be used to force a user to reset their password by setting [IsOptional=TRUE]
+        /// </summary>
+        /// <param name="UserEmail">User email</param>
+        /// <param name="IsOptional">Specify whether or not user will be forced to update password</param>
+        /// <param name="GeneralFailHandler">Error handler in case DB cannot be reached or there is other unknown error</param>
+        /// <returns></returns>
+        public async Task<(AcctRecoveryResultCode ResultCode, IUserRecoveryContext RecoveryContext, string RecoveryKey)> TryCreateUserRecoveryContextAsync(
+            string UserEmail,
+            bool IsOptional)
+        {
+            //check for valid email format
+            if (!UserEmail.IsValidEmail())
+            {
+                return (AcctRecoveryResultCode.EmailInvalid, null, null);
+            }
+
+
+            long? id = null;
+            try
+            {
+                await UserReader.GetUserIDAsync(UserEmail);
+            }
+            catch (Exception ex)
+            {
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("A37237C0-EE53-4B52-92E7-ADDEC84CEF06", ex);
+                return (AcctRecoveryResultCode.UnknownError, null, null);
+            }
+
+
+            if (id == null)
+            {
+                return (AcctRecoveryResultCode.UserInvalid, null, null);
+            }
+
+
+            return await TryCreateUserRecoveryContextAsync(
+                id.Value,
+                IsOptional);
+        }
+
+
+        /// <summary>
+        /// Create a user password recovery context. Allows users to create a new password if they forget their old password.  Can be used to force a user to reset their password by setting [IsOptional=TRUE]
+        /// </summary>
+        /// <param name="UserUID">User UID</param>
+        /// <param name="IsOptional">Specify whether or not user will be forced to update password</param>
+        /// <param name="GeneralFailHandler">Error handler in case DB cannot be reached or there is other unknown error</param>
+        /// <returns></returns>
+        public async Task<(AcctRecoveryResultCode ResultCode, IUserRecoveryContext RecoveryContext, string RecoveryKey)> TryCreateUserRecoveryContextAsync(
+            long UserID,
+            bool IsOptional)
+        {
+            try
+            {
+                var cmsUser = await UserReader.GetUserAsync(UserID);
+
+                if (cmsUser == null || cmsUser.ID == null)
+                {
+                    return (AcctRecoveryResultCode.UserInvalid, null, null);
+                }
+
+
+                //prevent a new optional recovery context from being made if the user already has an active forced reset
+                //a new recovery context would override the prior and allow a bypass
+                //Allow user to create new context in case the previous was lost
+                var recoveryContext = await UserReader.GetRecoveryContextAsync(cmsUser.ID.Value);
+                if (recoveryContext != null && !recoveryContext.IsOptional)
+                {
+                    IsOptional = false;
+                }
+
+
+                var hashType = CoreFactory.Singleton.Properties.PswdHashType;
+                string recoveryKey = SysSec.Membership.GeneratePassword(R_KEY_LEN, 5);
+                string hashedKey = recoveryKey.GetCryptoHash(hashType);
+
+#pragma warning disable 612, 618
+                //will attempt to delete all old recovery contexts and create a new one
+                //any failures will result in system state rollback
+                var context = await UserWriter.CreateRecoveryContextAsync(UserID, hashedKey, IsOptional);
+#pragma warning restore
+
+
+                if (context == null)
+                {
+                    CoreFactory.Singleton.Logging.CreateErrorLogAsync("492D2F3F-9727-46C7-9ECC-E37D975E909E");
+                    return (AcctRecoveryResultCode.UnknownError, null, null);
+                }
+
+
+                return (AcctRecoveryResultCode.Success, context, recoveryKey);
+            }
+            catch (Exception ex)
+            {
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("1DB703FD-5D16-47A8-8283-52836AD9B9FE", ex);
+                return (AcctRecoveryResultCode.UserInvalid, null, null);
+            }
+
         }
 
 
@@ -805,8 +980,8 @@ namespace UHub.CoreLib.Security.Accounts
                 }
 
 
-                CmsUser.UpdateVersion();
-                await UserWriter.DeleteUserAsync((long)CmsUser.ID);
+                await TryUpdateUserVersionAsync(CmsUser.ID.Value);
+                await UserWriter.DeleteUserAsync(CmsUser.ID.Value);
 
                 return true;
             }
@@ -818,108 +993,21 @@ namespace UHub.CoreLib.Security.Accounts
 #pragma warning restore
         }
 
-        /// <summary>
-        /// Create a user password recovery context. Allows users to create a new password if they forget their old password.  Can be used to force a user to reset their password by setting [IsOptional=TRUE]
-        /// </summary>
-        /// <param name="UserEmail">User email</param>
-        /// <param name="IsOptional">Specify whether or not user will be forced to update password</param>
-        /// <param name="GeneralFailHandler">Error handler in case DB cannot be reached or there is other unknown error</param>
-        /// <returns></returns>
-        public async Task<(AcctRecoveryResultCode ResultCode, IUserRecoveryContext RecoveryContext, string RecoveryKey)> TryCreateUserRecoveryContextAsync(
-            string UserEmail,
-            bool IsOptional)
-        {
-            //check for valid email format
-            if (!UserEmail.IsValidEmail())
-            {
-                return (AcctRecoveryResultCode.EmailInvalid, null, null);
-            }
 
 
-            long? id = null;
-            try
-            {
-                await UserReader.GetUserIDAsync(UserEmail);
-            }
-            catch (Exception ex)
-            {
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync("A37237C0-EE53-4B52-92E7-ADDEC84CEF06", ex);
-                return (AcctRecoveryResultCode.UnknownError, null, null);
-            }
 
 
-            if (id == null)
-            {
-                return (AcctRecoveryResultCode.UserInvalid, null, null);
-            }
 
-
-            return await TryCreateUserRecoveryContextAsync(
-                id.Value,
-                IsOptional);
-        }
 
         /// <summary>
-        /// Create a user password recovery context. Allows users to create a new password if they forget their old password.  Can be used to force a user to reset their password by setting [IsOptional=TRUE]
+        /// Handle password hash/write logic
         /// </summary>
-        /// <param name="UserUID">User UID</param>
-        /// <param name="IsOptional">Specify whether or not user will be forced to update password</param>
-        /// <param name="GeneralFailHandler">Error handler in case DB cannot be reached or there is other unknown error</param>
+        /// <param name="UserID"></param>
+        /// <param name="UserPswd"></param>
         /// <returns></returns>
-        public async Task<(AcctRecoveryResultCode ResultCode, IUserRecoveryContext RecoveryContext, string RecoveryKey)> TryCreateUserRecoveryContextAsync(
-            long UserID,
-            bool IsOptional)
-        {
-            try
-            {
-                var cmsUser = await UserReader.GetUserAsync(UserID);
-
-                if (cmsUser == null || cmsUser.ID == null)
-                {
-                    return (AcctRecoveryResultCode.UserInvalid, null, null);
-                }
-
-
-                //prevent a new recovery context from being made if the user already has an active forced reset
-                //a new recovery context would override the prior and allow a bypass
-                var recoveryContext = cmsUser.GetRecoveryContext();
-                if (recoveryContext != null && !recoveryContext.IsOptional)
-                {
-                    return (AcctRecoveryResultCode.UserInvalid, null, null);
-                }
-
-
-                var hashType = CoreFactory.Singleton.Properties.PswdHashType;
-                string recoveryKey = SysSec.Membership.GeneratePassword(R_KEY_LEN, 5);
-                string hashedKey = recoveryKey.GetCryptoHash(hashType);
-
-#pragma warning disable 612, 618
-                var context = await UserWriter.CreateRecoveryContextAsync(UserID, hashedKey, true, true);
-#pragma warning restore
-
-
-                if (context == null)
-                {
-                    CoreFactory.Singleton.Logging.CreateErrorLogAsync("492D2F3F-9727-46C7-9ECC-E37D975E909E");
-                    return (AcctRecoveryResultCode.UnknownError, null, null);
-                }
-
-
-                return (AcctRecoveryResultCode.Success, context, recoveryKey);
-            }
-            catch (Exception ex)
-            {
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync("1DB703FD-5D16-47A8-8283-52836AD9B9FE", ex);
-                return (AcctRecoveryResultCode.UserInvalid, null, null);
-            }
-
-        }
-
-
-
-
         private static async Task<bool> DoPasswordWorkAsync(long UserID, string UserPswd)
         {
+#pragma warning disable 612, 618
             var salt = SysSec.Membership.GeneratePassword(SALT_LEN, 0);
             string pswdHash = null;
             try
@@ -940,7 +1028,7 @@ namespace UHub.CoreLib.Security.Accounts
             try
             {
                 //SET DB PASSWORD
-                await UpdateUserPassword_DBAsync(UserID, pswdHash, salt);
+                await UserWriter.UpdateUserPasswordAsync(UserID, pswdHash, salt);
             }
             catch (Exception ex)
             {
@@ -949,54 +1037,9 @@ namespace UHub.CoreLib.Security.Accounts
             }
 
             return true;
+#pragma warning restore
         }
 
 
-        private static async Task UpdateUserPassword_DBAsync(string UserEmail, string Password, string Salt)
-        {
-            if (!CoreFactory.Singleton.IsEnabled)
-            {
-                throw new SystemDisabledException();
-            }
-
-            if (!UserReader.DoesUserExist(UserEmail))
-            {
-                throw new InvalidOperationException("User does not exist");
-            }
-
-            await SqlWorker.ExecNonQueryAsync(
-                CoreFactory.Singleton.Properties.CmsDBConfig,
-                "[dbo].[User_UpdatePasswordByEmail]",
-                (cmd) =>
-                {
-                    cmd.Parameters.Add("@Email", SqlDbType.NVarChar).Value = UserEmail;
-                    cmd.Parameters.Add("@PswdHash", SqlDbType.NVarChar).Value = Password;
-                    cmd.Parameters.Add("@Salt", SqlDbType.NVarChar).Value = Salt;
-                });
-        }
-
-
-        private static async Task UpdateUserPassword_DBAsync(long UserID, string Password, string Salt)
-        {
-            if (!CoreFactory.Singleton.IsEnabled)
-            {
-                throw new SystemDisabledException();
-            }
-
-            if (!UserReader.DoesUserExist(UserID))
-            {
-                throw new InvalidOperationException("User does not exist");
-            }
-
-            await SqlWorker.ExecNonQueryAsync(
-                CoreFactory.Singleton.Properties.CmsDBConfig,
-                "[dbo].[User_UpdatePasswordByID]",
-                (cmd) =>
-                {
-                    cmd.Parameters.Add("@UserID", SqlDbType.BigInt).Value = UserID;
-                    cmd.Parameters.Add("@PswdHash", SqlDbType.NVarChar).Value = Password;
-                    cmd.Parameters.Add("@Salt", SqlDbType.NVarChar).Value = Salt;
-                });
-        }
     }
 }
