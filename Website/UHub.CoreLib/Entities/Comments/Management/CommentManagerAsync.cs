@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UHub.CoreLib.Entities.Comments.DataInterop;
+using UHub.CoreLib.ErrorHandling.Exceptions;
+using UHub.CoreLib.Management;
 
 namespace UHub.CoreLib.Entities.Comments.Management
 {
@@ -24,7 +26,43 @@ namespace UHub.CoreLib.Entities.Comments.Management
             }
 
 
-            var id = await CommentWriter.TryCreateCommentAsync(NewComment);
+            long? id = null;
+            try
+            {
+                id = await CommentWriter.CreateCommentAsync(NewComment);
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                return (null, CommentResultCode.InvalidArgument);
+            }
+            catch (ArgumentNullException)
+            {
+                return (null, CommentResultCode.NullArgument);
+            }
+            catch (ArgumentException)
+            {
+                return (null, CommentResultCode.InvalidArgument);
+            }
+            catch (InvalidCastException)
+            {
+                return (null, CommentResultCode.InvalidArgumentType);
+            }
+            catch (InvalidOperationException)
+            {
+                return (null, CommentResultCode.InvalidOperation);
+            }
+            catch (AccessForbiddenException)
+            {
+                return (null, CommentResultCode.AccessDenied);
+            }
+            catch (Exception ex)
+            {
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("20ACD0FF-49AE-4A0F-9803-7D84A4EF58A6", ex);
+                return (null, CommentResultCode.UnknownError);
+            }
+
+
+
 
             if (id == null)
             {

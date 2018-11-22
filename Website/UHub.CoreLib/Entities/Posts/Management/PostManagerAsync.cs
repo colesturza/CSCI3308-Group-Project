@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UHub.CoreLib.Entities.Posts.DataInterop;
+using UHub.CoreLib.ErrorHandling.Exceptions;
 using UHub.CoreLib.Extensions;
 using UHub.CoreLib.Management;
 using UHub.CoreLib.Security;
@@ -27,7 +28,47 @@ namespace UHub.CoreLib.Entities.Posts.Management
             }
 
 
-            var id = await PostWriter.TryCreatePostAsync(NewPost);
+
+            long? id = null;
+            try
+            {
+                id = await PostWriter.CreatePostAsync(NewPost);
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                return (null, PostResultCode.InvalidArgument);
+            }
+            catch (ArgumentNullException)
+            {
+                return (null, PostResultCode.NullArgument);
+            }
+            catch (ArgumentException)
+            {
+                return (null, PostResultCode.InvalidArgument);
+            }
+            catch (InvalidCastException)
+            {
+                return (null, PostResultCode.InvalidArgumentType);
+            }
+            catch (InvalidOperationException)
+            {
+                return (null, PostResultCode.InvalidOperation);
+            }
+            catch (AccessForbiddenException)
+            {
+                return (null, PostResultCode.AccessDenied);
+            }
+            catch (Exception ex)
+            {
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("CAC62728-256B-40F1-8B51-0F8B9B69A8D2", ex);
+                return (null, PostResultCode.UnknownError);
+            }
+
+
+
+
+
+
             if (id == null)
             {
                 return (id, PostResultCode.UnknownError);

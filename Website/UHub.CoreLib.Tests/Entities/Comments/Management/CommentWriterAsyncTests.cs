@@ -31,7 +31,7 @@ namespace UHub.CoreLib.Entities.Comments.DataInterop.Tests
             };
 
             var post = testPost.ToInternal<Post>();
-            var postId = await PostWriter.TryCreatePostAsync(post);
+            var postId = await PostWriter.CreatePostAsync(post);
 
             if(postId == null)
             {
@@ -50,7 +50,7 @@ namespace UHub.CoreLib.Entities.Comments.DataInterop.Tests
             };
 
             var comment = testComment.ToInternal<Comment>();
-            var commentId = await CommentWriter.TryCreateCommentAsync(comment);
+            var commentId = await CommentWriter.CreateCommentAsync(comment);
 
 
             if (commentId == null)

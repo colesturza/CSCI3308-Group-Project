@@ -259,11 +259,15 @@
     <Compile Include="Entities\SchoolMajors\APIControllers\SchoolMajorController.cs" />
     <Compile Include="Entities\SchoolMajors\DataInterop\SchoolMajorWriter_Core.cs" />
     <Compile Include="Entities\SchoolMajors\DTOs\SchoolMajor_R_PublicDTO.cs" />
+    <Compile Include="Entities\SchoolMajors\Enums\SchoolMajorResultCode.cs" />
     <Compile Include="Entities\SchoolMajors\Interfaces\ISchoolMajor_R_Public.cs" />
     <Compile Include="Entities\SchoolMajors\DataInterop\SchoolMajorReader_CoreAsync.cs" />
     <Compile Include="Entities\SchoolMajors\DataInterop\SchoolMajorWriterAsync.cs" />
     <Compile Include="Entities\SchoolMajors\DataInterop\SchoolMajorWriter.cs" />
     <Compile Include="Entities\SchoolMajors\DataInterop\SchoolMajorReader_Core.cs" />
+    <Compile Include="Entities\SchoolMajors\Management\SchoolMajorManagerAsync.cs" />
+    <Compile Include="Entities\SchoolMajors\Management\SchoolMajorManagerShared.cs" />
+    <Compile Include="Entities\SchoolMajors\Management\SchoolMajorManager.cs" />
     <Compile Include="Entities\SchoolMajors\SchoolMajor.cs" />
     <Compile Include="Entities\Schools\APIControllers\SchoolController.cs" />
     <Compile Include="Entities\Schools\DataInterop\SchoolWriter_Core.cs" />
@@ -447,7 +451,6 @@
     <Folder Include="Entities\Images\DTOs\" />
     <Folder Include="Entities\Images\Enums\" />
     <Folder Include="Entities\Images\Interfaces\" />
-    <Folder Include="Entities\SchoolMajors\Enums\" />
     <Folder Include="Entities\Schools\Enums\" />
     <Folder Include="Logging\APIControllers\" />
   </ItemGroup>

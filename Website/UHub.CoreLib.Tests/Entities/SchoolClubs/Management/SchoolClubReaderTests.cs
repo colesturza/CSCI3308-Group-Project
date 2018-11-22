@@ -112,7 +112,7 @@ namespace UHub.CoreLib.Entities.SchoolClubs.DataInterop.Tests
             club.SchoolID = cmsUser.SchoolID.Value;
             club.CreatedBy = cmsUser.ID.Value;
 
-            var clubID = SchoolClubWriter.TryCreateClub(club);
+            var clubID = SchoolClubWriter.CreateClub(club);
             Assert.IsNotNull(clubID);
 
 
@@ -147,7 +147,7 @@ namespace UHub.CoreLib.Entities.SchoolClubs.DataInterop.Tests
             club.SchoolID = cmsUser.SchoolID.Value;
             club.CreatedBy = cmsUser.ID.Value;
 
-            var clubID = SchoolClubWriter.TryCreateClub(club);
+            var clubID = SchoolClubWriter.CreateClub(club);
             Assert.IsNotNull(clubID);
 
 

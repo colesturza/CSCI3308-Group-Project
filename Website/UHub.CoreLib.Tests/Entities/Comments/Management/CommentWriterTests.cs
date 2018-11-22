@@ -30,7 +30,7 @@ namespace UHub.CoreLib.Entities.Comments.DataInterop.Tests
             };
 
             var post = testPost.ToInternal<Post>();
-            var postId = PostWriter.TryCreatePost(post);
+            var postId = PostWriter.CreatePost(post);
 
             if(postId == null)
             {
@@ -49,7 +49,7 @@ namespace UHub.CoreLib.Entities.Comments.DataInterop.Tests
             };
 
             var comment = testComment.ToInternal<Comment>();
-            var commentId = CommentWriter.TryCreateComment(comment);
+            var commentId = CommentWriter.CreateComment(comment);
 
 
             if (commentId == null)

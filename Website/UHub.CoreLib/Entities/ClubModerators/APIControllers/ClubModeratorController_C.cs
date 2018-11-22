@@ -105,7 +105,7 @@ namespace UHub.CoreLib.Entities.ClubModerators.APIControllers
             }
             catch (Exception ex)
             {
-                var errCode = "185AB13F-2C5C-435B-8B87-AA48F1AB3C73";
+                var errCode = "69605919-C129-4409-BE24-3FFFBD702B39";
                 Exception ex_outer = new Exception(errCode, ex);
                 CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
 
