@@ -16,14 +16,6 @@ namespace UHub.CoreLib.Security.Accounts.Management
     public sealed partial class AccountManager
     {
 
-        private const short EMAIL_MIN_LEN = 3;
-        private const short EMAIL_MAX_LEN = 250;
-        private const short SALT_LEN = 50;
-        private const short USER_VERSION_LEN = 10;
-        private const short R_KEY_LEN = 20;
-
-
-
         private static class Shared
         {
 

@@ -6,8 +6,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
 using UHub.CoreLib.APIControllers;
-using UHub.CoreLib.Entities.SchoolMajors.DataInterop;
-using UHub.CoreLib.Entities.Schools.DataInterop;
 using UHub.CoreLib.Entities.Users;
 using UHub.CoreLib.Entities.Users.DTOs;
 using UHub.CoreLib.Management;

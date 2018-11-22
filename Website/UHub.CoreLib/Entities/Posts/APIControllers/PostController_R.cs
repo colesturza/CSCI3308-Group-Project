@@ -16,6 +16,7 @@ using UHub.CoreLib.Entities.Schools.DataInterop;
 using UHub.CoreLib.Management;
 using UHub.CoreLib.Tools;
 using UHub.CoreLib.Security;
+using UHub.CoreLib.Entities.Posts.Management;
 
 namespace UHub.CoreLib.Entities.Posts.APIControllers
 {
@@ -103,6 +104,8 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             {
                 return NotFound();
             }
+            await PostManager.TryIncrementViewCountAsync(postInternal.ID.Value);
+
 
             return Ok(postPublic);
         }

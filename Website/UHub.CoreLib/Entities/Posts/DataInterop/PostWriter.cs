@@ -43,8 +43,30 @@ namespace UHub.CoreLib.Entities.Posts.DataInterop
                     cmd.Parameters.Add("@IsReadonly", SqlDbType.Bit).Value = HandleParamEmpty(cmsPost.IsReadOnly);
                 });
 
-
             return PostID;
+        }
+
+        /// <summary>
+        /// Attempts to increment the viewcount of specified post
+        /// </summary>
+        /// <param name="cmsPost"></param>
+        /// <returns></returns>
+        internal static bool IncrementViewCount(long PostID)
+        {
+            if (!CoreFactory.Singleton.IsEnabled)
+            {
+                throw new SystemDisabledException();
+            }
+
+
+            return SqlWorker.ExecScalar<bool>(
+                _dbConn,
+                "[dbo].[Post_IncrementViewCount]",
+                (cmd) =>
+                {
+                    cmd.Parameters.Add("@PostID", SqlDbType.BigInt).Value = PostID;
+                });
+
         }
     }
 }

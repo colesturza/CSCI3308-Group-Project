@@ -67,8 +67,6 @@ namespace UHub.CoreLib.Entities.Posts.Management
 
 
 
-
-
             if (id == null)
             {
                 return (id, PostResultCode.UnknownError);
@@ -76,6 +74,26 @@ namespace UHub.CoreLib.Entities.Posts.Management
             return (id, PostResultCode.Success);
 
         }
+
+
+
+        public static bool? TryIncrementViewCount(long PostID)
+        {
+
+            bool? val = null;
+            try
+            {
+                val = PostWriter.IncrementViewCount(PostID);
+            }
+            catch (Exception ex)
+            {
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("8A829937-3470-4A7C-9E62-36234575FB88", ex);
+            }
+
+
+            return val;
+        }
+
     }
 
 #pragma warning restore

@@ -9,24 +9,18 @@ using UHub.CoreLib.ErrorHandling.Exceptions;
 using UHub.CoreLib.Extensions;
 using UHub.CoreLib.Management;
 
-namespace UHub.CoreLib.Entities.SchoolClubs.DataInterop
+namespace UHub.CoreLib.Entities.SchoolMajors.DataInterop
 {
-    public static partial class SchoolClubReader
+    public static partial class SchoolMajorReader
     {
-        private static string _dbConn = null;
-
-        static SchoolClubReader()
-        {
-            _dbConn = CoreFactory.Singleton.Properties.CmsDBConfig;
-        }
 
 
         /// <summary>
-        /// Get DB school club full detail by LONG ID
+        /// Get DB school major full detail by LONG ID
         /// </summary>
-        /// <param name="SchoolClubID"></param>
+        /// <param name="SchoolMajorID"></param>
         /// <returns></returns>
-        public static SchoolClub TryGetClub(long SchoolClubID)
+        public static SchoolMajor TryGetMajor(long SchoolMajorID)
         {
             if (!CoreFactory.Singleton.IsEnabled)
             {
@@ -36,31 +30,30 @@ namespace UHub.CoreLib.Entities.SchoolClubs.DataInterop
             try
             {
 
-                return SqlWorker.ExecBasicQuery<SchoolClub>(
+                return SqlWorker.ExecBasicQuery<SchoolMajor>(
                     _dbConn,
-                    "[dbo].[SchoolClub_GetByID]",
+                    "[dbo].[SchoolMajor_GetByID]",
                     (cmd) =>
                     {
-                        cmd.Parameters.Add("@SchoolClubID", SqlDbType.BigInt).Value = SchoolClubID;
+                        cmd.Parameters.Add("@SchoolMajorID", SqlDbType.BigInt).Value = SchoolMajorID;
                     })
                     .SingleOrDefault();
 
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync("DB0F9B85-F015-4898-9640-AC932B7BE290", ex);
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("DF24DBC5-577C-46E9-9E83-AF67CD1C40E3", ex);
                 return null;
             }
         }
 
 
 
-
         /// <summary>
-        /// Get all the school clubs in the DB
+        /// Get all the school majors in the DB
         /// </summary>
         /// <returns></returns>
-        public static IEnumerable<SchoolClub> TryGetAllClubs()
+        public static IEnumerable<SchoolMajor> TryGetAllMajors()
         {
 
             if (!CoreFactory.Singleton.IsEnabled)
@@ -70,22 +63,22 @@ namespace UHub.CoreLib.Entities.SchoolClubs.DataInterop
 
             try
             {
-                return SqlWorker.ExecBasicQuery<SchoolClub>(_dbConn, "[dbo].[SchoolClubs_GetAll]");
+                return SqlWorker.ExecBasicQuery<SchoolMajor>(_dbConn, "[dbo].[SchoolMajors_GetAll]");
 
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync("1632E25F-B6D8-4597-B45C-F96A6E3B2EE1", ex);
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("3D63B30C-80CE-4A2B-95E9-B51A13A49994", ex);
                 return null;
             }
         }
 
         /// <summary>
-        /// Get all the school clubs in the DB
+        /// Get all the school majors in the DB by school
         /// </summary>
         /// <param name="SchoolID"></param>
         /// <returns></returns>
-        public static IEnumerable<SchoolClub> TryGetClubsBySchool(long SchoolID)
+        public static IEnumerable<SchoolMajor> TryGetMajorsBySchool(long SchoolID)
         {
 
             if (!CoreFactory.Singleton.IsEnabled)
@@ -96,9 +89,9 @@ namespace UHub.CoreLib.Entities.SchoolClubs.DataInterop
 
             try
             {
-                return SqlWorker.ExecBasicQuery<SchoolClub>(
+                return SqlWorker.ExecBasicQuery<SchoolMajor>(
                     _dbConn,
-                    "[dbo].[SchoolClubs_GetBySchool]",
+                    "[dbo].[SchoolMajors_GetBySchool]",
                     (cmd) =>
                     {
                         cmd.Parameters.Add("@SchoolID", SqlDbType.BigInt).Value = SchoolID;
@@ -107,17 +100,18 @@ namespace UHub.CoreLib.Entities.SchoolClubs.DataInterop
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync("9F041C9F-1ACC-4BFE-BAEF-04906E62FCC4", ex);
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("411B43FA-9F3E-4C9F-9433-BA366EA20D55", ex);
                 return null;
             }
         }
 
+
         /// <summary>
-        /// Get all the school clubs in the DB for a school using the email addr of a user
+        /// Get all the school majors in the DB for a school using the email addr of a user
         /// </summary>
         /// <param name="Email"></param>
         /// <returns></returns>
-        public static IEnumerable<SchoolClub> TryGetClubsByEmail(string Email)
+        public static IEnumerable<SchoolMajor> TryGetMajorsByEmail(string Email)
         {
 
             if (!CoreFactory.Singleton.IsEnabled)
@@ -127,15 +121,15 @@ namespace UHub.CoreLib.Entities.SchoolClubs.DataInterop
 
             if (!Email.IsValidEmail())
             {
-                return Enumerable.Empty<SchoolClub>();
+                return Enumerable.Empty<SchoolMajor>();
             }
-
 
             try
             {
-                return SqlWorker.ExecBasicQuery<SchoolClub>(
+
+                return SqlWorker.ExecBasicQuery<SchoolMajor>(
                     _dbConn,
-                    "[dbo].[SchoolClubs_GetByEmail]",
+                    "[dbo].[SchoolMajors_GetByEmail]",
                     (cmd) =>
                     {
                         cmd.Parameters.Add("@Email", SqlDbType.NVarChar).Value = Email;
@@ -144,18 +138,17 @@ namespace UHub.CoreLib.Entities.SchoolClubs.DataInterop
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync("47AC2532-FABD-4709-A436-07F307472741", ex);
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("EEE91FB7-9F50-4D13-A88D-349421B3EA6D", ex);
                 return null;
             }
         }
 
-
         /// <summary>
-        /// Get all the school clubs in the DB for a school using the school domain
+        /// Get all the school majors in the DB for a school using the school domain
         /// </summary>
         /// <param name="Email"></param>
         /// <returns></returns>
-        public static IEnumerable<SchoolClub> TryGetClubsByDomain(string Domain)
+        public static IEnumerable<SchoolMajor> TryGetMajorsByDomain(string Domain)
         {
 
             if (!CoreFactory.Singleton.IsEnabled)
@@ -165,23 +158,24 @@ namespace UHub.CoreLib.Entities.SchoolClubs.DataInterop
 
             if (!Domain.IsValidEmailDomain())
             {
-                return Enumerable.Empty<SchoolClub>();
+                return Enumerable.Empty<SchoolMajor>();
             }
 
 
             try
             {
-                return SqlWorker.ExecBasicQuery<SchoolClub>(
+                return SqlWorker.ExecBasicQuery<SchoolMajor>(
                     _dbConn,
-                    "[dbo].[SchoolClubs_GetByDomain]",
+                    "[dbo].[SchoolMajors_GetByDomain]",
                     (cmd) =>
                     {
                         cmd.Parameters.Add("@Domain", SqlDbType.NVarChar).Value = Domain;
                     });
+
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync("9ED9915C-F4C5-4CB7-991F-B40ABDD6A965", ex);
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("2B103763-54EE-4DBE-8372-E0659F246100", ex);
                 return null;
             }
         }

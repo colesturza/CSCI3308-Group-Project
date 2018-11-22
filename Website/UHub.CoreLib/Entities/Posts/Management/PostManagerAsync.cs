@@ -66,15 +66,31 @@ namespace UHub.CoreLib.Entities.Posts.Management
 
 
 
-
-
-
             if (id == null)
             {
                 return (id, PostResultCode.UnknownError);
             }
             return (id, PostResultCode.Success);
 
+        }
+
+
+
+        public static async Task<bool?> TryIncrementViewCountAsync(long PostID)
+        {
+
+            bool? val = null;
+            try
+            {
+                val = await PostWriter.IncrementViewCountAsync(PostID);
+            }
+            catch (Exception ex)
+            {
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("7FB424FA-8548-47F1-AC05-A38183376902", ex);
+            }
+
+
+            return val;
         }
     }
 

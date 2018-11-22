@@ -13,12 +13,7 @@ namespace UHub.CoreLib.Entities.Schools.DataInterop
 {
     public static partial class SchoolReader
     {
-        private static string _dbConn = null;
 
-        static SchoolReader()
-        {
-            _dbConn = CoreFactory.Singleton.Properties.CmsDBConfig;
-        }
 
         public static IEnumerable<School> TryGetAllSchools()
         {

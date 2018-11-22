@@ -46,5 +46,29 @@ namespace UHub.CoreLib.Entities.Posts.DataInterop
 
             return PostID;
         }
+
+
+        /// <summary>
+        /// Attempts to increment the viewcount of specified post
+        /// </summary>
+        /// <param name="cmsPost"></param>
+        /// <returns></returns>
+        internal static async Task<bool> IncrementViewCountAsync(long PostID)
+        {
+            if (!CoreFactory.Singleton.IsEnabled)
+            {
+                throw new SystemDisabledException();
+            }
+
+
+            return await SqlWorker.ExecScalarAsync<bool>(
+                _dbConn,
+                "[dbo].[Post_IncrementViewCount]",
+                (cmd) =>
+                {
+                    cmd.Parameters.Add("@PostID", SqlDbType.BigInt).Value = PostID;
+                });
+
+        }
     }
 }

@@ -13,13 +13,6 @@ namespace UHub.CoreLib.Entities.Comments.DataInterop
 {
     public static partial class CommentReader
     {
-        private static string _dbConn = null;
-
-        static CommentReader()
-        {
-            _dbConn = CoreFactory.Singleton.Properties.CmsDBConfig;
-        }
-
 
         /// <summary>
         /// Get all the comments in the DB from a post

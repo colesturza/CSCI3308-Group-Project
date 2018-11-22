@@ -15,12 +15,6 @@ namespace UHub.CoreLib.Entities.Users.DataInterop
 {
     public static partial class UserReader
     {
-        private static string _dbConn = null;
-
-        static UserReader()
-        {
-            _dbConn = CoreFactory.Singleton.Properties.CmsDBConfig;
-        }
 
 
         #region Individual
