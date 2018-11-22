@@ -174,6 +174,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             if (shouldSanitize)
             {
                 outSet = posts
+                    .AsParallel()
                     .Select(x =>
                     {
                         x.Content = x.Content.SanitizeHtml();
@@ -183,6 +184,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             else
             {
                 outSet = posts
+                    .AsParallel()
                     .Select(x =>
                     {
                         return x.ToDto<Post_R_PublicDTO>();
@@ -248,6 +250,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             if (shouldSanitize)
             {
                 outSet = posts
+                    .AsParallel()
                     .Select(x =>
                     {
                         x.Content = x.Content.SanitizeHtml();
@@ -257,6 +260,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             else
             {
                 outSet = posts
+                    .AsParallel()
                     .Select(x =>
                     {
                         return x.ToDto<Post_R_PublicDTO>();
