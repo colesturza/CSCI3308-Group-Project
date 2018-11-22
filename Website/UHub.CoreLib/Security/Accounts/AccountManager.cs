@@ -381,7 +381,7 @@ namespace UHub.CoreLib.Security.Accounts
         /// </summary>
         /// <param name="UserID">User ID</param>
         /// <param name="IsApproved">Approval Status</param>
-        public void UpdateUserApprovalStatus(long UserID, bool IsApproved)
+        public bool TryUpdateUserApprovalStatus(long UserID, bool IsApproved)
         {
 #pragma warning disable 612, 618
             if (!CoreFactory.Singleton.IsEnabled)
@@ -389,7 +389,18 @@ namespace UHub.CoreLib.Security.Accounts
                 throw new SystemDisabledException();
             }
 
-            UserWriter.UpdateUserApproval(UserID, IsApproved);
+
+            try
+            {
+
+                UserWriter.UpdateUserApproval(UserID, IsApproved);
+                return true;
+            }
+            catch
+            {
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("FE482294-6197-4048-99DC-4DE4421823B9");
+                return false;
+            }
 #pragma warning restore
         }
 

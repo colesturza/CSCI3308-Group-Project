@@ -45,7 +45,7 @@ namespace UHub.CoreLib.Security.Accounts.Interfaces
         /// </summary>
         /// <param name="UserID">User ID</param>
         /// <param name="IsApproved">Approval Status</param>
-        void UpdateUserApprovalStatus(long UserID, bool IsApproved);
+        bool TryUpdateUserApprovalStatus(long UserID, bool IsApproved);
 
 
 

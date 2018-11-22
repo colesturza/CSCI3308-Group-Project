@@ -305,7 +305,6 @@ namespace UHub.CoreLib.Security.Accounts
                 if (emailSendStatus != SmtpResultCode.Success)
                 {
                     CoreFactory.Singleton.Logging.CreateErrorLogAsync("0ADC52B0-89BB-4346-84F3-1F6CAC63DACF");
-
                     return AcctCreateResultCode.UnknownError;
                 }
             }
@@ -393,8 +392,9 @@ namespace UHub.CoreLib.Security.Accounts
 
                 return result;
             }
-            catch
+            catch (Exception ex)
             {
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("FC19EE94-D93C-4198-BAE2-A857B5B2F0CD");
                 return false;
             }
 #pragma warning restore
