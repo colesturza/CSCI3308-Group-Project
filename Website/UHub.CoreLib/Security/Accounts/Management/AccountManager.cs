@@ -94,7 +94,7 @@ namespace UHub.CoreLib.Security.Accounts.Management
 
             try
             {
-                var tmpSchool = SchoolReader.GetSchoolByDomain(domain);
+                var tmpSchool = SchoolReader.TryGetSchoolByDomain(domain);
                 if (tmpSchool == null || tmpSchool.ID == null)
                 {
                     return AcctCreateResultCode.EmailDomainInvalid;
@@ -128,7 +128,7 @@ namespace UHub.CoreLib.Security.Accounts.Management
             {
                 var major = NewUser.Major;
                 var majorValidationSet = SchoolMajorReader
-                                                .GetMajorsBySchool(NewUser.SchoolID.Value)
+                                                .TryGetMajorsBySchool(NewUser.SchoolID.Value)
                                                 .Select(x => x.Name)
                                                 .ToHashSet();
 

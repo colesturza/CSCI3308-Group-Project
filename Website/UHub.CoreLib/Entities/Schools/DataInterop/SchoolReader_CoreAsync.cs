@@ -14,16 +14,23 @@ namespace UHub.CoreLib.Entities.Schools.DataInterop
     public static partial class SchoolReader
     {
 
-        public static async Task<IEnumerable<School>> GetAllSchoolsAsync()
+        public static async Task<IEnumerable<School>> TryGetAllSchoolsAsync()
         {
             if (!CoreFactory.Singleton.IsEnabled)
             {
                 throw new SystemDisabledException();
             }
 
+            try
+            {
+                return await SqlWorker.ExecBasicQueryAsync<School>(_dbConn, "[dbo].[Schools_GetAll]");
 
-            return await SqlWorker.ExecBasicQueryAsync<School>(_dbConn, "[dbo].[Schools_GetAll]");
-
+            }
+            catch (Exception ex)
+            {
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("A9C7339B-7FD0-4224-AFAB-C8447611F25D", ex);
+                return null;
+            }
         }
 
 
@@ -32,7 +39,7 @@ namespace UHub.CoreLib.Entities.Schools.DataInterop
         /// </summary>
         /// <param name="ID">School ID</param>
         /// <returns></returns>
-        public static async Task<School> GetSchoolAsync(long SchoolID)
+        public static async Task<School> TryGetSchoolAsync(long SchoolID)
         {
             if (!CoreFactory.Singleton.IsEnabled)
             {
@@ -40,16 +47,26 @@ namespace UHub.CoreLib.Entities.Schools.DataInterop
             }
 
 
-            var temp = await SqlWorker.ExecBasicQueryAsync<School>(
-                _dbConn,
-                "[dbo].[School_GetByID]",
-                (cmd) =>
-                {
-                    cmd.Parameters.Add("@SchoolID", SqlDbType.BigInt).Value = SchoolID;
-                });
+            try
+            {
+                var temp = await SqlWorker.ExecBasicQueryAsync<School>(
+                    _dbConn,
+                    "[dbo].[School_GetByID]",
+                    (cmd) =>
+                    {
+                        cmd.Parameters.Add("@SchoolID", SqlDbType.BigInt).Value = SchoolID;
+                    });
+                return temp.SingleOrDefault();
 
 
-            return temp.SingleOrDefault();
+            }
+            catch (Exception ex)
+            {
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("F22F4424-6D73-4F7E-B9AC-87A49EACC88C", ex);
+                return null;
+            }
+
+
         }
 
 
@@ -58,23 +75,31 @@ namespace UHub.CoreLib.Entities.Schools.DataInterop
         /// </summary>
         /// <param name="ID">School ID</param>
         /// <returns></returns>
-        public static async Task<School> GetSchoolByNameAsync(string SchoolName)
+        public static async Task<School> TryGetSchoolByNameAsync(string SchoolName)
         {
             if (!CoreFactory.Singleton.IsEnabled)
             {
                 throw new SystemDisabledException();
             }
 
+            try
+            {
+                var temp = await SqlWorker.ExecBasicQueryAsync<School>(
+                    _dbConn,
+                    "[dbo].[School_GetByName]",
+                    (cmd) =>
+                    {
+                        cmd.Parameters.Add("@SchoolName", SqlDbType.NVarChar).Value = @SchoolName;
+                    });
 
-            var temp = await SqlWorker.ExecBasicQueryAsync<School>(
-                _dbConn,
-                "[dbo].[School_GetByName]",
-                (cmd) =>
-                {
-                    cmd.Parameters.Add("@SchoolName", SqlDbType.NVarChar).Value = @SchoolName;
-                });
+                return temp.SingleOrDefault();
 
-            return temp.SingleOrDefault();
+            }
+            catch (Exception ex)
+            {
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("8B7670E6-9D51-4961-ACD6-28E979BE0EA7", ex);
+                return null;
+            }
         }
 
 
@@ -84,23 +109,32 @@ namespace UHub.CoreLib.Entities.Schools.DataInterop
         /// </summary>
         /// <param name="Email"></param>
         /// <returns></returns>
-        public static async Task<School> GetSchoolByEmailAsync(string Email)
+        public static async Task<School> TryGetSchoolByEmailAsync(string Email)
         {
             if (!CoreFactory.Singleton.IsEnabled)
             {
                 throw new SystemDisabledException();
             }
 
+            try
+            {
+                var temp = await SqlWorker.ExecBasicQueryAsync<School>(
+                    _dbConn,
+                    "[dbo].[School_GetByEmail]",
+                    (cmd) =>
+                    {
+                        cmd.Parameters.Add("@Email", SqlDbType.NVarChar).Value = Email;
+                    });
+                return temp.SingleOrDefault();
 
-            var temp = await SqlWorker.ExecBasicQueryAsync<School>(
-                _dbConn,
-                "[dbo].[School_GetByEmail]",
-                (cmd) =>
-                {
-                    cmd.Parameters.Add("@Email", SqlDbType.NVarChar).Value = Email;
-                });
 
-            return temp.SingleOrDefault();
+            }
+            catch (Exception ex)
+            {
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("E52D97EE-2CED-4F27-994D-B701C8547311", ex);
+                return null;
+            }
+
         }
 
 
@@ -109,7 +143,7 @@ namespace UHub.CoreLib.Entities.Schools.DataInterop
         /// </summary>
         /// <param name="Email"></param>
         /// <returns></returns>
-        public static async Task<School> GetSchoolByDomainAsync(string Domain)
+        public static async Task<School> TryGetSchoolByDomainAsync(string Domain)
         {
             if (!CoreFactory.Singleton.IsEnabled)
             {
@@ -121,19 +155,30 @@ namespace UHub.CoreLib.Entities.Schools.DataInterop
                 return null;
             }
 
-            var temp = await SqlWorker.ExecBasicQueryAsync<School>(
-                _dbConn,
-                "[dbo].[School_GetByDomain]",
-                (cmd) =>
-                {
-                    cmd.Parameters.Add("@Domain", SqlDbType.NVarChar).Value = Domain;
-                });
-            
-            return temp.SingleOrDefault();
+
+            try
+            {
+                var temp = await SqlWorker.ExecBasicQueryAsync<School>(
+                    _dbConn,
+                    "[dbo].[School_GetByDomain]",
+                    (cmd) =>
+                    {
+                        cmd.Parameters.Add("@Domain", SqlDbType.NVarChar).Value = Domain;
+                    });
+
+                return temp.SingleOrDefault();
+
+
+            }
+            catch (Exception ex)
+            {
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("23AFFEF9-8D06-4FA1-91BF-BF233B11736D", ex);
+                return null;
+            }
         }
 
 
-        public static async Task<bool> IsEmailValidAsync(string Email)
+        public static async Task<bool> TryIsEmailValidAsync(string Email)
         {
             if (!Email.IsValidEmail())
             {
@@ -144,30 +189,48 @@ namespace UHub.CoreLib.Entities.Schools.DataInterop
             var domain = Email.GetEmailDomain();
 
 
-            return await SqlWorker.ExecScalarAsync<bool>(
-                _dbConn,
-                "[dbo].[School_IsDomainValid]",
-                (cmd) =>
-                {
-                    cmd.Parameters.Add("@Domain", SqlDbType.NVarChar).Value = domain;
-                });
+            try
+            {
+                return await SqlWorker.ExecScalarAsync<bool>(
+                    _dbConn,
+                    "[dbo].[School_IsDomainValid]",
+                    (cmd) =>
+                    {
+                        cmd.Parameters.Add("@Domain", SqlDbType.NVarChar).Value = domain;
+                    });
+
+            }
+            catch (Exception ex)
+            {
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("150FFD55-0B39-43FF-BEE4-C6EC97931D15", ex);
+                return false;
+            }
         }
 
-        public static async Task<bool> IsDomainValidAsync(string Domain)
+        public static async Task<bool> TryIsDomainValidAsync(string Domain)
         {
-            if(!Domain.IsValidEmailDomain())
+            if (!Domain.IsValidEmailDomain())
             {
                 return false;
             }
 
 
-            return await SqlWorker.ExecScalarAsync<bool>(
-                _dbConn,
-                "[dbo].[School_IsDomainValid]",
-                (cmd) =>
-                {
-                    cmd.Parameters.Add("@Domain", SqlDbType.NVarChar).Value = Domain;
-                });
+            try
+            {
+                return await SqlWorker.ExecScalarAsync<bool>(
+                    _dbConn,
+                    "[dbo].[School_IsDomainValid]",
+                    (cmd) =>
+                    {
+                        cmd.Parameters.Add("@Domain", SqlDbType.NVarChar).Value = Domain;
+                    });
+
+            }
+            catch (Exception ex)
+            {
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("A18440AB-870D-49B9-8813-09363C0FF1B4", ex);
+                return false;
+            }
         }
     }
 }

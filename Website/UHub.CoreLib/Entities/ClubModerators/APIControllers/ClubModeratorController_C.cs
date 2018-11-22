@@ -49,9 +49,9 @@ namespace UHub.CoreLib.Entities.ClubModerators.APIControllers
             var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser().CmsUser;
 
 
-            var taskIsCurrentUserOwner = UserReader.ValidateClubModeratorAsync(clubID, (long)cmsUser.ID);
-            var taskIsCurrentUserBanned = SchoolClubReader.IsUserBannedAsync(clubID, (long)cmsUser.ID);
-            var taskIsNewUserBanned = SchoolClubReader.IsUserBannedAsync(clubID, tmpClubModerator.UserID);
+            var taskIsCurrentUserOwner = UserReader.TryValidateClubModeratorAsync(clubID, (long)cmsUser.ID);
+            var taskIsCurrentUserBanned = SchoolClubReader.TryIsUserBannedAsync(clubID, (long)cmsUser.ID);
+            var taskIsNewUserBanned = SchoolClubReader.TryIsUserBannedAsync(clubID, tmpClubModerator.UserID);
 
             await Task.WhenAll(taskIsCurrentUserOwner, taskIsCurrentUserBanned, taskIsNewUserBanned);
             var isCurrentUserBanned = taskIsCurrentUserBanned.Result;

@@ -20,33 +20,33 @@ namespace UHub.CoreLib.Entities.ClubModerators.Management
             {
                 id = await ClubModeratorWriter.CreateClubModeratorAsync(NewModerator, ParentID);
             }
-            catch (ArgumentOutOfRangeException)
+            catch (AggregateException ex) when (ex.InnerException is ArgumentOutOfRangeException)
             {
                 return (null, ClubModeratorResultCode.InvalidArgument);
             }
-            catch (ArgumentNullException)
+            catch (AggregateException ex) when (ex.InnerException is ArgumentNullException)
             {
                 return (null, ClubModeratorResultCode.NullArgument);
             }
-            catch (ArgumentException)
+            catch (AggregateException ex) when (ex.InnerException is ArgumentException)
             {
                 return (null, ClubModeratorResultCode.InvalidArgument);
             }
-            catch (InvalidCastException)
+            catch (AggregateException ex) when (ex.InnerException is InvalidCastException)
             {
                 return (null, ClubModeratorResultCode.InvalidArgumentType);
             }
-            catch (InvalidOperationException)
+            catch (AggregateException ex) when (ex.InnerException is InvalidOperationException)
             {
                 return (null, ClubModeratorResultCode.InvalidOperation);
             }
-            catch (AccessForbiddenException)
+            catch (AggregateException ex) when (ex.InnerException is AccessForbiddenException)
             {
                 return (null, ClubModeratorResultCode.AccessDenied);
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync("2D390C89-3FC4-46EB-94B3-192E98F77993", ex);
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("9B1CF137-A021-40DB-ADEC-6F09E277DEA2", ex);
                 return (null, ClubModeratorResultCode.UnknownError);
             }
 

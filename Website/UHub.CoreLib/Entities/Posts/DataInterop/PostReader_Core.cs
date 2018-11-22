@@ -25,37 +25,47 @@ namespace UHub.CoreLib.Entities.Posts.DataInterop
             _dbConn = CoreFactory.Singleton.Properties.CmsDBConfig;
         }
 
-        #region Individual
+
+
         /// <summary>
         /// Get DB post full detail by LONG ID
         /// </summary>
         /// <param name="PostID"></param>
         /// <returns></returns>
-        public static Post GetPost(long PostID)
+        public static Post TryGetPost(long PostID)
         {
             if (!CoreFactory.Singleton.IsEnabled)
             {
                 throw new SystemDisabledException();
             }
 
+            try
+            {
 
-            return SqlWorker.ExecBasicQuery<Post>(
-                _dbConn,
-                "[dbo].[Post_GetByID]",
-                (cmd) =>
-                {
-                    cmd.Parameters.Add("@PostID", SqlDbType.BigInt).Value = PostID;
-                })
-                .SingleOrDefault();
+                return SqlWorker.ExecBasicQuery<Post>(
+                    _dbConn,
+                    "[dbo].[Post_GetByID]",
+                    (cmd) =>
+                    {
+                        cmd.Parameters.Add("@PostID", SqlDbType.BigInt).Value = PostID;
+                    })
+                    .SingleOrDefault();
+
+            }
+            catch (Exception ex)
+            {
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("CCE3A0A5-DC88-42B6-ADC0-F2F95995203C", ex);
+                return null;
+            }
         }
-        #endregion Individual
 
-        #region Group
+
+
         /// <summary>
         /// Get all the posts in the DB
         /// </summary>
         /// <returns></returns>
-        public static IEnumerable<Post> GetAllPosts()
+        public static IEnumerable<Post> TryGetAllPosts()
         {
 
             if (!CoreFactory.Singleton.IsEnabled)
@@ -64,120 +74,43 @@ namespace UHub.CoreLib.Entities.Posts.DataInterop
             }
 
 
-            return SqlWorker.ExecBasicQuery<Post>(
-                _dbConn,
-                "[dbo].[Posts_GetAll]",
-                (cmd) => { });
+            try
+            {
+                return SqlWorker.ExecBasicQuery<Post>(_dbConn, "[dbo].[Posts_GetAll]");
+
+            }
+            catch (Exception ex)
+            {
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("00877A2B-2DE3-492A-9EFE-5FDB837E9C59", ex);
+                return Enumerable.Empty<Post>();
+            }
         }
+
+
 
 
         /// <summary>
-        /// Get all the posts in the DB by parent
+        /// Get set of clubs with associated post counts
         /// </summary>
-        /// <param name="ParentID"></param>
         /// <returns></returns>
-        public static IEnumerable<Post> GetPostsByParent(long ParentID)
-        {
-
-            if (!CoreFactory.Singleton.IsEnabled)
-            {
-                throw new SystemDisabledException();
-            }
-
-
-            return SqlWorker.ExecBasicQuery<Post>(
-                _dbConn,
-                "[dbo].[Posts_GetByParent]",
-                (cmd) =>
-                {
-                    cmd.Parameters.Add("@ParentID", SqlDbType.BigInt).Value = ParentID;
-                });
-        }
-
-        /// <summary>
-        /// Get all the posts in the DB by school
-        /// </summary>
-        /// <param name="SchoolID"></param>
-        /// <returns></returns>
-        public static IEnumerable<Post> GetPostsBySchool(long SchoolID)
-        {
-
-            if (!CoreFactory.Singleton.IsEnabled)
-            {
-                throw new SystemDisabledException();
-            }
-
-
-            return SqlWorker.ExecBasicQuery<Post>(
-                _dbConn,
-                "[dbo].[Posts_GetBySchool]",
-                (cmd) =>
-                {
-                    cmd.Parameters.Add("@SchoolID", SqlDbType.BigInt).Value = SchoolID;
-                });
-        }
-
-        /// <summary>
-        /// Get all the posts in the DB by school club
-        /// </summary>
-        /// <param name="SchoolClubID"></param>
-        /// <returns></returns>
-        public static IEnumerable<Post> GetPostsByClub(long SchoolClubID)
-        {
-
-            if (!CoreFactory.Singleton.IsEnabled)
-            {
-                throw new SystemDisabledException();
-            }
-
-
-            return SqlWorker.ExecBasicQuery<Post>(
-                _dbConn,
-                "[dbo].[Posts_GetByClub]",
-                (cmd) =>
-                {
-                    cmd.Parameters.Add("@SchoolClubID", SqlDbType.BigInt).Value = SchoolClubID;
-                });
-        }
-
-
-
-
-        #endregion Group
-
-        #region Counters
-
-        public static IEnumerable<PostClusteredCount> GetPostClusteredCounts()
+        public static IEnumerable<PostClusteredCount> TryGetPostClusteredCounts()
         {
             if (!CoreFactory.Singleton.IsEnabled)
             {
                 throw new SystemDisabledException();
             }
 
-
-            return SqlWorker.ExecBasicQuery<PostClusteredCount>(
-                _dbConn,
-                "[dbo].[Posts_GetClusteredCounts]",
-                (cmd) => { });
-        }
-
-        public static IEnumerable<PostClusteredCount> GetPostClusteredCounts(long SchoolID)
-        {
-            if (!CoreFactory.Singleton.IsEnabled)
+            try
             {
-                throw new SystemDisabledException();
+                return SqlWorker.ExecBasicQuery<PostClusteredCount>(_dbConn, "[dbo].[Posts_GetClusteredCounts]");
+
             }
-
-
-            return SqlWorker.ExecBasicQuery<PostClusteredCount>(
-                _dbConn,
-                "[dbo].[Posts_GetClusteredCountsBySchool]",
-                (cmd) =>
-                {
-                    cmd.Parameters.Add("@SchoolID", SqlDbType.BigInt).Value = SchoolID;
-                });
+            catch (Exception ex)
+            {
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("D93AA28B-A453-4BC1-B32C-882BEAEDCEDE", ex);
+                return null;
+            }
         }
 
-        #endregion Counters
     }
 }

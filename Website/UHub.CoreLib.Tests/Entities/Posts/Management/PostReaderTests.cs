@@ -25,7 +25,7 @@ namespace UHub.CoreLib.Entities.Posts.DataInterop.Tests
         {
             TestGlobal.TestInit();
 
-            PostReader.GetAllPosts().ToList();
+            PostReader.TryGetAllPosts().ToList();
         }
 
         [TestMethod()]
@@ -33,7 +33,7 @@ namespace UHub.CoreLib.Entities.Posts.DataInterop.Tests
         {
             TestGlobal.TestInit();
 
-            var postSet = PostReader.GetAllPosts().ToList();
+            var postSet = PostReader.TryGetAllPosts().ToList();
 
 
             var dtoSet = postSet.Select(x => x.ToDto<Post_R_PublicDTO>()).ToList();
@@ -50,7 +50,7 @@ namespace UHub.CoreLib.Entities.Posts.DataInterop.Tests
             TestGlobal.TestInit();
 
 
-            var postSet = PostReader.GetAllPosts().ToList();
+            var postSet = PostReader.TryGetAllPosts().ToList();
 
             if (postSet.Count == 0)
             {
@@ -64,11 +64,11 @@ namespace UHub.CoreLib.Entities.Posts.DataInterop.Tests
             var end = FailoverDateTimeOffset.UtcNow;
 
             start = FailoverDateTimeOffset.UtcNow;
-            PostReader.GetPost(id);
+            PostReader.TryGetPost(id);
             end = FailoverDateTimeOffset.UtcNow;
             Console.WriteLine($"{(end - start).TotalMilliseconds}ms");
             start = FailoverDateTimeOffset.UtcNow;
-            PostReader.GetPost(id);
+            PostReader.TryGetPost(id);
             end = FailoverDateTimeOffset.UtcNow;
             Console.WriteLine($"{(end - start).TotalMilliseconds}ms");
         }
@@ -80,7 +80,7 @@ namespace UHub.CoreLib.Entities.Posts.DataInterop.Tests
             TestGlobal.TestInit();
 
 
-            var schoolSet = SchoolReader.GetAllSchools().ToList();
+            var schoolSet = SchoolReader.TryGetAllSchools().ToList();
 
             if (schoolSet.Count == 0)
             {
@@ -90,7 +90,7 @@ namespace UHub.CoreLib.Entities.Posts.DataInterop.Tests
             var schoolId = schoolSet.First().ID.Value;
 
 
-            var x = PostReader.GetPostsBySchool(schoolId);
+            var x = PostReader.TryGetPostsBySchool(schoolId);
 
             Console.WriteLine(x.Count());
 
@@ -102,7 +102,7 @@ namespace UHub.CoreLib.Entities.Posts.DataInterop.Tests
             TestGlobal.TestInit();
 
 
-            var clubSet = SchoolClubReader.GetAllClubs().ToList();
+            var clubSet = SchoolClubReader.TryGetAllClubs().ToList();
 
             if (clubSet.Count == 0)
             {
@@ -112,7 +112,7 @@ namespace UHub.CoreLib.Entities.Posts.DataInterop.Tests
             var clubId = clubSet.First().ID.Value;
 
 
-            var id = PostReader.GetPostsByClub(clubId);
+            var id = PostReader.TryGetPostsByClub(clubId);
             Assert.IsNotNull(id);
 
         }
@@ -128,26 +128,26 @@ namespace UHub.CoreLib.Entities.Posts.DataInterop.Tests
 
 
 
-            PostReader.GetPostsBySchoolPage(schoolId, null, out _);
+            PostReader.TryGetPostsBySchoolPage(schoolId, null, out _);
 
             var start = FailoverDateTimeOffset.UtcNow;
             var end = FailoverDateTimeOffset.UtcNow;
 
 
             start = FailoverDateTimeOffset.UtcNow;
-            PostReader.GetPostsBySchoolPage(schoolId, null, null, 5).ToList();
+            PostReader.TryGetPostsBySchoolPage(schoolId, null, null, 5).ToList();
             end = FailoverDateTimeOffset.UtcNow;
             Console.WriteLine($"Page 0: {(end - start).TotalMilliseconds}ms");
 
 
             start = FailoverDateTimeOffset.UtcNow;
-            var outSet = PostReader.GetPostsBySchoolPage(schoolId, null, 0, 5).ToList();
+            var outSet = PostReader.TryGetPostsBySchoolPage(schoolId, null, 0, 5).ToList();
             end = FailoverDateTimeOffset.UtcNow;
             Console.WriteLine($"Page 0: {(end - start).TotalMilliseconds}ms");
 
 
             start = FailoverDateTimeOffset.UtcNow;
-            var outSet2 = PostReader.GetPostsBySchoolPage(schoolId, null, 2100, 5).ToList();
+            var outSet2 = PostReader.TryGetPostsBySchoolPage(schoolId, null, 2100, 5).ToList();
             end = FailoverDateTimeOffset.UtcNow;
             Console.WriteLine($"Page 2000: {(end - start).TotalMilliseconds}ms");
 
@@ -161,7 +161,7 @@ namespace UHub.CoreLib.Entities.Posts.DataInterop.Tests
             TestGlobal.TestInit();
 
 
-            var clubSet = SchoolClubReader.GetAllClubs().ToList();
+            var clubSet = SchoolClubReader.TryGetAllClubs().ToList();
 
             if (clubSet.Count == 0)
             {
@@ -171,9 +171,9 @@ namespace UHub.CoreLib.Entities.Posts.DataInterop.Tests
             var schoolId = clubSet.First().ID.Value;
 
 
-            PostReader.GetPostsByClubPage(schoolId, null, out _);
+            PostReader.TryGetPostsByClubPage(schoolId, null, out _);
 
-            PostReader.GetPostsByClubPage(schoolId, 3, null, 1);
+            PostReader.TryGetPostsByClubPage(schoolId, 3, null, 1);
 
 
         }

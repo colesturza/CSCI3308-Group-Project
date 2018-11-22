@@ -16,39 +16,47 @@ namespace UHub.CoreLib.Entities.Posts.DataInterop
     public static partial class PostReader
     {
 
-        #region Individual
+
         /// <summary>
         /// Get DB post full detail by LONG ID
         /// </summary>
         /// <param name="PostID"></param>
         /// <returns></returns>
-        public static async Task<Post> GetPostAsync(long PostID)
+        public static async Task<Post> TryGetPostAsync(long PostID)
         {
             if (!CoreFactory.Singleton.IsEnabled)
             {
                 throw new SystemDisabledException();
             }
 
-            var temp = await SqlWorker.ExecBasicQueryAsync<Post>(
-                _dbConn,
-                "[dbo].[Post_GetByID]",
-                (cmd) =>
-                {
-                    cmd.Parameters.Add("@PostID", SqlDbType.BigInt).Value = PostID;
-                });
+            try
+            {
 
+                var temp = await SqlWorker.ExecBasicQueryAsync<Post>(
+                    _dbConn,
+                    "[dbo].[Post_GetByID]",
+                    (cmd) =>
+                    {
+                        cmd.Parameters.Add("@PostID", SqlDbType.BigInt).Value = PostID;
+                    });
 
-            return temp.SingleOrDefault();
+                return temp.SingleOrDefault();
+
+            }
+            catch (Exception ex)
+            {
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("9ED9915C-F4C5-4CB7-991F-B40ABDD6A965", ex);
+                return null;
+            }
+
         }
-        #endregion Individual
 
 
-        #region Group
         /// <summary>
         /// Get all the posts in the DB
         /// </summary>
         /// <returns></returns>
-        public static async Task<IEnumerable<Post>> GetAllPostsAsync()
+        public static async Task<IEnumerable<Post>> TryGetAllPostsAsync()
         {
 
             if (!CoreFactory.Singleton.IsEnabled)
@@ -56,118 +64,44 @@ namespace UHub.CoreLib.Entities.Posts.DataInterop
                 throw new SystemDisabledException();
             }
 
+            try
+            {
+                return await SqlWorker.ExecBasicQueryAsync<Post>(_dbConn, "[dbo].[Posts_GetAll]");
 
-            return await SqlWorker.ExecBasicQueryAsync<Post>(_dbConn, "[dbo].[Posts_GetAll]");
+            }
+            catch (Exception ex)
+            {
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("A273171F-BBF0-4A01-9187-17AF7BA3FEA4", ex);
+                return null;
+            }
         }
 
 
         /// <summary>
-        /// Get all the posts in the DB by parent
+        /// Get set of clubs with associated post counts
         /// </summary>
-        /// <param name="ParentID"></param>
         /// <returns></returns>
-        public static async Task<IEnumerable<Post>> GetPostsByParentAsync(long ParentID)
-        {
-
-            if (!CoreFactory.Singleton.IsEnabled)
-            {
-                throw new SystemDisabledException();
-            }
-
-
-            return await SqlWorker.ExecBasicQueryAsync<Post>(
-                _dbConn,
-                "[dbo].[Posts_GetByParent]",
-                (cmd) =>
-                {
-                    cmd.Parameters.Add("@ParentID", SqlDbType.BigInt).Value = ParentID;
-                });
-        }
-
-        /// <summary>
-        /// Get all the posts in the DB by school
-        /// </summary>
-        /// <param name="SchoolID"></param>
-        /// <returns></returns>
-        public static async Task<IEnumerable<Post>> GetPostsBySchoolAsync(long SchoolID)
-        {
-
-            if (!CoreFactory.Singleton.IsEnabled)
-            {
-                throw new SystemDisabledException();
-            }
-
-
-            return await SqlWorker.ExecBasicQueryAsync<Post>(
-                _dbConn,
-                "[dbo].[Posts_GetBySchool]",
-                (cmd) =>
-                {
-                    cmd.Parameters.Add("@SchoolID", SqlDbType.BigInt).Value = SchoolID;
-                });
-        }
-
-        /// <summary>
-        /// Get all the posts in the DB by school club
-        /// </summary>
-        /// <param name="SchoolClubID"></param>
-        /// <returns></returns>
-        public static async Task<IEnumerable<Post>> GetPostsByClubAsync(long SchoolClubID)
-        {
-
-            if (!CoreFactory.Singleton.IsEnabled)
-            {
-                throw new SystemDisabledException();
-            }
-
-
-            return await SqlWorker.ExecBasicQueryAsync<Post>(
-                _dbConn,
-                "[dbo].[Posts_GetByClub]",
-                (cmd) =>
-                {
-                    cmd.Parameters.Add("@SchoolClubID", SqlDbType.BigInt).Value = SchoolClubID;
-                });
-        }
-
-
-        #endregion Group
-
-
-        #region Counters
-
-        public static async Task<IEnumerable<PostClusteredCount>> GetPostClusteredCountsAsync()
+        public static async Task<IEnumerable<PostClusteredCount>> TryGetPostClusteredCountsAsync()
         {
             if (!CoreFactory.Singleton.IsEnabled)
             {
                 throw new SystemDisabledException();
             }
 
-
-            return await SqlWorker.ExecBasicQueryAsync<PostClusteredCount>(
-                _dbConn,
-                "[dbo].[Posts_GetClusteredCounts]",
-                (cmd) => { });
-        }
-
-
-        public static async Task<IEnumerable<PostClusteredCount>> GetPostClusteredCountsAsync(long SchoolID)
-        {
-            if (!CoreFactory.Singleton.IsEnabled)
+            try
             {
-                throw new SystemDisabledException();
+                return await SqlWorker.ExecBasicQueryAsync<PostClusteredCount>(_dbConn, "[dbo].[Posts_GetClusteredCounts]");
+
             }
-
-
-            return await SqlWorker.ExecBasicQueryAsync<PostClusteredCount>(
-                _dbConn,
-                "[dbo].[Posts_GetClusteredCountsBySchool]",
-                (cmd) =>
-                {
-                    cmd.Parameters.Add("@SchoolID", SqlDbType.BigInt).Value = SchoolID;
-                });
+            catch (Exception ex)
+            {
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("556303EA-E9D0-46CE-945C-F702C4A9315F", ex);
+                return null;
+            }
         }
 
-        #endregion Counters
+
+
+
     }
 }

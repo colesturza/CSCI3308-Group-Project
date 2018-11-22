@@ -45,8 +45,8 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             var schoolID = cmsUser.SchoolID.Value;
 
 
-            var taskGetUserMemberships = UserReader.GetValidClubMembershipsAsync(userID);
-            var taskGetCountSet = PostReader.GetPostClusteredCountsAsync(schoolID);
+            var taskGetUserMemberships = UserReader.TryGetValidClubMembershipsAsync(userID);
+            var taskGetCountSet = PostReader.TryGetPostClusteredCountsAsync(schoolID);
 
             var membershipHash = (await taskGetUserMemberships).ToHashSet();
             await taskGetCountSet;
@@ -86,8 +86,8 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             var schoolID = cmsUser.SchoolID.Value;
 
 
-            var taskGetUserMemberships = UserReader.GetValidClubMembershipsAsync(userID);
-            var taskGetCountSet = PostReader.GetPostClusteredCountsAsync(schoolID);
+            var taskGetUserMemberships = UserReader.TryGetValidClubMembershipsAsync(userID);
+            var taskGetCountSet = PostReader.TryGetPostClusteredCountsAsync(schoolID);
 
             var membershipHash = (await taskGetUserMemberships).ToHashSet();
             await taskGetCountSet;
@@ -145,7 +145,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             var schoolID = cmsUser.SchoolID.Value;
 
 
-            var posts = await PostReader.GetPostsBySchoolAsync(schoolID);
+            var posts = await PostReader.TryGetPostsBySchoolAsync(schoolID);
 
 
             var sanitizerMode = CoreFactory.Singleton.Properties.HtmlSanitizerMode;
@@ -195,7 +195,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             var schoolID = cmsUser.SchoolID.Value;
 
 
-            var posts = await PostReader.GetPostsBySchoolPageAsync(schoolID, StartID, PageNum, PageSize);
+            var posts = await PostReader.TryGetPostsBySchoolPageAsync(schoolID, StartID, PageNum, PageSize);
 
             var sanitizerMode = CoreFactory.Singleton.Properties.HtmlSanitizerMode;
             var shouldSanitize = (sanitizerMode & HtmlSanitizerMode.OnRead) != 0;

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UHub.CoreLib.DataInterop;
+using UHub.CoreLib.Management;
 
 namespace UHub.CoreLib.Entities.Users.DataInterop
 {
@@ -16,17 +17,26 @@ namespace UHub.CoreLib.Entities.Users.DataInterop
         /// <param name="UserID"></param>
         /// <param name="ParentID"></param>
         /// <returns></returns>
-        public static bool ValidateCommentParent(long UserID, long ParentID)
+        public static bool TryValidateCommentParent(long UserID, long ParentID)
         {
 
-            return SqlWorker.ExecScalar<bool>(
-                _dbConn,
-                "[dbo].[User_ValidateCommentParent]",
-                (cmd) =>
-                {
-                    cmd.Parameters.Add("@UserID", SqlDbType.BigInt).Value = UserID;
-                    cmd.Parameters.Add("@ParentID", SqlDbType.BigInt).Value = UserID;
-                });
+            try
+            {
+                return SqlWorker.ExecScalar<bool>(
+                    _dbConn,
+                    "[dbo].[User_ValidateCommentParent]",
+                    (cmd) =>
+                    {
+                        cmd.Parameters.Add("@UserID", SqlDbType.BigInt).Value = UserID;
+                        cmd.Parameters.Add("@ParentID", SqlDbType.BigInt).Value = UserID;
+                    });
+
+            }
+            catch (Exception ex)
+            {
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("F750F68E-728C-49E7-BA99-3DB3E1CBDB8E", ex);
+                return false;
+            }
 
         }
 

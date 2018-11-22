@@ -216,6 +216,12 @@
     <Compile Include="Entities\Posts\APIControllers\PostController_R_ByParent.cs" />
     <Compile Include="Entities\Posts\APIControllers\PostController_R_ByClub.cs" />
     <Compile Include="Entities\Posts\APIControllers\PostController_R_BySchool.cs" />
+    <Compile Include="Entities\Posts\DataInterop\PostReader_ByClubAsync.cs" />
+    <Compile Include="Entities\Posts\DataInterop\PostReader_ByClub.cs" />
+    <Compile Include="Entities\Posts\DataInterop\PostReader_ByParentAsync.cs" />
+    <Compile Include="Entities\Posts\DataInterop\PostReader_ByParent.cs" />
+    <Compile Include="Entities\Posts\DataInterop\PostReader_BySchoolAsync.cs" />
+    <Compile Include="Entities\Posts\DataInterop\PostReader_BySchool.cs" />
     <Compile Include="Entities\Posts\DataInterop\PostWriter_Core.cs" />
     <Compile Include="Entities\Posts\DTOs\Post_C_PublicDTO.cs" />
     <Compile Include="Entities\Posts\DTOs\Post_R_PublicDTO.cs" />
@@ -223,8 +229,6 @@
     <Compile Include="Entities\Posts\Interfaces\IPost_C_Public.cs" />
     <Compile Include="Entities\Posts\Interfaces\IPost_R_Public.cs" />
     <Compile Include="Entities\Posts\DataInterop\PostReader_CoreAsync.cs" />
-    <Compile Include="Entities\Posts\DataInterop\PostReader_PagesAsync.cs" />
-    <Compile Include="Entities\Posts\DataInterop\PostReader_Pages.cs" />
     <Compile Include="Entities\Posts\DataInterop\PostWriterAsync.cs" />
     <Compile Include="Entities\Posts\DataInterop\PostWriter.cs" />
     <Compile Include="Entities\Posts\DataInterop\PostReader_Core.cs" />
@@ -256,7 +260,7 @@
     <Compile Include="Entities\SchoolClubs\Management\SchoolClubManagerShared.cs" />
     <Compile Include="Entities\SchoolClubs\Management\SchoolClubManager.cs" />
     <Compile Include="Entities\SchoolClubs\SchoolClub.cs" />
-    <Compile Include="Entities\SchoolMajors\APIControllers\SchoolMajorController.cs" />
+    <Compile Include="Entities\SchoolMajors\APIControllers\SchoolMajorController_R.cs" />
     <Compile Include="Entities\SchoolMajors\DataInterop\SchoolMajorWriter_Core.cs" />
     <Compile Include="Entities\SchoolMajors\DTOs\SchoolMajor_R_PublicDTO.cs" />
     <Compile Include="Entities\SchoolMajors\Enums\SchoolMajorResultCode.cs" />
@@ -269,7 +273,7 @@
     <Compile Include="Entities\SchoolMajors\Management\SchoolMajorManagerShared.cs" />
     <Compile Include="Entities\SchoolMajors\Management\SchoolMajorManager.cs" />
     <Compile Include="Entities\SchoolMajors\SchoolMajor.cs" />
-    <Compile Include="Entities\Schools\APIControllers\SchoolController.cs" />
+    <Compile Include="Entities\Schools\APIControllers\SchoolController_R.cs" />
     <Compile Include="Entities\Schools\DataInterop\SchoolWriter_Core.cs" />
     <Compile Include="Entities\Schools\DTOs\School_R_PublicDTO.cs" />
     <Compile Include="Entities\Schools\Interfaces\ISchool_R_Public.cs" />

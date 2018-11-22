@@ -83,21 +83,7 @@ namespace UHub.CoreLib.Security.Accounts.APIControllers
 
             if (!isCreated && enableDetail)
             {
-                switch (resultCode)
-                {
-                    case AcctCreateResultCode.EmailEmpty: { status = "Email Empty"; break; }
-                    case AcctCreateResultCode.EmailInvalid: { status = "Email Invalid"; break; }
-                    case AcctCreateResultCode.EmailDuplicate: { status = "Email Duplicate"; break; }
-                    case AcctCreateResultCode.EmailDomainInvalid: { status = "Email Domain Not Supported"; break; }
-                    case AcctCreateResultCode.UsernameInvalid: { status = "Username Invalid.  Cannot contain whitespace and must be between 3 and 50 characters"; break; }
-                    case AcctCreateResultCode.UsernameDuplicate: { status = "Username Duplicate"; break; }
-                    case AcctCreateResultCode.UserInvalid: { status = "User is not valid"; break; }
-                    case AcctCreateResultCode.MajorInvalid: { status = "Major Invalid"; break; }
-                    case AcctCreateResultCode.PswdEmpty: { status = "Password Empty"; break; }
-                    case AcctCreateResultCode.PswdInvalid: { status = "Password Invalid"; break; }
-                    case AcctCreateResultCode.UnknownError: { status = "An unknown error has occured"; break; }
-                    default: { status = "An unknown error has occured"; break; }
-                }
+                status = resultCode.ToString();
             }
 
 

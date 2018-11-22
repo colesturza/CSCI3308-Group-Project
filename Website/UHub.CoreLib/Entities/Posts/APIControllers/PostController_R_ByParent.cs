@@ -35,28 +35,29 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
                 return Content(statCode, status);
             }
 
-            var taskGetTargetClub = SchoolClubReader.GetClubAsync(ParentID);
+            var taskGetTargetClub = SchoolClubReader.TryGetClubAsync(ParentID);
             var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser().CmsUser;
 
-            var count = 0L;
+            long? count = null;
 
 
             //parent is school
             if (ParentID == cmsUser.SchoolID)
             {
-                count = await PostReader.GetPostCountByClubAsync(ParentID, true);
+                count = await PostReader.TryGetPostCountByClubAsync(ParentID, true);
             }
             //parent is club
             else
             {
                 var targetClub = await taskGetTargetClub;
 
-                if (targetClub != null)
+                if (targetClub == null)
                 {
-
+                    return NotFound();
                 }
-                var taskIsUserBanned = SchoolClubReader.IsUserBannedAsync(ParentID, cmsUser.ID.Value);
-                var taskIsUserMember = SchoolClubReader.ValidateMembershipAsync(ParentID, cmsUser.ID.Value);
+
+                var taskIsUserBanned = SchoolClubReader.TryIsUserBannedAsync(ParentID, cmsUser.ID.Value);
+                var taskIsUserMember = SchoolClubReader.TryValidateMembershipAsync(ParentID, cmsUser.ID.Value);
 
                 if (targetClub.SchoolID != cmsUser.SchoolID)
                 {
@@ -64,7 +65,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
                 }
 
                 var isUserMember = await taskIsUserMember;
-                var taskGetCount = PostReader.GetPostCountByClubAsync(ParentID, isUserMember);
+                var taskGetCount = PostReader.TryGetPostCountByClubAsync(ParentID, isUserMember);
 
                 if (await taskIsUserBanned)
                 {
@@ -75,6 +76,10 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
                 count = await taskGetCount;
             }
 
+            if (count == null)
+            {
+                return InternalServerError();
+            }
 
             return Ok(count);
         }
@@ -93,16 +98,16 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             }
 
 
-            var taskGetTargetClub = SchoolClubReader.GetClubAsync(ParentID);
+            var taskGetTargetClub = SchoolClubReader.TryGetClubAsync(ParentID);
             var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser().CmsUser;
 
-            var count = 0L;
+            long? count = null;
 
 
             //parent is school
             if (ParentID == cmsUser.SchoolID)
             {
-                count = await PostReader.GetPostCountByClubAsync(ParentID, true);
+                count = await PostReader.TryGetPostCountByClubAsync(ParentID, true);
             }
             //parent is club
             else
@@ -113,8 +118,8 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
                 {
 
                 }
-                var taskIsUserBanned = SchoolClubReader.IsUserBannedAsync(ParentID, cmsUser.ID.Value);
-                var taskIsUserMember = SchoolClubReader.ValidateMembershipAsync(ParentID, cmsUser.ID.Value);
+                var taskIsUserBanned = SchoolClubReader.TryIsUserBannedAsync(ParentID, cmsUser.ID.Value);
+                var taskIsUserMember = SchoolClubReader.TryValidateMembershipAsync(ParentID, cmsUser.ID.Value);
 
                 if (targetClub.SchoolID != cmsUser.SchoolID)
                 {
@@ -122,7 +127,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
                 }
 
                 var isUserMember = await taskIsUserMember;
-                var taskGetCount = PostReader.GetPostCountByClubAsync(ParentID, isUserMember);
+                var taskGetCount = PostReader.TryGetPostCountByClubAsync(ParentID, isUserMember);
 
                 if (await taskIsUserBanned)
                 {
@@ -133,8 +138,14 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
                 count = await taskGetCount;
             }
 
+            if(count == null)
+            {
+                return InternalServerError();
+            }
+            var countVal = count.Value;
 
-            if (count == 0)
+
+            if (countVal == 0)
             {
                 return Ok(0);
             }
@@ -144,13 +155,13 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             }
             if (PageSize < 1)
             {
-                double divResult = (count * 1.0) / DEFAULT_PAGE_SIZE;
+                double divResult = (countVal * 1.0) / DEFAULT_PAGE_SIZE;
                 long ceil = (long)Math.Ceiling(divResult);
                 return Ok(ceil);
             }
 
 
-            double divResult2 = (count * 1.0) / PageSize;
+            double divResult2 = (countVal * 1.0) / PageSize;
             long ceil2 = (long)Math.Ceiling(divResult2);
             return Ok(ceil2);
         }
@@ -176,13 +187,18 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
 
             if (ParentID == cmsUser.SchoolID)
             {
-                posts = await PostReader.GetPostsByParentAsync(ParentID);
+                posts = await PostReader.TryGetPostsByParentAsync(ParentID);
+
+                if (posts == null)
+                {
+                    return InternalServerError();
+                }
             }
             else
             {
-                var taskTargetClub = SchoolClubReader.GetClubAsync(ParentID);
-                var taskIsUserBanned = SchoolClubReader.IsUserBannedAsync(ParentID, cmsUser.ID.Value);
-                var taskIsUserMember = SchoolClubReader.ValidateMembershipAsync(ParentID, cmsUser.ID.Value);
+                var taskTargetClub = SchoolClubReader.TryGetClubAsync(ParentID);
+                var taskIsUserBanned = SchoolClubReader.TryIsUserBannedAsync(ParentID, cmsUser.ID.Value);
+                var taskIsUserMember = SchoolClubReader.TryValidateMembershipAsync(ParentID, cmsUser.ID.Value);
 
                 await Task.WhenAll(taskTargetClub, taskIsUserBanned);
 
@@ -200,7 +216,12 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
                     return Content(HttpStatusCode.Forbidden, "Access Denied");
                 }
 
-                posts = await PostReader.GetPostsByParentAsync(ParentID);
+                posts = await PostReader.TryGetPostsByParentAsync(ParentID);
+                if (posts == null)
+                {
+                    return InternalServerError();
+                }
+
 
 
                 bool IsUserMember = await taskIsUserMember;
@@ -210,8 +231,9 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
                     posts= posts.Where(x => x.IsPublic);
                 }
             }
-            
 
+
+            
 
 
             var sanitizerMode = CoreFactory.Singleton.Properties.HtmlSanitizerMode;
@@ -264,13 +286,17 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
 
             if (ParentID == cmsUser.SchoolID)
             {
-                posts = await PostReader.GetPostsByParentPageAsync(ParentID,StartID, PageNum, PageSize);
+                posts = await PostReader.TryGetPostsByParentPageAsync(ParentID,StartID, PageNum, PageSize);
+                if (posts == null)
+                {
+                    return InternalServerError();
+                }
             }
             else
             {
-                var taskTargetClub = SchoolClubReader.GetClubAsync(ParentID);
-                var taskIsUserBanned = SchoolClubReader.IsUserBannedAsync(ParentID, cmsUser.ID.Value);
-                var taskIsUserMember = SchoolClubReader.ValidateMembershipAsync(ParentID, cmsUser.ID.Value);
+                var taskTargetClub = SchoolClubReader.TryGetClubAsync(ParentID);
+                var taskIsUserBanned = SchoolClubReader.TryIsUserBannedAsync(ParentID, cmsUser.ID.Value);
+                var taskIsUserMember = SchoolClubReader.TryValidateMembershipAsync(ParentID, cmsUser.ID.Value);
 
                 await Task.WhenAll(taskTargetClub, taskIsUserBanned);
 
@@ -288,7 +314,11 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
                     return Content(HttpStatusCode.Forbidden, "Access Denied");
                 }
 
-                posts = await PostReader.GetPostsByParentPageAsync(ParentID, StartID, PageNum, PageSize);
+                posts = await PostReader.TryGetPostsByParentPageAsync(ParentID, StartID, PageNum, PageSize);
+                if (posts == null)
+                {
+                    return InternalServerError();
+                }
 
 
                 bool IsUserMember = await taskIsUserMember;

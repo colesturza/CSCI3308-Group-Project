@@ -27,7 +27,12 @@ namespace UHub.CoreLib.Entities.SchoolMajors.APIControllers
         public async Task<IHttpActionResult> GetAllBySchool(long SchoolID)
         {
 
-            var majorSet = await SchoolMajorReader.GetMajorsBySchoolAsync(SchoolID);
+            var majorSet = await SchoolMajorReader.TryGetMajorsBySchoolAsync(SchoolID);
+            if (majorSet == null)
+            {
+                return InternalServerError();
+            }
+
 
             return Ok(majorSet.Select(x => x.ToDto<SchoolMajor_R_PublicDTO>()));
 
@@ -44,7 +49,12 @@ namespace UHub.CoreLib.Entities.SchoolMajors.APIControllers
                 return BadRequest();
             }
 
-            var majorSet = await SchoolMajorReader.GetMajorsByEmailAsync(email);
+            var majorSet = await SchoolMajorReader.TryGetMajorsByEmailAsync(email);
+            if (majorSet == null)
+            {
+                return InternalServerError();
+            }
+
 
             return Ok(majorSet.Select(x => x.ToDto<SchoolMajor_R_PublicDTO>()));
 
@@ -62,7 +72,12 @@ namespace UHub.CoreLib.Entities.SchoolMajors.APIControllers
             }
 
 
-            var majorSet = await SchoolMajorReader.GetMajorsByDomainAsync(domain);
+            var majorSet = await SchoolMajorReader.TryGetMajorsByDomainAsync(domain);
+            if (majorSet == null)
+            {
+                return InternalServerError();
+            }
+
 
             return Ok(majorSet.Select(x => x.ToDto<SchoolMajor_R_PublicDTO>()));
 

@@ -56,7 +56,7 @@ namespace UHub.CoreLib.Security.Accounts.Management
             }
 
             var taskDoesEmailExist = UserReader.DoesUserExistAsync(NewUser.Email);
-            var taskSchoolMajors = SchoolMajorReader.GetMajorsBySchoolAsync(NewUser.SchoolID.Value);
+            var taskSchoolMajors = SchoolMajorReader.TryGetMajorsBySchoolAsync(NewUser.SchoolID.Value);
 
             //TODO: finalize trims
             //TODO: validate year against list
@@ -78,7 +78,7 @@ namespace UHub.CoreLib.Security.Accounts.Management
 
             //Validate user domain and school
             var domain = NewUser.Email.GetEmailDomain();
-            var taskGetUserSchool = SchoolReader.GetSchoolByDomainAsync(domain);
+            var taskGetUserSchool = SchoolReader.TryGetSchoolByDomainAsync(domain);
             var taskDoesUsernameExist = UserReader.DoesUserExistAsync(NewUser.Username, domain);
 
 
@@ -162,46 +162,38 @@ namespace UHub.CoreLib.Security.Accounts.Management
                 userID = await UserWriter.CreateUserAsync(NewUser);
 #pragma warning restore
             }
-            catch (AggregateException ex)
+            catch (AggregateException ex) when (ex.InnerException is DuplicateNameException)
             {
-                if (ex.InnerException is DuplicateNameException)
-                {
-                    return AcctCreateResultCode.EmailDuplicate;
-                }
-                else if (ex.InnerException is ArgumentOutOfRangeException)
-                {
-                    return AcctCreateResultCode.InvalidArgument;
-                }
-                else if (ex.InnerException is ArgumentNullException)
-                {
-                    return AcctCreateResultCode.NullArgument;
-                }
-                else if (ex.InnerException is ArgumentException)
-                {
-                    return AcctCreateResultCode.InvalidArgument;
-                }
-                else if (ex.InnerException is InvalidCastException)
-                {
-                    return AcctCreateResultCode.InvalidArgumentType;
-                }
-                else if (ex.InnerException is InvalidOperationException)
-                {
-                    return AcctCreateResultCode.InvalidOperation;
-                }
-                else if (ex.InnerException is AccessForbiddenException)
-                {
-                    return AcctCreateResultCode.AccessDenied;
-                }
-                else
-                {
-                    return AcctCreateResultCode.UnknownError;
-                }
-
+                return AcctCreateResultCode.EmailDuplicate;
+            }
+            catch (AggregateException ex) when (ex.InnerException is ArgumentOutOfRangeException)
+            {
+                return AcctCreateResultCode.InvalidArgument;
+            }
+            catch (AggregateException ex) when (ex.InnerException is ArgumentNullException)
+            {
+                return AcctCreateResultCode.NullArgument;
+            }
+            catch (AggregateException ex) when (ex.InnerException is ArgumentException)
+            {
+                return AcctCreateResultCode.InvalidArgument;
+            }
+            catch (AggregateException ex) when (ex.InnerException is InvalidCastException)
+            {
+                return AcctCreateResultCode.InvalidArgumentType;
+            }
+            catch (AggregateException ex) when (ex.InnerException is InvalidOperationException)
+            {
+                return AcctCreateResultCode.InvalidOperation;
+            }
+            catch (AggregateException ex) when (ex.InnerException is AccessForbiddenException)
+            {
+                return AcctCreateResultCode.AccessDenied;
             }
             catch (Exception ex)
             {
 
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync("E1738AAB-D840-4F1B-B4ED-54ABF01408AD", ex);
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("9206C3AE-215E-491D-9621-B7607A6AF91D", ex);
                 return AcctCreateResultCode.UnknownError;
             }
 

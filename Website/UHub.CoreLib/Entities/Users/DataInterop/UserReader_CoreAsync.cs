@@ -26,26 +26,15 @@ namespace UHub.CoreLib.Entities.Users.DataInterop
             }
 
 
-            try
+
+            return await SqlWorker.ExecScalarAsync<bool>(
+            _dbConn,
+            "[dbo].[User_DoesExistByID]",
+            (cmd) =>
             {
-                return await SqlWorker.ExecScalarAsync<bool>(
-                _dbConn,
-                "[dbo].[User_DoesExistByID]",
-                (cmd) =>
-                {
-                    cmd.Parameters.Add("@UserID", SqlDbType.BigInt).Value = UserID;
-                });
+                cmd.Parameters.Add("@UserID", SqlDbType.BigInt).Value = UserID;
+            });
 
-
-            }
-            catch (Exception ex)
-            {
-                var errCode = "A2DEF2E8-2FCE-4374-B15F-47F68EF80995";
-                Exception ex_outer = new Exception(errCode, ex);
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
-
-                return false;
-            }
         }
 
         public static async Task<bool> DoesUserExistAsync(string Email)
@@ -61,24 +50,15 @@ namespace UHub.CoreLib.Entities.Users.DataInterop
             }
 
 
-            try
-            {
-                return await SqlWorker.ExecScalarAsync<bool>(
-                _dbConn,
-                "[dbo].[User_DoesExistByEmail]",
-                (cmd) =>
-                {
-                    cmd.Parameters.Add("@Email", SqlDbType.NVarChar).Value = HandleParamEmpty(Email);
-                });
-            }
-            catch (Exception ex)
-            {
-                var errCode = "F23FFB10-4DD5-43FA-910F-D745C431FE1F";
-                Exception ex_outer = new Exception(errCode, ex);
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
 
-                return false;
-            }
+            return await SqlWorker.ExecScalarAsync<bool>(
+            _dbConn,
+            "[dbo].[User_DoesExistByEmail]",
+            (cmd) =>
+            {
+                cmd.Parameters.Add("@Email", SqlDbType.NVarChar).Value = HandleParamEmpty(Email);
+            });
+
         }
 
         public static async Task<bool> DoesUserExistAsync(string Username, string Domain)
@@ -94,27 +74,17 @@ namespace UHub.CoreLib.Entities.Users.DataInterop
             }
 
 
-            try
+
+            return await SqlWorker.ExecScalarAsync<bool>(
+            _dbConn,
+            "[dbo].[User_DoesExistByUsername]",
+            (cmd) =>
             {
-                return await SqlWorker.ExecScalarAsync<bool>(
-                _dbConn,
-                "[dbo].[User_DoesExistByUsername]",
-                (cmd) =>
-                {
-                    cmd.Parameters.Add("@Username", SqlDbType.NVarChar).Value = HandleParamEmpty(Username);
-                    cmd.Parameters.Add("@Domain", SqlDbType.NVarChar).Value = HandleParamEmpty(Domain);
-                });
+                cmd.Parameters.Add("@Username", SqlDbType.NVarChar).Value = HandleParamEmpty(Username);
+                cmd.Parameters.Add("@Domain", SqlDbType.NVarChar).Value = HandleParamEmpty(Domain);
+            });
 
 
-            }
-            catch (Exception ex)
-            {
-                var errCode = "77AD516E-109E-47E4-9409-7F61C43674DF";
-                Exception ex_outer = new Exception(errCode, ex);
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
-
-                return false;
-            }
         }
 
 
@@ -137,24 +107,14 @@ namespace UHub.CoreLib.Entities.Users.DataInterop
             }
 
 
-            try
+            return await SqlWorker.ExecScalarAsync<long>(
+            _dbConn,
+            "[dbo].[User_GetIDByEmail]",
+            (cmd) =>
             {
-                return await SqlWorker.ExecScalarAsync<long>(
-                _dbConn,
-                "[dbo].[User_GetIDByEmail]",
-                (cmd) =>
-                {
-                    cmd.Parameters.Add("@Email", SqlDbType.NVarChar).Value = HandleParamEmpty(Email);
-                });
-            }
-            catch (Exception ex)
-            {
-                var errCode = "8E5E8203-137C-4B79-B902-3644EEA887DF";
-                Exception ex_outer = new Exception(errCode, ex);
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
+                cmd.Parameters.Add("@Email", SqlDbType.NVarChar).Value = HandleParamEmpty(Email);
+            });
 
-                return null;
-            }
         }
 
         /// <summary>
@@ -174,25 +134,16 @@ namespace UHub.CoreLib.Entities.Users.DataInterop
                 return null;
             }
 
-            try
-            {
-                return await SqlWorker.ExecScalarAsync<long>(
-                _dbConn,
-                "[dbo].[User_GetIDByUsername]",
-                (cmd) =>
-                {
-                    cmd.Parameters.Add("@Username", SqlDbType.NVarChar).Value = HandleParamEmpty(Username);
-                    cmd.Parameters.Add("@Domain", SqlDbType.NVarChar).Value = HandleParamEmpty(Domain);
-                });
-            }
-            catch (Exception ex)
-            {
-                var errCode = "3E11FF4A-4611-4EB8-A084-CA14040089A4";
-                Exception ex_outer = new Exception(errCode, ex);
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
 
-                return null;
-            }
+            return await SqlWorker.ExecScalarAsync<long>(
+            _dbConn,
+            "[dbo].[User_GetIDByUsername]",
+            (cmd) =>
+            {
+                cmd.Parameters.Add("@Username", SqlDbType.NVarChar).Value = HandleParamEmpty(Username);
+                cmd.Parameters.Add("@Domain", SqlDbType.NVarChar).Value = HandleParamEmpty(Domain);
+            });
+
         }
 
         /// <summary>
@@ -207,28 +158,19 @@ namespace UHub.CoreLib.Entities.Users.DataInterop
                 throw new SystemDisabledException();
             }
 
-            try
-            {
-
-                var temp = await SqlWorker.ExecBasicQueryAsync<User>(
-                    _dbConn,
-                    "[dbo].[User_GetByID]",
-                    (cmd) =>
-                    {
-                        cmd.Parameters.Add("@UserID", SqlDbType.BigInt).Value = UserID;
-                    });
 
 
-                return temp.SingleOrDefault();
-            }
-            catch (Exception ex)
-            {
-                var errCode = "A5507A7A-2D24-4433-BCC5-02EF4FF6B374";
-                Exception ex_outer = new Exception(errCode, ex);
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
+            var temp = await SqlWorker.ExecBasicQueryAsync<User>(
+                _dbConn,
+                "[dbo].[User_GetByID]",
+                (cmd) =>
+                {
+                    cmd.Parameters.Add("@UserID", SqlDbType.BigInt).Value = UserID;
+                });
 
-                return null;
-            }
+
+            return temp.SingleOrDefault();
+
         }
 
         /// <summary>
@@ -249,26 +191,17 @@ namespace UHub.CoreLib.Entities.Users.DataInterop
             }
 
 
-            try
-            {
-                var temp = await SqlWorker.ExecBasicQueryAsync<User>(
-                _dbConn,
-                "[dbo].[User_GetByEmail]",
-                (cmd) =>
-                {
-                    cmd.Parameters.Add("@Email", SqlDbType.NVarChar).Value = HandleParamEmpty(Email);
-                });
 
-                return temp.SingleOrDefault();
-            }
-            catch (Exception ex)
+            var temp = await SqlWorker.ExecBasicQueryAsync<User>(
+            _dbConn,
+            "[dbo].[User_GetByEmail]",
+            (cmd) =>
             {
-                var errCode = "AFCC4016-826B-4EB3-9AB9-0ECA77B45784";
-                Exception ex_outer = new Exception(errCode, ex);
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
+                cmd.Parameters.Add("@Email", SqlDbType.NVarChar).Value = HandleParamEmpty(Email);
+            });
 
-                return null;
-            }
+            return temp.SingleOrDefault();
+
         }
 
         /// <summary>
@@ -289,28 +222,18 @@ namespace UHub.CoreLib.Entities.Users.DataInterop
             }
 
 
-            try
-            {
 
-                var temp = await SqlWorker.ExecBasicQueryAsync<User>(
-                    _dbConn,
-                    "[dbo].[User_GetByUsername]",
-                    (cmd) =>
-                    {
-                        cmd.Parameters.Add("@Username", SqlDbType.NVarChar).Value = HandleParamEmpty(Username);
-                        cmd.Parameters.Add("@Domain", SqlDbType.NVarChar).Value = HandleParamEmpty(Domain);
-                    });
+            var temp = await SqlWorker.ExecBasicQueryAsync<User>(
+                _dbConn,
+                "[dbo].[User_GetByUsername]",
+                (cmd) =>
+                {
+                    cmd.Parameters.Add("@Username", SqlDbType.NVarChar).Value = HandleParamEmpty(Username);
+                    cmd.Parameters.Add("@Domain", SqlDbType.NVarChar).Value = HandleParamEmpty(Domain);
+                });
 
-                return temp.SingleOrDefault();
-            }
-            catch (Exception ex)
-            {
-                var errCode = "A7527D36-FAEE-4630-87DB-4CF13A3EF0B2";
-                Exception ex_outer = new Exception(errCode, ex);
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
+            return temp.SingleOrDefault();
 
-                return null;
-            }
         }
         #endregion Individual
 
@@ -327,20 +250,10 @@ namespace UHub.CoreLib.Entities.Users.DataInterop
                 throw new SystemDisabledException();
             }
 
-            try
-            {
 
-                return await SqlWorker.ExecBasicQueryAsync<User>(_dbConn, "[dbo].[User_GetAll]");
 
-            }
-            catch (Exception ex)
-            {
-                var errCode = "86F10DBA-EE88-414C-B8E5-AADEBB6A7977";
-                Exception ex_outer = new Exception(errCode, ex);
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
+            return await SqlWorker.ExecBasicQueryAsync<User>(_dbConn, "[dbo].[User_GetAll]");
 
-                return null;
-            }
         }
         #endregion Group
 

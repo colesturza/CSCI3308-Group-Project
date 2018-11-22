@@ -43,7 +43,7 @@ namespace UHub.CoreLib.Entities.Comments.APIControllers
             var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser().CmsUser;
 
 
-            var validateParent = await UserReader.ValidateCommentParentAsync((long)cmsUser.ID, tmpComment.ParentID);
+            var validateParent = await UserReader.TryValidateCommentParentAsync((long)cmsUser.ID, tmpComment.ParentID);
 
             if (!validateParent)
             {

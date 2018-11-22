@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UHub.CoreLib.DataInterop;
+using UHub.CoreLib.Management;
 
 namespace UHub.CoreLib.Entities.Users.DataInterop
 {
@@ -16,17 +17,25 @@ namespace UHub.CoreLib.Entities.Users.DataInterop
         /// <param name="UserID"></param>
         /// <param name="ParentID"></param>
         /// <returns></returns>
-        public static async Task<bool> ValidateCommentParentAsync(long UserID, long ParentID)
+        public static async Task<bool> TryValidateCommentParentAsync(long UserID, long ParentID)
         {
+            try
+            {
 
-            return await SqlWorker.ExecScalarAsync<bool>(
-                _dbConn,
-                "[dbo].[User_ValidateCommentParent]",
-                (cmd) =>
-                {
-                    cmd.Parameters.Add("@UserID", SqlDbType.BigInt).Value = UserID;
-                    cmd.Parameters.Add("@ParentID", SqlDbType.BigInt).Value = UserID;
-                });
+                return await SqlWorker.ExecScalarAsync<bool>(
+                    _dbConn,
+                    "[dbo].[User_ValidateCommentParent]",
+                    (cmd) =>
+                    {
+                        cmd.Parameters.Add("@UserID", SqlDbType.BigInt).Value = UserID;
+                        cmd.Parameters.Add("@ParentID", SqlDbType.BigInt).Value = UserID;
+                    });
+            }
+            catch (Exception ex)
+            {
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("806327DF-92D9-4400-974C-11D7EB2C1793", ex);
+                return false;
+            }
 
         }
 

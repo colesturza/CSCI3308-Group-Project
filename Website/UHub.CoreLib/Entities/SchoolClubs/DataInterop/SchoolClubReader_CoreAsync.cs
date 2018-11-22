@@ -14,39 +14,46 @@ namespace UHub.CoreLib.Entities.SchoolClubs.DataInterop
     public static partial class SchoolClubReader
     {
 
-        #region Individual
         /// <summary>
         /// Get DB school club full detail by LONG ID
         /// </summary>
         /// <param name="SchoolClubID"></param>
         /// <returns></returns>
-        public static async Task<SchoolClub> GetClubAsync(long SchoolClubID)
+        public static async Task<SchoolClub> TryGetClubAsync(long SchoolClubID)
         {
             if (!CoreFactory.Singleton.IsEnabled)
             {
                 throw new SystemDisabledException();
             }
 
+            try
+            {
 
-            var temp = SqlWorker.ExecBasicQueryAsync<SchoolClub>(
-                _dbConn,
-                "[dbo].[SchoolClub_GetByID]",
-                (cmd) =>
-                {
-                    cmd.Parameters.Add("@SchoolClubID", SqlDbType.BigInt).Value = SchoolClubID;
-                });
+                var temp = SqlWorker.ExecBasicQueryAsync<SchoolClub>(
+                    _dbConn,
+                    "[dbo].[SchoolClub_GetByID]",
+                    (cmd) =>
+                    {
+                        cmd.Parameters.Add("@SchoolClubID", SqlDbType.BigInt).Value = SchoolClubID;
+                    });
 
+                return (await temp).SingleOrDefault();
 
-            return (await temp).SingleOrDefault();
+            }
+            catch (Exception ex)
+            {
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("DE0D14EB-0091-4C9D-962C-CDCDA69B9775", ex);
+                return null;
+            }
         }
-        #endregion Individual
 
-        #region Group
+
+
         /// <summary>
         /// Get all the school clubs in the DB
         /// </summary>
         /// <returns></returns>
-        public static async Task<IEnumerable<SchoolClub>> GetAllClubsAsync()
+        public static async Task<IEnumerable<SchoolClub>> TryGetAllClubsAsync()
         {
 
             if (!CoreFactory.Singleton.IsEnabled)
@@ -54,10 +61,16 @@ namespace UHub.CoreLib.Entities.SchoolClubs.DataInterop
                 throw new SystemDisabledException();
             }
 
+            try
+            {
+                return await SqlWorker.ExecBasicQueryAsync<SchoolClub>(_dbConn, "[dbo].[SchoolClubs_GetAll]");
 
-            return await SqlWorker.ExecBasicQueryAsync<SchoolClub>(
-                _dbConn,
-                "[dbo].[SchoolClubs_GetAll]");
+            }
+            catch (Exception ex)
+            {
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("1CE82570-22DA-4DA5-96FB-3B1A417A4B09", ex);
+                return null;
+            }
         }
 
         /// <summary>
@@ -65,7 +78,7 @@ namespace UHub.CoreLib.Entities.SchoolClubs.DataInterop
         /// </summary>
         /// <param name="SchoolID"></param>
         /// <returns></returns>
-        public static async Task<IEnumerable<SchoolClub>> GetClubsBySchoolAsync(long SchoolID)
+        public static async Task<IEnumerable<SchoolClub>> TryGetClubsBySchoolAsync(long SchoolID)
         {
 
             if (!CoreFactory.Singleton.IsEnabled)
@@ -73,13 +86,22 @@ namespace UHub.CoreLib.Entities.SchoolClubs.DataInterop
                 throw new SystemDisabledException();
             }
 
+            try
+            {
+                return await SqlWorker.ExecBasicQueryAsync<SchoolClub>(
+                    _dbConn,
+                    "[dbo].[SchoolClubs_GetBySchool]",
+                    (cmd) =>
+                    {
+                        cmd.Parameters.Add("@SchoolID", SqlDbType.BigInt).Value = SchoolID;
+                    });
 
-            return await SqlWorker.ExecBasicQueryAsync<SchoolClub>(
-                _dbConn,
-                "[dbo].[SchoolClubs_GetBySchool]",
-                (cmd) => {
-                    cmd.Parameters.Add("@SchoolID", SqlDbType.BigInt).Value = SchoolID;
-                });
+            }
+            catch (Exception ex)
+            {
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("887A70DF-2D82-4E34-9462-ABC0CA252E32", ex);
+                return null;
+            }
         }
 
         /// <summary>
@@ -87,7 +109,7 @@ namespace UHub.CoreLib.Entities.SchoolClubs.DataInterop
         /// </summary>
         /// <param name="Email"></param>
         /// <returns></returns>
-        public static async Task<IEnumerable<SchoolClub>> GetClubsByEmailAsync(string Email)
+        public static async Task<IEnumerable<SchoolClub>> TryGetClubsByEmailAsync(string Email)
         {
 
             if (!CoreFactory.Singleton.IsEnabled)
@@ -101,12 +123,22 @@ namespace UHub.CoreLib.Entities.SchoolClubs.DataInterop
             }
 
 
-            return await SqlWorker.ExecBasicQueryAsync<SchoolClub>(
-                _dbConn,
-                "[dbo].[SchoolClubs_GetByEmail]",
-                (cmd) => {
-                    cmd.Parameters.Add("@Email", SqlDbType.NVarChar).Value = Email;
-                });
+            try
+            {
+                return await SqlWorker.ExecBasicQueryAsync<SchoolClub>(
+                    _dbConn,
+                    "[dbo].[SchoolClubs_GetByEmail]",
+                    (cmd) =>
+                    {
+                        cmd.Parameters.Add("@Email", SqlDbType.NVarChar).Value = Email;
+                    });
+
+            }
+            catch (Exception ex)
+            {
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("3B1D5714-49AC-444D-B65A-F14B8B34305B", ex);
+                return null;
+            }
         }
 
 
@@ -115,7 +147,7 @@ namespace UHub.CoreLib.Entities.SchoolClubs.DataInterop
         /// </summary>
         /// <param name="Email"></param>
         /// <returns></returns>
-        public static async Task<IEnumerable<SchoolClub>> GetClubsByDomainAsync(string Domain)
+        public static async Task<IEnumerable<SchoolClub>> TryGetClubsByDomainAsync(string Domain)
         {
 
             if (!CoreFactory.Singleton.IsEnabled)
@@ -129,14 +161,23 @@ namespace UHub.CoreLib.Entities.SchoolClubs.DataInterop
             }
 
 
-            return await SqlWorker.ExecBasicQueryAsync<SchoolClub>(
-                _dbConn,
-                "[dbo].[SchoolClubs_GetByDomain]",
-                (cmd) => {
-                    cmd.Parameters.Add("@Domain", SqlDbType.NVarChar).Value = Domain;
-                });
+            try
+            {
+                return await SqlWorker.ExecBasicQueryAsync<SchoolClub>(
+                    _dbConn,
+                    "[dbo].[SchoolClubs_GetByDomain]",
+                    (cmd) =>
+                    {
+                        cmd.Parameters.Add("@Domain", SqlDbType.NVarChar).Value = Domain;
+                    });
+            }
+            catch (Exception ex)
+            {
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("920AD4FB-8F4C-431C-ADC6-63D1E835A122", ex);
+                return null;
+            }
         }
-        #endregion Group
+
 
     }
 }

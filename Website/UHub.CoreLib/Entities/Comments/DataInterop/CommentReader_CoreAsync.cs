@@ -14,13 +14,12 @@ namespace UHub.CoreLib.Entities.Comments.DataInterop
     public static partial class CommentReader
     {
 
-        #region Group
         /// <summary>
         /// Get all the comments in the DB from a post
         /// </summary>
         /// <param name="PostID"></param>
         /// <returns></returns>
-        public static async Task<IEnumerable<Comment>> GetCommentsByPostAsync(long PostID)
+        public static async Task<IEnumerable<Comment>> TryGetCommentsByPostAsync(long PostID)
         {
 
             if (!CoreFactory.Singleton.IsEnabled)
@@ -28,13 +27,23 @@ namespace UHub.CoreLib.Entities.Comments.DataInterop
                 throw new SystemDisabledException();
             }
 
+            try
+            {
 
-            return await SqlWorker.ExecBasicQueryAsync<Comment>(
-                _dbConn,
-                "[dbo].[Comments_GetByPost]",
-                (cmd) => {
-                    cmd.Parameters.Add("@PostID", SqlDbType.BigInt).Value = PostID;
-                });
+                return await SqlWorker.ExecBasicQueryAsync<Comment>(
+                    _dbConn,
+                    "[dbo].[Comments_GetByPost]",
+                    (cmd) =>
+                    {
+                        cmd.Parameters.Add("@PostID", SqlDbType.BigInt).Value = PostID;
+                    });
+
+            }
+            catch (Exception ex)
+            {
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("66C367D8-119F-4539-92DD-48F01738BDA1", ex);
+                return null;
+            }
         }
 
         /// <summary>
@@ -43,7 +52,7 @@ namespace UHub.CoreLib.Entities.Comments.DataInterop
         /// </summary>
         /// /// <param name="ParentID"></param>
         /// <returns></returns>
-        public static async Task<IEnumerable<Comment>> GetCommentsByParentAsync(long ParentID)
+        public static async Task<IEnumerable<Comment>> TryGetCommentsByParentAsync(long ParentID)
         {
 
             if (!CoreFactory.Singleton.IsEnabled)
@@ -52,13 +61,23 @@ namespace UHub.CoreLib.Entities.Comments.DataInterop
             }
 
 
-            return await SqlWorker.ExecBasicQueryAsync<Comment>(
-                _dbConn,
-                "[dbo].[Comments_GetByParent]",
-                (cmd) => {
-                    cmd.Parameters.Add("@ParentID", SqlDbType.BigInt).Value = ParentID;
-                });
+            try
+            {
+
+                return await SqlWorker.ExecBasicQueryAsync<Comment>(
+                    _dbConn,
+                    "[dbo].[Comments_GetByParent]",
+                    (cmd) =>
+                    {
+                        cmd.Parameters.Add("@ParentID", SqlDbType.BigInt).Value = ParentID;
+                    });
+
+            }
+            catch (Exception ex)
+            {
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("63E18CDB-F9A3-41EE-AF75-954AD55A4E40", ex);
+                return null;
+            }
         }
-        #endregion Group
     }
 }

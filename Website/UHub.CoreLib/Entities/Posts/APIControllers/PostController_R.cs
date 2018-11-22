@@ -34,7 +34,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             }
 
 
-            var postInternal = await PostReader.GetPostAsync(postID);
+            var postInternal = await PostReader.TryGetPostAsync(postID);
             if (postInternal == null)
             {
                 return NotFound();
@@ -45,9 +45,9 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
 
 
 
-            var taskPostClub = SchoolClubReader.GetClubAsync(parentID);
-            var taskIsUserBanned = SchoolClubReader.IsUserBannedAsync(parentID, cmsUser.ID.Value);
-            var taskIsUserMember = SchoolClubReader.ValidateMembershipAsync(parentID, cmsUser.ID.Value);
+            var taskPostClub = SchoolClubReader.TryGetClubAsync(parentID);
+            var taskIsUserBanned = SchoolClubReader.TryIsUserBannedAsync(parentID, cmsUser.ID.Value);
+            var taskIsUserMember = SchoolClubReader.TryValidateMembershipAsync(parentID, cmsUser.ID.Value);
 
 
 

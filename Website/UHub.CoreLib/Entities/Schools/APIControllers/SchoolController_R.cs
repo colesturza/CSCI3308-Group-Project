@@ -34,9 +34,13 @@ namespace UHub.CoreLib.Entities.Schools.APIControllers
         public async Task<IHttpActionResult> GetAll()
         {
 
-            var schoolSet = await SchoolReader.GetAllSchoolsAsync();
+            var schoolSet = await SchoolReader.TryGetAllSchoolsAsync();
+            if (schoolSet == null)
+            {
+                return InternalServerError();
+            }
 
-            
+
             return Ok(schoolSet.Select(x => x.ToDto<School_R_PublicDTO>()));
 
         }
@@ -48,9 +52,9 @@ namespace UHub.CoreLib.Entities.Schools.APIControllers
         public async Task<IHttpActionResult> GetByID(long SchoolID)
         {
 
-            var school = await SchoolReader.GetSchoolAsync(SchoolID);
+            var school = await SchoolReader.TryGetSchoolAsync(SchoolID);
 
-            if(school == null)
+            if (school == null)
             {
                 return NotFound();
             }
@@ -66,7 +70,7 @@ namespace UHub.CoreLib.Entities.Schools.APIControllers
         [ApiCacheControl(1 * 3600)]
         public async Task<IHttpActionResult> IsEmailValid(string email)
         {
-            if (await SchoolReader.IsEmailValidAsync(email))
+            if (await SchoolReader.TryIsEmailValidAsync(email))
             {
                 return BadRequest();
             }
@@ -83,8 +87,7 @@ namespace UHub.CoreLib.Entities.Schools.APIControllers
         [ApiCacheControl(1 * 3600)]
         public async Task<IHttpActionResult> IsDomainValid(string domain)
         {
-
-            if (await SchoolReader.IsDomainValidAsync(domain))
+            if (await SchoolReader.TryIsDomainValidAsync(domain))
             {
                 return BadRequest();
             }

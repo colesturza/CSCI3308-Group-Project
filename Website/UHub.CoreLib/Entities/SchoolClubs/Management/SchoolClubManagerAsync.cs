@@ -32,33 +32,33 @@ namespace UHub.CoreLib.Entities.SchoolClubs.Management
             {
                 id = await SchoolClubWriter.CreateClubAsync(NewClub);
             }
-            catch (ArgumentOutOfRangeException)
+            catch (AggregateException ex) when (ex.InnerException is ArgumentOutOfRangeException)
             {
                 return (null, SchoolClubResultCode.InvalidArgument);
             }
-            catch (ArgumentNullException)
+            catch (AggregateException ex) when (ex.InnerException is ArgumentNullException)
             {
                 return (null, SchoolClubResultCode.NullArgument);
             }
-            catch (ArgumentException)
+            catch (AggregateException ex) when (ex.InnerException is ArgumentException)
             {
                 return (null, SchoolClubResultCode.InvalidArgument);
             }
-            catch (InvalidCastException)
+            catch (AggregateException ex) when (ex.InnerException is InvalidCastException)
             {
                 return (null, SchoolClubResultCode.InvalidArgumentType);
             }
-            catch (InvalidOperationException)
+            catch (AggregateException ex) when (ex.InnerException is InvalidOperationException)
             {
                 return (null, SchoolClubResultCode.InvalidOperation);
             }
-            catch (AccessForbiddenException)
+            catch (AggregateException ex) when (ex.InnerException is AccessForbiddenException)
             {
                 return (null, SchoolClubResultCode.AccessDenied);
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync("89FCABD4-0147-44FD-B195-F29945C16693", ex);
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("11D2E2C7-C000-4BA1-8EF7-D7857E3B2C25", ex);
                 return (null, SchoolClubResultCode.UnknownError);
             }
 

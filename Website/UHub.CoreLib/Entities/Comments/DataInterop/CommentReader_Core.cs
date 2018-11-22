@@ -20,13 +20,13 @@ namespace UHub.CoreLib.Entities.Comments.DataInterop
             _dbConn = CoreFactory.Singleton.Properties.CmsDBConfig;
         }
 
-        #region Group
+
         /// <summary>
         /// Get all the comments in the DB from a post
         /// </summary>
         /// <param name="PostID"></param>
         /// <returns></returns>
-        public static IEnumerable<Comment> GetCommentsByPost(long PostID)
+        public static IEnumerable<Comment> TryGetCommentsByPost(long PostID)
         {
 
             if (!CoreFactory.Singleton.IsEnabled)
@@ -34,13 +34,23 @@ namespace UHub.CoreLib.Entities.Comments.DataInterop
                 throw new SystemDisabledException();
             }
 
+            try
+            {
 
-            return SqlWorker.ExecBasicQuery<Comment>(
-                _dbConn,
-                "[dbo].[Comments_GetByPost]",
-                (cmd) => {
-                    cmd.Parameters.Add("@PostID", SqlDbType.BigInt).Value = PostID;
-                });
+                return SqlWorker.ExecBasicQuery<Comment>(
+                    _dbConn,
+                    "[dbo].[Comments_GetByPost]",
+                    (cmd) =>
+                    {
+                        cmd.Parameters.Add("@PostID", SqlDbType.BigInt).Value = PostID;
+                    });
+
+            }
+            catch (Exception ex)
+            {
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("88E483DA-53AE-492D-95CA-C02E14FC5868", ex);
+                return null;
+            }
         }
 
         /// <summary>
@@ -49,7 +59,7 @@ namespace UHub.CoreLib.Entities.Comments.DataInterop
         /// </summary>
         /// /// <param name="ParentID"></param>
         /// <returns></returns>
-        public static IEnumerable<Comment> GetCommentsByParent(long ParentID)
+        public static IEnumerable<Comment> TryGetCommentsByParent(long ParentID)
         {
 
             if (!CoreFactory.Singleton.IsEnabled)
@@ -58,13 +68,23 @@ namespace UHub.CoreLib.Entities.Comments.DataInterop
             }
 
 
-            return SqlWorker.ExecBasicQuery<Comment>(
-                _dbConn,
-                "[dbo].[Comments_GetByParent]",
-                (cmd) => {
-                    cmd.Parameters.Add("@ParentID", SqlDbType.BigInt).Value = ParentID;
-                });
+            try
+            {
+
+                return SqlWorker.ExecBasicQuery<Comment>(
+                    _dbConn,
+                    "[dbo].[Comments_GetByParent]",
+                    (cmd) =>
+                    {
+                        cmd.Parameters.Add("@ParentID", SqlDbType.BigInt).Value = ParentID;
+                    });
+            }
+            catch (Exception ex)
+            {
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("EE567558-4FFB-4017-A4BF-EE7D3B5A5365", ex);
+                return null;
+            }
         }
-        #endregion Group
+
     }
 }

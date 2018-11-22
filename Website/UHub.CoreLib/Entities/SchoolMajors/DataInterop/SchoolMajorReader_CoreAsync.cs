@@ -14,39 +14,46 @@ namespace UHub.CoreLib.Entities.SchoolMajors.DataInterop
     public static partial class SchoolMajorReader
     {
 
-        #region Individual
+
         /// <summary>
         /// Get DB school major full detail by LONG ID
         /// </summary>
         /// <param name="SchoolMajorID"></param>
         /// <returns></returns>
-        public static async Task<SchoolMajor> GetMajorAsync(long SchoolMajorID)
+        public static async Task<SchoolMajor> TryGetMajorAsync(long SchoolMajorID)
         {
             if (!CoreFactory.Singleton.IsEnabled)
             {
                 throw new SystemDisabledException();
             }
 
+            try
+            {
+                var temp = await SqlWorker.ExecBasicQueryAsync<SchoolMajor>(
+                    _dbConn,
+                    "[dbo].[SchoolMajor_GetByID]",
+                    (cmd) =>
+                    {
+                        cmd.Parameters.Add("@SchoolMajorID", SqlDbType.BigInt).Value = SchoolMajorID;
+                    });
 
-            var temp = await SqlWorker.ExecBasicQueryAsync<SchoolMajor>(
-                _dbConn,
-                "[dbo].[SchoolMajor_GetByID]",
-                (cmd) =>
-                {
-                    cmd.Parameters.Add("@SchoolMajorID", SqlDbType.BigInt).Value = SchoolMajorID;
-                });
+                return temp.SingleOrDefault();
 
-
-            return temp.SingleOrDefault();
+            }
+            catch (Exception ex)
+            {
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("E80BCB26-D221-458A-999C-C885A0D4F018", ex);
+                return null;
+            }
         }
-        #endregion Individual
 
-        #region Group
+
+
         /// <summary>
         /// Get all the school majors in the DB
         /// </summary>
         /// <returns></returns>
-        public static async Task<IEnumerable<SchoolMajor>> GetAllMajorsAsync()
+        public static async Task<IEnumerable<SchoolMajor>> TryGetAllMajorsAsync()
         {
 
             if (!CoreFactory.Singleton.IsEnabled)
@@ -54,8 +61,16 @@ namespace UHub.CoreLib.Entities.SchoolMajors.DataInterop
                 throw new SystemDisabledException();
             }
 
+            try
+            {
+                return await SqlWorker.ExecBasicQueryAsync<SchoolMajor>(_dbConn, "[dbo].[SchoolMajors_GetAll]");
 
-            return await SqlWorker.ExecBasicQueryAsync<SchoolMajor>(_dbConn, "[dbo].[SchoolMajors_GetAll]");
+            }
+            catch (Exception ex)
+            {
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("B007CC88-B728-4BDE-854C-C125A263FDB5", ex);
+                return null;
+            }
         }
 
         /// <summary>
@@ -63,7 +78,7 @@ namespace UHub.CoreLib.Entities.SchoolMajors.DataInterop
         /// </summary>
         /// <param name="SchoolID"></param>
         /// <returns></returns>
-        public static async Task<IEnumerable<SchoolMajor>> GetMajorsBySchoolAsync(long SchoolID)
+        public static async Task<IEnumerable<SchoolMajor>> TryGetMajorsBySchoolAsync(long SchoolID)
         {
 
             if (!CoreFactory.Singleton.IsEnabled)
@@ -72,13 +87,22 @@ namespace UHub.CoreLib.Entities.SchoolMajors.DataInterop
             }
 
 
-            return await SqlWorker.ExecBasicQueryAsync<SchoolMajor>(
-                _dbConn,
-                "[dbo].[SchoolMajors_GetBySchool]",
-                (cmd) =>
-                {
-                    cmd.Parameters.Add("@SchoolID", SqlDbType.BigInt).Value = SchoolID;
-                });
+            try
+            {
+                return await SqlWorker.ExecBasicQueryAsync<SchoolMajor>(
+                    _dbConn,
+                    "[dbo].[SchoolMajors_GetBySchool]",
+                    (cmd) =>
+                    {
+                        cmd.Parameters.Add("@SchoolID", SqlDbType.BigInt).Value = SchoolID;
+                    });
+
+            }
+            catch (Exception ex)
+            {
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("03710860-1CB4-4867-BFE8-2ED83F0ED6A2", ex);
+                return null;
+            }
         }
 
 
@@ -87,7 +111,7 @@ namespace UHub.CoreLib.Entities.SchoolMajors.DataInterop
         /// </summary>
         /// <param name="Email"></param>
         /// <returns></returns>
-        public static async Task<IEnumerable<SchoolMajor>> GetMajorsByEmailAsync(string Email)
+        public static async Task<IEnumerable<SchoolMajor>> TryGetMajorsByEmailAsync(string Email)
         {
 
             if (!CoreFactory.Singleton.IsEnabled)
@@ -100,13 +124,22 @@ namespace UHub.CoreLib.Entities.SchoolMajors.DataInterop
                 return Enumerable.Empty<SchoolMajor>();
             }
 
-            return await SqlWorker.ExecBasicQueryAsync<SchoolMajor>(
-                _dbConn,
-                "[dbo].[SchoolMajors_GetByEmail]",
-                (cmd) =>
-                {
-                    cmd.Parameters.Add("@Email", SqlDbType.NVarChar).Value = Email;
-                });
+            try
+            {
+                return await SqlWorker.ExecBasicQueryAsync<SchoolMajor>(
+                    _dbConn,
+                    "[dbo].[SchoolMajors_GetByEmail]",
+                    (cmd) =>
+                    {
+                        cmd.Parameters.Add("@Email", SqlDbType.NVarChar).Value = Email;
+                    });
+
+            }
+            catch (Exception ex)
+            {
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("EA923AAB-04CE-4B39-8F83-6DED5538CE76", ex);
+                return null;
+            }
         }
 
         /// <summary>
@@ -114,7 +147,7 @@ namespace UHub.CoreLib.Entities.SchoolMajors.DataInterop
         /// </summary>
         /// <param name="Email"></param>
         /// <returns></returns>
-        public static async Task<IEnumerable<SchoolMajor>> GetMajorsByDomainAsync(string Domain)
+        public static async Task<IEnumerable<SchoolMajor>> TryGetMajorsByDomainAsync(string Domain)
         {
 
             if (!CoreFactory.Singleton.IsEnabled)
@@ -127,15 +160,24 @@ namespace UHub.CoreLib.Entities.SchoolMajors.DataInterop
                 return Enumerable.Empty<SchoolMajor>();
             }
 
-            return await SqlWorker.ExecBasicQueryAsync<SchoolMajor>(
-                _dbConn,
-                "[dbo].[SchoolMajors_GetByDomain]",
-                (cmd) =>
-                {
-                    cmd.Parameters.Add("@Domain", SqlDbType.NVarChar).Value = Domain;
-                });
+
+            try
+            {
+                return await SqlWorker.ExecBasicQueryAsync<SchoolMajor>(
+                    _dbConn,
+                    "[dbo].[SchoolMajors_GetByDomain]",
+                    (cmd) =>
+                    {
+                        cmd.Parameters.Add("@Domain", SqlDbType.NVarChar).Value = Domain;
+                    });
+
+            }
+            catch (Exception ex)
+            {
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("203FD5B2-3C56-4A67-9D8F-01DC54A1F5B2", ex);
+                return null;
+            }
         }
 
-        #endregion Group
     }
 }

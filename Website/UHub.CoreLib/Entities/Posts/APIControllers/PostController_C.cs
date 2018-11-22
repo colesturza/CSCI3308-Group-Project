@@ -47,8 +47,8 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
 
 
 
-            var taskIsValidParent = UserReader.ValidatePostParentAsync((long)cmsUser.ID, tmpPost.ParentID);
-            var taskIsUserBanned = SchoolClubReader.IsUserBannedAsync(post.ParentID, cmsUser.ID.Value);
+            var taskIsValidParent = UserReader.TryValidatePostParentAsync((long)cmsUser.ID, tmpPost.ParentID);
+            var taskIsUserBanned = SchoolClubReader.TryIsUserBannedAsync(post.ParentID, cmsUser.ID.Value);
 
 
 
