@@ -22,7 +22,6 @@ namespace UHub.CoreLib.Security.Accounts.Interfaces
         AcctCreateResultCode TryCreateUser(
             User NewUser,
             bool AttemptAutoLogin,
-            Action<Guid> GeneralFailHandler = null,
             Action<User, bool> SuccessHandler = null);
 
 
@@ -63,8 +62,7 @@ namespace UHub.CoreLib.Security.Accounts.Interfaces
             string UserEmail,
             string OldPassword,
             string NewPassword,
-            bool DeviceLogout,
-            Action<Guid> GeneralFailHandler = null);
+            bool DeviceLogout);
         /// <summary>
         /// Attempt to update a user password. Requires validation against the current password. User will be signed out of all locations upon completion
         /// </summary>
@@ -78,8 +76,7 @@ namespace UHub.CoreLib.Security.Accounts.Interfaces
             long UserID,
             string OldPassword,
             string NewPassword,
-            bool DeviceLogout,
-            Action<Guid> GeneralFailHandler = null);
+            bool DeviceLogout);
 
 
 
@@ -96,8 +93,7 @@ namespace UHub.CoreLib.Security.Accounts.Interfaces
             string RecoveryContextID,
             string RecoveryKey,
             string NewPassword,
-            bool DeviceLogout,
-            Action<Guid> GeneralFailHandler = null);
+            bool DeviceLogout);
 
 
 
@@ -114,8 +110,7 @@ namespace UHub.CoreLib.Security.Accounts.Interfaces
         AcctRecoveryResultCode TryResetPassword(
             string UserEmail,
             string NewPassword,
-            bool DeviceLogout,
-            Action<Guid> GeneralFailHandler = null);
+            bool DeviceLogout);
         /// <summary>
         /// Attempts to reset a user password.  System level function that overrides validation against the current password. User will be signed out of all locations upon completion
         /// </summary>
@@ -129,8 +124,7 @@ namespace UHub.CoreLib.Security.Accounts.Interfaces
         AcctRecoveryResultCode TryResetPassword(
             long UserID,
             string NewPassword,
-            bool DeviceLogout,
-            Action<Guid> GeneralFailHandler = null);
+            bool DeviceLogout);
 
 
 
@@ -138,18 +132,18 @@ namespace UHub.CoreLib.Security.Accounts.Interfaces
         /// Delete user by ID.
         /// </summary>
         /// <param name="UserID"></param>
-        void DeleteUser(long UserID);
+        bool TryDeleteUser(long UserID);
         /// <summary>
         /// Delete user by Email
         /// </summary>
         /// <param name="Email"></param>
-        void DeleteUser(string Email);
+        bool TryDeleteUser(string Email);
         /// <summary>
         /// Delete user by Username and Domain
         /// </summary>
         /// <param name="Username"></param>
         /// <param name="Domain"></param>
-        void DeleteUser(string Username, string Domain);
+        bool TryDeleteUser(string Username, string Domain);
 
 
         /// <summary>
@@ -161,8 +155,7 @@ namespace UHub.CoreLib.Security.Accounts.Interfaces
         /// <returns></returns>
         (AcctRecoveryResultCode ResultCode, IUserRecoveryContext RecoveryContext, string RecoveryKey) TryCreateUserRecoveryContext(
             string UserEmail,
-            bool IsOptional,
-            Action<Guid> GeneralFailHandler = null);
+            bool IsOptional);
 
 
         /// <summary>
@@ -174,7 +167,6 @@ namespace UHub.CoreLib.Security.Accounts.Interfaces
         /// <returns></returns>
         (AcctRecoveryResultCode ResultCode, IUserRecoveryContext RecoveryContext, string RecoveryKey) TryCreateUserRecoveryContext(
             long UserID,
-            bool IsOptional,
-            Action<Guid> GeneralFailHandler = null);
+            bool IsOptional);
     }
 }

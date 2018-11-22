@@ -31,6 +31,7 @@ namespace UHub.CoreLib.Entities.Users.DataInterop
                 throw new SystemDisabledException();
             }
 
+
             return SqlWorker.ExecScalar<bool>(
                 _dbConn,
                 "[dbo].[User_DoesExistByID]",

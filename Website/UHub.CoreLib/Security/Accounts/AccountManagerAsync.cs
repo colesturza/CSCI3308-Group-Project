@@ -43,7 +43,6 @@ namespace UHub.CoreLib.Security.Accounts
         public async Task<AcctCreateResultCode> TryCreateUserAsync(
             User NewUser,
             bool AttemptAutoLogin,
-            Action<Guid> GeneralFailHandler = null,
             Action<User, bool> SuccessHandler = null)
         {
             if (!CoreFactory.Singleton.IsEnabled)
@@ -83,167 +82,238 @@ namespace UHub.CoreLib.Security.Accounts
             var taskDoesUsernameExist = UserReader.DoesUserExistAsync(NewUser.Username, domain);
 
 
-
             //check for duplicate email
-            if (await taskDoesEmailExist)
+            try
             {
-                return AcctCreateResultCode.EmailDuplicate;
+                if (await taskDoesEmailExist)
+                {
+                    return AcctCreateResultCode.EmailDuplicate;
+                }
+            }
+            catch (Exception ex)
+            {
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("94553D4D-B1E3-45FC-A166-2A2E1D816276", ex);
+                return AcctCreateResultCode.UnknownError;
             }
 
 
-            var tmpSchool = await taskGetUserSchool;
-            if (tmpSchool == null || tmpSchool.ID == null)
+            //Check for valid school domain
+            try
             {
-                return AcctCreateResultCode.EmailDomainInvalid;
+                var tmpSchool = await taskGetUserSchool;
+                if (tmpSchool == null || tmpSchool.ID == null)
+                {
+                    return AcctCreateResultCode.EmailDomainInvalid;
+                }
+                NewUser.SchoolID = tmpSchool.ID;
             }
-            NewUser.SchoolID = tmpSchool.ID;
+            catch (Exception ex)
+            {
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("1F60C82E-B33E-478D-BC7C-D796134C7990", ex);
+                return AcctCreateResultCode.UnknownError;
+            }
+
 
 
             //check for duplicate username
-            if (await taskDoesUsernameExist)
+            try
             {
-                return AcctCreateResultCode.UsernameDuplicate;
+                if (await taskDoesUsernameExist)
+                {
+                    return AcctCreateResultCode.UsernameDuplicate;
+                }
             }
+            catch (Exception ex)
+            {
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("7798B041-235E-42DD-BFA3-A8FD3957A2AD", ex);
+                return AcctCreateResultCode.UnknownError;
+            }
+
 
 
             //check for valid major (chosen via dropdown)
-            var major = NewUser.Major;
-            var majorValidationSet = (await taskSchoolMajors)
-                                        .Select(x => x.Name)
-                                        .ToHashSet();
-
-
-            if (!majorValidationSet.Contains(major))
+            try
             {
-                return AcctCreateResultCode.MajorInvalid;
+                var major = NewUser.Major;
+                var majorValidationSet = (await taskSchoolMajors)
+                                            .Select(x => x.Name)
+                                            .ToHashSet();
+
+                if (!majorValidationSet.Contains(major))
+                {
+                    return AcctCreateResultCode.MajorInvalid;
+                }
             }
+            catch (Exception ex)
+            {
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("946FA6BE-5F49-472E-B021-D39F30D38650", ex);
+                return AcctCreateResultCode.UnknownError;
+            }
+
 
             Shared.TryCreate_HandleUserDefaults(ref NewUser);
 
 
+            //create CMS user
+            long? userID = null;
             try
             {
 #pragma warning disable 612, 618
-                //create CMS user
-                var userID = await UserWriter.TryCreateUserAsync(NewUser);
+                userID = await UserWriter.TryCreateUserAsync(NewUser);
+#pragma warning restore
+            }
+            catch (AggregateException ex)
+            {
+                if (ex.InnerException is DuplicateNameException)
+                {
+                    return AcctCreateResultCode.EmailDuplicate;
+                }
+                else if (ex.InnerException is ArgumentOutOfRangeException)
+                {
+                    return AcctCreateResultCode.InvalidArgument;
+                }
+                else if (ex.InnerException is ArgumentNullException)
+                {
+                    return AcctCreateResultCode.NullArgument;
+                }
+                else if (ex.InnerException is ArgumentException)
+                {
+                    return AcctCreateResultCode.InvalidArgument;
+                }
+                else if (ex.InnerException is InvalidCastException)
+                {
+                    return AcctCreateResultCode.InvalidArgumentType;
+                }
+                else if (ex.InnerException is InvalidOperationException)
+                {
+                    return AcctCreateResultCode.InvalidOperation;
+                }
+                else if (ex.InnerException is AccessForbiddenException)
+                {
+                    return AcctCreateResultCode.AccessDenied;
+                }
+                else
+                {
+                    return AcctCreateResultCode.UnknownError;
+                }
+
+            }
+            catch (Exception ex)
+            {
+
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("E1738AAB-D840-4F1B-B4ED-54ABF01408AD", ex);
+                return AcctCreateResultCode.UnknownError;
+            }
+
+
+
+            if (userID == null)
+            {
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("6205BDC3-FDFF-4C2C-A98B-C30CA8950B06");
+                return AcctCreateResultCode.UnknownError;
+            }
+
+
+            //try to create password
+            //if failed, then purge the remaining CMS account components so user can try again
+
+
+#pragma warning disable 612, 618
+            var isPswdChanged = await DoPasswordWorkAsync(userID.Value, NewUser.Password);
+            if (!isPswdChanged)
+            {
+                await UserWriter.TryPurgeUserAsync((long)userID);
+                return AcctCreateResultCode.UnknownError;
+            }
 #pragma warning restore
 
 
-                if (userID == null)
+
+            //get cms user
+            var taskConfirmToken = UserReader.GetConfirmTokenAsync(userID.Value);
+            User cmsUser = null;
+            try
+            {
+                cmsUser = UserReader.GetUser(userID.Value);
+            }
+            catch (Exception ex)
+            {
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("0D703D60-C47B-4475-AE60-6BBA1704A7F3", ex);
+                return AcctCreateResultCode.UnknownError;
+            }
+
+
+            if (cmsUser == null)
+            {
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("7A327386-FC5A-423B-9B72-3D5BC2FF0729");
+                return AcctCreateResultCode.UnknownError;
+            }
+
+
+            //attempt autologin
+            //autoconfirm user -> auto login
+            bool canLogin =
+                AttemptAutoLogin
+                && CoreFactory.Singleton.Properties.AutoConfirmNewAccounts
+                && CoreFactory.Singleton.Properties.AutoApproveNewAccounts;
+
+
+            if (canLogin)
+            {
+                try
                 {
-                    GeneralFailHandler?.Invoke(new Guid("8ED72683-F21D-4E24-9899-473B20782B33"));
+                    //set login
+                    CoreFactory.Singleton.Auth.TrySetClientAuthToken(NewUser.Email, NewUser.Password, false);
+
+                    //TODO: log to DB
+                    //CoreFactory.Singleton.Logging.CreateDBActivityLog(ActivityLogTypes.UserLogin);
+                }
+                catch
+                {
+                    //account creating, but auto login failed
+                    //should only ever occur during tests
+                    CoreFactory.Singleton.Logging.CreateErrorLogAsync("F475C097-FC34-45E8-BEEF-EF37C9BC48B0");
+                    canLogin = false;
+                }
+            }
+            else if (!CoreFactory.Singleton.Properties.AutoConfirmNewAccounts)
+            {
+                var siteName = CoreFactory.Singleton.Properties.SiteFriendlyName;
+                IUserConfirmToken confirmToken = null;
+                try
+                {
+                    confirmToken = await taskConfirmToken;
+                }
+                catch (Exception ex)
+                {
+                    CoreFactory.Singleton.Logging.CreateErrorLogAsync("F22EAFDD-5728-4DF6-9D6E-015DF260B3D6", ex);
+                    return AcctCreateResultCode.UnknownError;
+                }
+                if (confirmToken == null)
+                {
+                    CoreFactory.Singleton.Logging.CreateErrorLogAsync("508B5155-E218-4DB9-8348-789EBC588B05");
                     return AcctCreateResultCode.UnknownError;
                 }
 
 
-                //try to create password
-                //if failed, then purge the remaining CMS account components so user can try again
-
-
-#pragma warning disable 612, 618
-                var salt = SysSec.Membership.GeneratePassword(SALT_LEN, 0);
-                string pswdHash = null;
-                try
+                var msg = new SmtpMessage_ConfirmAcct($"{siteName} Account Confirmation", siteName, NewUser.Email)
                 {
-                    var hashType = CoreFactory.Singleton.Properties.PswdHashType;
-                    pswdHash = NewUser.Password.GetCryptoHash(hashType, salt);
-                }
-                catch
+                    ConfirmationURL = confirmToken.GetURL()
+                };
+
+                var emailSendStatus = await CoreFactory.Singleton.Mail.TrySendMessageAsync(msg);
+                if (emailSendStatus != SmtpResultCode.Success)
                 {
-                    await UserWriter.TryPurgeUserAsync((long)userID);
-                    throw new Exception(ResponseStrings.AccountError.ACCOUNT_FAIL);
+                    CoreFactory.Singleton.Logging.CreateErrorLogAsync("0ADC52B0-89BB-4346-84F3-1F6CAC63DACF");
+
+                    return AcctCreateResultCode.UnknownError;
                 }
-                if (pswdHash.IsEmpty())
-                {
-                    await UserWriter.TryPurgeUserAsync((long)userID);
-                    throw new Exception(ResponseStrings.AccountError.ACCOUNT_FAIL);
-                }
-                try
-                {
-                    //SET DB PASSWORD
-                    await UpdateUserPassword_DBAsync((long)userID, pswdHash, salt);
-                }
-                catch
-                {
-                    await UserWriter.TryPurgeUserAsync((long)userID);
-                    throw new Exception(ResponseStrings.AccountError.ACCOUNT_FAIL);
-                }
-#pragma warning restore
-
-
-
-                //get cms user
-                var cmsUser = UserReader.GetUser(userID.Value);
-                var taskConfirmToken = UserReader.GetConfirmTokenAsync(userID.Value);
-
-
-                //attempt autologin
-                //autoconfirm user -> auto login
-                bool canLogin =
-                    AttemptAutoLogin
-                    && CoreFactory.Singleton.Properties.AutoConfirmNewAccounts
-                    && CoreFactory.Singleton.Properties.AutoApproveNewAccounts;
-
-
-                if (canLogin)
-                {
-                    try
-                    {
-                        //set login
-                        CoreFactory.Singleton.Auth.TrySetClientAuthToken(NewUser.Email, NewUser.Password, false);
-
-                        //TODO: log to DB
-                        //CoreFactory.Singleton.Logging.CreateDBActivityLog(ActivityLogTypes.UserLogin);
-                    }
-                    catch
-                    {
-                        //account creating, but auto login failed
-                        //should only ever occur during tests
-                        var errCode = "F475C097-FC34-45E8-BEEF-EF37C9BC48B0";
-                        CoreFactory.Singleton.Logging.CreateErrorLogAsync(errCode);
-
-                        SuccessHandler?.Invoke(cmsUser, false);
-                        return AcctCreateResultCode.Success;
-                    }
-                }
-                else if (!CoreFactory.Singleton.Properties.AutoConfirmNewAccounts)
-                {
-                    var siteName = CoreFactory.Singleton.Properties.SiteFriendlyName;
-                    var confirmToken = await taskConfirmToken;
-
-                    var msg = new SmtpMessage_ConfirmAcct($"{siteName} Account Confirmation", siteName, NewUser.Email)
-                    {
-                        ConfirmationURL = confirmToken.GetURL()
-                    };
-
-                    var emailSendStatus = await CoreFactory.Singleton.Mail.TrySendMessageAsync(msg);
-                    if (emailSendStatus != SmtpResultCode.Success)
-                    {
-                        var errCode = "0ADC52B0-89BB-4346-84F3-1F6CAC63DACF";
-                        CoreFactory.Singleton.Logging.CreateErrorLogAsync(errCode);
-                        GeneralFailHandler?.Invoke(new Guid(errCode));
-
-                        return AcctCreateResultCode.UnknownError;
-                    }
-                }
-
-
-                SuccessHandler?.Invoke(cmsUser, canLogin);
-                return AcctCreateResultCode.Success;
             }
-            catch (DuplicateNameException)
-            {
-                return AcctCreateResultCode.EmailDuplicate;
-            }
-            catch (Exception ex)
-            {
-                var errCode = "87C1806A-32DE-4077-ABE4-DA08C9493B6D";
-                Exception ex_outer = new Exception(errCode, ex);
 
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
-                GeneralFailHandler?.Invoke(new Guid(errCode));
-                return AcctCreateResultCode.UnknownError;
-            }
+
+
+            SuccessHandler?.Invoke(cmsUser, canLogin);
+            return AcctCreateResultCode.Success;
         }
 
 
@@ -345,8 +415,7 @@ namespace UHub.CoreLib.Security.Accounts
             string OldPassword,
             string NewPassword,
             bool DeviceLogout,
-            HttpContext Context,
-            Action<Guid> GeneralFailHandler = null)
+            HttpContext Context)
         {
 
             if (UserEmail.IsEmpty())
@@ -367,8 +436,7 @@ namespace UHub.CoreLib.Security.Accounts
                 OldPassword,
                 NewPassword,
                 DeviceLogout,
-                Context,
-                GeneralFailHandler);
+                Context);
         }
 
         /// <summary>
@@ -385,8 +453,7 @@ namespace UHub.CoreLib.Security.Accounts
             string OldPassword,
             string NewPassword,
             bool DeviceLogout,
-            HttpContext Context,
-            Action<Guid> GeneralFailHandler = null)
+            HttpContext Context)
         {
 
             if (!CoreFactory.Singleton.IsEnabled)
@@ -435,29 +502,9 @@ namespace UHub.CoreLib.Security.Accounts
                 }
 
                 //try to change password
-                var salt = SysSec.Membership.GeneratePassword(SALT_LEN, 0);
-                string hashedPsd = null;
-                try
+                var isPswdChanged = await DoPasswordWorkAsync(modUser.ID.Value, NewPassword);
+                if (!isPswdChanged)
                 {
-                    hashedPsd = NewPassword.GetCryptoHash(CoreFactory.Singleton.Properties.PswdHashType, salt);
-                }
-                catch
-                {
-                    GeneralFailHandler?.Invoke(new Guid("C8CB51BB-E26F-46FF-A3F7-3762AD1708AC"));
-                    return AcctPswdResultCode.UnknownError;
-                }
-                if (hashedPsd.IsEmpty())
-                {
-                    GeneralFailHandler?.Invoke(new Guid("E552CE2C-34C2-45EE-9D39-3E346A1FBFBF"));
-                    return AcctPswdResultCode.UnknownError;
-                }
-                try
-                {
-                    await UpdateUserPassword_DBAsync(modUser.ID.Value, hashedPsd, salt);
-                }
-                catch
-                {
-                    GeneralFailHandler?.Invoke(new Guid("06C6E47C-69AD-4A3D-866C-DB797B645364"));
                     return AcctPswdResultCode.UnknownError;
                 }
 
@@ -482,11 +529,7 @@ namespace UHub.CoreLib.Security.Accounts
             }
             catch (Exception ex)
             {
-                var errCode = "17A42823-0767-4BA4-9F24-6A868509558B";
-                Exception ex_outer = new Exception(errCode, ex);
-
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
-                GeneralFailHandler?.Invoke(new Guid(errCode));
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("17A42823-0767-4BA4-9F24-6A868509558B", ex);
                 return AcctPswdResultCode.UnknownError;
             }
         }
@@ -507,8 +550,7 @@ namespace UHub.CoreLib.Security.Accounts
             string RecoveryKey,
             string NewPassword,
             bool DeviceLogout,
-            HttpContext Context,
-            Action<Guid> GeneralFailHandler = null)
+            HttpContext Context)
         {
             //TODO: fix side channel attack vector that would allow attacker to bypass attempt limit with large number of simultaneous requests
             //Possible solution:
@@ -523,13 +565,22 @@ namespace UHub.CoreLib.Security.Accounts
 
             if (!CoreFactory.Singleton.Properties.EnablePswdRecovery)
             {
-                throw new InvalidOperationException("Password resets are not enabled");
+                return AcctRecoveryResultCode.RecoveryNotEnabled;
             }
 
 
 
+            IUserRecoveryContext recoveryContext = null;
+            try
+            {
+                recoveryContext = await UserReader.GetRecoveryContextAsync(RecoveryContextID);
+            }
+            catch (Exception ex)
+            {
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("2391BC17-9B8D-41AF-BD64-57BFE47B08CC", ex);
+                return AcctRecoveryResultCode.UnknownError;
+            }
 
-            var recoveryContext = await UserReader.GetRecoveryContextAsync(RecoveryContextID);
 
             if (recoveryContext == null)
             {
@@ -540,7 +591,14 @@ namespace UHub.CoreLib.Security.Accounts
             var resultCode = recoveryContext.ValidateRecoveryKey(RecoveryKey);
             if (resultCode != 0)
             {
-                await recoveryContext.IncrementAttemptCountAsync();
+                try
+                {
+                    await recoveryContext.IncrementAttemptCountAsync();
+                }
+                catch (Exception ex)
+                {
+                    CoreFactory.Singleton.Logging.CreateErrorLogAsync("DC21C490-16B6-4D64-9528-196FD42B4A32", ex);
+                }
                 return resultCode;
             }
 
@@ -551,8 +609,7 @@ namespace UHub.CoreLib.Security.Accounts
                 userID,
                 NewPassword,
                 DeviceLogout,
-                Context,
-                GeneralFailHandler);
+                Context);
         }
 
 
@@ -572,8 +629,7 @@ namespace UHub.CoreLib.Security.Accounts
             string UserEmail,
             string NewPassword,
             bool DeviceLogout,
-            HttpContext Context,
-            Action<Guid> GeneralFailHandler = null)
+            HttpContext Context)
         {
 
             if (!CoreFactory.Singleton.IsEnabled)
@@ -582,7 +638,7 @@ namespace UHub.CoreLib.Security.Accounts
             }
             if (!CoreFactory.Singleton.Properties.EnablePswdRecovery)
             {
-                throw new InvalidOperationException("Password resets are not enabled");
+                return AcctRecoveryResultCode.RecoveryNotEnabled;
             }
 
             if (UserEmail.IsEmpty())
@@ -592,7 +648,17 @@ namespace UHub.CoreLib.Security.Accounts
 
             UserEmail = UserEmail.Trim();
 
-            var ID = await UserReader.GetUserIDAsync(UserEmail);
+
+            long? ID = null;
+            try
+            {
+                ID = await UserReader.GetUserIDAsync(UserEmail);
+            }
+            catch (Exception ex)
+            {
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("C16CA5A3-B142-45FB-8337-F8FB8CB5F0B4", ex);
+                return AcctRecoveryResultCode.UnknownError;
+            }
 
             if (ID == null)
             {
@@ -603,8 +669,7 @@ namespace UHub.CoreLib.Security.Accounts
                 ID.Value,
                 NewPassword,
                 DeviceLogout,
-                Context,
-                GeneralFailHandler);
+                Context);
         }
 
         /// <summary>
@@ -620,17 +685,15 @@ namespace UHub.CoreLib.Security.Accounts
             long UserID,
             string NewPassword,
             bool DeviceLogout,
-            HttpContext Context,
-            Action<Guid> GeneralFailHandler = null)
+            HttpContext Context)
         {
             if (!CoreFactory.Singleton.IsEnabled)
             {
                 throw new SystemDisabledException();
             }
-
             if (!CoreFactory.Singleton.Properties.EnablePswdRecovery)
             {
-                throw new InvalidOperationException("Password resets are not enabled");
+                return AcctRecoveryResultCode.RecoveryNotEnabled;
             }
 
 
@@ -656,36 +719,12 @@ namespace UHub.CoreLib.Security.Accounts
 
 
                 //try to change password
-                var salt = SysSec.Membership.GeneratePassword(SALT_LEN, 0);
-                string hashedPsd = null;
-                try
+                var isPswdChanged = await DoPasswordWorkAsync(modUser.ID.Value, NewPassword);
+                if (!isPswdChanged)
                 {
-                    var hashType = CoreFactory.Singleton.Properties.PswdHashType;
-                    hashedPsd = NewPassword.GetCryptoHash(hashType, salt);
-                }
-                catch (Exception ex1)
-                {
-                    CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex1);
-                    GeneralFailHandler?.Invoke(new Guid("87C7EC81-811A-480F-B132-7963FE0D657C"));
-
                     return AcctRecoveryResultCode.UnknownError;
                 }
-                if (hashedPsd.IsEmpty())
-                {
-                    GeneralFailHandler?.Invoke(new Guid("A3A419C1-60D1-46D4-A8E5-13B2C6A1AF20"));
 
-                    return AcctRecoveryResultCode.UnknownError;
-                }
-                try
-                {
-                    await UpdateUserPassword_DBAsync(modUser.ID.Value, hashedPsd, salt);
-                }
-                catch
-                {
-                    GeneralFailHandler?.Invoke(new Guid("A36CA901-8A1F-4E73-ACE5-9DE68CF3B15A"));
-
-                    return AcctRecoveryResultCode.UnknownError;
-                }
 
                 //if everything worked, increment user version to force global re auth
                 modUser.UpdateVersion();
@@ -709,13 +748,9 @@ namespace UHub.CoreLib.Security.Accounts
 
 
             }
-            catch (Exception ex2)
+            catch (Exception ex)
             {
-                var errCode = "347A406B-85D2-4C6D-B966-3B3D81120DC3";
-                Exception ex_outer = new Exception(errCode, ex2);
-
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
-                GeneralFailHandler?.Invoke(new Guid(errCode));
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("347A406B-85D2-4C6D-B966-3B3D81120DC3", ex);
                 return AcctRecoveryResultCode.UnknownError;
 
             }
@@ -727,20 +762,20 @@ namespace UHub.CoreLib.Security.Accounts
         /// Delete user by ID.
         /// </summary>
         /// <param name="UserID"></param>
-        public async Task DeleteUserAsync(long UserID)
+        public async Task<bool> TryDeleteUserAsync(long UserID)
         {
             var modUser = await UserReader.GetUserAsync(UserID);
-            await _deleteUserAsync(modUser);
+            return await _deleteUserAsync(modUser);
         }
 
         /// <summary>
         /// Delete user by Email
         /// </summary>
         /// <param name="Email"></param>
-        public async Task DeleteUserAsync(string Email)
+        public async Task<bool> TryDeleteUserAsync(string Email)
         {
             var modUser = await UserReader.GetUserAsync(Email);
-            await _deleteUserAsync(modUser);
+            return await _deleteUserAsync(modUser);
         }
 
         /// <summary>
@@ -748,10 +783,10 @@ namespace UHub.CoreLib.Security.Accounts
         /// </summary>
         /// <param name="Username"></param>
         /// <param name="Domain"></param>
-        public async Task DeleteUserAsync(string Username, string Domain)
+        public async Task<bool> TryDeleteUserAsync(string Username, string Domain)
         {
             var modUser = UserReader.GetUser(Username, Domain);
-            await _deleteUserAsync(modUser);
+            return await _deleteUserAsync(modUser);
         }
 
         /// <summary>
@@ -759,25 +794,26 @@ namespace UHub.CoreLib.Security.Accounts
         /// </summary>
         /// <param name="RequestedBy"></param>
         /// <param name="CmsUser"></param>
-        private async Task _deleteUserAsync(User CmsUser)
+        private async Task<bool> _deleteUserAsync(User CmsUser)
         {
 #pragma warning disable 612, 618
             try
             {
-                if (CmsUser != null && CmsUser.ID != null)
+                if (CmsUser == null || CmsUser.ID == null)
                 {
-                    CmsUser.UpdateVersion();
-
-                    await UserWriter.DeleteUserAsync((long)CmsUser.ID);
+                    return false;
                 }
+
+
+                CmsUser.UpdateVersion();
+                await UserWriter.DeleteUserAsync((long)CmsUser.ID);
+
+                return true;
             }
             catch (Exception ex)
             {
-                var errCode = "7AA4C25A-458D-4184-A50A-C85779E5DDAF";
-                Exception ex_outer = new Exception(errCode, ex);
-
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
-                throw new Exception();
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("7AA4C25A-458D-4184-A50A-C85779E5DDAF", ex);
+                return false;
             }
 #pragma warning restore
         }
@@ -791,8 +827,7 @@ namespace UHub.CoreLib.Security.Accounts
         /// <returns></returns>
         public async Task<(AcctRecoveryResultCode ResultCode, IUserRecoveryContext RecoveryContext, string RecoveryKey)> TryCreateUserRecoveryContextAsync(
             string UserEmail,
-            bool IsOptional,
-            Action<Guid> GeneralFailHandler = null)
+            bool IsOptional)
         {
             //check for valid email format
             if (!UserEmail.IsValidEmail())
@@ -801,7 +836,17 @@ namespace UHub.CoreLib.Security.Accounts
             }
 
 
-            long? id = await UserReader.GetUserIDAsync(UserEmail);
+            long? id = null;
+            try
+            {
+                await UserReader.GetUserIDAsync(UserEmail);
+            }
+            catch (Exception ex)
+            {
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("A37237C0-EE53-4B52-92E7-ADDEC84CEF06", ex);
+                return (AcctRecoveryResultCode.UnknownError, null, null);
+            }
+
 
             if (id == null)
             {
@@ -811,8 +856,7 @@ namespace UHub.CoreLib.Security.Accounts
 
             return await TryCreateUserRecoveryContextAsync(
                 id.Value,
-                IsOptional,
-                GeneralFailHandler);
+                IsOptional);
         }
 
         /// <summary>
@@ -824,8 +868,7 @@ namespace UHub.CoreLib.Security.Accounts
         /// <returns></returns>
         public async Task<(AcctRecoveryResultCode ResultCode, IUserRecoveryContext RecoveryContext, string RecoveryKey)> TryCreateUserRecoveryContextAsync(
             long UserID,
-            bool IsOptional,
-            Action<Guid> GeneralFailHandler = null)
+            bool IsOptional)
         {
             try
             {
@@ -857,18 +900,55 @@ namespace UHub.CoreLib.Security.Accounts
 
                 if (context == null)
                 {
-                    GeneralFailHandler?.Invoke(new Guid("17849D2D-07D7-4BC4-939A-51CD1D4D0707"));
+                    CoreFactory.Singleton.Logging.CreateErrorLogAsync("492D2F3F-9727-46C7-9ECC-E37D975E909E");
                     return (AcctRecoveryResultCode.UnknownError, null, null);
                 }
 
 
                 return (AcctRecoveryResultCode.Success, context, recoveryKey);
             }
-            catch
+            catch (Exception ex)
             {
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("1DB703FD-5D16-47A8-8283-52836AD9B9FE", ex);
                 return (AcctRecoveryResultCode.UserInvalid, null, null);
             }
 
+        }
+
+
+
+
+        private static async Task<bool> DoPasswordWorkAsync(long UserID, string UserPswd)
+        {
+            var salt = SysSec.Membership.GeneratePassword(SALT_LEN, 0);
+            string pswdHash = null;
+            try
+            {
+                var hashType = CoreFactory.Singleton.Properties.PswdHashType;
+                pswdHash = UserPswd.GetCryptoHash(hashType, salt);
+            }
+            catch (Exception ex)
+            {
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("AA3E2DB3-5CCF-400D-8046-1D982E723F58", ex);
+                return false;
+            }
+            if (pswdHash.IsEmpty())
+            {
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("3C722062-9158-4FCB-8A9D-2D132B6784E5");
+                return false;
+            }
+            try
+            {
+                //SET DB PASSWORD
+                await UpdateUserPassword_DBAsync(UserID, pswdHash, salt);
+            }
+            catch (Exception ex)
+            {
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("047BD588-A27E-4B49-AB5B-8157589AAA4B", ex);
+                return false;
+            }
+
+            return true;
         }
 
 

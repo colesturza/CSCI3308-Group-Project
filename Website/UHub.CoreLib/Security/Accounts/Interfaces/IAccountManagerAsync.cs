@@ -23,7 +23,6 @@ namespace UHub.CoreLib.Security.Accounts.Interfaces
         Task<AcctCreateResultCode> TryCreateUserAsync(
             User NewUser,
             bool AttemptAutoLogin,
-            Action<Guid> GeneralFailHandler = null,
             Action<User, bool> SuccessHandler = null);
 
 
@@ -61,8 +60,7 @@ namespace UHub.CoreLib.Security.Accounts.Interfaces
             string OldPassword,
             string NewPassword,
             bool DeviceLogout,
-            HttpContext Context,
-            Action<Guid> GeneralFailHandler = null);
+            HttpContext Context);
 
 
 
@@ -80,8 +78,7 @@ namespace UHub.CoreLib.Security.Accounts.Interfaces
             string OldPassword,
             string NewPassword,
             bool DeviceLogout,
-            HttpContext Context,
-            Action<Guid> GeneralFailHandler = null);
+            HttpContext Context);
 
 
 
@@ -100,8 +97,7 @@ namespace UHub.CoreLib.Security.Accounts.Interfaces
             string RecoveryKey,
             string NewPassword,
             bool DeviceLogout,
-            HttpContext Context,
-            Action<Guid> GeneralFailHandler = null);
+            HttpContext Context);
 
 
 
@@ -119,8 +115,7 @@ namespace UHub.CoreLib.Security.Accounts.Interfaces
             string UserEmail,
             string NewPassword,
             bool DeviceLogout,
-            HttpContext Context,
-            Action<Guid> GeneralFailHandler = null);
+            HttpContext Context);
 
 
 
@@ -138,8 +133,7 @@ namespace UHub.CoreLib.Security.Accounts.Interfaces
             long UserID,
             string NewPassword,
             bool DeviceLogout,
-            HttpContext Context,
-            Action<Guid> GeneralFailHandler = null);
+            HttpContext Context);
 
 
 
@@ -147,20 +141,20 @@ namespace UHub.CoreLib.Security.Accounts.Interfaces
         /// Delete user by ID.
         /// </summary>
         /// <param name="UserID"></param>
-        Task DeleteUserAsync(long UserID);
+        Task<bool> TryDeleteUserAsync(long UserID);
 
         /// <summary>
         /// Delete user by Email
         /// </summary>
         /// <param name="Email"></param>
-        Task DeleteUserAsync(string Email);
+        Task<bool> TryDeleteUserAsync(string Email);
 
         /// <summary>
         /// Delete user by Username and Domain
         /// </summary>
         /// <param name="Username"></param>
         /// <param name="Domain"></param>
-        Task DeleteUserAsync(string Username, string Domain);
+        Task<bool> TryDeleteUserAsync(string Username, string Domain);
 
 
         /// <summary>
@@ -172,8 +166,7 @@ namespace UHub.CoreLib.Security.Accounts.Interfaces
         /// <returns></returns>
         Task<(AcctRecoveryResultCode ResultCode, IUserRecoveryContext RecoveryContext, string RecoveryKey)> TryCreateUserRecoveryContextAsync(
             string UserEmail,
-            bool IsOptional,
-            Action<Guid> GeneralFailHandler = null);
+            bool IsOptional);
 
 
         /// <summary>
@@ -185,7 +178,6 @@ namespace UHub.CoreLib.Security.Accounts.Interfaces
         /// <returns></returns>
         Task<(AcctRecoveryResultCode ResultCode, IUserRecoveryContext RecoveryContext, string RecoveryKey)> TryCreateUserRecoveryContextAsync(
             long UserID,
-            bool IsOptional,
-            Action<Guid> GeneralFailHandler = null);
+            bool IsOptional);
     }
 }

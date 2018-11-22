@@ -222,25 +222,15 @@ namespace UHub.CoreLib.Entities.Users.DataInterop
         /// <param name="UserUID">The user being deleted</param>
         internal static void DeleteUser(long UserID, long? DeletedBy = null)
         {
-            try
-            {
-                SqlWorker.ExecNonQuery(
-                    _dbConn,
-                    "[dbo].[User_DeleteByID]",
-                    (cmd) =>
-                    {
-                        cmd.Parameters.Add("@UserID", SqlDbType.BigInt).Value = UserID;
-                        cmd.Parameters.Add("@DeletedBy", SqlDbType.BigInt).Value = DeletedBy;
-                    });
-            }
-            catch (Exception ex)
-            {
-                var errCode = "017BDF75-40BA-4F89-B15C-5EB2CEFFC7E5";
-                Exception ex_outer = new Exception(errCode, ex);
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
 
-                throw new Exception();
-            }
+            SqlWorker.ExecNonQuery(
+                _dbConn,
+                "[dbo].[User_DeleteByID]",
+                (cmd) =>
+                {
+                    cmd.Parameters.Add("@UserID", SqlDbType.BigInt).Value = UserID;
+                    cmd.Parameters.Add("@DeletedBy", SqlDbType.BigInt).Value = DeletedBy;
+                });
         }
         /// <summary>
         /// Attempt to purge a user from the DB

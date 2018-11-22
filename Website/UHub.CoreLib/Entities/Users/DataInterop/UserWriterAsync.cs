@@ -224,30 +224,17 @@ namespace UHub.CoreLib.Entities.Users.DataInterop
         /// </summary>
         /// <param name="RequestedBy">The user executing the delete command</param>
         /// <param name="UserUID">The user being deleted</param>
-        internal static async Task<bool> DeleteUserAsync(long UserID, long? DeletedBy = null)
+        internal static async Task DeleteUserAsync(long UserID, long? DeletedBy = null)
         {
-            try
-            {
-                await SqlWorker.ExecNonQueryAsync(
-                    _dbConn,
-                    "[dbo].[User_DeleteByID]",
-                    (cmd) =>
-                    {
-                        cmd.Parameters.Add("@UserID", SqlDbType.BigInt).Value = UserID;
-                        cmd.Parameters.Add("@DeletedBy", SqlDbType.BigInt).Value = DeletedBy;
-                    });
 
-
-                return true;
-            }
-            catch (Exception ex)
-            {
-                var errCode = "017BDF75-40BA-4F89-B15C-5EB2CEFFC7E5";
-                Exception ex_outer = new Exception(errCode, ex);
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
-
-                return false;
-            }
+            await SqlWorker.ExecNonQueryAsync(
+                _dbConn,
+                "[dbo].[User_DeleteByID]",
+                (cmd) =>
+                {
+                    cmd.Parameters.Add("@UserID", SqlDbType.BigInt).Value = UserID;
+                    cmd.Parameters.Add("@DeletedBy", SqlDbType.BigInt).Value = DeletedBy;
+                });
         }
         /// <summary>
         /// Attempt to purge a user from the DB

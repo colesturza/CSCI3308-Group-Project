@@ -99,6 +99,12 @@ namespace UHub.CoreLib.Logging
         {
             await CreateErrorLogAsync(ex?.ToString() ?? "UNKNOWN EXCEPTION");
         }
+        public async Task CreateErrorLogAsync(string UID, Exception exInner)
+        {
+            Exception exOuter = new Exception(UID, exInner);
+
+            await CreateErrorLogAsync(exInner?.ToString() ?? "UNKNOWN EXCEPTION");
+        }
         /// <summary>
         /// Create error message using anonymous type
         /// </summary>
