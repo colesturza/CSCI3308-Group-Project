@@ -25,8 +25,7 @@ namespace UHub.CoreLib.Security.Authentication.Interfaces
             string UserEmail,
             string UserPassword,
             bool IsPersistent,
-            HttpContext Context,
-            Action<Guid> GeneralFailHandler = null);
+            HttpContext Context);
 
 
 
@@ -38,12 +37,11 @@ namespace UHub.CoreLib.Security.Authentication.Interfaces
         /// <param name="IsPersistent">Flag to set token persistence status</param>
         /// <param name="GeneralFailHandler">Error handler in case DB cannot be reached or there is other unknown error</param>
         /// <returns></returns>
-        Task<(string AuthToken, AuthResultCode ResultCode)> TryGetClientAuthTokenAsync(
+        Task<(AuthResultCode ResultCode, string AuthToken)> TryGetClientAuthTokenAsync(
             string UserEmail,
             string UserPassword,
             bool IsPersistent,
-            HttpContext Context,
-            Action<Guid> GeneralFailHandler = null);
+            HttpContext Context);
 
 
 
@@ -53,7 +51,7 @@ namespace UHub.CoreLib.Security.Authentication.Interfaces
         /// </summary>
         /// <param name="token"></param>
         /// <returns></returns>
-        Task<(string Token, TokenValidationStatus TokenStatus)> TrySlideAuthTokenExpirationAsync(string token, HttpContext Context);
+        Task<(TokenValidationStatus TokenStatus, string AuthToken)> TrySlideAuthTokenExpirationAsync(string token, HttpContext Context);
 
 
 
@@ -66,8 +64,7 @@ namespace UHub.CoreLib.Security.Authentication.Interfaces
         /// <returns></returns>
         Task<AuthResultCode> TryAuthenticateUserAsync(
             string UserEmail,
-            string UserPassword,
-            Action<Guid> GeneralFailHandler = null);
+            string UserPassword);
 
 
 
@@ -77,7 +74,7 @@ namespace UHub.CoreLib.Security.Authentication.Interfaces
         /// </summary>
         /// <param name="tokenStr">AuthToken in string form</param>
         /// <returns>Status flag</returns>
-        Task<(bool StatusFlag, TokenValidationStatus TokenStatus)> TrySetRequestUserAsync(string tokenStr, HttpContext Context);
+        Task<TokenValidationStatus> TrySetRequestUserAsync(string tokenStr, HttpContext Context);
 
 
 
@@ -89,7 +86,7 @@ namespace UHub.CoreLib.Security.Authentication.Interfaces
         /// <param name="CmsUser">User encapsulated by auth token (if valid)</param>
         /// <param name="tokenStatus">Return auth token validation status</param>
         /// <returns></returns>
-        Task<(User CmsUser, TokenValidationStatus TokenStatus)> ValidateAuthTokenAsync(string tokenStr);
+        Task<(TokenValidationStatus TokenStatus, User CmsUser)> ValidateAuthTokenAsync(string tokenStr, HttpContext Context);
 
 
 
@@ -99,7 +96,7 @@ namespace UHub.CoreLib.Security.Authentication.Interfaces
         /// Returns the authenticated user or a reference to Anon instance
         /// </summary>
         /// <returns></returns>
-        Task<(bool StatusFlag, User CmsUser, TokenValidationStatus TokenStatus)> IsUserLoggedInAsync(HttpContext Context);
+        Task<bool> IsUserLoggedInAsync(HttpContext Context);
 
 
 
@@ -108,7 +105,7 @@ namespace UHub.CoreLib.Security.Authentication.Interfaces
         /// Get the currently authenticated CMS user. If the user is not authenticated, then an anonymous user is returned (UID=null, class=Anon)
         /// </summary>
         /// <returns></returns>
-        Task<(User CmsUser, TokenValidationStatus TokenStatus)> GetCurrentUserAsync(HttpContext Context);
+        Task<(TokenValidationStatus TokenStatus, User CmsUser)> GetCurrentUserAsync(HttpContext Context);
 
     }
 }

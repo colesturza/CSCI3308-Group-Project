@@ -5,8 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using UHub.CoreLib.Extensions;
 using UHub.CoreLib.Logging.Interfaces;
+using UHub.CoreLib.Logging.Util;
 
-namespace UHub.CoreLib.Logging
+namespace UHub.CoreLib.Logging.Management
 {
     // <summary>
     // Manage system logging | core init

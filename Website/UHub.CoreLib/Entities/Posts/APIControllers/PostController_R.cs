@@ -41,7 +41,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             }
 
             var parentID = postInternal.ParentID;
-            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser();
+            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser().CmsUser;
 
 
 

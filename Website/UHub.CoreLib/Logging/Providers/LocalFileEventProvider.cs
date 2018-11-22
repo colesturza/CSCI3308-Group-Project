@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using UHub.CoreLib.Logging.Interfaces;
 using UHub.CoreLib.Management;
 
-namespace UHub.CoreLib.Logging
+namespace UHub.CoreLib.Logging.Providers
 {
     internal sealed class LocalFileEventProvider : ILocalLogProvider
     {

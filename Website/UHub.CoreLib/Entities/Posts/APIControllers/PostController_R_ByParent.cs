@@ -36,7 +36,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             }
 
             var taskGetTargetClub = SchoolClubReader.GetClubAsync(ParentID);
-            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser();
+            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser().CmsUser;
 
             var count = 0L;
 
@@ -94,7 +94,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
 
 
             var taskGetTargetClub = SchoolClubReader.GetClubAsync(ParentID);
-            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser();
+            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser().CmsUser;
 
             var count = 0L;
 
@@ -169,7 +169,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             }
 
 
-            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser();
+            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser().CmsUser;
 
 
             IEnumerable<Post> posts = null;
@@ -257,8 +257,8 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
                 return Content(statCode, status);
             }
 
+            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser().CmsUser;
 
-            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser();
 
             IEnumerable<Post> posts = null;
 

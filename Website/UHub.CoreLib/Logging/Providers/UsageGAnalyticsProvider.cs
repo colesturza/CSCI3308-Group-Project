@@ -12,7 +12,7 @@ using GoogleAnalyticsTracker.Core.TrackerParameters;
 using UHub.CoreLib.Management;
 using UHub.CoreLib.Extensions;
 
-namespace UHub.CoreLib.Logging
+namespace UHub.CoreLib.Logging.Providers
 {
     internal sealed class UsageGAnalyticsProvider : IUsageLogProvider
     {

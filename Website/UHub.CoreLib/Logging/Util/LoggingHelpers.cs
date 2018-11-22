@@ -11,7 +11,7 @@ using UHub.CoreLib;
 using UHub.CoreLib.Extensions;
 using UHub.CoreLib.Management;
 
-namespace UHub.CoreLib.Logging
+namespace UHub.CoreLib.Logging.Util
 {
     internal static class LoggingHelpers
     {
@@ -25,7 +25,8 @@ namespace UHub.CoreLib.Logging
 
             if (Request != null)
             {
-                long? userID = CoreFactory.Singleton.Auth.GetCurrentUser()?.ID ?? null;
+                var userInfo = CoreFactory.Singleton.Auth.GetCurrentUser();
+                long? userID = userInfo.CmsUser.ID;
 
 
                 logData.UserAgent = userID?.ToString() ?? null;

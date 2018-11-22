@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using UHub.CoreLib.Extensions;
 using UHub.CoreLib.Logging.Interfaces;
 
-namespace UHub.CoreLib.Logging
+namespace UHub.CoreLib.Logging.Management
 {
     // <summary>
     // Manage system logging | local server events

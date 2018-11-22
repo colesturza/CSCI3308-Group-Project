@@ -13,8 +13,9 @@ using UHub.CoreLib.Tools;
 using UHub.CoreLib.Entities.Users;
 using UHub.CoreLib.Entities.Users.Interfaces;
 using UHub.CoreLib.Entities.Users.DataInterop;
+using UHub.CoreLib.Security.Authentication.Management;
 
-namespace UHub.CoreLib.Security.Authentication
+namespace UHub.CoreLib.Security.Authentication.Providers
 {
     internal abstract partial class AuthenticationProvider
     {
@@ -30,7 +31,6 @@ namespace UHub.CoreLib.Security.Authentication
         abstract internal Task<AuthResultCode> TryAuthenticateUserAsync(
             string userEmail,
             string userPassword,
-            Action<Guid> GeneralFailHandler = null,
             Func<User, bool> UserTokenHandler = null);
 
 
@@ -38,7 +38,7 @@ namespace UHub.CoreLib.Security.Authentication
         /// <summary>
         /// Get user auth data from cookie and load as the CurrentUser identity
         /// </summary>
-        internal async Task<(User CmsUser, TokenValidationStatus TokenStatus)> ValidateAuthCookieAsync(HttpContext Context, Action ErrorHandler = null)
+        internal async Task<(TokenValidationStatus TokenStatus, User CmsUser)> ValidateAuthCookieAsync(HttpContext Context)
         {
             var authTknCookieName = CoreFactory.Singleton.Properties.AuthTknCookieName;
 
@@ -49,20 +49,18 @@ namespace UHub.CoreLib.Security.Authentication
 
             if (authCookie == null)
             {
-                ErrorHandler?.Invoke();
                 var CmsUser = UserReader.GetAnonymousUser();
                 var TokenStatus = TokenValidationStatus.TokenNotFound;
 
-                return (CmsUser, TokenStatus);
+                return (TokenStatus, CmsUser);
             }
 
             if (authCookie.Value.IsEmpty())
             {
-                ErrorHandler?.Invoke();
                 var CmsUser = UserReader.GetAnonymousUser();
                 var TokenStatus = TokenValidationStatus.TokenNotFound;
 
-                return (CmsUser, TokenStatus);
+                return (TokenStatus, CmsUser);
             }
 
 
@@ -84,7 +82,7 @@ namespace UHub.CoreLib.Security.Authentication
                 };
 
 
-            return await ValidateAuthTokenAsync(authCookie.Value, Context, ErrorHandler, succHandler);
+            return await ValidateAuthTokenAsync(authCookie.Value, Context, succHandler);
 
         }
 
@@ -97,23 +95,16 @@ namespace UHub.CoreLib.Security.Authentication
         /// <param name="errorHandler"></param>
         /// <param name="SuccessHandler"></param>
         /// <returns></returns>
-        internal async Task<(User CmsUser, TokenValidationStatus TokenStatus)> ValidateAuthTokenAsync(
+        internal async Task<(TokenValidationStatus TokenStatus, User CmsUser)> ValidateAuthTokenAsync(
             string tokenStr,
             HttpContext Context,
-            Action errorHandler = null,
             Action<AuthenticationToken> SuccessHandler = null)
         {
 
             if (tokenStr.IsEmpty())
             {
                 var CmsUser = UserReader.GetAnonymousUser();
-                try
-                {
-                    errorHandler?.Invoke();
-                }
-                catch { }
-
-                return (CmsUser, TokenValidationStatus.TokenNotFound);
+                return (TokenValidationStatus.TokenNotFound, CmsUser);
             }
             //get token
             AuthenticationToken authToken = null;
@@ -123,19 +114,14 @@ namespace UHub.CoreLib.Security.Authentication
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex);
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("8959AB05-5BEF-4351-A980-A3A8AD140EE7", ex);
 
                 var CmsUser = UserReader.GetAnonymousUser();
-                try
-                {
-                    errorHandler?.Invoke();
-                }
-                catch { }
-
-                return (CmsUser, TokenValidationStatus.TokenAESFailure);
+                return (TokenValidationStatus.TokenAESFailure, CmsUser);
             }
 
-            return await ValidateAuthTokenAsync(authToken, Context, errorHandler, SuccessHandler);
+
+            return await ValidateAuthTokenAsync(authToken, Context, SuccessHandler);
         }
 
         /// <summary>
@@ -147,20 +133,18 @@ namespace UHub.CoreLib.Security.Authentication
         /// <param name="errorHandler"></param>
         /// <param name="SuccessHandler"></param>
         /// <returns></returns>
-        private protected async Task<(User CmsUser, TokenValidationStatus TokenStatus)> ValidateAuthTokenAsync(
+        private protected async Task<(TokenValidationStatus TokenStatus, User CmsUser)> ValidateAuthTokenAsync(
             AuthenticationToken token,
             HttpContext Context,
-            Action errorHandler = null,
             Action<AuthenticationToken> SuccessHandler = null)
         {
 
             //authenticate token
             if (token == null)
             {
-                errorHandler?.Invoke();
                 var CmsUser = UserReader.GetAnonymousUser();
 
-                return (CmsUser, TokenValidationStatus.TokenNotFound);
+                return (TokenValidationStatus.TokenNotFound, CmsUser);
             }
 
 
@@ -171,16 +155,14 @@ namespace UHub.CoreLib.Security.Authentication
             var taskGetUser = UserReader.GetUserAsync(userID);
 
             var tokenStatus = await TokenManager.IsTokenValidAsync(token, sessionID);
-            var isTokenValid = tokenStatus == TokenValidationStatus.Success;
+            var isTokenValid = (tokenStatus == 0);
 
 
             if (isTokenValid)
             {
-                errorHandler?.Invoke();
                 var CmsUser = UserReader.GetAnonymousUser();
 
-
-                return (CmsUser, tokenStatus);
+                return (tokenStatus, CmsUser);
             }
 
             if
@@ -189,10 +171,9 @@ namespace UHub.CoreLib.Security.Authentication
                 token.SystemVersion != CoreFactory.Singleton.Properties.CurrentAuthTknVersion
             )
             {
-                errorHandler?.Invoke();
                 var CmsUser = UserReader.GetAnonymousUser();
 
-                return (CmsUser, TokenValidationStatus.TokenVersionMismatch);
+                return (TokenValidationStatus.TokenVersionMismatch, CmsUser);
             }
 
 
@@ -207,10 +188,9 @@ namespace UHub.CoreLib.Security.Authentication
             //validate CMS specific user
             if (cmsUser_local == null || cmsUser_local.ID == null)
             {
-                errorHandler?.Invoke();
                 var CmsUser = UserReader.GetAnonymousUser();
 
-                return (CmsUser, TokenValidationStatus.TokenUserError);
+                return (TokenValidationStatus.TokenUserError, CmsUser);
             }
 
 
@@ -220,38 +200,33 @@ namespace UHub.CoreLib.Security.Authentication
                 string userVersion = token.UserVersion;
                 if (cmsUser_local.Version != userVersion)
                 {
-                    errorHandler?.Invoke();
                     var CmsUser = UserReader.GetAnonymousUser();
 
-                    return (CmsUser, TokenValidationStatus.TokenVersionMismatch);
+                    return (TokenValidationStatus.TokenVersionMismatch, CmsUser);
                 }
             }
 
             //user not confirmed
             if (!cmsUser_local.IsConfirmed)
             {
-                errorHandler?.Invoke();
                 var CmsUser = UserReader.GetAnonymousUser();
 
-                return (CmsUser, TokenValidationStatus.TokenUserNotConfirmed);
+                return (TokenValidationStatus.TokenUserNotConfirmed, CmsUser);
             }
             if (!cmsUser_local.IsApproved)
             {
-                errorHandler?.Invoke();
                 var CmsUser = UserReader.GetAnonymousUser();
 
-
-                return (CmsUser, TokenValidationStatus.TokenUserNotApproved);
+                return (TokenValidationStatus.TokenUserNotApproved, CmsUser);
             }
 
             //user disabled for some other reason
             //could be disabled by admin
             if (!cmsUser_local.IsEnabled)
             {
-                errorHandler?.Invoke();
                 var CmsUser = UserReader.GetAnonymousUser();
 
-                return (CmsUser, TokenValidationStatus.TokenUserDisabled);
+                return (TokenValidationStatus.TokenUserDisabled, CmsUser);
             }
 
             ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -259,8 +234,7 @@ namespace UHub.CoreLib.Security.Authentication
             ////////////////////////////////////////////////////////////////////////////////////////////////////
 
             SuccessHandler?.Invoke(token);
-
-            return (cmsUser_local, TokenValidationStatus.Success);
+            return (TokenValidationStatus.Success, cmsUser_local);
 
         }
 
@@ -329,7 +303,7 @@ namespace UHub.CoreLib.Security.Authentication
 
         internal async Task<bool> IsUserLockedOutAsync(long UserID)
         {
-            var info = await GetUserAuthInfo_DBAsync(UserID);
+            var info = await UserReader.TryGetUserAuthDataAsync(UserID);
             if (info == null)
             {
                 throw new InvalidOperationException("User does not exist");
@@ -346,7 +320,7 @@ namespace UHub.CoreLib.Security.Authentication
         #region GetUserLockoutDate
         internal async Task<DateTimeOffset> GetUserLockoutDateAsync(long UserID)
         {
-            var info = await GetUserAuthInfo_DBAsync(UserID);
+            var info = await UserReader.TryGetUserAuthDataAsync(UserID);
             if (info == null)
             {
                 throw new InvalidOperationException("User does not exist");
@@ -390,7 +364,7 @@ namespace UHub.CoreLib.Security.Authentication
 
         #region HandleBadPswd
 
-        private protected async Task HandleBadPswdAttemptAsync(UserAuthInfo UserAuthInfo)
+        private protected async Task HandleBadPswdAttemptAsync(UserAuthData UserAuthInfo)
         {
 
             //log failed pswd attempt to DB
@@ -450,77 +424,5 @@ namespace UHub.CoreLib.Security.Authentication
                 });
         }
         #endregion LogFailedPswd
-
-
-        #region UserAuthInfo
-        private protected async Task<UserAuthInfo> GetUserAuthInfo_DBAsync(long UserID)
-        {
-            try
-            {
-
-                var temp = SqlWorker.ExecBasicQueryAsync<UserAuthInfo>(
-                    CoreFactory.Singleton.Properties.CmsDBConfig,
-                    "[dbo].[User_GetAuthInfoByID]",
-                    (cmd) =>
-                    {
-                        cmd.Parameters.Add("@UserID", SqlDbType.BigInt).Value = UserID;
-                    });
-
-
-                return (await temp).SingleOrDefault();
-            }
-            catch
-            {
-                return null;
-            }
-        }
-
-        private protected async Task<UserAuthInfo> GetUserAuthInfo_DBAsync(string Email)
-        {
-            try
-            {
-
-                var temp = SqlWorker.ExecBasicQueryAsync<UserAuthInfo>(
-                    CoreFactory.Singleton.Properties.CmsDBConfig,
-                    "[dbo].[User_GetAuthInfoByEmail]",
-                    (cmd) =>
-                    {
-                        cmd.Parameters.Add("@Email", SqlDbType.NVarChar).Value = Email;
-                    });
-
-
-                return (await temp).SingleOrDefault();
-            }
-            catch
-            {
-                return null;
-            }
-        }
-
-
-        private protected async Task<UserAuthInfo> GetUserAuthInfo_DBAsync(string Username, string Domain)
-        {
-            try
-            {
-
-                var temp = SqlWorker.ExecBasicQueryAsync<UserAuthInfo>(
-                    CoreFactory.Singleton.Properties.CmsDBConfig,
-                    "[dbo].[User_GetAuthInfoByUsername]",
-                    (cmd) =>
-                    {
-                        cmd.Parameters.Add("@Username", SqlDbType.NVarChar).Value = Username;
-                        cmd.Parameters.Add("@Domain", SqlDbType.NVarChar).Value = Domain;
-                    });
-
-
-                return (await temp).SingleOrDefault();
-            }
-            catch
-            {
-                return null;
-            }
-        }
-
-        #endregion UserAuthInfo
     }
 }

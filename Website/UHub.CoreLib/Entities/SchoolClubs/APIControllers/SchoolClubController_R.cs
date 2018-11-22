@@ -30,7 +30,8 @@ namespace UHub.CoreLib.Entities.SchoolClubs.APIControllers
         public async Task<IHttpActionResult> GetAllBySchool()
         {
 
-            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser();
+            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser().CmsUser;
+
             var schoolID = cmsUser.SchoolID.Value;
 
             var clubSet = await SchoolClubReader.GetClubsBySchoolAsync(schoolID);

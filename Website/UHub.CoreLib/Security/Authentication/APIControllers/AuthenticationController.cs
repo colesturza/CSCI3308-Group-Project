@@ -73,15 +73,14 @@ namespace UHub.CoreLib.Security.Authentication.APIControllers
                     email,
                     password,
                     persistent,
-                    context,
-                    GeneralFailHandler: (code) =>
-                    {
-                        statCode = HttpStatusCode.InternalServerError;
-                        if (enableFailCode)
-                        {
-                            status = code.ToString();
-                        }
-                    });
+                    context);
+
+                if (authResultSet.ResultCode == AuthResultCode.UnknownError)
+                {
+                    statCode = HttpStatusCode.InternalServerError;
+                    return Content(HttpStatusCode.InternalServerError, status);
+                }
+
 
                 var ResultCode = authResultSet.ResultCode;
                 token = authResultSet.AuthToken;
@@ -157,7 +156,7 @@ namespace UHub.CoreLib.Security.Authentication.APIControllers
 
                 var resultSet = await CoreFactory.Singleton.Auth.TrySlideAuthTokenExpirationAsync(token, context);
 
-                string newToken = resultSet.Token;
+                string newToken = resultSet.AuthToken;
                 var status = resultSet.TokenStatus;
                 if (status == TokenValidationStatus.Success)
                 {

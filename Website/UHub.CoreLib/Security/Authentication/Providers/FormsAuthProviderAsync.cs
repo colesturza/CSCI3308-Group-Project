@@ -14,7 +14,7 @@ using UHub.CoreLib.Entities.Users.DataInterop;
 using System.Text.RegularExpressions;
 using System.Web;
 
-namespace UHub.CoreLib.Security.Authentication
+namespace UHub.CoreLib.Security.Authentication.Providers
 {
     internal sealed partial class FormsAuthProvider : AuthenticationProvider
     {
@@ -30,7 +30,6 @@ namespace UHub.CoreLib.Security.Authentication
         override internal async Task<AuthResultCode> TryAuthenticateUserAsync(
             string UserEmail,
             string UserPassword,
-            Action<Guid> GeneralFailHandler = null,
             Func<User, bool> UserTokenHandler = null)
         {
 
@@ -40,7 +39,7 @@ namespace UHub.CoreLib.Security.Authentication
             }
 
             UserEmail = UserEmail?.Trim();
-            var taskGetUserAuthInfo = GetUserAuthInfo_DBAsync(UserEmail);
+            var taskGetUserAuthInfo = UserReader.TryGetUserAuthDataAsync(UserEmail);
 
 
             var attrIsValid = Shared.TryAuthenticate_ValidateFields(UserEmail, UserPassword);
@@ -52,7 +51,16 @@ namespace UHub.CoreLib.Security.Authentication
 
 
             //get userAuth info (pswf info)
-            UserAuthInfo userAuthInfo = await taskGetUserAuthInfo;
+            UserAuthData userAuthInfo = null;
+            try
+            {
+                userAuthInfo = await taskGetUserAuthInfo;
+            }
+            catch (Exception ex)
+            {
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("2645E23E-6171-487A-AE7C-8970511C3390", ex);
+                return AuthResultCode.UnknownError;
+            }
             //ensure account exists
             if (userAuthInfo == null)
             {
@@ -75,7 +83,15 @@ namespace UHub.CoreLib.Security.Authentication
                 var now = FailoverDateTimeOffset.UtcNow;
                 if (resetDt < now)
                 {
-                    ResetUserLockout(userAuthInfo.UserID);
+                    try
+                    {
+                        await ResetUserLockoutAsync(userAuthInfo.UserID);
+                    }
+                    catch (Exception ex)
+                    {
+                        CoreFactory.Singleton.Logging.CreateErrorLogAsync("A53922C5-0923-4382-A572-50ED87A0B2BE", ex);
+                        return AuthResultCode.UnknownError;
+                    }
                 }
                 else
                 {
@@ -91,9 +107,7 @@ namespace UHub.CoreLib.Security.Authentication
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex);
-                GeneralFailHandler?.Invoke(new Guid("EE2C6BB0-8E49-4B31-9CB1-8C246C3EFFD9"));
-
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("55AE48DF-B91A-4B24-8EED-2077493BEFE8", ex);
                 return AuthResultCode.UnknownError;
             }
             if (validationStatus != PasswordValidationStatus.Success)
@@ -113,7 +127,7 @@ namespace UHub.CoreLib.Security.Authentication
                 }
                 else
                 {
-                    GeneralFailHandler?.Invoke(new Guid("FC5D3DDB-A48B-49C9-922E-7A96CB53CA7E"));
+                    CoreFactory.Singleton.Logging.CreateErrorLogAsync("07F533B2-FBAD-4751-A467-494BA2D6D19D");
                     return AuthResultCode.UnknownError;
                 }
 
@@ -123,7 +137,16 @@ namespace UHub.CoreLib.Security.Authentication
 
 
             //try to get the real user from CMS DB
-            User cmsUser = await taskGetUser;
+            User cmsUser = null;
+            try
+            {
+                cmsUser = await taskGetUser;
+            }
+            catch (Exception ex)
+            {
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("D7101F53-4E23-4786-A1C2-69CC6E5EFA25", ex);
+                return AuthResultCode.UnknownError;
+            }
 
             var userAccessIsValid = Shared.TryAuthenticate_ValidateUserAccess(cmsUser);
             if (userAccessIsValid != AuthResultCode.Success)

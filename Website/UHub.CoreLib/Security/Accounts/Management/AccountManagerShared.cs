@@ -11,7 +11,7 @@ using UHub.CoreLib.Tools;
 using RgxPtrn = UHub.CoreLib.Regex.Patterns;
 using System.Text.RegularExpressions;
 
-namespace UHub.CoreLib.Security.Accounts
+namespace UHub.CoreLib.Security.Accounts.Management
 {
     public sealed partial class AccountManager
     {

@@ -46,7 +46,7 @@ namespace UHub.CoreLib.Entities.ClubModerators.APIControllers
 
 
             var tmpClubModerator = clubModerator.ToInternal<ClubModerator>();
-            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser();
+            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser().CmsUser;
 
 
             var taskIsCurrentUserOwner = UserReader.ValidateClubModeratorAsync(clubID, (long)cmsUser.ID);

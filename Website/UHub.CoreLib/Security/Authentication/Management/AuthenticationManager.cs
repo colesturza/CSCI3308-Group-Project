@@ -14,10 +14,10 @@ using UHub.CoreLib.Entities.Users;
 using UHub.CoreLib.Entities.Users.Interfaces;
 using UHub.CoreLib.Entities.Users.DataInterop;
 
-namespace UHub.CoreLib.Security.Authentication
+namespace UHub.CoreLib.Security.Authentication.Management
 {
 
-    internal sealed partial class AuthenticationManager : IAuthenticationManager
+    internal sealed partial class AuthenticationManager
     {
 
 
@@ -27,13 +27,12 @@ namespace UHub.CoreLib.Security.Authentication
         /// <param name="UserEmail">Email address associated with the user account</param>
         /// <param name="UserPassword">Password associated with the user account</param>
         /// <param name="IsPersistent">Flag to set token persistence status</param>
+        /// <paramref name="ResultCode">Result code to indicate process status</paramref>
         /// <param name="GeneralFailHandler">Error handler in case DB cannot be reached or there is other unknown error</param>
-        public async Task<AuthResultCode> TrySetClientAuthTokenAsync(
+        public AuthResultCode TrySetClientAuthToken(
             string UserEmail,
             string UserPassword,
-            bool IsPersistent,
-            HttpContext Context,
-            Action<Guid> GeneralFailHandler = null)
+            bool IsPersistent)
         {
             if (!CoreFactory.Singleton.IsEnabled)
             {
@@ -46,8 +45,8 @@ namespace UHub.CoreLib.Security.Authentication
                 var authCookieName = CoreFactory.Singleton.Properties.AuthTknCookieName;
 
                 //remove old token
-                Context.Request.Cookies.Remove(authCookieName);
-                Context.Response.Cookies.Remove(authCookieName);
+                HttpContext.Current.Request.Cookies.Remove(authCookieName);
+                HttpContext.Current.Response.Cookies.Remove(authCookieName);
 
                 //everything good
                 //write user auth cookie
@@ -57,20 +56,19 @@ namespace UHub.CoreLib.Security.Authentication
                     authWorker.SetCurrentUser_ClientToken(IsPersistent, cmsUser);
                     return true;
                 }
-                catch
+                catch (Exception ex)
                 {
-
-                    GeneralFailHandler(new Guid("B0FE06E5-C2CD-47E1-B68C-15AA0F02281A"));
+                    CoreFactory.Singleton.Logging.CreateErrorLogAsync("F1459F20-3C34-4DAD-9925-A3A09D917E5F", ex);
                     return false;
                 }
             }
 
 
-            return await authWorker.TryAuthenticateUserAsync(
+            return authWorker.TryAuthenticateUser(
                 UserEmail,
                 UserPassword,
-                GeneralFailHandler,
                 userTokenHandler);
+
         }
 
         /// <summary>
@@ -79,14 +77,13 @@ namespace UHub.CoreLib.Security.Authentication
         /// <param name="UserEmail">Email address associated with the user account</param>
         /// <param name="UserPassword">Password associated with the user account</param>
         /// <param name="IsPersistent">Flag to set token persistence status</param>
+        /// <paramref name="ResultCode">Result code to indicate process status</paramref>
         /// <param name="GeneralFailHandler">Error handler in case DB cannot be reached or there is other unknown error</param>
         /// <returns></returns>
-        public async Task<(string AuthToken, AuthResultCode ResultCode)> TryGetClientAuthTokenAsync(
+        public (AuthResultCode ResultCode, string AuthToken) TryGetClientAuthToken(
             string UserEmail,
             string UserPassword,
-            bool IsPersistent,
-            HttpContext Context,
-            Action<Guid> GeneralFailHandler = null)
+            bool IsPersistent)
         {
             if (!CoreFactory.Singleton.IsEnabled)
             {
@@ -101,40 +98,36 @@ namespace UHub.CoreLib.Security.Authentication
                 //write user auth cookie
                 try
                 {
-                    var tkn = authWorker.GenerateAuthToken(IsPersistent, cmsUser, Context);
+                    var context = HttpContext.Current;
+                    var tkn = authWorker.GenerateAuthToken(IsPersistent, cmsUser, context);
                     token = tkn.Encrypt();
-
                     return true;
                 }
                 catch (CryptographicException ex)
                 {
                     token = "ERROR";
-                    GeneralFailHandler(new Guid("B4BDF1F7-C946-419F-A403-ABDFEA540E2B"));
-                    CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex);
+                    CoreFactory.Singleton.Logging.CreateErrorLogAsync("28A013BC-BB19-47FF-977A-A4AAA6798884", ex);
 
                     return false;
                 }
                 catch (Exception ex)
                 {
                     token = "ERROR";
-                    GeneralFailHandler(new Guid("8BF88EC6-B13E-4E65-809F-277B572300C6"));
-                    CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex);
+                    CoreFactory.Singleton.Logging.CreateErrorLogAsync("3BB3F302-6D3F-4271-824C-589EDFD49C13", ex);
 
                     return false;
                 }
             }
 
 
-            var resultCode = await authWorker.TryAuthenticateUserAsync(
+            var resultCode = authWorker.TryAuthenticateUser(
                 UserEmail,
                 UserPassword,
-                GeneralFailHandler,
                 userTokenHandler);
 
 
-            return (token, resultCode);
+            return (resultCode, token);
         }
-
 
         /// <summary>
         /// Slide the expiration date of a token and return a new encrypted client token
@@ -142,7 +135,7 @@ namespace UHub.CoreLib.Security.Authentication
         /// </summary>
         /// <param name="token"></param>
         /// <returns></returns>
-        public async Task<(string Token, TokenValidationStatus TokenStatus)> TrySlideAuthTokenExpirationAsync(string token, HttpContext Context)
+        public (TokenValidationStatus TokenStatus, string AuthToken) TrySlideAuthTokenExpiration(string token)
         {
             if (!CoreFactory.Singleton.IsEnabled)
             {
@@ -151,85 +144,144 @@ namespace UHub.CoreLib.Security.Authentication
 
             string newToken = token;
 
-
             void succHandler(AuthenticationToken authToken)
             {
                 authWorker.SlideAuthTokenExpiration(authToken);
                 newToken = authToken.Encrypt();
             }
 
-            var result = await authWorker.ValidateAuthTokenAsync(token, Context, () => { TryLogOut(5); }, succHandler);
+            var validationResult = authWorker.ValidateAuthToken(token, succHandler);
+            if (validationResult.TokenStatus != 0)
+            {
+                var context = HttpContext.Current;
+                TryLogOut(context, 5);
+            }
 
-
-            return (token, result.TokenStatus);
+            return (validationResult.TokenStatus, newToken);
         }
+
 
         /// <summary>
         /// Try to authenticate a user account using the supplied account credentials
         /// </summary>
         /// <param name="UserEmail">Email address associated with the user account</param>
         /// <param name="UserPassword">Password associated with the user account</param>
+        /// <paramref name="ResultCode">Result code to indicate process status</paramref>
         /// <param name="GeneralFailHandler">Error handler in case DB cannot be reached or there is other unknown error</param>
         /// <returns></returns>
-        public async Task<AuthResultCode> TryAuthenticateUserAsync(
+        public AuthResultCode TryAuthenticateUser(
             string UserEmail,
-            string UserPassword,
-            Action<Guid> GeneralFailHandler = null)
+            string UserPassword)
         {
             if (!CoreFactory.Singleton.IsEnabled)
             {
                 throw new SystemDisabledException();
             }
 
-            return await authWorker.TryAuthenticateUserAsync(
+            return authWorker.TryAuthenticateUser(
                 UserEmail,
                 UserPassword,
-                GeneralFailHandler,
                 null);
         }
 
 
+        /// <summary>
+        /// Get the url that the user should be redirected to after login
+        /// </summary>
+        public string GetAuthForwardUrl()
+        {
+            if (!CoreFactory.Singleton.IsEnabled)
+            {
+                throw new SystemDisabledException();
+            }
+
+            var postAuthCookieName = CoreFactory.Singleton.Properties.PostAuthCookieName;
+            var cookie = HttpContext.Current.Request.Cookies[postAuthCookieName];
+
+
+            var loginUrl = CoreFactory.Singleton.Properties.LoginURL;
+            var defaultFwdUrl = CoreFactory.Singleton.Properties.DefaultAuthFwdURL;
+
+
+            if (cookie != null)
+            {
+                cookie.Decrypt();
+                if (cookie.Value.IsNotEmpty() && cookie.Value != loginUrl)
+                {
+                    //go to requested page
+
+                    if (Uri.TryCreate(cookie.Value, UriKind.Absolute, out var url))
+                    {
+                        return url.AbsolutePath;
+                    }
+
+                    return defaultFwdUrl;
+                }
+                else
+                {
+                    //go to default page
+                    return defaultFwdUrl;
+                }
+            }
+            else
+            {
+                return defaultFwdUrl;
+            }
+        }
+
+        /// <summary>
+        /// Forward user to originally requested page (if set) or default auth page
+        /// </summary>
+        public void AuthUserPageForward()
+        {
+            if (!CoreFactory.Singleton.IsEnabled)
+            {
+                throw new SystemDisabledException();
+            }
+
+            //forward to originally requested page
+            var url = GetAuthForwardUrl();
+
+            HttpContext.Current.Response.Redirect(url);
+        }
 
         /// <summary>
         /// Set the user for the current request using an Auth Token.  If the token is invalid, then the user will be set to ANON privs.
         /// This method is provided so that restful API requests without an auth cookie can be authenticated throughout the CMS pipeline
         /// </summary>
         /// <param name="tokenStr">AuthToken in string form</param>
+        /// <param name="tokenStatus">Returns token validation status</param>
         /// <returns>Status flag</returns>
-        public async Task<(bool StatusFlag, TokenValidationStatus TokenStatus)> TrySetRequestUserAsync(string tokenStr, HttpContext Context)
+        public TokenValidationStatus TrySetRequestUser(string tokenStr)
         {
             if (!CoreFactory.Singleton.IsEnabled)
             {
                 throw new SystemDisabledException();
             }
 
-            var validationResult = await ValidateAuthTokenAsync(tokenStr);
+            var validationResult = ValidateAuthToken(tokenStr);
             var cmsUser = validationResult.CmsUser;
-            var tokenStatus = validationResult.TokenStatus;
-            var isValid = (tokenStatus == TokenValidationStatus.Success);
 
 
-            if (!isValid)
+            if (validationResult.TokenStatus != TokenValidationStatus.Success)
             {
                 cmsUser = UserReader.GetAnonymousUser();
-                Context.Items[AuthenticationManager.REQUEST_CURRENT_USER] = cmsUser;
-                return (false, tokenStatus);
+                HttpContext.Current.Items[REQUEST_CURRENT_USER] = cmsUser;
+                return validationResult.TokenStatus;
             }
 
 
             if (cmsUser == null || cmsUser.ID == null)
             {
                 cmsUser = UserReader.GetAnonymousUser();
-                Context.Items[AuthenticationManager.REQUEST_CURRENT_USER] = cmsUser;
-                return (false, tokenStatus);
+                HttpContext.Current.Items[REQUEST_CURRENT_USER] = cmsUser;
+                return TokenValidationStatus.AnonUser;
             }
 
 
-            Context.Items[AuthenticationManager.REQUEST_CURRENT_USER] = cmsUser;
+            HttpContext.Current.Items[REQUEST_CURRENT_USER] = cmsUser;
 
-
-            var isSuccess = cmsUser.ID != null;
-            return (isSuccess, tokenStatus);
+            return TokenValidationStatus.Success;
         }
 
         /// <summary>
@@ -239,7 +291,7 @@ namespace UHub.CoreLib.Security.Authentication
         /// <param name="CmsUser">User encapsulated by auth token (if valid)</param>
         /// <param name="tokenStatus">Return auth token validation status</param>
         /// <returns></returns>
-        public async Task<(User CmsUser, TokenValidationStatus TokenStatus)> ValidateAuthTokenAsync(string tokenStr)
+        public (TokenValidationStatus TokenStatus, User CmsUser) ValidateAuthToken(string tokenStr)
         {
             if (!CoreFactory.Singleton.IsEnabled)
             {
@@ -247,7 +299,8 @@ namespace UHub.CoreLib.Security.Authentication
             }
 
 
-            return await authWorker.ValidateAuthTokenAsync(tokenStr, null);
+            var tokenStatus = authWorker.ValidateAuthToken(tokenStr, null);
+            return tokenStatus;
         }
 
 
@@ -257,67 +310,63 @@ namespace UHub.CoreLib.Security.Authentication
         /// Returns the authenticated user or a reference to Anon instance
         /// </summary>
         /// <returns></returns>
-        public async Task<(bool StatusFlag, User CmsUser, TokenValidationStatus TokenStatus)> IsUserLoggedInAsync(HttpContext Context)
+        public bool IsUserLoggedIn()
         {
-
             if (!CoreFactory.Singleton.IsEnabled)
             {
                 throw new SystemDisabledException();
             }
 
 
-            var requestUser = Context.Items[AuthenticationManager.REQUEST_CURRENT_USER];
 
+            var requestUser = HttpContext.Current.Items[REQUEST_CURRENT_USER];
+
+            //check for cached user
             if (false && requestUser != null && requestUser is User currentUser)
             {
-                var CmsUser = currentUser;
                 if (currentUser.ID == null)
                 {
-                    var tokenStatus = TokenValidationStatus.AnonUser;
-                    return (false, CmsUser, tokenStatus);
+                    return false;
                 }
 
-                return (true, CmsUser, TokenValidationStatus.Success);
+
+                return true;
             }
+            //if no cached user
             else
             {
-                var authData = await authWorker.ValidateAuthCookieAsync(Context);
-                var CmsUser = authData.CmsUser;
-                var TokenStatus = authData.TokenStatus;
+                //get user info from tkn (if it exists)
+                var cookieResult = authWorker.ValidateAuthCookie();
+                var tokenStatus = cookieResult.TokenStatus;
+                var cmsUser = cookieResult.CmsUser;
 
 
-                //check for real user vs Anon user
-                if (CmsUser == null || CmsUser.ID == null)
+                if (cmsUser == null || cmsUser.ID == null)
                 {
-                    if (TokenStatus == TokenValidationStatus.Success)
+                    if (tokenStatus == TokenValidationStatus.Success)
                     {
-                        TokenStatus = TokenValidationStatus.AnonUser;
+                        tokenStatus = TokenValidationStatus.AnonUser;
                     }
-
-                    CmsUser = UserReader.GetAnonymousUser();
-                    Context.Items[AuthenticationManager.REQUEST_CURRENT_USER] = CmsUser;
-
-                    return (false, CmsUser, TokenStatus);
+                }
+                if (tokenStatus != TokenValidationStatus.Success)
+                {
+                    cmsUser = UserReader.GetAnonymousUser();
                 }
 
-
-                //GOOD USER
-                Context.Items[AuthenticationManager.REQUEST_CURRENT_USER] = CmsUser;
-
+                //write user to cache
+                HttpContext.Current.Items[REQUEST_CURRENT_USER] = cmsUser;
 
 
-                TokenStatus = TokenValidationStatus.Success;
-                return (true, CmsUser, TokenStatus);
+                return (tokenStatus == 0);
             }
 
         }
-
 
         /// <summary>
         /// Get the currently authenticated CMS user. If the user is not authenticated, then an anonymous user is returned (UID=null, class=Anon)
         /// </summary>
         /// <returns></returns>
-        public async Task<(User CmsUser, TokenValidationStatus TokenStatus)> GetCurrentUserAsync(HttpContext Context)
+        public (TokenValidationStatus TokenStatus, User CmsUser) GetCurrentUser()
         {
             if (!CoreFactory.Singleton.IsEnabled)
             {
@@ -327,51 +376,56 @@ namespace UHub.CoreLib.Security.Authentication
             try
             {
 
-                var requestUser = Context.Items[AuthenticationManager.REQUEST_CURRENT_USER];
+                var requestUser = HttpContext.Current?.Items[REQUEST_CURRENT_USER];
 
-
+                //check for cached user
                 if (requestUser != null && requestUser is User currentUser)
                 {
-                    return (currentUser, TokenValidationStatus.Success);
+                    if (currentUser.ID == null)
+                    {
+                        return (TokenValidationStatus.AnonUser, currentUser);
+                    }
+
+
+                    return (TokenValidationStatus.Success, currentUser);
                 }
+                //if no cached user
                 else
                 {
+                    //get user info from tkt (if it exists)
+                    var validateResult = authWorker.ValidateAuthCookie();
+                    var tokenStatus = validateResult.TokenStatus;
+                    var cmsUser = validateResult.CmsUser;
 
-                    var authData = await authWorker.ValidateAuthCookieAsync(Context);
-                    var CmsUser = authData.CmsUser;
-                    var TokenStatus = authData.TokenStatus;
-
-
-                    //BAD USER
-                    if (CmsUser == null || CmsUser.ID == null)
+                    if (cmsUser == null || cmsUser.ID == null)
                     {
-                        if (TokenStatus == TokenValidationStatus.Success)
+                        if (tokenStatus == TokenValidationStatus.Success)
                         {
-                            TokenStatus = TokenValidationStatus.AnonUser;
+                            tokenStatus = TokenValidationStatus.AnonUser;
                         }
-                        CmsUser = UserReader.GetAnonymousUser();
-                        Context.Items[AuthenticationManager.REQUEST_CURRENT_USER] = CmsUser;
-
-
                     }
-                    else
+                    if (tokenStatus != TokenValidationStatus.Success)
                     {
-                        //GOOD USER
-                        Context.Items[AuthenticationManager.REQUEST_CURRENT_USER] = CmsUser;
-
+                        cmsUser = UserReader.GetAnonymousUser();
                     }
 
+                    //write user to cache
+                    HttpContext.Current.Items[REQUEST_CURRENT_USER] = cmsUser;
 
-                    return (CmsUser, TokenStatus);
+
+                    return (tokenStatus, cmsUser);
                 }
 
             }
             catch (Exception ex)
             {
-                var CmsUser = UserReader.GetAnonymousUser();
-                return (CmsUser, TokenValidationStatus.AnonUser);
+                var cmsUser = UserReader.GetAnonymousUser();
+                return (TokenValidationStatus.AnonUser, cmsUser);
             }
         }
+
+
+        
 
 
 

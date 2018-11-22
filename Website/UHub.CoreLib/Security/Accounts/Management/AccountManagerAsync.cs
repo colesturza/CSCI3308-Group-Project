@@ -24,7 +24,7 @@ using UHub.CoreLib.Security.Accounts.Interfaces;
 using UHub.CoreLib.Security.Authentication;
 
 
-namespace UHub.CoreLib.Security.Accounts
+namespace UHub.CoreLib.Security.Accounts.Management
 {
     /// <summary>
     /// Wrapper for UserWriter functionality.  Controls user account create/edit/delete functionality while also adding error callback functionality

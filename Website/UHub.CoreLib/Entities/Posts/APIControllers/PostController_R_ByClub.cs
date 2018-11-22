@@ -37,7 +37,8 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
 
 
             var taskGetTargetClub = SchoolClubReader.GetClubAsync(ClubID);
-            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser();
+            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser().CmsUser;
+
 
             var taskIsUserBanned = SchoolClubReader.IsUserBannedAsync(ClubID, cmsUser.ID.Value);
             var taskIsUserMember = SchoolClubReader.ValidateMembershipAsync(ClubID, cmsUser.ID.Value);
@@ -85,7 +86,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
 
 
             var taskGetTargetClub = SchoolClubReader.GetClubAsync(ClubID);
-            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser();
+            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser().CmsUser;
             var taskIsUserMember = SchoolClubReader.ValidateMembershipAsync(ClubID, cmsUser.ID.Value);
 
 
@@ -140,7 +141,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             }
 
 
-            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser();
+            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser().CmsUser;
 
 
             var taskTargetClub = SchoolClubReader.GetClubAsync(ClubID);
@@ -216,8 +217,8 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             }
 
 
-            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser(out var stat);
-            
+            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser().CmsUser;
+
 
             var taskTargetClub = SchoolClubReader.GetClubAsync(ClubID);
             var taskIsUserBanned = SchoolClubReader.IsUserBannedAsync(ClubID, cmsUser.ID.Value);

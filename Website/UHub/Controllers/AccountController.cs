@@ -21,7 +21,7 @@ namespace UHub.Controllers
         [MvcAuthControl]
         public ActionResult Index()
         {
-            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser();
+            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser().CmsUser;
 
             var userName = cmsUser.Username;
 
@@ -41,7 +41,7 @@ namespace UHub.Controllers
         [System.Web.Mvc.HttpGet]
         public ActionResult Login()
         {
-            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser();
+            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser().CmsUser;
             if (cmsUser != null && cmsUser.ID != null)
             {
                 var url = CoreFactory.Singleton.Properties.DefaultAuthFwdURL;
@@ -81,8 +81,7 @@ namespace UHub.Controllers
             var ResultCode = CoreFactory.Singleton.Auth.TrySetClientAuthToken(
                 email,
                 pswd,
-                false,
-                GeneralFailHandler: (id) => { });
+                false);
 
             var isValid = (ResultCode == AuthResultCode.Success);
 
@@ -230,7 +229,7 @@ namespace UHub.Controllers
             }
 
 
-            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser();
+            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser().CmsUser;
 
 
             var result = await CoreFactory.Singleton.Accounts.TryUpdatePasswordAsync(

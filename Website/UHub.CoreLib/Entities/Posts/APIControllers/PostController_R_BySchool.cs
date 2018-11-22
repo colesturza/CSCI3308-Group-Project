@@ -40,7 +40,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             }
 
 
-            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser();
+            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser().CmsUser;
             var userID = cmsUser.ID.Value;
             var schoolID = cmsUser.SchoolID.Value;
 
@@ -81,7 +81,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             }
 
 
-            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser();
+            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser().CmsUser;
             var userID = cmsUser.ID.Value;
             var schoolID = cmsUser.SchoolID.Value;
 
@@ -140,7 +140,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
                 return Content(statCode, status);
             }
 
-            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser();
+            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser().CmsUser;
 
             var schoolID = cmsUser.SchoolID.Value;
 
@@ -191,7 +191,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             }
 
 
-            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser();
+            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser().CmsUser;
             var schoolID = cmsUser.SchoolID.Value;
 
 

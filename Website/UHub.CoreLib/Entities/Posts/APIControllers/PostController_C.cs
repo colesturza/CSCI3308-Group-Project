@@ -43,7 +43,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
 
 
             var tmpPost = post.ToInternal<Post>();
-            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser();
+            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser().CmsUser;
 
 
 

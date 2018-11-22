@@ -8,29 +8,27 @@ using UHub.CoreLib.Extensions;
 using UHub.CoreLib.Management;
 using UHub.CoreLib.Tools;
 
-namespace UHub.CoreLib.Security.Authentication
+namespace UHub.CoreLib.Security.Authentication.Management
 {
     internal static partial class TokenManager
     {
 
 
-        internal static async Task<TokenValidator> GetValidatorAsync(AuthenticationToken token)
+        internal static TokenValidator GetValidator(AuthenticationToken token)
         {
             TokenValidator validator = null;
 
             try
             {
-                var taskValidator = DataInterop.SqlWorker.ExecBasicQueryAsync<TokenValidator>(
+                validator = DataInterop.SqlWorker.ExecBasicQuery<TokenValidator>(
                     CoreFactory.Singleton.Properties.CmsDBConfig,
                     "[dbo].[User_GetTokenValidator]",
                     (cmd) =>
                     {
                         cmd.Parameters.Add("@IssueDate", SqlDbType.DateTimeOffset).Value = token.IssueDate.UtcDateTime;
                         cmd.Parameters.Add("@TokenID", SqlDbType.NVarChar).Value = token.TokenID;
-                    });
-
-
-                validator = (await taskValidator).SingleOrDefault();
+                    })
+                    .SingleOrDefault();
             }
             catch (Exception ex)
             {
@@ -42,7 +40,7 @@ namespace UHub.CoreLib.Security.Authentication
             return validator;
         }
 
-        internal static async Task<bool> SaveTokenValidatorToDBAsync(AuthenticationToken token)
+        internal static void SaveTokenValidatorToDB(AuthenticationToken token)
         {
             DateTimeOffset issue = token.IssueDate.UtcDateTime;
             DateTimeOffset expiration;
@@ -59,72 +57,40 @@ namespace UHub.CoreLib.Security.Authentication
             }
 
 
-            try
-            {
-
-                await DataInterop.SqlWorker.ExecNonQueryAsync(
-                    CoreFactory.Singleton.Properties.CmsDBConfig,
-                    "[dbo].[User_CreateTokenValidator]",
-                    (cmd) =>
-                    {
-                        cmd.Parameters.Add("@IssueDate", SqlDbType.DateTimeOffset).Value = issue;
-                        cmd.Parameters.Add("@MaxExpirationDate", SqlDbType.DateTimeOffset).Value = expiration;
-                        cmd.Parameters.Add("@TokenID", SqlDbType.NVarChar).Value = token.TokenID;
-                        cmd.Parameters.Add("@IsPersistent", SqlDbType.Bit).Value = token.IsPersistent;
-                        cmd.Parameters.Add("@TokenHash", SqlDbType.NVarChar).Value = token.GetTokenHash();
-                        cmd.Parameters.Add("@SessionID", SqlDbType.NVarChar).Value = token.SessionID ?? "";
-                        cmd.Parameters.Add("@RequestID", SqlDbType.NVarChar).Value = "";    //NOT USED
-                    });
-
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
+            DataInterop.SqlWorker.ExecNonQuery(
+                CoreFactory.Singleton.Properties.CmsDBConfig,
+                "[dbo].[User_CreateTokenValidator]",
+                (cmd) =>
+                {
+                    cmd.Parameters.Add("@IssueDate", SqlDbType.DateTimeOffset).Value = issue;
+                    cmd.Parameters.Add("@MaxExpirationDate", SqlDbType.DateTimeOffset).Value = expiration;
+                    cmd.Parameters.Add("@TokenID", SqlDbType.NVarChar).Value = token.TokenID;
+                    cmd.Parameters.Add("@IsPersistent", SqlDbType.Bit).Value = token.IsPersistent;
+                    cmd.Parameters.Add("@TokenHash", SqlDbType.NVarChar).Value = token.GetTokenHash();
+                    cmd.Parameters.Add("@SessionID", SqlDbType.NVarChar).Value = token.SessionID ?? "";
+                    cmd.Parameters.Add("@RequestID", SqlDbType.NVarChar).Value = "";    //NOT USED
+                });
         }
 
-        internal static async Task<bool> RevokeTokenValidatorAsync(AuthenticationToken token)
+        internal static void RevokeTokenValidator(AuthenticationToken token)
         {
-            try
-            {
-
-                await DataInterop.SqlWorker.ExecNonQueryAsync(
-                    CoreFactory.Singleton.Properties.CmsDBConfig,
-                    "[dbo].[User_RevokeTokenValidator]",
-                    (cmd) =>
-                    {
-                        cmd.Parameters.Add("@IssueDate", SqlDbType.DateTimeOffset).Value = token.IssueDate;
-                        cmd.Parameters.Add("@TokenID", SqlDbType.NVarChar).Value = token.TokenID;
-                    });
-
-
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
+            DataInterop.SqlWorker.ExecNonQuery(
+                CoreFactory.Singleton.Properties.CmsDBConfig,
+                "[dbo].[User_RevokeTokenValidator]",
+                (cmd) =>
+                {
+                    cmd.Parameters.Add("@IssueDate", SqlDbType.DateTimeOffset).Value = token.IssueDate;
+                    cmd.Parameters.Add("@TokenID", SqlDbType.NVarChar).Value = token.TokenID;
+                });
         }
 
 
-        internal static async Task<bool> PurgeExpiredTokenValidatorsAsync()
+        internal static void PurgeExpiredTokenValidators()
         {
-            try
-            {
-
-                await DataInterop.SqlWorker.ExecNonQueryAsync(
-                       CoreFactory.Singleton.Properties.CmsDBConfig,
-                       "[dbo].[Users_PurgeExpiredTokenValidators]",
-                       (cmd) => { });
-
-
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
+            DataInterop.SqlWorker.ExecNonQuery(
+               CoreFactory.Singleton.Properties.CmsDBConfig,
+               "[dbo].[Users_PurgeExpiredTokenValidators]", 
+               null);
         }
 
         /// <summary>
@@ -134,12 +100,12 @@ namespace UHub.CoreLib.Security.Authentication
         /// <param name="SessionID"></param>
         /// <param name="tokenStatus"></param>
         /// <returns></returns>
-        internal static async Task<TokenValidationStatus> IsTokenValidAsync(AuthenticationToken token, string SessionID)
+        internal static TokenValidationStatus IsTokenValid(AuthenticationToken token, string SessionID)
         {
+
             var now = FailoverDateTimeOffset.UtcNow;
 
-            TokenValidator validator = await GetValidatorAsync(token);
-
+            TokenValidator validator = GetValidator(token);
 
             if (validator == null)
             {
@@ -177,6 +143,7 @@ namespace UHub.CoreLib.Security.Authentication
             }
             //ensure that the token is still pinned to the proper client session
             //only important is token is not persistent
+
             if (!token.IsPersistent && token.SessionID != SessionID)
             {
                 return TokenValidationStatus.TokenSessionMismatch;

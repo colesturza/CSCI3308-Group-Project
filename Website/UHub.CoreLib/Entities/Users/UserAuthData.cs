@@ -7,10 +7,10 @@ using UHub.CoreLib.Attributes;
 using UHub.CoreLib.DataInterop;
 using UHub.CoreLib.Management;
 
-namespace UHub.CoreLib.Security.Authentication
+namespace UHub.CoreLib.Entities.Users
 {
     [DataClass]
-    internal sealed partial class UserAuthInfo : DBEntityBase
+    internal sealed partial class UserAuthData : DBEntityBase
     {
 
         #region DataProperties

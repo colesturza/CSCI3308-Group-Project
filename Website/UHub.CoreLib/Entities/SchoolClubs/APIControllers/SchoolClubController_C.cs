@@ -51,7 +51,8 @@ namespace UHub.CoreLib.Entities.SchoolClubs.APIControllers
 
 
             var tmpClub = club.ToInternal<SchoolClub>();
-            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser();
+            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser().CmsUser;
+
 
             try
             {

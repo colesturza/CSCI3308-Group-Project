@@ -38,7 +38,7 @@ namespace UHub.CoreLib.Attributes
                 if (authToken.IsEmpty())
                 {
                     //test for cookie auth
-                    isLoggedIn = CoreFactory.Singleton.Auth.IsUserLoggedIn(out _, out _);
+                    isLoggedIn = CoreFactory.Singleton.Auth.IsUserLoggedIn();
                 }
                 else
                 {
@@ -53,7 +53,8 @@ namespace UHub.CoreLib.Attributes
                 }
 
 
-                var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser();
+                var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser().CmsUser;
+
 
                 return 
                     cmsUser.ID != null

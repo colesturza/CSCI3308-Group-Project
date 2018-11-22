@@ -27,5 +27,7 @@ namespace UHub.CoreLib.Security.Authentication
 
         PendingConfirmation = 40,
         PendingApproval = 41,
+
+        PendingRecoveryContextResolution = 50,
     }
 }

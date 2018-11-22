@@ -40,7 +40,7 @@ namespace UHub.CoreLib.Entities.Comments.APIControllers
 
 
             var tmpComment = comment.ToInternal<Comment>();
-            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser();
+            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser().CmsUser;
 
 
             var validateParent = await UserReader.ValidateCommentParentAsync((long)cmsUser.ID, tmpComment.ParentID);

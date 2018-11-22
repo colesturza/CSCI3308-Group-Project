@@ -13,7 +13,7 @@ using UHub.CoreLib.Entities.Users.Interfaces;
 using UHub.CoreLib.Entities.Users.DataInterop;
 using System.Text.RegularExpressions;
 
-namespace UHub.CoreLib.Security.Authentication
+namespace UHub.CoreLib.Security.Authentication.Providers
 {
     internal sealed partial class FormsAuthProvider : AuthenticationProvider
     {
@@ -29,7 +29,6 @@ namespace UHub.CoreLib.Security.Authentication
         override internal AuthResultCode TryAuthenticateUser(
             string UserEmail,
             string UserPassword,
-            Action<Guid> GeneralFailHandler = null,
             Func<User, bool> UserTokenHandler = null)
         {
 
@@ -49,15 +48,14 @@ namespace UHub.CoreLib.Security.Authentication
 
 
             //get userAuth info (pswf info)
-            UserAuthInfo userAuthInfo = null;
+            UserAuthData userAuthInfo = null;
             try
             {
-                userAuthInfo = GetUserAuthInfo_DB(UserEmail);
+                userAuthInfo = UserReader.TryGetUserAuthData(UserEmail);
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex);
-                GeneralFailHandler?.Invoke(new Guid("B61DB416-F38E-495C-BFDF-317FDB7F8063"));
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("78B4CACB-D93D-4D3B-945D-923676D05A91", ex);
                 return AuthResultCode.UnknownError;
             }
 
@@ -77,7 +75,15 @@ namespace UHub.CoreLib.Security.Authentication
                 var now = FailoverDateTimeOffset.UtcNow;
                 if (resetDt < now)
                 {
-                    ResetUserLockout(userAuthInfo.UserID);
+                    try
+                    {
+                        ResetUserLockout(userAuthInfo.UserID);
+                    }
+                    catch (Exception ex)
+                    {
+                        CoreFactory.Singleton.Logging.CreateErrorLogAsync("6E63EB15-1A36-4D12-95F7-693B7F9A9AE3", ex);
+                        return AuthResultCode.UnknownError;
+                    }
                 }
                 else
                 {
@@ -93,8 +99,7 @@ namespace UHub.CoreLib.Security.Authentication
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex);
-                GeneralFailHandler?.Invoke(new Guid("EE2C6BB0-8E49-4B31-9CB1-8C246C3EFFD9"));
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("CC051A0E-3530-4DAB-8654-2FEA5DB40332", ex);
                 return AuthResultCode.UnknownError;
             }
             if (validationStatus != PasswordValidationStatus.Success)
@@ -114,7 +119,7 @@ namespace UHub.CoreLib.Security.Authentication
                 }
                 else
                 {
-                    GeneralFailHandler?.Invoke(new Guid("FC5D3DDB-A48B-49C9-922E-7A96CB53CA7E"));
+                    CoreFactory.Singleton.Logging.CreateErrorLogAsync("E4D786E2-6574-4C11-95BF-06FF2BA069B1");
                     return AuthResultCode.UnknownError;
                 }
             }
@@ -131,10 +136,11 @@ namespace UHub.CoreLib.Security.Authentication
             catch (Exception ex)
             {
 
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex);
-                GeneralFailHandler?.Invoke(new Guid("EC7D4ACA-498F-49DA-994B-099292AA9BD8"));
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("D1CBD896-CAB8-48AD-9DA6-DD2DE9CEA2A1", ex);
                 return AuthResultCode.UnknownError;
             }
+
+
 
 
             var userAccessIsValid = Shared.TryAuthenticate_ValidateUserAccess(cmsUser);
@@ -144,8 +150,13 @@ namespace UHub.CoreLib.Security.Authentication
             }
 
 
+            var status = true;
+            if (UserTokenHandler != null)
+            {
+                status = UserTokenHandler.Invoke(cmsUser);
+            }
 
-            var status = UserTokenHandler?.Invoke(cmsUser) ?? true;
+
             if (status)
             {
                 //CoreFactory.Singleton.Logging.CreateDBActivityLog(ActivityLogType.UserLogin);
@@ -155,70 +166,6 @@ namespace UHub.CoreLib.Security.Authentication
             {
                 return AuthResultCode.UnknownError;
             }
-
-        }
-
-
-
-        private PasswordValidationStatus ValidatePassword(string UserEmail, string Password)
-        {
-            var userAuthInfo = GetUserAuthInfo_DB(UserEmail);
-
-
-            if (userAuthInfo == null)
-            {
-                return PasswordValidationStatus.NotFound;
-            }
-            if (userAuthInfo.PswdHash.IsEmpty())
-            {
-                return PasswordValidationStatus.NotFound;
-            }
-            if (userAuthInfo.Salt.IsEmpty())
-            {
-                return PasswordValidationStatus.NotFound;
-            }
-
-
-            //check pswd expiration
-            var maxPsdAge = CoreFactory.Singleton.Properties.MaxPswdAge;
-
-            if (maxPsdAge != null && maxPsdAge.Ticks != 0)
-            {
-                var pswdModDate = userAuthInfo.PswdModifiedDate;
-                var maxValidDt = pswdModDate.Add(maxPsdAge);
-                var now = FailoverDateTimeOffset.UtcNow;
-                if (maxValidDt < now)
-                {
-                    return PasswordValidationStatus.PswdExpired;
-                }
-            }
-
-
-            //check pswd hashes
-            bool isMatch = false;
-            var hashType = CoreFactory.Singleton.Properties.PswdHashType;
-
-            if (hashType == CryptoHashType.Bcrypt)
-            {
-                isMatch = BCrypt.Net.BCrypt.Verify(Password, userAuthInfo.PswdHash);
-            }
-            else
-            {
-                isMatch = (userAuthInfo.PswdHash == Password.GetCryptoHash(hashType, userAuthInfo.Salt));
-            }
-
-
-            //process result
-            if (!isMatch)
-            {
-                HandleBadPswdAttempt(userAuthInfo);
-                return PasswordValidationStatus.HashMismatch;
-            }
-            else
-            {
-                return PasswordValidationStatus.Success;
-            }
-
 
         }
 

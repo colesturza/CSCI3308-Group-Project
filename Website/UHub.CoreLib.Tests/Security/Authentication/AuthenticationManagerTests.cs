@@ -31,19 +31,19 @@ namespace UHub.CoreLib.Security.Authentication.Tests
             var persistent = false;
 
 
-            var token = CoreFactory.Singleton.Auth.TryGetClientAuthToken(
+            var tokenResult = CoreFactory.Singleton.Auth.TryGetClientAuthToken(
                     email,
                     password,
-                    persistent,
-                    out var resultCode,
-                    GeneralFailHandler: (code) =>
-                    {
-                        Assert.Fail();
-                        if (enableFailCode)
-                        {
-                            status = code.ToString();
-                        }
-                    });
+                    persistent);
+
+            var token = tokenResult.AuthToken;
+            var resultCode = tokenResult.ResultCode;
+
+
+            if (resultCode == AuthResultCode.UnknownError)
+            {
+                Assert.Fail();
+            }
 
 
             if (enableDetail)
@@ -88,20 +88,19 @@ namespace UHub.CoreLib.Security.Authentication.Tests
             var persistent = false;
             var isFailed = false;
 
-            var token = CoreFactory.Singleton.Auth.TryGetClientAuthToken(
+            var tokenResult = CoreFactory.Singleton.Auth.TryGetClientAuthToken(
                     email,
                     password,
-                    persistent,
-                    out var resultCode,
-                    GeneralFailHandler: (code) =>
-                    {
-                        isFailed = true;
-                        CoreFactory.Singleton.Logging.CreateErrorLogAsync(code).Wait();
-                        if (enableFailCode)
-                        {
-                            status = code.ToString();
-                        }
-                    });
+                    persistent);
+
+
+            var token = tokenResult.AuthToken;
+            var resultCode = tokenResult.ResultCode;
+
+            if (resultCode == AuthResultCode.UnknownError)
+            {
+                Assert.Fail();
+            }
 
 
             if (enableDetail)
@@ -118,7 +117,7 @@ namespace UHub.CoreLib.Security.Authentication.Tests
                     case AuthResultCode.UserDisabled: { status = "Account Disabled"; break; }
                     case AuthResultCode.PswdExpired: { status = "Password Expired"; break; }
                     case AuthResultCode.CredentialsInvalid: { status = "Credentials Invalid"; break; }
-                    case AuthResultCode.Success: { status = "Unknown Error"; break; }
+                    case AuthResultCode.Success: { status = "Success"; break; }
                 }
             }
 
@@ -128,7 +127,7 @@ namespace UHub.CoreLib.Security.Authentication.Tests
             }
 
             Console.WriteLine(status);
-            Assert.AreEqual("Unknown Error", status);
+            Assert.AreEqual("Success", status);
         }
     }
 }
