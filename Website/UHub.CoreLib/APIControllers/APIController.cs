@@ -41,7 +41,7 @@ namespace UHub.CoreLib.APIControllers
             if (!CoreFactory.Singleton.IsEnabled)
             {
                 result = "System Disabled";
-                resultCode = HttpStatusCode.InternalServerError;
+                resultCode = HttpStatusCode.ServiceUnavailable;
                 return false;
             }
 

@@ -30,6 +30,8 @@ namespace UHub.CoreLib.Security.Accounts.APIControllers
         [Route("CreateUser")]
         public async Task<IHttpActionResult> CreateUser([FromBody] User_C_PublicDTO user)
         {
+
+
             string status = "";
             HttpStatusCode statCode = HttpStatusCode.BadRequest;
             if (!this.ValidateSystemState(out status, out statCode))
@@ -49,8 +51,8 @@ namespace UHub.CoreLib.Security.Accounts.APIControllers
                 return BadRequest();
             }
 
-
             var tmpUser = user.ToInternal<User>();
+
 
 
             var enableDetail = CoreFactory.Singleton.Properties.EnableDetailedAPIErrors;
@@ -60,15 +62,26 @@ namespace UHub.CoreLib.Security.Accounts.APIControllers
             bool userCanLogin = false;
 
 
-            var resultCode = await CoreFactory.Singleton.Accounts.TryCreateUserAsync(
-                tmpUser,
-                true,
-                SuccessHandler: (newUser, canLogin) =>
-                {
-                    status = "User Created";
-                    statCode = HttpStatusCode.OK;
-                    userCanLogin = canLogin;
-                });
+            AcctCreateResultCode resultCode = AcctCreateResultCode.UnknownError;
+            try
+            {
+                resultCode = await CoreFactory.Singleton.Accounts.TryCreateUserAsync(
+                    tmpUser,
+                    true,
+                    SuccessHandler: (newUser, canLogin) =>
+                    {
+                        status = "User Created";
+                        statCode = HttpStatusCode.OK;
+                        userCanLogin = canLogin;
+                    });
+            }
+            catch (Exception ex)
+            {
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("68934E91-EC89-41A4-A25A-C985496B99AA", ex);
+           
+            }
+
+
 
             var isCreated = (resultCode == AcctCreateResultCode.Success);
 

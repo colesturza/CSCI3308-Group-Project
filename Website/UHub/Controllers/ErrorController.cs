@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using UHub.CoreLib.Extensions;
+using UHub.CoreLib.Management;
 
 namespace UHub.Controllers
 {
@@ -104,12 +105,15 @@ namespace UHub.Controllers
 
         public ActionResult Startup()
         {
-            if (Request.QueryString.HasKeys() && Request.QueryString["aspxerrorpath"] != null)
+            try
             {
-                Response.Redirect(Request.Url.GetLeftPart(UriPartial.Path), true);
+                var x = CoreFactory.Singleton;
+                return Redirect("~/");
             }
-
-            return View();
+            catch
+            {
+                return View();
+            }
         }
     }
 }

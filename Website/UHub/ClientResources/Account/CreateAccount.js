@@ -1,39 +1,53 @@
-﻿var createUser = new Vue({
+﻿var oldEmail = "";
+
+var createUser = new Vue({
     el: "#userForm",
     data: {
-        email: "",
-        username: "",
-        password: "",
-        name: "",
+        Username: "",
+        Password: "",
+        Email: "",
+        Name: "",
+        Major: "",
         PhoneNumber: "",
-        major: ""
+        Year: "",
+        GradDate: "",
+        Company: "",
+        JobTitle: ""
     },
     methods: {
         readRefs() {
             let refs = this.$refs;
-            this.username = refs.inputUSR.value;
-            this.password = refs.inputPWD.value;
-            this.email = refs.inputEmail.value;
-            this.fullname = refs.inputFirst.value + refs.inputLast.value;
-            this.major = refs.inputMajor.value;
+            this.Username = refs.inputUSR.value;
+            this.Password = refs.inputPWD.value;
+            this.Email = refs.inputEmail.value;
+            this.Name = refs.inputFirst.value + refs.inputLast.value;
+            this.Major = refs.inputMajor.value;
             this.PhoneNumber = refs.inputPhone.value;
             this.Year = refs.inputYear.value;
             this.GradDate = refs.inputGrad.value;
             this.Company = refs.inputCompany.value;
             this.JobTitle = refs.inputJob.value;
             this.sendObj = JSON.stringify(this.$data);
-            console.log(this.sendObj);
-        }
-    },
-    watch: {
-        sendObj: function () {
+        },
+        sendData() {
             $.ajax({
                 method: "POST",
                 url: "/uhubapi/account/createuser",
                 data: createUser.sendObj,
-            }).error(function () {
-                alert("Error during user creation");
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    alert(data.status);
+                },
+                error: function (data) {
+                    alert(data.responseJSON.status);
+                }
             });
+        }
+    },
+    watch: {
+        sendObj: function () {
+            
         }
     }
 });
@@ -46,6 +60,11 @@ $("#email").blur(function () {
     if (val == undefined || val == null || val == "") {
         return;
     }
+    if (val === oldEmail) {
+        return;
+    }
+
+    oldEmail = val;
 
     $.ajax({
         method: "get",
@@ -67,6 +86,7 @@ $("#email").blur(function () {
     });
 });
 
-$(function() {
-    $("#grad-date").datepicker("option", "dateFormat", "yyyy-mm-dd");
+$(function () {
+    $("#grad-date").datepicker();
+    $("#grad-date").datepicker("option", "dateFormat", "yy-mm-dd");
 });
