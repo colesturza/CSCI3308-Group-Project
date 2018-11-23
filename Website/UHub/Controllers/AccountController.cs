@@ -21,7 +21,7 @@ namespace UHub.Controllers
         [MvcAuthControl]
         public ActionResult Index()
         {
-            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser();
+            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser().CmsUser;
 
             var userName = cmsUser.Username;
 
@@ -41,7 +41,7 @@ namespace UHub.Controllers
         [System.Web.Mvc.HttpGet]
         public ActionResult Login()
         {
-            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser();
+            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser().CmsUser;
             if (cmsUser != null && cmsUser.ID != null)
             {
                 var url = CoreFactory.Singleton.Properties.DefaultAuthFwdURL;
@@ -81,8 +81,7 @@ namespace UHub.Controllers
             var ResultCode = CoreFactory.Singleton.Auth.TrySetClientAuthToken(
                 email,
                 pswd,
-                false,
-                GeneralFailHandler: (id) => { });
+                false);
 
             var isValid = (ResultCode == AuthResultCode.Success);
 
@@ -180,9 +179,16 @@ namespace UHub.Controllers
                 ViewBag.Message = "Unable to complete operation - must provide confirmation key";
                 return View();
             }
-
-
             var idStr = idObj.ToString();
+
+
+            if(idStr.ToLower() == "new")
+            {
+                ViewBag.Message = "Your new account has been created, please check your email and follow the confirmation instructions";
+                return View();
+            }
+
+
 
             var confResult = await CoreFactory.Singleton.Accounts.TryConfirmUserAsync(idStr);
             if (confResult == 0)
@@ -230,7 +236,7 @@ namespace UHub.Controllers
             }
 
 
-            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser();
+            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser().CmsUser;
 
 
             var result = await CoreFactory.Singleton.Accounts.TryUpdatePasswordAsync(
@@ -283,8 +289,7 @@ namespace UHub.Controllers
             var data = await CoreFactory.Singleton.Accounts
                 .TryCreateUserRecoveryContextAsync(
                     UserEmail: txt_Email,
-                    IsOptional: true,
-                    GeneralFailHandler: null);
+                    IsOptional: true);
 
 
             if (data.ResultCode != AcctRecoveryResultCode.Success)

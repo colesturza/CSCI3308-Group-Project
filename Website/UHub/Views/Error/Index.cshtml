@@ -1,6 +1,6 @@
 ﻿@{
     ViewBag.Title = "Error";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "~/Views/Shared/_LayoutNoAuth.cshtml";
 }
 
 
@@ -10,18 +10,21 @@
 
 
 
+<div id="body-Content" class="container w-70">
 
-<h2>@ViewBag.Title</h2>
+    <h2>@ViewBag.Title</h2>
 
-<p></p>
-<p></p>
-
-<div class="center_LR" style="display:inline-block">
-    <img src="@ViewBag.CatAddr" title="cat" width="750" height="600" />
     <p></p>
-    <span class="center_LR" style="display:inline-block">
-        <strong>
-            @ViewBag.ErrorMessage
-        </strong>
-    </span>
+    <p></p>
+
+    <div class="center_LR" style="display:inline-block">
+        <img src="@ViewBag.CatAddr" title="cat" width="750" height="600" />
+        <p></p>
+        <span class="center_LR" style="display:inline-block">
+            <strong>
+                @ViewBag.ErrorMessage
+            </strong>
+        </span>
+    </div>
+
 </div>

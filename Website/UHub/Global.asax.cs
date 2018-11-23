@@ -35,13 +35,10 @@ namespace UHub
 
 
             var cmsConfig = Common.GetCmsConfig();
-            if(cmsConfig == null)
+            if (cmsConfig != null)
             {
-                throw new CmsConfigBootstrapException();
+                CoreFactory.Initialize(cmsConfig);
             }
-
-
-            CoreFactory.Initialize(cmsConfig);
 
 
 

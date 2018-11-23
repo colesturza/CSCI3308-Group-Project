@@ -16,12 +16,12 @@ namespace UHub.CoreLib.Entities.Users.Interfaces
         /// <summary>
         /// Increment the attempt count in DB
         /// </summary>
-        Task<AcctRecoveryResultCode> IncrementAttemptCountAsync();
+        Task<AcctRecoveryResultCode> TryIncrementAttemptCountAsync();
 
 
         /// <summary>
         /// Delete this context to prevent it from being used again
         /// </summary>
-        Task DeleteAsync();
+        Task<bool> TryDeleteAsync();
     }
 }

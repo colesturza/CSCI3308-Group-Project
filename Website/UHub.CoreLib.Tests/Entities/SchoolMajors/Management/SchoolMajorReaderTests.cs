@@ -19,7 +19,7 @@ namespace UHub.CoreLib.Entities.SchoolMajors.DataInterop.Tests
             TestGlobal.TestInit();
 
 
-            SchoolMajorReader.GetAllMajors().ToList();
+            SchoolMajorReader.TryGetAllMajors().ToList();
 
         }
 
@@ -30,7 +30,7 @@ namespace UHub.CoreLib.Entities.SchoolMajors.DataInterop.Tests
             TestGlobal.TestInit();
 
 
-            var majorSet = SchoolMajorReader.GetAllMajors().ToList();
+            var majorSet = SchoolMajorReader.TryGetAllMajors().ToList();
 
             if (majorSet.Count == 0)
             {
@@ -40,7 +40,7 @@ namespace UHub.CoreLib.Entities.SchoolMajors.DataInterop.Tests
 
 
 
-            SchoolMajorReader.GetMajor(id);
+            SchoolMajorReader.TryGetMajor(id);
         }
 
 
@@ -52,7 +52,7 @@ namespace UHub.CoreLib.Entities.SchoolMajors.DataInterop.Tests
             var schoolID = 1;   //CU Boulder
 
 
-            var majorSet = SchoolMajorReader.GetMajorsBySchool(schoolID).ToList();
+            var majorSet = SchoolMajorReader.TryGetMajorsBySchool(schoolID).ToList();
             majorSet.ForEach(x => Console.WriteLine(x.Name));
         }
 
@@ -64,7 +64,7 @@ namespace UHub.CoreLib.Entities.SchoolMajors.DataInterop.Tests
 
             var email = "aual1780@colorado.edu";
 
-            var majorSet = SchoolMajorReader.GetMajorsByEmail(email).ToList();
+            var majorSet = SchoolMajorReader.TryGetMajorsByEmail(email).ToList();
             majorSet.ForEach(x => Console.WriteLine(x.Name));
         }
 
@@ -78,7 +78,7 @@ namespace UHub.CoreLib.Entities.SchoolMajors.DataInterop.Tests
             var domain = email.Substring(email.IndexOf("@"));   //@colorado.edu
 
 
-            var majorSet = SchoolMajorReader.GetMajorsByDomain(domain).ToList();
+            var majorSet = SchoolMajorReader.TryGetMajorsByDomain(domain).ToList();
             majorSet.ForEach(x => Console.WriteLine(x.Name));
         }
     }

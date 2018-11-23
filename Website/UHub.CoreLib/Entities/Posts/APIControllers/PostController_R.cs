@@ -16,6 +16,7 @@ using UHub.CoreLib.Entities.Schools.DataInterop;
 using UHub.CoreLib.Management;
 using UHub.CoreLib.Tools;
 using UHub.CoreLib.Security;
+using UHub.CoreLib.Entities.Posts.Management;
 
 namespace UHub.CoreLib.Entities.Posts.APIControllers
 {
@@ -34,20 +35,20 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             }
 
 
-            var postInternal = await PostReader.GetPostAsync(postID);
+            var postInternal = await PostReader.TryGetPostAsync(postID);
             if (postInternal == null)
             {
                 return NotFound();
             }
 
             var parentID = postInternal.ParentID;
-            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser();
+            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser().CmsUser;
 
 
 
-            var taskPostClub = SchoolClubReader.GetClubAsync(parentID);
-            var taskIsUserBanned = SchoolClubReader.IsUserBannedAsync(parentID, cmsUser.ID.Value);
-            var taskIsUserMember = SchoolClubReader.ValidateMembershipAsync(parentID, cmsUser.ID.Value);
+            var taskPostClub = SchoolClubReader.TryGetClubAsync(parentID);
+            var taskIsUserBanned = SchoolClubReader.TryIsUserBannedAsync(parentID, cmsUser.ID.Value);
+            var taskIsUserMember = SchoolClubReader.TryValidateMembershipAsync(parentID, cmsUser.ID.Value);
 
 
 
@@ -103,6 +104,8 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             {
                 return NotFound();
             }
+            await PostManager.TryIncrementViewCountAsync(postInternal.ID.Value);
+
 
             return Ok(postPublic);
         }

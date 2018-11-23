@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UHub.CoreLib.Entities.Posts.DataInterop;
+using UHub.CoreLib.ErrorHandling.Exceptions;
 using UHub.CoreLib.Extensions;
 using UHub.CoreLib.Management;
 using UHub.CoreLib.Security;
@@ -28,7 +29,44 @@ namespace UHub.CoreLib.Entities.Posts.Management
             }
 
 
-            var id = PostWriter.TryCreatePost(NewPost);
+            long? id = null;
+            try
+            {
+                id = PostWriter.CreatePost(NewPost);
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                return (null, PostResultCode.InvalidArgument);
+            }
+            catch (ArgumentNullException)
+            {
+                return (null, PostResultCode.NullArgument);
+            }
+            catch (ArgumentException)
+            {
+                return (null, PostResultCode.InvalidArgument);
+            }
+            catch (InvalidCastException)
+            {
+                return (null, PostResultCode.InvalidArgumentType);
+            }
+            catch (InvalidOperationException)
+            {
+                return (null, PostResultCode.InvalidOperation);
+            }
+            catch (AccessForbiddenException)
+            {
+                return (null, PostResultCode.AccessDenied);
+            }
+            catch (Exception ex)
+            {
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("CDB83704-5E14-48DB-AEB9-FA947EA91D0B", ex);
+                return (null, PostResultCode.UnknownError);
+            }
+
+
+
+
             if (id == null)
             {
                 return (id, PostResultCode.UnknownError);
@@ -36,6 +74,26 @@ namespace UHub.CoreLib.Entities.Posts.Management
             return (id, PostResultCode.Success);
 
         }
+
+
+
+        public static bool? TryIncrementViewCount(long PostID)
+        {
+
+            bool? val = null;
+            try
+            {
+                val = PostWriter.IncrementViewCount(PostID);
+            }
+            catch (Exception ex)
+            {
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("8A829937-3470-4A7C-9E62-36234575FB88", ex);
+            }
+
+
+            return val;
+        }
+
     }
 
 #pragma warning restore

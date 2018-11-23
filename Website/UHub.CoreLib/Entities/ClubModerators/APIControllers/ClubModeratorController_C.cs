@@ -46,12 +46,12 @@ namespace UHub.CoreLib.Entities.ClubModerators.APIControllers
 
 
             var tmpClubModerator = clubModerator.ToInternal<ClubModerator>();
-            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser();
+            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser().CmsUser;
 
 
-            var taskIsCurrentUserOwner = UserReader.ValidateClubModeratorAsync(clubID, (long)cmsUser.ID);
-            var taskIsCurrentUserBanned = SchoolClubReader.IsUserBannedAsync(clubID, (long)cmsUser.ID);
-            var taskIsNewUserBanned = SchoolClubReader.IsUserBannedAsync(clubID, tmpClubModerator.UserID);
+            var taskIsCurrentUserOwner = UserReader.TryValidateClubModeratorAsync(clubID, (long)cmsUser.ID);
+            var taskIsCurrentUserBanned = SchoolClubReader.TryIsUserBannedAsync(clubID, (long)cmsUser.ID);
+            var taskIsNewUserBanned = SchoolClubReader.TryIsUserBannedAsync(clubID, tmpClubModerator.UserID);
 
             await Task.WhenAll(taskIsCurrentUserOwner, taskIsCurrentUserBanned, taskIsNewUserBanned);
             var isCurrentUserBanned = taskIsCurrentUserBanned.Result;
@@ -105,7 +105,7 @@ namespace UHub.CoreLib.Entities.ClubModerators.APIControllers
             }
             catch (Exception ex)
             {
-                var errCode = "185AB13F-2C5C-435B-8B87-AA48F1AB3C73";
+                var errCode = "69605919-C129-4409-BE24-3FFFBD702B39";
                 Exception ex_outer = new Exception(errCode, ex);
                 CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
 

@@ -14,7 +14,7 @@ namespace UHub.CoreLib.Entities.Comments.DataInterop.Tests
 
 
             long postID = 353;
-            var comments = CommentReader.GetCommentsByPost(postID);
+            var comments = CommentReader.TryGetCommentsByPost(postID);
 
             Assert.IsNotNull(comments);
         }
@@ -27,7 +27,7 @@ namespace UHub.CoreLib.Entities.Comments.DataInterop.Tests
 
 
             long postID = 353;
-            var comments = CommentReader.GetCommentsByParent(postID);
+            var comments = CommentReader.TryGetCommentsByParent(postID);
 
             Assert.IsNotNull(comments);
         }

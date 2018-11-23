@@ -20,7 +20,7 @@ namespace UHub.CoreLib.Entities.SchoolClubs.DataInterop.Tests
         {
             TestGlobal.TestInit();
 
-            var clubSet = SchoolClubReader.GetAllClubs().ToList();
+            var clubSet = SchoolClubReader.TryGetAllClubs().ToList();
             clubSet.ForEach(x => Console.WriteLine(x));
         }
 
@@ -31,7 +31,7 @@ namespace UHub.CoreLib.Entities.SchoolClubs.DataInterop.Tests
             TestGlobal.TestInit();
 
 
-            var clubSet = SchoolClubReader.GetAllClubs().ToList();
+            var clubSet = SchoolClubReader.TryGetAllClubs().ToList();
 
             if(clubSet.Count == 0)
             {
@@ -41,7 +41,7 @@ namespace UHub.CoreLib.Entities.SchoolClubs.DataInterop.Tests
             var id = clubSet.First().ID.Value;
 
 
-            SchoolClubReader.GetClub(id);
+            SchoolClubReader.TryGetClub(id);
         }
 
 
@@ -54,7 +54,7 @@ namespace UHub.CoreLib.Entities.SchoolClubs.DataInterop.Tests
             var schoolID = 1;   //CU Boulder
 
 
-            var clubSet = SchoolClubReader.GetClubsBySchool(schoolID).ToList();
+            var clubSet = SchoolClubReader.TryGetClubsBySchool(schoolID).ToList();
             clubSet.ForEach(x => Console.WriteLine(x.Name));
         }
 
@@ -68,7 +68,7 @@ namespace UHub.CoreLib.Entities.SchoolClubs.DataInterop.Tests
             var email = "aual1780@colorado.edu";
 
 
-            var clubSet= SchoolClubReader.GetClubsByEmail(email).ToList();
+            var clubSet= SchoolClubReader.TryGetClubsByEmail(email).ToList();
             clubSet.ForEach(x => Console.WriteLine(x.Name));
         }
 
@@ -82,7 +82,7 @@ namespace UHub.CoreLib.Entities.SchoolClubs.DataInterop.Tests
             var domain = email.Substring(email.IndexOf("@"));   //@colorado.edu
 
 
-            var clubSet = SchoolClubReader.GetClubsByDomain(domain).ToList();
+            var clubSet = SchoolClubReader.TryGetClubsByDomain(domain).ToList();
             clubSet.ForEach(x => Console.WriteLine(x.Name));
         }
 
@@ -112,11 +112,11 @@ namespace UHub.CoreLib.Entities.SchoolClubs.DataInterop.Tests
             club.SchoolID = cmsUser.SchoolID.Value;
             club.CreatedBy = cmsUser.ID.Value;
 
-            var clubID = SchoolClubWriter.TryCreateClub(club);
+            var clubID = SchoolClubWriter.CreateClub(club);
             Assert.IsNotNull(clubID);
 
 
-            SchoolClubReader.ValidateMembership(clubID.Value, userID.Value);
+            SchoolClubReader.TryValidateMembership(clubID.Value, userID.Value);
 
         }
 
@@ -147,11 +147,11 @@ namespace UHub.CoreLib.Entities.SchoolClubs.DataInterop.Tests
             club.SchoolID = cmsUser.SchoolID.Value;
             club.CreatedBy = cmsUser.ID.Value;
 
-            var clubID = SchoolClubWriter.TryCreateClub(club);
+            var clubID = SchoolClubWriter.CreateClub(club);
             Assert.IsNotNull(clubID);
 
 
-            SchoolClubReader.IsUserBanned(clubID.Value, userID.Value);
+            SchoolClubReader.TryIsUserBanned(clubID.Value, userID.Value);
 
         }
     }

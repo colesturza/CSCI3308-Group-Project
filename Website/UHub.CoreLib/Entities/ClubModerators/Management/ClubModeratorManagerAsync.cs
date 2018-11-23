@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UHub.CoreLib.Entities.ClubModerators.DataInterop;
+using UHub.CoreLib.ErrorHandling.Exceptions;
+using UHub.CoreLib.Management;
 
 namespace UHub.CoreLib.Entities.ClubModerators.Management
 {
@@ -12,9 +14,46 @@ namespace UHub.CoreLib.Entities.ClubModerators.Management
     {
         public static async Task<(long? ClubModID, ClubModeratorResultCode ResultCode)> TryCreateClubModeratorAsync(ClubModerator NewModerator, long ParentID)
         {
-            var id = await ClubModeratorWriter.TryCreateClubModeratorAsync(NewModerator, ParentID);
 
-            if(id == null)
+            long? id = null;
+            try
+            {
+                id = await ClubModeratorWriter.CreateClubModeratorAsync(NewModerator, ParentID);
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                return (null, ClubModeratorResultCode.InvalidArgument);
+            }
+            catch (ArgumentNullException)
+            {
+                return (null, ClubModeratorResultCode.NullArgument);
+            }
+            catch (ArgumentException)
+            {
+                return (null, ClubModeratorResultCode.InvalidArgument);
+            }
+            catch (InvalidCastException)
+            {
+                return (null, ClubModeratorResultCode.InvalidArgumentType);
+            }
+            catch (InvalidOperationException)
+            {
+                return (null, ClubModeratorResultCode.InvalidOperation);
+            }
+            catch (AccessForbiddenException)
+            {
+                return (null, ClubModeratorResultCode.AccessDenied);
+            }
+            catch (Exception ex)
+            {
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("169CBE64-325B-4820-9E21-833B1BC8DE4D", ex);
+                return (null, ClubModeratorResultCode.UnknownError);
+            }
+
+
+
+
+            if (id == null)
             {
                 return (id, ClubModeratorResultCode.UnknownError);
             }

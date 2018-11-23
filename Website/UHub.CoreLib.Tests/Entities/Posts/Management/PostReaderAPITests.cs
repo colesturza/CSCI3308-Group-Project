@@ -82,7 +82,7 @@ namespace UHub.CoreLib.Entities.Posts.DataInterop.Tests
             TestGlobal.TestInit();
 
 
-            var clubSet = SchoolClubReader.GetClubsByDomain("@colorado.edu").ToList();
+            var clubSet = SchoolClubReader.TryGetClubsByDomain("@colorado.edu").ToList();
             var clubID = clubSet.FirstOrDefault()?.ID;
 
             if (clubID == null)
@@ -108,7 +108,7 @@ namespace UHub.CoreLib.Entities.Posts.DataInterop.Tests
         {
             TestGlobal.TestInit();
 
-            var clubSet = SchoolClubReader.GetClubsByDomain("@colorado.edu").ToList();
+            var clubSet = SchoolClubReader.TryGetClubsByDomain("@colorado.edu").ToList();
             var clubID = clubSet.FirstOrDefault()?.ID;
 
             if (clubID == null)
@@ -134,7 +134,7 @@ namespace UHub.CoreLib.Entities.Posts.DataInterop.Tests
             TestGlobal.TestInit();
 
 
-            var clubSet = SchoolClubReader.GetClubsByDomain("@colorado.edu").ToList();
+            var clubSet = SchoolClubReader.TryGetClubsByDomain("@colorado.edu").ToList();
             var clubID = clubSet.FirstOrDefault()?.ID;
 
             if (clubID == null)

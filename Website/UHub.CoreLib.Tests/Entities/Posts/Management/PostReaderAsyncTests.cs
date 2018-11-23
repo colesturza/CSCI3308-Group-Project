@@ -25,7 +25,7 @@ namespace UHub.CoreLib.Entities.Posts.DataInterop.Tests
         {
             TestGlobal.TestInit();
 
-            (await PostReader.GetAllPostsAsync()).ToList();
+            (await PostReader.TryGetAllPostsAsync()).ToList();
         }
 
 
@@ -36,7 +36,7 @@ namespace UHub.CoreLib.Entities.Posts.DataInterop.Tests
             TestGlobal.TestInit();
 
 
-            var postSet = (await PostReader.GetAllPostsAsync()).ToList();
+            var postSet = (await PostReader.TryGetAllPostsAsync()).ToList();
 
             if (postSet.Count == 0)
             {
@@ -50,11 +50,11 @@ namespace UHub.CoreLib.Entities.Posts.DataInterop.Tests
             var end = FailoverDateTimeOffset.UtcNow;
 
             start = FailoverDateTimeOffset.UtcNow;
-            await PostReader.GetPostAsync(id);
+            await PostReader.TryGetPostAsync(id);
             end = FailoverDateTimeOffset.UtcNow;
             Console.WriteLine($"{(end - start).TotalMilliseconds}ms");
             start = FailoverDateTimeOffset.UtcNow;
-            await PostReader.GetPostAsync(id);
+            await PostReader.TryGetPostAsync(id);
             end = FailoverDateTimeOffset.UtcNow;
             Console.WriteLine($"{(end - start).TotalMilliseconds}ms");
         }
@@ -66,7 +66,7 @@ namespace UHub.CoreLib.Entities.Posts.DataInterop.Tests
             TestGlobal.TestInit();
 
 
-            var schoolSet = (await SchoolReader.GetAllSchoolsAsync()).ToList();
+            var schoolSet = (await SchoolReader.TryGetAllSchoolsAsync()).ToList();
 
             if (schoolSet.Count == 0)
             {
@@ -76,7 +76,7 @@ namespace UHub.CoreLib.Entities.Posts.DataInterop.Tests
             var schoolId = schoolSet.First().ID.Value;
 
 
-            var x = await PostReader.GetPostsBySchoolAsync(schoolId);
+            var x = await PostReader.TryGetPostsBySchoolAsync(schoolId);
 
             Console.WriteLine(x.Count());
 
@@ -88,7 +88,7 @@ namespace UHub.CoreLib.Entities.Posts.DataInterop.Tests
             TestGlobal.TestInit();
 
 
-            var clubSet = (await SchoolClubReader.GetAllClubsAsync()).ToList();
+            var clubSet = (await SchoolClubReader.TryGetAllClubsAsync()).ToList();
 
             if (clubSet.Count == 0)
             {
@@ -98,7 +98,7 @@ namespace UHub.CoreLib.Entities.Posts.DataInterop.Tests
             var clubId = clubSet.First().ID.Value;
 
 
-            var id = PostReader.GetPostsByClubAsync(clubId);
+            var id = PostReader.TryGetPostsByClubAsync(clubId);
             Assert.IsNotNull(id);
 
         }
@@ -114,26 +114,26 @@ namespace UHub.CoreLib.Entities.Posts.DataInterop.Tests
 
 
 
-            await PostReader.GetPostsBySchoolPageAsync(schoolId, null);
+            await PostReader.TryGetPostsBySchoolPageAsync(schoolId, null);
 
             var start = FailoverDateTimeOffset.UtcNow;
             var end = FailoverDateTimeOffset.UtcNow;
 
 
             start = FailoverDateTimeOffset.UtcNow;
-            (await PostReader.GetPostsBySchoolPageAsync(schoolId, null, null, 5)).ToList();
+            (await PostReader.TryGetPostsBySchoolPageAsync(schoolId, null, null, 5)).ToList();
             end = FailoverDateTimeOffset.UtcNow;
             Console.WriteLine($"Page 0: {(end - start).TotalMilliseconds}ms");
 
 
             start = FailoverDateTimeOffset.UtcNow;
-            var outSet = (await PostReader.GetPostsBySchoolPageAsync(schoolId, null, 0, 5)).ToList();
+            var outSet = (await PostReader.TryGetPostsBySchoolPageAsync(schoolId, null, 0, 5)).ToList();
             end = FailoverDateTimeOffset.UtcNow;
             Console.WriteLine($"Page 0: {(end - start).TotalMilliseconds}ms");
 
 
             start = FailoverDateTimeOffset.UtcNow;
-            var outSet2 = (await PostReader.GetPostsBySchoolPageAsync(schoolId, null, 2100, 5)).ToList();
+            var outSet2 = (await PostReader.TryGetPostsBySchoolPageAsync(schoolId, null, 2100, 5)).ToList();
             end = FailoverDateTimeOffset.UtcNow;
             Console.WriteLine($"Page 2000: {(end - start).TotalMilliseconds}ms");
 
@@ -147,7 +147,7 @@ namespace UHub.CoreLib.Entities.Posts.DataInterop.Tests
             TestGlobal.TestInit();
 
 
-            var clubSet = (await SchoolClubReader.GetAllClubsAsync()).ToList();
+            var clubSet = (await SchoolClubReader.TryGetAllClubsAsync()).ToList();
 
             if (clubSet.Count == 0)
             {
@@ -157,9 +157,9 @@ namespace UHub.CoreLib.Entities.Posts.DataInterop.Tests
             var schoolId = clubSet.First().ID.Value;
 
 
-            await PostReader.GetPostsByClubPageAsync(schoolId, null);
+            await PostReader.TryGetPostsByClubPageAsync(schoolId, null);
 
-            await PostReader.GetPostsByClubPageAsync(schoolId, 3, null, 1);
+            await PostReader.TryGetPostsByClubPageAsync(schoolId, 3, null, 1);
 
 
         }

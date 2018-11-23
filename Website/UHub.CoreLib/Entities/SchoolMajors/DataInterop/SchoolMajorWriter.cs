@@ -14,16 +14,6 @@ namespace UHub.CoreLib.Entities.SchoolMajors.DataInterop
 {
     internal static partial class SchoolMajorWriter
     {
-        /// <summary>
-        /// Attempts to create a new CMS school major in the database and returns the SchoolMajorID if successful
-        /// </summary>
-        /// <param name="cmsSchoolMajor"></param>
-        /// <param name="ParentID"></param>
-        /// <returns></returns>
-        internal static long? TryCreateSchoolMajor(SchoolMajor cmsSchoolMajor, long ParentID)
-        {
-            return TryCreateSchoolMajor(cmsSchoolMajor, ParentID, out _);
-        }
 
         /// <summary>
         /// Attempts to create a new CMS school major in the database and returns the SchoolMajorID if successful
@@ -31,42 +21,28 @@ namespace UHub.CoreLib.Entities.SchoolMajors.DataInterop
         /// <param name="cmsSchoolMajor"></param>
         /// <param name="ParentID"></param>
         /// <returns></returns>
-        internal static long? TryCreateSchoolMajor(SchoolMajor cmsSchoolMajor, long ParentID, out string ErrorMsg)
+        internal static long? CreateSchoolMajor(SchoolMajor cmsSchoolMajor, long ParentID)
         {
             if (!CoreFactory.Singleton.IsEnabled)
             {
                 throw new SystemDisabledException();
             }
 
-            try
-            {
 
-                long? schoolMajorID = SqlWorker.ExecScalar<long?>(
-                    _dbConn,
-                    "[dbo].[SchoolMajor_Create]",
-                    (cmd) =>
-                    {
-                        cmd.Parameters.Add("@Name", SqlDbType.NVarChar).Value = HandleParamEmpty(cmsSchoolMajor.Name);
-                        cmd.Parameters.Add("@Description", SqlDbType.NVarChar).Value = HandleParamEmpty(cmsSchoolMajor.Description);
-                        cmd.Parameters.Add("@ParentID", SqlDbType.BigInt).Value = ParentID;
-                        cmd.Parameters.Add("@CreatedBy", SqlDbType.BigInt).Value = HandleParamEmpty(cmsSchoolMajor.CreatedBy);
-                        cmd.Parameters.Add("@IsReadonly", SqlDbType.BigInt).Value = HandleParamEmpty(cmsSchoolMajor.IsReadonly);
-                    });
-
-                if (schoolMajorID == null)
+            long? schoolMajorID = SqlWorker.ExecScalar<long?>(
+                _dbConn,
+                "[dbo].[SchoolMajor_Create]",
+                (cmd) =>
                 {
-                    throw new Exception(ResponseStrings.DBError.WRITE_UNKNOWN);
-                }
+                    cmd.Parameters.Add("@Name", SqlDbType.NVarChar).Value = HandleParamEmpty(cmsSchoolMajor.Name);
+                    cmd.Parameters.Add("@Description", SqlDbType.NVarChar).Value = HandleParamEmpty(cmsSchoolMajor.Description);
+                    cmd.Parameters.Add("@ParentID", SqlDbType.BigInt).Value = ParentID;
+                    cmd.Parameters.Add("@CreatedBy", SqlDbType.BigInt).Value = HandleParamEmpty(cmsSchoolMajor.CreatedBy);
+                    cmd.Parameters.Add("@IsReadonly", SqlDbType.BigInt).Value = HandleParamEmpty(cmsSchoolMajor.IsReadonly);
+                });
 
-                ErrorMsg = null;
-                return schoolMajorID;
-            }
-            catch (Exception ex)
-            {
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex);
-                ErrorMsg = ex.Message;
-                return null;
-            }
+
+            return schoolMajorID;
         }
     }
 }

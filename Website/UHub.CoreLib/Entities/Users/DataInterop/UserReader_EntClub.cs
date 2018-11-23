@@ -12,27 +12,37 @@ namespace UHub.CoreLib.Entities.Users.DataInterop
 {
     public static partial class UserReader
     {
-        public static IEnumerable<long> GetValidClubMemberships(long UserID)
+        public static IEnumerable<long> TryGetValidClubMemberships(long UserID)
         {
             if (!CoreFactory.Singleton.IsEnabled)
             {
                 throw new SystemDisabledException();
             }
 
-            return SqlWorker.ExecBasicQuery<long>(
-                _dbConn,
-                "[dbo].[User_GetValidClubMemberships_Light]",
-                (cmd) =>
-                {
-                    cmd.Parameters.Add("@UserID", SqlDbType.BigInt).Value = UserID;
-                },
-                (reader) =>
-                {
-                    //READ FIRST COLUMN 
-                    //read column 1 as long
-                    //this column has the ID of clubs where user is an approved member
-                    return reader.GetInt64(0);
-                });
+
+            try
+            {
+
+                return SqlWorker.ExecBasicQuery<long>(
+                    _dbConn,
+                    "[dbo].[User_GetValidClubMemberships_Light]",
+                    (cmd) =>
+                    {
+                        cmd.Parameters.Add("@UserID", SqlDbType.BigInt).Value = UserID;
+                    },
+                    (reader) =>
+                    {
+                        //READ FIRST COLUMN 
+                        //read column 1 as long
+                        //this column has the ID of clubs where user is an approved member
+                        return reader.GetInt64(0);
+                    });
+            }
+            catch (Exception ex)
+            {
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("FCDB5385-E010-4AC3-B6E5-D3F7B9D28657", ex);
+                return null;
+            }
         }
 
 

@@ -1,16 +1,20 @@
 ﻿@using UHub.CoreLib.Extensions;
 @{
     ViewBag.Title = "My Account";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "~/Views/Shared/_LayoutAuth.cshtml";
 }
-<div id="navbar-uhub">
-    <navbar-component></navbar-component>
+
+
+<div id="body-Content" class="container w-70">
+
+    <h2>My Account</h2>
+
+    <p>
+        @ViewBag.Username
+    </p>
+
+
+    @Html.ActionLink("Update Password", "UpdatePassword", "Account")
+
+
 </div>
-<h2>My Account</h2>
-
-<p>
-    @ViewBag.Username
-</p>
-
-
-@Html.ActionLink("Update Password", "UpdatePassword", "Account")

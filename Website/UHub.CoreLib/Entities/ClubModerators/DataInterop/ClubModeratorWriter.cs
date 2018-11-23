@@ -14,62 +14,35 @@ namespace UHub.CoreLib.Entities.ClubModerators.DataInterop
 {
     public sealed partial class ClubModeratorWriter
     {
-        /// <summary>
-        /// Attempts to create a new CMS club moderator in the database and returns the club moderators id if successful
-        /// </summary>
-        /// <param name="cmsClubModerator"></param>
-        /// <returns></returns>
-        internal static long? TryCreateClubModerator(ClubModerator cmsClubModerator, long parentID) 
-            => TryCreateClubModerator(cmsClubModerator, parentID, out _);
-
-
 
         /// <summary>
         /// Attempts to create a new CMS club moderator in the database and returns the club moderators id if successful
         /// </summary>
         /// <param name="cmsClubModerator"></param>
         /// <returns></returns>
-        internal static long? TryCreateClubModerator(ClubModerator cmsClubModerator, long parentID, out string ErrorMsg)
+        internal static long? CreateClubModerator(ClubModerator cmsClubModerator, long parentID)
         {
             if (!CoreFactory.Singleton.IsEnabled)
             {
                 throw new SystemDisabledException();
             }
 
-            try
-            {
 
-                long? ClubModeratorID = SqlWorker.ExecScalar<long?>(
-                    _dbConn,
-                    "[dbo].[SchoolClubModerator_Create]",
-                    (cmd) =>
-                    {
-                        cmd.Parameters.Add("@UserID", SqlDbType.BigInt).Value = HandleParamEmpty(cmsClubModerator.UserID);
-                        cmd.Parameters.Add("@IsOwner", SqlDbType.Bit).Value = HandleParamEmpty(cmsClubModerator.IsOwner);
-                        cmd.Parameters.Add("@IsValid", SqlDbType.Bit).Value = HandleParamEmpty(cmsClubModerator.IsValid);
-                        cmd.Parameters.Add("@ParentID", SqlDbType.BigInt).Value = HandleParamEmpty(parentID);
-                        cmd.Parameters.Add("@CreatedBy", SqlDbType.BigInt).Value = HandleParamEmpty(cmsClubModerator.CreatedBy);
-                        cmd.Parameters.Add("@IsReadonly", SqlDbType.Bit).Value = HandleParamEmpty(cmsClubModerator.IsReadOnly);
-                    });
-
-                if (ClubModeratorID == null)
+            long? ClubModeratorID = SqlWorker.ExecScalar<long?>(
+                _dbConn,
+                "[dbo].[SchoolClubModerator_Create]",
+                (cmd) =>
                 {
-                    ErrorMsg = ResponseStrings.DBError.WRITE_UNKNOWN;
-                    return null;
-                }
+                    cmd.Parameters.Add("@UserID", SqlDbType.BigInt).Value = HandleParamEmpty(cmsClubModerator.UserID);
+                    cmd.Parameters.Add("@IsOwner", SqlDbType.Bit).Value = HandleParamEmpty(cmsClubModerator.IsOwner);
+                    cmd.Parameters.Add("@IsValid", SqlDbType.Bit).Value = HandleParamEmpty(cmsClubModerator.IsValid);
+                    cmd.Parameters.Add("@ParentID", SqlDbType.BigInt).Value = HandleParamEmpty(parentID);
+                    cmd.Parameters.Add("@CreatedBy", SqlDbType.BigInt).Value = HandleParamEmpty(cmsClubModerator.CreatedBy);
+                    cmd.Parameters.Add("@IsReadonly", SqlDbType.Bit).Value = HandleParamEmpty(cmsClubModerator.IsReadOnly);
+                });
 
-                ErrorMsg = null;
-                return ClubModeratorID;
-            }
-            catch (Exception ex)
-            {
-                var errCode = "BD0886CA-E8DB-4A0F-A574-ADA6FE36F4D5";
-                Exception ex_outer = new Exception(errCode, ex);
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
 
-                ErrorMsg = ex.Message;
-                return null;
-            }
+            return ClubModeratorID;
         }
     }
 }

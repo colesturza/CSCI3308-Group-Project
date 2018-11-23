@@ -36,11 +36,12 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             }
 
 
-            var taskGetTargetClub = SchoolClubReader.GetClubAsync(ClubID);
-            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser();
+            var taskGetTargetClub = SchoolClubReader.TryGetClubAsync(ClubID);
+            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser().CmsUser;
 
-            var taskIsUserBanned = SchoolClubReader.IsUserBannedAsync(ClubID, cmsUser.ID.Value);
-            var taskIsUserMember = SchoolClubReader.ValidateMembershipAsync(ClubID, cmsUser.ID.Value);
+
+            var taskIsUserBanned = SchoolClubReader.TryIsUserBannedAsync(ClubID, cmsUser.ID.Value);
+            var taskIsUserMember = SchoolClubReader.TryValidateMembershipAsync(ClubID, cmsUser.ID.Value);
 
 
 
@@ -57,7 +58,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             }
 
             var isUserMember = await taskIsUserMember;
-            var taskGetCount = PostReader.GetPostCountByClubAsync(ClubID, isUserMember);
+            var taskGetCount = PostReader.TryGetPostCountByClubAsync(ClubID, isUserMember);
 
 
             if (await taskIsUserBanned)
@@ -67,7 +68,13 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
 
 
             var count = await taskGetCount;
-            return Ok(count);
+            if (count == null)
+            {
+                return InternalServerError();
+            }
+            var countVal = count.Value;
+
+            return Ok(countVal);
         }
 
 
@@ -84,9 +91,9 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             }
 
 
-            var taskGetTargetClub = SchoolClubReader.GetClubAsync(ClubID);
-            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser();
-            var taskIsUserMember = SchoolClubReader.ValidateMembershipAsync(ClubID, cmsUser.ID.Value);
+            var taskGetTargetClub = SchoolClubReader.TryGetClubAsync(ClubID);
+            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser().CmsUser;
+            var taskIsUserMember = SchoolClubReader.TryValidateMembershipAsync(ClubID, cmsUser.ID.Value);
 
 
             var targetClub = await taskGetTargetClub;
@@ -101,11 +108,18 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             }
 
             var isUserMember = await taskIsUserMember;
-            var taskGetCount = PostReader.GetPostCountByClubAsync(ClubID, isUserMember);
+            var taskGetCount = PostReader.TryGetPostCountByClubAsync(ClubID, isUserMember);
 
 
             var count = await taskGetCount;
-            if (count == 0)
+            if (count == null)
+            {
+                return InternalServerError();
+            }
+            var countVal = count.Value;
+
+
+            if (countVal == 0)
             {
                 return Ok(0);
             }
@@ -115,13 +129,13 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             }
             if (PageSize < 1)
             {
-                double divResult = (count * 1.0) / DEFAULT_PAGE_SIZE;
+                double divResult = (countVal * 1.0) / DEFAULT_PAGE_SIZE;
                 long ceil = (long)Math.Ceiling(divResult);
                 return Ok(ceil);
             }
 
 
-            double divResult2 = (count * 1.0) / PageSize;
+            double divResult2 = (countVal * 1.0) / PageSize;
             long ceil2 = (long)Math.Ceiling(divResult2);
             return Ok(ceil2);
         }
@@ -140,12 +154,12 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             }
 
 
-            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser();
+            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser().CmsUser;
 
 
-            var taskTargetClub = SchoolClubReader.GetClubAsync(ClubID);
-            var taskIsUserBanned = SchoolClubReader.IsUserBannedAsync(ClubID, cmsUser.ID.Value);
-            var taskIsUserMember = SchoolClubReader.ValidateMembershipAsync(ClubID, cmsUser.ID.Value);
+            var taskTargetClub = SchoolClubReader.TryGetClubAsync(ClubID);
+            var taskIsUserBanned = SchoolClubReader.TryIsUserBannedAsync(ClubID, cmsUser.ID.Value);
+            var taskIsUserMember = SchoolClubReader.TryValidateMembershipAsync(ClubID, cmsUser.ID.Value);
 
 
             await Task.WhenAll(taskTargetClub, taskIsUserBanned);
@@ -165,15 +179,22 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             }
 
 
-            var posts = PostReader.GetPostsByClub(ClubID);
+            var taskPosts = PostReader.TryGetPostsByClubAsync(ClubID);
             var sanitizerMode = CoreFactory.Singleton.Properties.HtmlSanitizerMode;
             var shouldSanitize = (sanitizerMode & HtmlSanitizerMode.OnRead) != 0;
+
+            var posts = await taskPosts;
+            if (posts == null)
+            {
+                return InternalServerError();
+            }
 
 
             IEnumerable<Post_R_PublicDTO> outSet = null;
             if (shouldSanitize)
             {
                 outSet = posts
+                    .AsParallel()
                     .Select(x =>
                     {
                         x.Content = x.Content.SanitizeHtml();
@@ -183,6 +204,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             else
             {
                 outSet = posts
+                    .AsParallel()
                     .Select(x =>
                     {
                         return x.ToDto<Post_R_PublicDTO>();
@@ -214,12 +236,12 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             }
 
 
-            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser(out var stat);
-            
+            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser().CmsUser;
 
-            var taskTargetClub = SchoolClubReader.GetClubAsync(ClubID);
-            var taskIsUserBanned = SchoolClubReader.IsUserBannedAsync(ClubID, cmsUser.ID.Value);
-            var taskIsUserMember = SchoolClubReader.ValidateMembershipAsync(ClubID, cmsUser.ID.Value);
+
+            var taskTargetClub = SchoolClubReader.TryGetClubAsync(ClubID);
+            var taskIsUserBanned = SchoolClubReader.TryIsUserBannedAsync(ClubID, cmsUser.ID.Value);
+            var taskIsUserMember = SchoolClubReader.TryValidateMembershipAsync(ClubID, cmsUser.ID.Value);
 
             await Task.WhenAll(taskTargetClub, taskIsUserBanned);
             var targetClub = await taskTargetClub;
@@ -239,15 +261,23 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             }
 
 
-            var posts = PostReader.GetPostsByClubPage(ClubID, StartID, PageNum, PageSize);
+            var taskPosts = PostReader.TryGetPostsByClubPageAsync(ClubID, StartID, PageNum, PageSize);
 
             var sanitizerMode = CoreFactory.Singleton.Properties.HtmlSanitizerMode;
             var shouldSanitize = (sanitizerMode & HtmlSanitizerMode.OnRead) != 0;
+
+            var posts = await taskPosts;
+            if(posts == null)
+            {
+                return InternalServerError();
+            }
+
 
             IEnumerable<Post_R_PublicDTO> outSet = null;
             if (shouldSanitize)
             {
                 outSet = posts
+                    .AsParallel()
                     .Select(x =>
                     {
                         x.Content = x.Content.SanitizeHtml();
@@ -257,6 +287,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             else
             {
                 outSet = posts
+                    .AsParallel()
                     .Select(x =>
                     {
                         return x.ToDto<Post_R_PublicDTO>();

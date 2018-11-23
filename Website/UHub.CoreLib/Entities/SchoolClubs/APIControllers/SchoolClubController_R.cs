@@ -30,13 +30,18 @@ namespace UHub.CoreLib.Entities.SchoolClubs.APIControllers
         public async Task<IHttpActionResult> GetAllBySchool()
         {
 
-            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser();
+            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser().CmsUser;
+
             var schoolID = cmsUser.SchoolID.Value;
 
-            var clubSet = await SchoolClubReader.GetClubsBySchoolAsync(schoolID);
+            var clubSet = await SchoolClubReader.TryGetClubsBySchoolAsync(schoolID);
+            if (clubSet == null)
+            {
+                return InternalServerError();
+            }
 
 
-            return Ok(clubSet.Select(x=>x.ToDto<SchoolClub_R_PublicDTO>()));
+            return Ok(clubSet.Select(x => x.ToDto<SchoolClub_R_PublicDTO>()));
         }
 
     }

@@ -41,7 +41,7 @@ namespace UHub.CoreLib.APIControllers
             if (!CoreFactory.Singleton.IsEnabled)
             {
                 result = "System Disabled";
-                resultCode = HttpStatusCode.InternalServerError;
+                resultCode = HttpStatusCode.ServiceUnavailable;
                 return false;
             }
 
@@ -73,16 +73,21 @@ namespace UHub.CoreLib.APIControllers
             if (authToken.IsEmpty())
             {
                 //test for cookie auth
-                isLoggedIn = !CoreFactory.Singleton.Auth.IsUserLoggedIn(out _, out tokenStatus);
+                var userStatus = CoreFactory.Singleton.Auth.GetCurrentUser();
+                currentUser = userStatus.CmsUser;
+
+                tokenStatus = userStatus.TokenStatus;
+                isLoggedIn = (currentUser.ID != null);
             }
             else
             {
                 //test for token auth
                 tokenStatus = CoreFactory.Singleton.Auth.TrySetRequestUser(authToken);
-                isLoggedIn = (tokenStatus != TokenValidationStatus.Success);
+
+                currentUser = CoreFactory.Singleton.Auth.GetCurrentUser().CmsUser;
+                isLoggedIn = (currentUser.ID != null);
             }
 
-            currentUser = CoreFactory.Singleton.Auth.GetCurrentUser();
 
             return isLoggedIn;
         }

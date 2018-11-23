@@ -6,8 +6,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
 using UHub.CoreLib.APIControllers;
-using UHub.CoreLib.Entities.SchoolMajors.DataInterop;
-using UHub.CoreLib.Entities.Schools.DataInterop;
 using UHub.CoreLib.Entities.Users;
 using UHub.CoreLib.Entities.Users.DTOs;
 using UHub.CoreLib.Management;
@@ -32,6 +30,8 @@ namespace UHub.CoreLib.Security.Accounts.APIControllers
         [Route("CreateUser")]
         public async Task<IHttpActionResult> CreateUser([FromBody] User_C_PublicDTO user)
         {
+
+
             string status = "";
             HttpStatusCode statCode = HttpStatusCode.BadRequest;
             if (!this.ValidateSystemState(out status, out statCode))
@@ -51,8 +51,8 @@ namespace UHub.CoreLib.Security.Accounts.APIControllers
                 return BadRequest();
             }
 
-
             var tmpUser = user.ToInternal<User>();
+
 
 
             var enableDetail = CoreFactory.Singleton.Properties.EnableDetailedAPIErrors;
@@ -61,54 +61,40 @@ namespace UHub.CoreLib.Security.Accounts.APIControllers
             statCode = HttpStatusCode.BadRequest;
             bool userCanLogin = false;
 
+
+            AcctCreateResultCode resultCode = AcctCreateResultCode.UnknownError;
             try
             {
-                var resultCode = await CoreFactory.Singleton.Accounts.TryCreateUserAsync(
+                resultCode = await CoreFactory.Singleton.Accounts.TryCreateUserAsync(
                     tmpUser,
                     true,
-                    GeneralFailHandler: (code) =>
-                    {
-                        statCode = HttpStatusCode.InternalServerError;
-                        if (enableFailCode)
-                        {
-                            status = code.ToString();
-                        }
-                    },
                     SuccessHandler: (newUser, canLogin) =>
                     {
                         status = "User Created";
                         statCode = HttpStatusCode.OK;
                         userCanLogin = canLogin;
                     });
-
-                var isCreated = (resultCode == AcctCreateResultCode.Success);
-
-                if (!isCreated && enableDetail)
-                {
-                    switch (resultCode)
-                    {
-                        case AcctCreateResultCode.EmailEmpty: { status = "Email Empty"; break; }
-                        case AcctCreateResultCode.EmailInvalid: { status = "Email Invalid"; break; }
-                        case AcctCreateResultCode.EmailDuplicate: { status = "Email Duplicate"; break; }
-                        case AcctCreateResultCode.EmailDomainInvalid: { status = "Email Domain Not Supported"; break; }
-                        case AcctCreateResultCode.UsernameInvalid: { status = "Username Invalid.  Cannot contain whitespace and must be between 3 and 50 characters"; break; }
-                        case AcctCreateResultCode.UsernameDuplicate: { status = "Username Duplicate"; break; }
-                        case AcctCreateResultCode.UserInvalid: { status = "User is not valid"; break; }
-                        case AcctCreateResultCode.MajorInvalid: { status = "Major Invalid"; break; }
-                        case AcctCreateResultCode.PswdEmpty: { status = "Password Empty"; break; }
-                        case AcctCreateResultCode.PswdInvalid: { status = "Password Invalid"; break; }
-                        case AcctCreateResultCode.UnknownError: { status = "An unknown error has occured"; break; }
-                        default: { status = "An unknown error has occured"; break; }
-                    }
-                }
             }
             catch (Exception ex)
             {
-                var errCode = "100d1257-b74c-461d-a389-b90298895e5d";
-                Exception ex_outer = new Exception(errCode, ex);
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("68934E91-EC89-41A4-A25A-C985496B99AA", ex);
+           
+            }
 
-                return Content(HttpStatusCode.InternalServerError, status);
+
+
+            var isCreated = (resultCode == AcctCreateResultCode.Success);
+
+            if (resultCode == AcctCreateResultCode.UnknownError)
+            {
+                return Content(HttpStatusCode.InternalServerError, resultCode.ToString());
+            }
+
+
+
+            if (!isCreated && enableDetail)
+            {
+                status = resultCode.ToString();
             }
 
 

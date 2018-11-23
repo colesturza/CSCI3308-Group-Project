@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UHub.CoreLib.Entities.SchoolClubs.DataInterop;
+using UHub.CoreLib.ErrorHandling.Exceptions;
+using UHub.CoreLib.Management;
 
 namespace UHub.CoreLib.Entities.SchoolClubs.Management
 {
@@ -24,7 +26,46 @@ namespace UHub.CoreLib.Entities.SchoolClubs.Management
             }
 
 
-            var id = await SchoolClubWriter.TryCreateClubAsync(NewClub);
+
+            long? id = null;
+            try
+            {
+                id = await SchoolClubWriter.CreateClubAsync(NewClub);
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                return (null, SchoolClubResultCode.InvalidArgument);
+            }
+            catch (ArgumentNullException)
+            {
+                return (null, SchoolClubResultCode.NullArgument);
+            }
+            catch (ArgumentException)
+            {
+                return (null, SchoolClubResultCode.InvalidArgument);
+            }
+            catch (InvalidCastException)
+            {
+                return (null, SchoolClubResultCode.InvalidArgumentType);
+            }
+            catch (InvalidOperationException)
+            {
+                return (null, SchoolClubResultCode.InvalidOperation);
+            }
+            catch (AccessForbiddenException)
+            {
+                return (null, SchoolClubResultCode.AccessDenied);
+            }
+            catch (Exception ex)
+            {
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("45CB4726-3D28-4D65-A0FE-AB53EFA3C705", ex);
+                return (null, SchoolClubResultCode.UnknownError);
+            }
+
+
+
+
+
             if (id == null)
             {
                 return (id, SchoolClubResultCode.UnknownError);

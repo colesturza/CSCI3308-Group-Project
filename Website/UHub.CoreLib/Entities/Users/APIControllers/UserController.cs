@@ -40,7 +40,7 @@ namespace UHub.CoreLib.Entities.Users.APIControllers
             }
 
 
-            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser();
+            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser().CmsUser;
 
             var dtoUser = cmsUser.ToDto<User_R_PrivateDTO>();
 
@@ -61,12 +61,24 @@ namespace UHub.CoreLib.Entities.Users.APIControllers
                 return Content(statCode, status);
             }
 
-            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser();
+            var userStat = CoreFactory.Singleton.Auth.GetCurrentUser();
+            var cmsUser = userStat.CmsUser;
+
+
             var domain = cmsUser.Email.GetEmailDomain();
 
 
             //search for user
-            var targetUser = await UserReader.GetUserAsync(username, domain);
+            User targetUser = null;
+            try
+            {
+                targetUser = await UserReader.GetUserAsync(username, domain);
+            }
+            catch (Exception ex)
+            {
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("D8EB78E4-3C48-4976-A234-6B5EACDC053A", ex);
+                return InternalServerError();
+            }
 
 
             //ensure user is found
@@ -85,9 +97,9 @@ namespace UHub.CoreLib.Entities.Users.APIControllers
             {
                 return Ok(cmsUser.ToDto<User_R_PrivateDTO>());
             }
-            
+
             //only allow users to see users from same school
-            if(targetUser.SchoolID != cmsUser.SchoolID)
+            if (targetUser.SchoolID != cmsUser.SchoolID)
             {
                 return NotFound();
             }
@@ -102,7 +114,7 @@ namespace UHub.CoreLib.Entities.Users.APIControllers
         [Route("GetByID")]
         [HttpPost]
         [ApiAuthControl]
-        public async Task<IHttpActionResult> GetByID(long UserID )
+        public async Task<IHttpActionResult> GetByID(long UserID)
         {
             string status = "";
             HttpStatusCode statCode = HttpStatusCode.BadRequest;
@@ -111,11 +123,21 @@ namespace UHub.CoreLib.Entities.Users.APIControllers
                 return Content(statCode, status);
             }
 
-            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser();
+            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser().CmsUser;
 
 
             //search for user
-            var targetUser = await UserReader.GetUserAsync(UserID);
+            User targetUser = null;
+            try
+            {
+                targetUser = await UserReader.GetUserAsync(UserID);
+            }
+            catch (Exception ex)
+            {
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("D2D5D240-FEBB-43A0-8B27-2B44AB28AEF7", ex);
+                return InternalServerError();
+            }
+
 
             //ensure user is found
             if (targetUser == null)

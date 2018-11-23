@@ -28,7 +28,12 @@ namespace UHub.CoreLib.Entities.Comments.APIControllers
 
 
 
-            var comments = await CommentReader.GetCommentsByPostAsync(postID);
+            var comments = await CommentReader.TryGetCommentsByPostAsync(postID);
+            if (comments == null)
+            {
+                return InternalServerError();
+            }
+
 
             var outSet = comments.Select(x => x.ToDto<Comment_R_PublicDTO>());
             return Ok(outSet);

@@ -69,7 +69,7 @@ namespace UHub.CoreLib.Entities.Users
 
             if (this.EffFromDate > DateTimeOffset.Now || this.EffToDate < DateTimeOffset.Now)
             {
-                this.Delete();
+                this.TryDelete();
                 return AcctRecoveryResultCode.RecoveryContextExpired;
             }
 
@@ -80,7 +80,7 @@ namespace UHub.CoreLib.Entities.Users
 
             if (this.AttemptCount > CoreFactory.Singleton.Properties.AcctPswdResetMaxAttemptCount)
             {
-                this.Delete();
+                this.TryDelete();
                 return AcctRecoveryResultCode.RecoveryContextDestroyed;
             }
 
@@ -110,12 +110,12 @@ namespace UHub.CoreLib.Entities.Users
         /// <summary>
         /// Increment the attempt count in DB
         /// </summary>
-        public AcctRecoveryResultCode IncrementAttemptCount()
+        public AcctRecoveryResultCode TryIncrementAttemptCount()
         {
 #pragma warning disable 612, 618
             if (AttemptCount >= CoreFactory.Singleton.Properties.AcctPswdResetMaxAttemptCount)
             {
-                this.Delete();
+                this.TryDelete();
                 return AcctRecoveryResultCode.RecoveryContextDestroyed;
             }
 
@@ -128,19 +128,35 @@ namespace UHub.CoreLib.Entities.Users
 
 
             this.AttemptCount++;
-            UserWriter.LogFailedRecoveryContextAttempt(this.RecoveryID);
-            return AcctRecoveryResultCode.Success;
-
+            try
+            {
+                UserWriter.LogFailedRecoveryContextAttempt(this.RecoveryID);
+                return AcctRecoveryResultCode.Success;
+            }
+            catch (Exception ex)
+            {
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("320E32EC-416F-4627-ADA1-D38EA201FCF0", ex);
+                return AcctRecoveryResultCode.UnknownError;
+            }
 #pragma warning restore
         }
 
         /// <summary>
         /// Delete this recovery context from the DB
         /// </summary>
-        public void Delete()
+        public bool TryDelete()
         {
 #pragma warning disable 612, 618
-            UserWriter.DeleteRecoveryContext(this.RecoveryID);
+            try
+            {
+                UserWriter.DeleteRecoveryContext(this.RecoveryID);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("AEB010D9-AF61-4108-9C5F-448CCAFE9EA8", ex);
+                return false;
+            }
 #pragma warning restore
         }
 
