@@ -13,6 +13,7 @@ Vue.component('navbar-component', {
         });
         return {
             communities
+            console.log(communities);
         }
     },
     template: 
