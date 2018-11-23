@@ -30,7 +30,7 @@
         MajorInvalid = 6020,
         MajorEmpty = 6021,
         YearInvalid = 6030,
-        YearEmpty = 6030,
+        YearEmpty = 6031,
         CompanyInvalid = 6040,
         CompanyEmpty = 6041,
         JobTitleInvalid = 6050,

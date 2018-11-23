@@ -42,6 +42,10 @@ var createUser = new Vue({
                 success: function (data) {
                     $("#btn_CreateUser").removeAttr("disabled");
                     alert(data.status);
+
+                    if (data.canLogin === 'true') {
+                        window.location.href = "/";
+                    }
                 },
                 error: function (data) {
                     $("#btn_CreateUser").removeAttr("disabled");
