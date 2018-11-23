@@ -6,6 +6,7 @@ Vue.component('navbar-component', {
             url: "/uhubapi/schoolclubs/GetAllBySchool",
             success: function (data) {
                 communities = data;
+                console.log(communities);
             },
             error: function (error) {
                 console.log(error);
@@ -13,7 +14,6 @@ Vue.component('navbar-component', {
         });
         return {
             communities
-            console.log(communities);
         }
     },
     template: 
