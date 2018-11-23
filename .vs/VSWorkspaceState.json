@@ -1,12 +1,22 @@
 {
   "ExpandedNodes": [
     "",
+    "\\HtmlInProgress",
+    "\\HtmlInProgress\\Justin",
+    "\\HtmlInProgress\\Justin\\Communities",
     "\\Website",
     "\\Website\\UHub",
-    "\\Website\\UHub.CoreLib",
     "\\Website\\UHub\\ClientResources",
-    "\\Website\\UHub\\ClientResources\\SampleUHUB"
+    "\\Website\\UHub\\ClientResources\\Home",
+    "\\Website\\UHub\\ClientResources\\Home\\Scripts",
+    "\\Website\\UHub\\ClientResources\\MASTER",
+    "\\Website\\UHub\\ClientResources\\MASTER\\Scripts",
+    "\\Website\\UHub\\ClientResources\\School",
+    "\\Website\\UHub\\ClientResources\\School\\Scripts",
+    "\\Website\\UHub\\Views",
+    "\\Website\\UHub\\Views\\Post",
+    "\\Website\\UHub\\Views\\Security"
   ],
-  "SelectedNode": "\\Website\\UHub\\ClientResources\\SampleUHUB\\postPage.html",
+  "SelectedNode": "\\Website\\UHub\\ClientResources\\MASTER\\Styles",
   "PreviewInSolutionExplorer": false
 }
