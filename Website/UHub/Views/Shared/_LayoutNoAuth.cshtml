@@ -1,0 +1,22 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section header
+{
+    <div id="mainNav" class="container-fullwidth">
+        <nav class="navbar navbar-expand navbar-dark bg-dark">
+            <a class="navbar-brand" href="/">UHUB</a>
+        </nav>
+    </div>
+}
+
+
+
+@RenderBody()
+
+
+
+@section scripts{
+    @RenderSection("scripts", false)
+}

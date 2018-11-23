@@ -38,7 +38,9 @@
 
 <body>
 
-    <header></header>
+    <header>
+        @RenderSection("header", true)
+    </header>
 
 
     <main>
@@ -50,8 +52,8 @@
         @{Html.RenderPartial("_Footer");}
     </footer>
 
-    @Scripts.Render("~/ClientResources/Master/Components/Navbar.js")
-    @RenderSection("scripts", false)
+    
+    @RenderSection("scripts", true)
 </body>
 
 </html>

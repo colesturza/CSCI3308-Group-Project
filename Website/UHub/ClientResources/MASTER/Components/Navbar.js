@@ -19,7 +19,7 @@
         `
         <div class="container">
             <div id="mainNav" class="container-fullwidth">
-                < nav class= "navbar navbar-expand navbar-dark bg-dark" >
+                <nav class= "navbar navbar-expand navbar-dark bg-dark">
                     <a class="navbar-brand" href="/School">UHUB</a>
                     <div class="collapse navbar-collapse" id="navbarNavDropdown">
                         <ul class="navbar-nav mr-auto">

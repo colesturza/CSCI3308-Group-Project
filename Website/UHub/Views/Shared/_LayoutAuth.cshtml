@@ -1,0 +1,21 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section header
+{
+    <div id="navbar-uhub">
+        <navbar-component></navbar-component>
+    </div>
+    @Scripts.Render("~/ClientResources/Master/Components/Navbar.js")
+}
+
+
+
+@RenderBody()
+
+
+
+@section scripts{
+    @RenderSection("scripts", false)
+}
