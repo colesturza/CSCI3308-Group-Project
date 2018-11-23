@@ -2,6 +2,13 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+
+@section head
+{
+    @RenderSection("head", false)
+}
+
+
 @section header
 {
     <div id="navbar-uhub">
@@ -9,6 +16,7 @@
     </div>
     @Scripts.Render("~/ClientResources/Master/Components/Navbar.js")
 }
+
 
 
 

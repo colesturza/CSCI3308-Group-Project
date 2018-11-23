@@ -185,7 +185,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ClientResources\Home\Styles\Home.scss" />
-    <Content Include="ClientResources\Account\CreateAccount.js" />
+    <Content Include="ClientResources\Account\Scripts\CreateAccount.js" />
+    <Content Include="ClientResources\Account\Styles\CreateAccount.css" />
     <Content Include="ClientResources\MASTER\Components\Navbar.js" />
     <Content Include="ClientResources\SampleUHUB_TESTING\homeVue.js" />
     <Content Include="ClientResources\SampleUHUB_TESTING\index.html" />
