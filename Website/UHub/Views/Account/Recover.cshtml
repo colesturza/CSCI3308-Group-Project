@@ -27,15 +27,14 @@
             <br />
             <input type="password" name="txt_ConfirmPswd" placeholder="Confirm Password:" class="form-control">
             <p></p>
-            @{
-                Html.RenderPartial(
-                    "~/Views/Security/_RecaptchaPartial.cshtml",
-                    new UHub.Models.Security.RecaptchaLoginViewModel
-                    {
-                        SubmitText = "Send Recovery Email",
-                        SubmitClass = "btn-outline-dark",
-                    });
-            }
+
+            Html.RenderPartial(
+                "~/Views/Security/_RecaptchaPartial.cshtml",
+                new UHub.Models.Security.RecaptchaLoginViewModel
+                {
+                    SubmitText = "Send Recovery Email",
+                    SubmitClass = "btn-outline-dark",
+                });
 
             <p>@ViewBag.Message</p>
 
