@@ -4,6 +4,7 @@ Vue.component('navbar-component', {
         $.ajax({
             method: "POST",
             url: "/uhubapi/schoolclubs/GetAllBySchool",
+            async: false,
             success: function (data) {
                 communities = data;
                 console.log(communities);
