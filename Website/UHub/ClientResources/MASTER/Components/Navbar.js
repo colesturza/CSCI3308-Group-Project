@@ -1,6 +1,5 @@
 ﻿Vue.component('navbar-component', {
     data: function () {
-        var communities;
         $.ajax({
             method: "POST",
             url: "/uhubapi/schoolclubs/GetAllBySchool",
@@ -11,14 +10,13 @@
                 console.log(error);
             }
         });
-        console.log(communities);
         return {
             communities
         }
     },
     template: 
         `
-        <div class="navbar-component">
+        <div class="container">
             <div id="mainNav" class="container-fullwidth">
                 <nav class= "navbar navbar-expand navbar-dark bg-dark">
                     <a class="navbar-brand" href="/School">UHUB</a>
