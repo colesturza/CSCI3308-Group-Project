@@ -31,7 +31,7 @@ var createUser = new Vue({
         },
         sendData() {
             $("#btn_CreateUser").attr("disabled", "disabled");
-            $(window).css({ cursor: "wait" });
+            $("html").css({ cursor: "wait" });
 
             $.ajax({
                 method: "POST",
@@ -41,7 +41,7 @@ var createUser = new Vue({
                 dataType: "json",
                 complete: function () {
                     $("#btn_CreateUser").removeAttr("disabled");
-                    $(window).css({ cursor: "default" });
+                    $("html").css({ cursor: "default" });
                 },
                 success: function (data) {
 

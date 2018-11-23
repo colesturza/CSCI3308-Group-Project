@@ -67,7 +67,10 @@ namespace UHub.CoreLib.Security.Accounts.Management
             }
 
             var taskDoesEmailExist = UserReader.DoesUserExistAsync(NewUser.Email);
-
+            //Validate user domain and school
+            var domain = NewUser.Email.GetEmailDomain();
+            var taskGetUserSchool = SchoolReader.TryGetSchoolByDomainAsync(domain);
+            var taskDoesUsernameExist = UserReader.DoesUserExistAsync(NewUser.Username, domain);
 
 
             var pswdValidation = Shared.ValidateUserPswd(NewUser);
@@ -77,10 +80,19 @@ namespace UHub.CoreLib.Security.Accounts.Management
             }
 
 
-            //Validate user domain and school
-            var domain = NewUser.Email.GetEmailDomain();
-            var taskGetUserSchool = SchoolReader.TryGetSchoolByDomainAsync(domain);
-            var taskDoesUsernameExist = UserReader.DoesUserExistAsync(NewUser.Username, domain);
+            //check for duplicate email
+            try
+            {
+                if (await taskDoesEmailExist)
+                {
+                    return AcctCreateResultCode.EmailDuplicate;
+                }
+            }
+            catch (Exception ex)
+            {
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("94553D4D-B1E3-45FC-A166-2A2E1D816276", ex);
+                return AcctCreateResultCode.UnknownError;
+            }
 
 
             //Check for valid school domain
@@ -99,23 +111,6 @@ namespace UHub.CoreLib.Security.Accounts.Management
                 return AcctCreateResultCode.UnknownError;
             }
             var taskSchoolMajors = SchoolMajorReader.TryGetMajorsBySchoolAsync(NewUser.SchoolID.Value);
-
-
-
-            //check for duplicate email
-            try
-            {
-                if (await taskDoesEmailExist)
-                {
-                    return AcctCreateResultCode.EmailDuplicate;
-                }
-            }
-            catch (Exception ex)
-            {
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync("94553D4D-B1E3-45FC-A166-2A2E1D816276", ex);
-                return AcctCreateResultCode.UnknownError;
-            }
-            
 
 
             //check for duplicate username
