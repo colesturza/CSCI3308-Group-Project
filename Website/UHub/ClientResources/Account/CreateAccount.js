@@ -43,18 +43,17 @@
 $("#email").blur(function () {
     var majornames = [];
     var val = $(this).val();
-    var safeVal = encodeURIComponent(val);
-    if (safeVal == undefined || safeVal == null || safeVal == "") {
+    if (val == undefined || val == null || val == "") {
         return;
     }
 
     $.ajax({
         method: "get",
-        url: "/uhubapi/schoolmajors/GetAllByEmail?email=" + safeVal,
-        data: $("#email").valueOf()[0].value,
+        url: "/uhubapi/schoolmajors/GetAllByEmail",
+        data: {
+            email: val
+        },
         success: function (data) {
-            console.log(data)
-
             for (var i = 0; i < data.length; i++) {
                 if (data[i].IsEnabled === true) {
                     majornames.push(data[i].Name);
@@ -66,4 +65,8 @@ $("#email").blur(function () {
             });
         }
     });
+});
+
+$(function() {
+    $("#grad-date").datepicker("option", "dateFormat", "yyyy-mm-dd");
 });

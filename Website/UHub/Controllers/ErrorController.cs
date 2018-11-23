@@ -48,6 +48,8 @@ namespace UHub.Controllers
 
             var idObj = Url.RequestContext.RouteData.Values["id"];
             var idStr = idObj?.ToString() ?? "0";
+
+
             var valid = int.TryParse(idStr, out var id);
 
             //set default error code
@@ -95,6 +97,18 @@ namespace UHub.Controllers
 
             ViewBag.CatAddr = $"https://http.cat/{id}.jpg";
             Response.StatusCode = id;
+            return View();
+        }
+
+
+
+        public ActionResult Startup()
+        {
+            if (Request.QueryString.HasKeys() && Request.QueryString["aspxerrorpath"] != null)
+            {
+                Response.Redirect(Request.Url.GetLeftPart(UriPartial.Path), true);
+            }
+
             return View();
         }
     }

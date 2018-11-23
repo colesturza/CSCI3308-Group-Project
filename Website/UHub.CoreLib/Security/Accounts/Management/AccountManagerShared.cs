@@ -10,6 +10,7 @@ using UHub.CoreLib.Management;
 using UHub.CoreLib.Tools;
 using RgxPtrn = UHub.CoreLib.Regex.Patterns;
 using System.Text.RegularExpressions;
+using System.Globalization;
 
 namespace UHub.CoreLib.Security.Accounts.Management
 {
@@ -140,10 +141,18 @@ namespace UHub.CoreLib.Security.Accounts.Management
                 //Check for invalid Grad Date
                 if (NewUser.GradDate.IsNotEmpty())
                 {
+                    CultureInfo provider = CultureInfo.InvariantCulture;
+
                     if (!NewUser.GradDate.RgxIsMatch(RgxPtrn.EntUser.GRAD_DATE_B, RegexOptions.Singleline))
                     {
                         return AcctCreateResultCode.GradDateInvalid;
                     }
+
+                    if (!DateTime.TryParseExact(NewUser.GradDate,"yyyy-mm-dd", provider, DateTimeStyles.None, out _))
+                    {
+                        return AcctCreateResultCode.GradDateInvalid;
+                    }
+                    
                 }
 
 
