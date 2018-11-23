@@ -335,6 +335,7 @@
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Extensions\TimeSpanExtensions.cs" />
     <Compile Include="Extensions\TypeExtensions.cs" />
+    <Compile Include="HttpModules\ResponseHeaderModule.cs" />
     <Compile Include="Logging\Enums\ActivityLogType.cs" />
     <Compile Include="Logging\Enums\LocationLogType.cs" />
     <Compile Include="Logging\Enums\LocalLoggingMode.cs" />

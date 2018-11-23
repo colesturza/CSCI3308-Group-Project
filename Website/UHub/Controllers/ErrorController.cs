@@ -27,6 +27,16 @@ namespace UHub.Controllers
         // GET: Error
         public ActionResult Index()
         {
+            Response.TrySkipIisCustomErrors = true;
+
+
+            if (Request.QueryString.HasKeys() && Request.QueryString["aspxerrorpath"] != null)
+            {
+                Response.Redirect(Request.Url.GetLeftPart(UriPartial.Path), true);
+            }
+
+
+
             //IMPORTANT
             //POST-CONDITIONS
             //
@@ -35,7 +45,6 @@ namespace UHub.Controllers
             //"ViewBag.CatAddr" must be set
 
 
-            Response.TrySkipIisCustomErrors = true;
 
             var idObj = Url.RequestContext.RouteData.Values["id"];
             var idStr = idObj?.ToString() ?? "0";

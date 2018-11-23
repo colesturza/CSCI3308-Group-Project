@@ -5,13 +5,16 @@
 }
 
 
+<div id="body-Content" class="container w-70">
+
+    <h2>My Account</h2>
+
+    <p>
+        @ViewBag.Username
+    </p>
 
 
-<h2>My Account</h2>
-
-<p>
-    @ViewBag.Username
-</p>
+    @Html.ActionLink("Update Password", "UpdatePassword", "Account")
 
 
-@Html.ActionLink("Update Password", "UpdatePassword", "Account")
+</div>
