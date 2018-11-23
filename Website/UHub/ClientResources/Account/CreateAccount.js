@@ -30,12 +30,18 @@ var createUser = new Vue({
             this.sendObj = JSON.stringify(this.$data);
         },
         sendData() {
+            $("#btn_CreateUser").attr("disabled", "disabled");
+
+
             $.ajax({
                 method: "POST",
                 url: "/uhubapi/account/createuser",
                 data: createUser.sendObj,
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
+                done: function () {
+                    $("#btn_CreateUser").removeAttr("disabled");
+                },
                 success: function (data) {
                     alert(data.status);
                 },
@@ -43,11 +49,6 @@ var createUser = new Vue({
                     alert(data.responseJSON.status);
                 }
             });
-        }
-    },
-    watch: {
-        sendObj: function () {
-            
         }
     }
 });
