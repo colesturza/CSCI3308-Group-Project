@@ -1,4 +1,5 @@
-﻿Vue.component('navbar-component', {
+﻿var communities = [];
+Vue.component('navbar-component', {
     data: function () {
         $.ajax({
             method: "POST",
