@@ -49,15 +49,12 @@ namespace UHub.CoreLib.Security.Accounts.Management
             {
                 throw new SystemDisabledException();
             }
-
             if (NewUser == null)
             {
                 return AcctCreateResultCode.UserInvalid;
             }
 
 
-            //TODO: finalize trims
-            //TODO: validate year against list
             Shared.TryCreate_HandleAttrTrim(ref NewUser);
 
 
@@ -185,6 +182,10 @@ namespace UHub.CoreLib.Security.Accounts.Management
             {
                 return AcctCreateResultCode.AccessDenied;
             }
+            catch (EntityGoneException)
+            {
+                return AcctCreateResultCode.InvalidOperation;
+            }
             catch (Exception ex)
             {
                 CoreFactory.Singleton.Logging.CreateErrorLogAsync("A983AFB8-920A-4850-9197-3DDE7F6E89CC", ex);
@@ -288,6 +289,103 @@ namespace UHub.CoreLib.Security.Accounts.Management
             SuccessHandler?.Invoke(cmsUser, canLogin);
             return AcctCreateResultCode.Success;
 
+        }
+
+
+
+        /// <summary>
+        /// Attempt to update user attributes in DB
+        /// </summary>
+        /// <param name="CmsUser"></param>
+        /// <returns></returns>
+        public AcctUpdateResultCode TryUpdateUser(User CmsUser)
+        {
+            if (!CoreFactory.Singleton.IsEnabled)
+            {
+                throw new SystemDisabledException();
+            }
+            if (CmsUser == null)
+            {
+                return AcctUpdateResultCode.UserInvalid;
+            }
+
+
+            Shared.TryCreate_HandleAttrTrim(ref CmsUser);
+
+
+            var attrValidation = Shared.TryCreate_ValidateUserAttrs(CmsUser);
+            if (attrValidation != 0)
+            {
+                return (AcctUpdateResultCode)attrValidation;
+            }
+
+
+            //check for valid major (chosen via dropdown)
+            try
+            {
+                var major = CmsUser.Major;
+                var majorValidationSet = SchoolMajorReader
+                                                .TryGetMajorsBySchool(CmsUser.SchoolID.Value)
+                                                .Select(x => x.Name)
+                                                .ToHashSet();
+
+                if (!majorValidationSet.Contains(major))
+                {
+                    return AcctUpdateResultCode.MajorInvalid;
+                }
+            }
+            catch (Exception ex)
+            {
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("194B1895-E9AB-44B3-A8CD-FCACCA4286FB", ex);
+                return AcctUpdateResultCode.UnknownError;
+            }
+
+
+            try
+            {
+                //create CMS user
+#pragma warning disable 612, 618
+                UserWriter.UpdateUser(CmsUser);
+#pragma warning restore
+
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                return AcctUpdateResultCode.InvalidArgument;
+            }
+            catch (ArgumentNullException)
+            {
+                return AcctUpdateResultCode.NullArgument;
+            }
+            catch (ArgumentException)
+            {
+                return AcctUpdateResultCode.InvalidArgument;
+            }
+            catch (InvalidCastException)
+            {
+                return AcctUpdateResultCode.InvalidArgumentType;
+            }
+            catch (InvalidOperationException)
+            {
+                return AcctUpdateResultCode.InvalidOperation;
+            }
+            catch (AccessForbiddenException)
+            {
+                return AcctUpdateResultCode.AccessDenied;
+            }
+            catch (EntityGoneException)
+            {
+                return AcctUpdateResultCode.InvalidOperation;
+            }
+            catch (Exception ex)
+            {
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("9E33013D-A3E9-4E96-A2A1-1E5462446125", ex);
+                return AcctUpdateResultCode.UnknownError;
+            }
+
+
+
+            return AcctUpdateResultCode.Success;
         }
 
 

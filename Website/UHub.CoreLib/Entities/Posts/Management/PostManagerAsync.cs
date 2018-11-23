@@ -58,9 +58,13 @@ namespace UHub.CoreLib.Entities.Posts.Management
             {
                 return (null, PostResultCode.AccessDenied);
             }
+            catch (EntityGoneException)
+            {
+                return (null, PostResultCode.InvalidOperation);
+            }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync("45CB4726-3D28-4D65-A0FE-AB53EFA3C705", ex);
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("05D71E7E-0D15-4D87-8ADB-16BBFD966B0C", ex);
                 return (null, PostResultCode.UnknownError);
             }
 
@@ -91,6 +95,71 @@ namespace UHub.CoreLib.Entities.Posts.Management
 
 
             return val;
+        }
+
+
+
+        public static async Task<PostResultCode> TryUpdatePostAsync(Post CmsPost)
+        {
+            if (CmsPost == null)
+            {
+                return PostResultCode.NullArgument;
+            }
+
+
+
+            Shared.TryCreate_HandleAttrTrim(ref CmsPost);
+
+            Shared.TryCreate_AttrConversionHandler(ref CmsPost);
+
+            var attrValidateCode = Shared.TryCreate_ValidatePostAttrs(CmsPost);
+            if (attrValidateCode != 0)
+            {
+                return attrValidateCode;
+            }
+
+
+
+            try
+            {
+                await PostWriter.UpdatePostAsync(CmsPost);
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                return PostResultCode.InvalidArgument;
+            }
+            catch (ArgumentNullException)
+            {
+                return PostResultCode.NullArgument;
+            }
+            catch (ArgumentException)
+            {
+                return PostResultCode.InvalidArgument;
+            }
+            catch (InvalidCastException)
+            {
+                return PostResultCode.InvalidArgumentType;
+            }
+            catch (InvalidOperationException)
+            {
+                return PostResultCode.InvalidOperation;
+            }
+            catch (AccessForbiddenException)
+            {
+                return PostResultCode.AccessDenied;
+            }
+            catch (EntityGoneException)
+            {
+                return PostResultCode.InvalidOperation;
+            }
+            catch (Exception ex)
+            {
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("CDB83704-5E14-48DB-AEB9-FA947EA91D0B", ex);
+                return PostResultCode.UnknownError;
+            }
+
+
+            return PostResultCode.Success;
         }
     }
 

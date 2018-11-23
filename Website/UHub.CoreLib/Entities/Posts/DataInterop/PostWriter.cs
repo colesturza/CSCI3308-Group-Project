@@ -68,5 +68,40 @@ namespace UHub.CoreLib.Entities.Posts.DataInterop
                 });
 
         }
+
+
+        /// <summary>
+        /// Attempt to update attributes in the DB
+        /// </summary>
+        /// <param name="cmsPost"></param>
+        /// <returns></returns>
+        internal static void UpdatePost(Post cmsPost)
+        {
+            if (!CoreFactory.Singleton.IsEnabled)
+            {
+                throw new SystemDisabledException();
+            }
+            if (cmsPost.ID == null)
+            {
+                throw new ArgumentException("Invalid target post");
+            }
+
+
+            SqlWorker.ExecNonQuery(
+                _dbConn,
+                "[dbo].[Post_Update]",
+                (cmd) =>
+                {
+                    cmd.Parameters.Add("@EntID", SqlDbType.BigInt).Value = cmsPost.ID.Value;
+                    cmd.Parameters.Add("@Name", SqlDbType.NVarChar).Value = HandleParamEmpty(cmsPost.Name);
+                    cmd.Parameters.Add("@Content", SqlDbType.NVarChar).Value = HandleParamEmpty(cmsPost.Content);
+                    cmd.Parameters.Add("@IsLocked", SqlDbType.Bit).Value = HandleParamEmpty(cmsPost.IsLocked);
+                    cmd.Parameters.Add("@CanComment", SqlDbType.Bit).Value = HandleParamEmpty(cmsPost.CanComment);
+                    cmd.Parameters.Add("@IsPublic", SqlDbType.Bit).Value = HandleParamEmpty(cmsPost.IsPublic);
+                    cmd.Parameters.Add("@ModifiedBy", SqlDbType.BigInt).Value = HandleParamEmpty(cmsPost.ModifiedBy);
+                    
+                });
+
+        }
     }
 }

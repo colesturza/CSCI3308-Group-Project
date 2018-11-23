@@ -26,6 +26,14 @@ namespace UHub.CoreLib.Security.Accounts.Interfaces
             Action<User, bool> SuccessHandler = null);
 
 
+        /// <summary>
+        /// Attempt to update user attributes in DB
+        /// </summary>
+        /// <param name="CmsUser"></param>
+        /// <returns></returns>
+        Task<AcctUpdateResultCode> TryUpdateUserAsync(User CmsUser);
+
+
 
         /// <summary>
         /// Confirm CMS user in DB

@@ -15,6 +15,11 @@ namespace UHub.CoreLib.Entities.SchoolMajors.Management
     {
         public static (long? ClubID, SchoolMajorResultCode ResultCode) TryCreateMajor(SchoolMajor NewMajor, long ParentID)
         {
+            if (NewMajor == null)
+            {
+                return (null, SchoolMajorResultCode.NullArgument);
+            }
+
 
             Shared.TryCreate_HandleAttrTrim(ref NewMajor);
 
@@ -56,6 +61,10 @@ namespace UHub.CoreLib.Entities.SchoolMajors.Management
             catch (AccessForbiddenException)
             {
                 return (null, SchoolMajorResultCode.AccessDenied);
+            }
+            catch (EntityGoneException)
+            {
+                return (null, SchoolMajorResultCode.InvalidOperation);
             }
             catch (Exception ex)
             {

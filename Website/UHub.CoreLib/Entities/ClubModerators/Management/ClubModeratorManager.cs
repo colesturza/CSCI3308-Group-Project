@@ -15,6 +15,11 @@ namespace UHub.CoreLib.Entities.ClubModerators.Management
     {
         public static (long? ClubModID, ClubModeratorResultCode ResultCode) TryCreateClubModerator(ClubModerator NewModerator, long ParentID)
         {
+            if (NewModerator == null)
+            {
+                return (null, ClubModeratorResultCode.NullArgument);
+            }
+
 
             long? id = null;
             try
@@ -44,6 +49,10 @@ namespace UHub.CoreLib.Entities.ClubModerators.Management
             catch (AccessForbiddenException)
             {
                 return (null, ClubModeratorResultCode.AccessDenied);
+            }
+            catch(EntityGoneException)
+            {
+                return (null, ClubModeratorResultCode.InvalidOperation);
             }
             catch (Exception ex)
             {

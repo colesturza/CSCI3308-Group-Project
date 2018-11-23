@@ -26,6 +26,14 @@ namespace UHub.CoreLib.Security.Accounts.Interfaces
 
 
         /// <summary>
+        /// Attempt to update user attributes in DB
+        /// </summary>
+        /// <param name="CmsUser"></param>
+        /// <returns></returns>
+        AcctUpdateResultCode TryUpdateUser(User CmsUser);
+
+
+        /// <summary>
         /// Confirm CMS user in DB
         /// </summary>
         /// <param name="RefUID">User reference UID</param>

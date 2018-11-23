@@ -48,15 +48,12 @@ namespace UHub.CoreLib.Security.Accounts.Management
             {
                 throw new SystemDisabledException();
             }
-
             if (NewUser == null)
             {
                 return AcctCreateResultCode.UserInvalid;
             }
 
 
-            //TODO: finalize trims
-            //TODO: validate year against list
             Shared.TryCreate_HandleAttrTrim(ref NewUser);
 
 
@@ -160,37 +157,40 @@ namespace UHub.CoreLib.Security.Accounts.Management
                 userID = await UserWriter.CreateUserAsync(NewUser);
 #pragma warning restore
             }
-            catch (DuplicateNameException ex)
+            catch (DuplicateNameException)
             {
                 return AcctCreateResultCode.EmailDuplicate;
             }
-            catch (ArgumentOutOfRangeException ex)
+            catch (ArgumentOutOfRangeException)
             {
                 return AcctCreateResultCode.InvalidArgument;
             }
-            catch (ArgumentNullException ex)
+            catch (ArgumentNullException)
             {
                 return AcctCreateResultCode.NullArgument;
             }
-            catch (ArgumentException ex)
+            catch (ArgumentException)
             {
                 return AcctCreateResultCode.InvalidArgument;
             }
-            catch (InvalidCastException ex)
+            catch (InvalidCastException)
             {
                 return AcctCreateResultCode.InvalidArgumentType;
             }
-            catch (InvalidOperationException ex)
+            catch (InvalidOperationException)
             {
                 return AcctCreateResultCode.InvalidOperation;
             }
-            catch (AccessForbiddenException ex)
+            catch (AccessForbiddenException)
             {
                 return AcctCreateResultCode.AccessDenied;
             }
+            catch (EntityGoneException)
+            {
+                return AcctCreateResultCode.InvalidOperation;
+            }
             catch (Exception ex)
             {
-
                 CoreFactory.Singleton.Logging.CreateErrorLogAsync("9206C3AE-215E-491D-9621-B7607A6AF91D", ex);
                 return AcctCreateResultCode.UnknownError;
             }
@@ -303,6 +303,104 @@ namespace UHub.CoreLib.Security.Accounts.Management
 
             SuccessHandler?.Invoke(cmsUser, canLogin);
             return AcctCreateResultCode.Success;
+        }
+
+
+
+        /// <summary>
+        /// Attempt to update user attributes in DB
+        /// </summary>
+        /// <param name="CmsUser"></param>
+        /// <returns></returns>
+        public async Task<AcctUpdateResultCode> TryUpdateUserAsync(User CmsUser)
+        {
+            if (!CoreFactory.Singleton.IsEnabled)
+            {
+                throw new SystemDisabledException();
+            }
+            if (CmsUser == null)
+            {
+                return AcctUpdateResultCode.UserInvalid;
+            }
+
+            var taskMajorSet = SchoolMajorReader.TryGetMajorsBySchoolAsync(CmsUser.SchoolID.Value);
+
+
+            Shared.TryCreate_HandleAttrTrim(ref CmsUser);
+
+
+            var attrValidation = Shared.TryCreate_ValidateUserAttrs(CmsUser);
+            if (attrValidation != 0)
+            {
+                return (AcctUpdateResultCode)attrValidation;
+            }
+
+
+            //check for valid major (chosen via dropdown)
+            try
+            {
+                var major = CmsUser.Major;
+                var majorValidationSet = (await taskMajorSet)
+                                                .Select(x => x.Name)
+                                                .ToHashSet();
+
+                if (!majorValidationSet.Contains(major))
+                {
+                    return AcctUpdateResultCode.MajorInvalid;
+                }
+            }
+            catch (Exception ex)
+            {
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("194B1895-E9AB-44B3-A8CD-FCACCA4286FB", ex);
+                return AcctUpdateResultCode.UnknownError;
+            }
+
+
+            try
+            {
+                //create CMS user
+#pragma warning disable 612, 618
+                await UserWriter.UpdateUserAsync(CmsUser);
+#pragma warning restore
+
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                return AcctUpdateResultCode.InvalidArgument;
+            }
+            catch (ArgumentNullException)
+            {
+                return AcctUpdateResultCode.NullArgument;
+            }
+            catch (ArgumentException)
+            {
+                return AcctUpdateResultCode.InvalidArgument;
+            }
+            catch (InvalidCastException)
+            {
+                return AcctUpdateResultCode.InvalidArgumentType;
+            }
+            catch (InvalidOperationException)
+            {
+                return AcctUpdateResultCode.InvalidOperation;
+            }
+            catch (AccessForbiddenException)
+            {
+                return AcctUpdateResultCode.AccessDenied;
+            }
+            catch (EntityGoneException)
+            {
+                return AcctUpdateResultCode.InvalidOperation;
+            }
+            catch (Exception ex)
+            {
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("9E33013D-A3E9-4E96-A2A1-1E5462446125", ex);
+                return AcctUpdateResultCode.UnknownError;
+            }
+
+
+
+            return AcctUpdateResultCode.Success;
         }
 
 

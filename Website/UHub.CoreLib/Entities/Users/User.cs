@@ -80,5 +80,14 @@ namespace UHub.CoreLib.Entities.Users
         [DataProperty]
         public long CreatedBy { get; set; }
 
+        [DataProperty]
+        public DateTimeOffset CreatedDate { get; set; }
+
+        [DataProperty]
+        public long? ModifiedBy { get; set; }
+
+        [DataProperty]
+        public DateTimeOffset? ModifiedDate { get; set; }
+
     }
 }

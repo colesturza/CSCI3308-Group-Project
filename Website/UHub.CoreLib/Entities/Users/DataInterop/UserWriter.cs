@@ -44,7 +44,7 @@ namespace UHub.CoreLib.Entities.Users.DataInterop
                     cmd.Parameters.Add("@GradDate", SqlDbType.NVarChar).Value = HandleParamEmpty(cmsUser.GradDate);
                     cmd.Parameters.Add("@Company", SqlDbType.NVarChar).Value = HandleParamEmpty(cmsUser.Company);
                     cmd.Parameters.Add("@JobTitle", SqlDbType.NVarChar).Value = HandleParamEmpty(cmsUser.JobTitle);
-                    cmd.Parameters.Add("@IsFinished", SqlDbType.NVarChar).Value = DBNull.Value;
+                    cmd.Parameters.Add("@IsFinished", SqlDbType.Bit).Value = DBNull.Value;
                     cmd.Parameters.Add("@Version", SqlDbType.NVarChar).Value = HandleParamEmpty(cmsUser.Version);
                     cmd.Parameters.Add("@IsApproved", SqlDbType.Bit).Value = HandleParamEmpty(cmsUser.IsApproved);
                     cmd.Parameters.Add("@IsConfirmed", SqlDbType.Bit).Value = HandleParamEmpty(cmsUser.IsConfirmed);
@@ -54,7 +54,7 @@ namespace UHub.CoreLib.Entities.Users.DataInterop
             return userID;
         }
 
-        internal static void UpdateUserInfo(User cmsUser)
+        internal static void UpdateUser(User cmsUser)
         {
             if (!CoreFactory.Singleton.IsEnabled)
             {
@@ -66,14 +66,13 @@ namespace UHub.CoreLib.Entities.Users.DataInterop
             }
 
 
-
             //run sproc
             SqlWorker.ExecNonQuery(
                 _dbConn,
-                "[dbo].[User_UpdateByID]",
+                "[dbo].[User_Update]",
                 (cmd) =>
                 {
-                    cmd.Parameters.Add("@UserID", SqlDbType.BigInt).Value = HandleParamEmpty(cmsUser.ID);
+                    cmd.Parameters.Add("@EntID", SqlDbType.BigInt).Value = cmsUser.ID.Value;
                     //-------------------------------------------------
                     cmd.Parameters.Add("@Name", SqlDbType.NVarChar).Value = HandleParamEmpty(cmsUser.Name);
                     cmd.Parameters.Add("@PhoneNumber", SqlDbType.NVarChar).Value = HandleParamEmpty(cmsUser.PhoneNumber);
@@ -82,8 +81,9 @@ namespace UHub.CoreLib.Entities.Users.DataInterop
                     cmd.Parameters.Add("@GradDate", SqlDbType.NVarChar).Value = HandleParamEmpty(cmsUser.GradDate);
                     cmd.Parameters.Add("@Company", SqlDbType.NVarChar).Value = HandleParamEmpty(cmsUser.Company);
                     cmd.Parameters.Add("@JobTitle", SqlDbType.NVarChar).Value = HandleParamEmpty(cmsUser.JobTitle);
+                    cmd.Parameters.Add("@IsFinished", SqlDbType.Bit).Value = cmsUser.IsFinished;
                     //-------------------------------------------------
-                    cmd.Parameters.Add("@ModifiedBy", SqlDbType.BigInt).Value = DBNull.Value;
+                    cmd.Parameters.Add("@ModifiedBy", SqlDbType.BigInt).Value = cmsUser.ModifiedBy;
                 });
 
         }

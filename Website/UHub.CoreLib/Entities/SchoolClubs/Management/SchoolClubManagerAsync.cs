@@ -15,6 +15,13 @@ namespace UHub.CoreLib.Entities.SchoolClubs.Management
     {
         public static async Task<(long? ClubID, SchoolClubResultCode ResultCode)> TryCreateClubAsync(SchoolClub NewClub)
         {
+            if (NewClub == null)
+            {
+                return (null, SchoolClubResultCode.NullArgument);
+            }
+
+
+
             Shared.TryCreate_HandleAttrTrim(ref NewClub);
 
             Shared.TryCreate_AttrConversionHandler(ref NewClub);
@@ -55,6 +62,10 @@ namespace UHub.CoreLib.Entities.SchoolClubs.Management
             catch (AccessForbiddenException)
             {
                 return (null, SchoolClubResultCode.AccessDenied);
+            }
+            catch (EntityGoneException)
+            {
+                return (null, SchoolClubResultCode.InvalidOperation);
             }
             catch (Exception ex)
             {

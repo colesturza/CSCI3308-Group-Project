@@ -14,6 +14,12 @@ namespace UHub.CoreLib.Entities.Comments.Management
     {
         public static async Task<(long? CommentID, CommentResultCode ResultCode)> TryCreateCommentAsync(Comment NewComment)
         {
+            if (NewComment == null)
+            {
+                return (null, CommentResultCode.NullArgument);
+            }
+
+
 
             Shared.TryCreate_HandleAttrTrim(ref NewComment);
 
@@ -54,6 +60,10 @@ namespace UHub.CoreLib.Entities.Comments.Management
             catch (AccessForbiddenException)
             {
                 return (null, CommentResultCode.AccessDenied);
+            }
+            catch (EntityGoneException)
+            {
+                return (null, CommentResultCode.InvalidOperation);
             }
             catch (Exception ex)
             {

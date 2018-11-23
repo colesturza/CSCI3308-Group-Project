@@ -221,6 +221,8 @@
     <Compile Include="Entities\Posts\APIControllers\PostController_R_ByClub.cs" />
     <Compile Include="Entities\Posts\APIControllers\PostController_R_ByParent.cs" />
     <Compile Include="Entities\Posts\APIControllers\PostController_R_BySchool.cs" />
+    <Compile Include="Entities\Posts\DataInterop\PostReader_RevisionsAsync.cs" />
+    <Compile Include="Entities\Posts\DataInterop\PostReader_Revisions.cs" />
     <Compile Include="Entities\Posts\DataInterop\PostReader.cs" />
     <Compile Include="Entities\Posts\DataInterop\PostReader_ByClub.cs" />
     <Compile Include="Entities\Posts\DataInterop\PostReader_ByClubAsync.cs" />
@@ -366,6 +368,7 @@
     <Compile Include="Regex\Patterns\HttpError.cs" />
     <Compile Include="Regex\Patterns\EntUser.cs" />
     <Compile Include="Regex\Patterns\Util.cs" />
+    <Compile Include="Security\Accounts\Enums\AcctUpdateResultCode.cs" />
     <Compile Include="Security\Accounts\Management\AccountManagerAsync.cs" />
     <Compile Include="Security\Accounts\Management\AccountManager.cs" />
     <Compile Include="Security\Accounts\APIControllers\AccountController.cs" />
