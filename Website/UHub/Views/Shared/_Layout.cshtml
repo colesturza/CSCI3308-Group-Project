@@ -2,12 +2,16 @@
 
 <html lang="en">
 <head>
-
     <meta charset="utf-8">
+    <meta http-equiv="Page-Enter" content="blendTrans(Duration=.001)">
+    <meta http-equiv="Page-Exit" content="blendTrans(Duration=.001)">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+
     @* OLD VERSION *@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.0/themes/smoothness/jquery-ui.css" crossorigin="anonymous">
+    @Styles.Render("~/resources/css/master")
     <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
@@ -26,7 +30,6 @@
 
 
 
-    @Styles.Render("~/resources/css/master")
     @Scripts.Render("~/resources/scripts/master")
 
     <link href=".." rel="stylesheet" />
@@ -47,6 +50,7 @@
         @{Html.RenderPartial("_Footer");}
     </footer>
 
+    @Scripts.Render("~/ClientResources/Master/Components/Navbar.js")
     @RenderSection("scripts", false)
 </body>
 
