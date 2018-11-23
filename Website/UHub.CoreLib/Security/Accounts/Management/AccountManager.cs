@@ -204,7 +204,7 @@ namespace UHub.CoreLib.Security.Accounts.Management
             //try to create password
             //if failed, then purge the remaining CMS account components so user can try again
 #pragma warning disable 612, 618
-            var isPswdChanged = DoPasswordWork(userID.Value, NewUser.Password);
+            var isPswdChanged = TryDoPasswordWork(userID.Value, NewUser.Password);
             if (!isPswdChanged)
             {
                 UserWriter.TryPurgeUser((long)userID);
@@ -518,7 +518,7 @@ namespace UHub.CoreLib.Security.Accounts.Management
                 }
 
                 //try to change password
-                var isPswdChanged = DoPasswordWork(modUser.ID.Value, NewPassword);
+                var isPswdChanged = TryDoPasswordWork(modUser.ID.Value, NewPassword);
                 if (!isPswdChanged)
                 {
                     return AcctPswdResultCode.UnknownError;
@@ -732,7 +732,7 @@ namespace UHub.CoreLib.Security.Accounts.Management
 
 
                 //try to change password
-                var isPswdChanged = DoPasswordWork(modUser.ID.Value, NewPassword);
+                var isPswdChanged = TryDoPasswordWork(modUser.ID.Value, NewPassword);
                 if (!isPswdChanged)
                 {
                     return AcctRecoveryResultCode.UnknownError;
@@ -979,7 +979,7 @@ namespace UHub.CoreLib.Security.Accounts.Management
         /// <param name="UserID"></param>
         /// <param name="UserPswd"></param>
         /// <returns></returns>
-        private static bool DoPasswordWork(long UserID, string UserPswd)
+        private static bool TryDoPasswordWork(long UserID, string UserPswd)
         {
 #pragma warning disable 612, 618
             var salt = SysSec.Membership.GeneratePassword(SALT_LEN, 0);

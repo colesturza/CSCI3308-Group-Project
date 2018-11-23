@@ -87,39 +87,9 @@ using UHub.CoreLib.Attributes;
 						/// Convert <#=conversionType.Name#> to <#=iType.Name#>
 						/// </summary>
 						/// <param name="arg1">The <#=conversionType.Name#> that will be converted into an <#=iType.Name#></param>
-						public static explicit operator <#=iType#>(<#=conversionType#> dtoObj)
+						public static explicit operator <#=iType#>(<#=conversionType#> nativeObj)
 						{
-                            <#=iType#> nativeObj = new <#=iType#>();
-							
-						<#
-							propSet
-							.ForEach(prop => 
-							{
-                                Write("nativeObj.");
-								Write(prop.Name);
-
-                                Write(" = ");
-								
-                                Write("dtoObj.");
-								Write(prop.Name);
-                                
-                                Write(";" + Environment.NewLine);
-
-								
-							});
-
-						#>
-						return nativeObj;
-						}
-
-
-                        /// <summary>
-						/// Convert <#=iType.Name#> to <#=conversionType.Name#>
-						/// </summary>
-						/// <param name="arg1">The <#=iType.Name#> that will be converted into an <#=conversionType#></param>
-						public static explicit operator <#=conversionType#>(<#=iType#> nativeObj)
-						{
-                            <#=conversionType#> dtoObj = new <#=conversionType#>();
+                            <#=iType#> dtoObj = new <#=iType#>();
 							
 						<#
 							propSet
@@ -140,6 +110,36 @@ using UHub.CoreLib.Attributes;
 
 						#>
 						return dtoObj;
+						}
+
+
+                        /// <summary>
+						/// Convert <#=iType.Name#> to <#=conversionType.Name#>
+						/// </summary>
+						/// <param name="arg1">The <#=iType.Name#> that will be converted into an <#=conversionType#></param>
+						public static explicit operator <#=conversionType#>(<#=iType#> dtoObj)
+						{
+                            <#=conversionType#> nativeObj = new <#=conversionType#>();
+							
+						<#
+							propSet
+							.ForEach(prop => 
+							{
+                                Write("nativeObj.");
+								Write(prop.Name);
+
+                                Write(" = ");
+								
+                                Write("dtoObj.");
+								Write(prop.Name);
+                                
+                                Write(";" + Environment.NewLine);
+
+								
+							});
+
+						#>
+						return nativeObj;
 						}}
                         
 

@@ -54,8 +54,6 @@ namespace UHub.CoreLib.Security.Accounts.Management
                 return AcctCreateResultCode.UserInvalid;
             }
 
-            var taskDoesEmailExist = UserReader.DoesUserExistAsync(NewUser.Email);
-            var taskSchoolMajors = SchoolMajorReader.TryGetMajorsBySchoolAsync(NewUser.SchoolID.Value);
 
             //TODO: finalize trims
             //TODO: validate year against list
@@ -68,6 +66,10 @@ namespace UHub.CoreLib.Security.Accounts.Management
                 return attrValidation;
             }
 
+            var taskDoesEmailExist = UserReader.DoesUserExistAsync(NewUser.Email);
+
+
+
             var pswdValidation = Shared.ValidateUserPswd(NewUser);
             if (pswdValidation != 0)
             {
@@ -79,21 +81,6 @@ namespace UHub.CoreLib.Security.Accounts.Management
             var domain = NewUser.Email.GetEmailDomain();
             var taskGetUserSchool = SchoolReader.TryGetSchoolByDomainAsync(domain);
             var taskDoesUsernameExist = UserReader.DoesUserExistAsync(NewUser.Username, domain);
-
-
-            //check for duplicate email
-            try
-            {
-                if (await taskDoesEmailExist)
-                {
-                    return AcctCreateResultCode.EmailDuplicate;
-                }
-            }
-            catch (Exception ex)
-            {
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync("94553D4D-B1E3-45FC-A166-2A2E1D816276", ex);
-                return AcctCreateResultCode.UnknownError;
-            }
 
 
             //Check for valid school domain
@@ -111,7 +98,24 @@ namespace UHub.CoreLib.Security.Accounts.Management
                 CoreFactory.Singleton.Logging.CreateErrorLogAsync("1F60C82E-B33E-478D-BC7C-D796134C7990", ex);
                 return AcctCreateResultCode.UnknownError;
             }
+            var taskSchoolMajors = SchoolMajorReader.TryGetMajorsBySchoolAsync(NewUser.SchoolID.Value);
 
+
+
+            //check for duplicate email
+            try
+            {
+                if (await taskDoesEmailExist)
+                {
+                    return AcctCreateResultCode.EmailDuplicate;
+                }
+            }
+            catch (Exception ex)
+            {
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("94553D4D-B1E3-45FC-A166-2A2E1D816276", ex);
+                return AcctCreateResultCode.UnknownError;
+            }
+            
 
 
             //check for duplicate username
@@ -161,31 +165,31 @@ namespace UHub.CoreLib.Security.Accounts.Management
                 userID = await UserWriter.CreateUserAsync(NewUser);
 #pragma warning restore
             }
-            catch (AggregateException ex) when (ex.InnerException is DuplicateNameException)
+            catch (DuplicateNameException ex)
             {
                 return AcctCreateResultCode.EmailDuplicate;
             }
-            catch (AggregateException ex) when (ex.InnerException is ArgumentOutOfRangeException)
+            catch (ArgumentOutOfRangeException ex)
             {
                 return AcctCreateResultCode.InvalidArgument;
             }
-            catch (AggregateException ex) when (ex.InnerException is ArgumentNullException)
+            catch (ArgumentNullException ex)
             {
                 return AcctCreateResultCode.NullArgument;
             }
-            catch (AggregateException ex) when (ex.InnerException is ArgumentException)
+            catch (ArgumentException ex)
             {
                 return AcctCreateResultCode.InvalidArgument;
             }
-            catch (AggregateException ex) when (ex.InnerException is InvalidCastException)
+            catch (InvalidCastException ex)
             {
                 return AcctCreateResultCode.InvalidArgumentType;
             }
-            catch (AggregateException ex) when (ex.InnerException is InvalidOperationException)
+            catch (InvalidOperationException ex)
             {
                 return AcctCreateResultCode.InvalidOperation;
             }
-            catch (AggregateException ex) when (ex.InnerException is AccessForbiddenException)
+            catch (AccessForbiddenException ex)
             {
                 return AcctCreateResultCode.AccessDenied;
             }
@@ -210,7 +214,7 @@ namespace UHub.CoreLib.Security.Accounts.Management
 
 
 #pragma warning disable 612, 618
-            var isPswdChanged = await DoPasswordWorkAsync(userID.Value, NewUser.Password);
+            var isPswdChanged = await TryDoPasswordWorkAsync(userID.Value, NewUser.Password);
             if (!isPswdChanged)
             {
                 await UserWriter.TryPurgeUserAsync((long)userID);
@@ -539,7 +543,7 @@ namespace UHub.CoreLib.Security.Accounts.Management
                 }
 
                 //try to change password
-                var isPswdChanged = await DoPasswordWorkAsync(modUser.ID.Value, NewPassword);
+                var isPswdChanged = await TryDoPasswordWorkAsync(modUser.ID.Value, NewPassword);
                 if (!isPswdChanged)
                 {
                     return AcctPswdResultCode.UnknownError;
@@ -761,7 +765,7 @@ namespace UHub.CoreLib.Security.Accounts.Management
 
 
                 //try to change password
-                var isPswdChanged = await DoPasswordWorkAsync(modUser.ID.Value, NewPassword);
+                var isPswdChanged = await TryDoPasswordWorkAsync(modUser.ID.Value, NewPassword);
                 if (!isPswdChanged)
                 {
                     return AcctRecoveryResultCode.UnknownError;
@@ -996,7 +1000,7 @@ namespace UHub.CoreLib.Security.Accounts.Management
         /// <param name="UserID"></param>
         /// <param name="UserPswd"></param>
         /// <returns></returns>
-        private static async Task<bool> DoPasswordWorkAsync(long UserID, string UserPswd)
+        private static async Task<bool> TryDoPasswordWorkAsync(long UserID, string UserPswd)
         {
 #pragma warning disable 612, 618
             var salt = SysSec.Membership.GeneratePassword(SALT_LEN, 0);

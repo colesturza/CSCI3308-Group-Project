@@ -306,7 +306,7 @@
     <Compile Include="Entities\Users\DataInterop\UserReader_ConfirmToken.cs" />
     <Compile Include="Entities\Users\DataInterop\UserReader_RecoveryContextAsync.cs" />
     <Compile Include="Entities\Users\DataInterop\UserWriterAsync.cs" />
-    <Compile Include="Entities\Users\DataInterop\UserWriter_Core.cs" />
+    <Compile Include="Entities\Users\DataInterop\UserWriterCore.cs" />
     <Compile Include="Entities\Users\DataInterop\UserWriter_RecoveryContext.cs" />
     <Compile Include="Entities\Users\DataInterop\UserWriter_RecoveryContextAsync.cs" />
     <Compile Include="Entities\Users\UserConfirmToken.cs" />
