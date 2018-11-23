@@ -4,23 +4,10 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div id="mainNav" class="container-fullwidth">
-    <nav class="navbar navbar-expand navbar-dark bg-dark">
-        <a class="navbar-brand" href="/">UHUB</a>
-        <div class="collapse navbar-collapse" id="navbarNavDropdown">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item active dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Communities
-                    </a>
-                    <div id="communityDrop" class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                        <a class="dropdown-item" v-for="community in communities" v-bind=community.url> {{ community.name }} </a>
-                    </div>
-                </li>
-            </ul>
-        </div>
-    </nav>
+<div id="navbar-uhub">
+    <navbar-component></navbar-component>
 </div>
+
 
 <div id="auxNav" class="container-fullwidth">
     <ul class="nav navbar bg-white">
