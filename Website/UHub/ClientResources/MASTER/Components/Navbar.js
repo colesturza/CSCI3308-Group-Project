@@ -33,6 +33,10 @@ Vue.component('navbar-component', {
                                     Communities
                                 </a>
                                 <div class="dropdown-menu scrollable-menu" aria-labelledby="navbarDropdownMenuLink">
+                                    <script>
+                                      console.log("Initializing dropdown");
+                                      console.log(communities);
+                                    </script>
                                     <a class="dropdown-item"
                                         v-for="community in communities"
                                         v-bind:href="'/SchoolClub/' + community.ID">
