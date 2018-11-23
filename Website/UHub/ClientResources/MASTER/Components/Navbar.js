@@ -11,6 +11,7 @@
                 console.log(error);
             }
         });
+        console.log(communities);
         return {
             communities
         }
@@ -35,7 +36,7 @@
                                     <a class="dropdown-item"
                                         v-for="community in communities"
                                         v-bind:href="'/SchoolClub/' + community.ID">
-                                    {{ community.Name }}
+                                        {{ community.Name }}
                                     </a>
                                 </div>
                             </li>
