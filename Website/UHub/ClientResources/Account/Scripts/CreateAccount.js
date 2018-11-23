@@ -39,16 +39,21 @@ var createUser = new Vue({
                 data: createUser.sendObj,
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
-                success: function (data) {
+                complete: function () {
                     $("#btn_CreateUser").removeAttr("disabled");
+                },
+                success: function (data) {
+                    
                     alert(data.status);
 
                     if (data.canLogin === true) {
                         window.location.href = "/";
                     }
+                    else {
+                        window.location.href = "/Account/Confirm/New";
+                    }
                 },
                 error: function (data) {
-                    $("#btn_CreateUser").removeAttr("disabled");
                     alert(data.responseJSON.status);
                 }
             });

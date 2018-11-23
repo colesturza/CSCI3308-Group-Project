@@ -179,9 +179,16 @@ namespace UHub.Controllers
                 ViewBag.Message = "Unable to complete operation - must provide confirmation key";
                 return View();
             }
-
-
             var idStr = idObj.ToString();
+
+
+            if(idStr.ToLower() == "new")
+            {
+                ViewBag.Message = "Your new account has been created, please check your email and follow the confirmation instructions";
+                return View();
+            }
+
+
 
             var confResult = await CoreFactory.Singleton.Accounts.TryConfirmUserAsync(idStr);
             if (confResult == 0)
