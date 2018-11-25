@@ -69,7 +69,7 @@ begin
 		--validate parent enabled flag
 		if(@_prnt_IsEnabled = 0)
 		begin
-			;throw 51000, '403: This School Club cannot be modified', 1;
+			;throw 51000, '403: Parent cannot be modified', 1;
 		end
 		--validate parent readonly flag
 		--ensure that parent entity does not have the readonly flag set

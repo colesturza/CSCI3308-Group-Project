@@ -38,7 +38,7 @@ begin
 				--set @val = @val + ''x''
 
 				set @sqlCmd = N'
-				declare @output '+ @Type + '
+				declare @output nvarchar(MAX)
 				set @output = TRY_CONVERT(' + @Type + ', @val)
 				if(@output is null)
 				begin
