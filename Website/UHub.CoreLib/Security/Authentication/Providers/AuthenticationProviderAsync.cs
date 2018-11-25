@@ -76,7 +76,7 @@ namespace UHub.CoreLib.Security.Authentication.Providers
 
                         if (isSlide)
                         {
-                            SetCurrentUser_ClientToken(token);
+                            SetCurrentUser_ClientToken(token, Context);
                         }
                     }
                 };

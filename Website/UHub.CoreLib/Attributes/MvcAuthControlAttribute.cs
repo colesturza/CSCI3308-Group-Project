@@ -84,6 +84,7 @@ namespace UHub.CoreLib.Attributes
         {
             var loginAddr = CoreFactory.Singleton.Properties.LoginURL;
             var fwrdCookieName = CoreFactory.Singleton.Properties.PostAuthCookieName;
+            var forceSecure = CoreFactory.Singleton.Properties.ForceSecureCookies;
 
 
 
@@ -91,6 +92,8 @@ namespace UHub.CoreLib.Attributes
             var cookie = new HttpCookie(fwrdCookieName);
             cookie.Value = targetAddr;
             cookie.Domain = CoreFactory.Singleton.Properties.CookieDomain;
+            cookie.Secure = forceSecure;
+            cookie.HttpOnly = forceSecure;
             cookie.Encrypt();
             filterContext.HttpContext.Response.SetCookie(cookie);
 

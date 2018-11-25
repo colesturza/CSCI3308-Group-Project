@@ -7,7 +7,7 @@ Vue.component('navbar-component', {
             async: false,
             success: function (data) {
                 communities = data;
-                console.log(communities);
+                communities.sort(dynamicSort("Name"));
             },
             error: function (error) {
                 console.log(error);

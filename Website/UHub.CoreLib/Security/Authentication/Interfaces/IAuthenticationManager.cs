@@ -112,32 +112,7 @@ namespace UHub.CoreLib.Security.Authentication.Interfaces
 
 
 
-        /// <summary>
-        /// Log out of all devices by changing user version
-        /// </summary>
-        /// <param name="UserID"></param>
-        /// <param name="ExcludeCurrent"></param>
-        void LogoutOfAllDevices(long UserID, bool ExcludeCurrent = false);
-        /// <summary>
-        /// Log out of all devices by changing user version
-        /// </summary>
-        /// <param name="Email"></param>
-        /// <param name="ExcludeCurrent"></param>
-        void LogoutOfAllDevices(string Email, bool ExcludeCurrent = false);
-        /// <summary>
-        /// Log out of all devices by changing user version
-        /// </summary>
-        /// <param name="Username"></param>
-        /// <param name="Domain"></param>
-        /// <param name="ExcludeCurrent"></param>
-        void LogoutOfAllDevices(string Username, string Domain, bool ExcludeCurrent = false);
 
-
-
-        /// <summary>
-        /// Remove persistent cookies from request/response
-        /// </summary>
-        void TryLogOut(HttpContext Context);
 
     }
 }

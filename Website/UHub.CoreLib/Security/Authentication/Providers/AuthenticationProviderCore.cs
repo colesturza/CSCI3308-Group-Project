@@ -37,10 +37,10 @@ namespace UHub.CoreLib.Security.Authentication.Providers
         /// Set current request user for caching
         /// </summary>
         /// <param name="CmsUser"></param>
-        internal void SetCurrentUser_Local(User CmsUser)
+        internal void SetCurrentUser_Local(User CmsUser, HttpContext Context)
         {
             //set identity
-            HttpContext.Current.Items[REQUEST_CURRENT_USER] = CmsUser;
+            Context.Items[REQUEST_CURRENT_USER] = CmsUser;
         }
 
 
@@ -52,30 +52,33 @@ namespace UHub.CoreLib.Security.Authentication.Providers
         /// <param name="SystemVersion">Specify an Auth Tkn version number. Defaults to <see cref="CmsProperties.CurrentAuthTknVersion"/> </param>
         /// <exception cref="SqlException"></exception>
         /// /// <exception cref="Exception"></exception>
-        internal void SetCurrentUser_ClientToken(bool IsPersistentent, User CmsUser)
+        internal void SetCurrentUser_ClientToken(bool IsPersistentent, User CmsUser, HttpContext Context)
         {
-            var context = HttpContext.Current;
+            var context = Context;
             var token = GenerateAuthToken(IsPersistentent, CmsUser, context);
-            SetCurrentUser_ClientToken(token);
+            SetCurrentUser_ClientToken(token, Context);
         }
 
         /// <summary>
         /// Set current user via cookie - allows login to persist between requests
         /// </summary>
         /// <param name="token"></param>
-        private protected void SetCurrentUser_ClientToken(AuthenticationToken token)
+        private protected void SetCurrentUser_ClientToken(AuthenticationToken token, HttpContext Context)
         {
             var authTknCookieName = CoreFactory.Singleton.Properties.AuthTknCookieName;
+            var forceSecure = CoreFactory.Singleton.Properties.ForceSecureCookies;
 
 
             //remove old token
-            HttpContext.Current.Request.Cookies.Remove(authTknCookieName);
-            HttpContext.Current.Response.Cookies.Remove(authTknCookieName);
+            Context.Request.Cookies.Remove(authTknCookieName);
+            Context.Response.Cookies.Remove(authTknCookieName);
 
 
             string encryptedToken = token.Encrypt();
             HttpCookie authCookie = new HttpCookie(authTknCookieName, encryptedToken);
             authCookie.Shareable = false;
+            authCookie.Secure = forceSecure;
+            authCookie.HttpOnly = forceSecure;
             //set expiration for persistent cookies
             //otherwise the cookie will expire with browser session
             if (token.IsPersistent)
@@ -83,7 +86,7 @@ namespace UHub.CoreLib.Security.Authentication.Providers
                 authCookie.Expires = token.ExpirationDate.UtcDateTime;
             }
 
-            HttpContext.Current.Response.Cookies.Add(authCookie);
+            Context.Response.SetCookie(authCookie);
         }
 
 

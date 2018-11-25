@@ -52,8 +52,8 @@ namespace UHub.CoreLib.Security.Authentication.Management
                 //write user auth cookie
                 try
                 {
-                    authWorker.SetCurrentUser_Local(cmsUser);
-                    authWorker.SetCurrentUser_ClientToken(IsPersistent, cmsUser);
+                    authWorker.SetCurrentUser_Local(cmsUser, Context);
+                    authWorker.SetCurrentUser_ClientToken(IsPersistent, cmsUser, Context);
                     return true;
                 }
                 catch (Exception ex)

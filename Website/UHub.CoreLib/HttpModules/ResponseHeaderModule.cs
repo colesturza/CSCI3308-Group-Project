@@ -19,9 +19,21 @@ namespace UHub.CoreLib.HttpModules
             //clean-up code here.
         }
 
+        string csp = "";
+
 
         public void Init(HttpApplication context)
         {
+
+            var cspBuilder = new StringBuilder();
+            cspBuilder.Append("default-src 'self' *.u-hub.life;");
+            cspBuilder.Append("script-src 'self' 'unsafe-eval' *.u-hub.life *.google.com *.gstatic.com *.bootstrapcdn.com code.jquery.com cdn.jsdelivr.net cdnjs.cloudflare.com;");
+            cspBuilder.Append("connect-src 'self' *.u-hub.life *.gstatic.com;");
+            cspBuilder.Append("style-src 'self' 'unsafe-inline' *.u-hub.life *.google.com *.gstatic.com *.bootstrapcdn.com code.jquery.com;");
+            cspBuilder.Append("font-src 'self' *.u-hub.life fonts.gstatic.com;");
+            cspBuilder.Append("child-src *.google.com;");
+            csp = cspBuilder.ToString();
+
             //lock (lockObject)
             //{
             //context.EndRequest += Context_EndRequest;
@@ -44,7 +56,9 @@ namespace UHub.CoreLib.HttpModules
 
             //Response.ClearHeaders();
 
+
             Response.Headers.Remove("Server");
+            Response.Headers.Remove("X-AspNetMvc-Version");
             Response.Headers.Remove("X-AspNet-Version");
             Response.Headers.Remove("X-Powered-By");
 
@@ -54,7 +68,10 @@ namespace UHub.CoreLib.HttpModules
                 Response.Headers.Add(name, val);
             };
 
+
             //set response headers to limit site XSS vectors and frame access
+            doHeaderWork("Content-Security-Policy", csp);
+            doHeaderWork("Referrer-Policy", "strict-origin");
             doHeaderWork("Vary", "Accept-Encoding");
             doHeaderWork("X-UA-Compatible", "IE=edge");
             doHeaderWork("Access-Control-Allow-Methods", "GET");

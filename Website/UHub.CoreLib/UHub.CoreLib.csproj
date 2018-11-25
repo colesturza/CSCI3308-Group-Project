@@ -382,6 +382,7 @@
     <Compile Include="Security\Accounts\Interfaces\IAccountManagerAsync.cs" />
     <Compile Include="Security\Accounts\Interfaces\IAccountManager.cs" />
     <Compile Include="Security\Authentication\APIControllers\AuthenticationController.cs" />
+    <Compile Include="Security\Authentication\Interfaces\IAuthenticationManagerCore.cs" />
     <Compile Include="Security\Authentication\Management\AuthenticationManagerCore.cs" />
     <Compile Include="Security\Authentication\Management\AuthenticationManagerAsync.cs" />
     <Compile Include="Security\Authentication\Management\AuthenticationManager.cs" />

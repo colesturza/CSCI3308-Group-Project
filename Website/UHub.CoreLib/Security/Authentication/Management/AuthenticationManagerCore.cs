@@ -38,7 +38,7 @@ namespace UHub.CoreLib.Security.Authentication.Management
         /// <summary>
         /// Logout of all devices by incrementing user version
         /// </summary>
-        public void LogoutOfAllDevices(long UserID, bool ExcludeCurrent = false)
+        public void LogoutOfAllDevices(long UserID, HttpContext Context, bool ExcludeCurrent = false)
         {
             var modUser = UserReader.GetUser(UserID);
             if (modUser == null || modUser.ID == null)
@@ -51,7 +51,7 @@ namespace UHub.CoreLib.Security.Authentication.Management
             {
                 try
                 {
-                    authWorker.SetCurrentUser_ClientToken(false, modUser);
+                    authWorker.SetCurrentUser_ClientToken(false, modUser, Context);
                 }
                 catch
                 {
@@ -65,7 +65,7 @@ namespace UHub.CoreLib.Security.Authentication.Management
         /// <summary>
         /// Logout of all devices by incrementing user version
         /// </summary>
-        public void LogoutOfAllDevices(string Email, bool ExcludeCurrent = false)
+        public void LogoutOfAllDevices(string Email, HttpContext Context, bool ExcludeCurrent = false)
         {
             var modUser = UserReader.GetUser(Email);
             if (modUser == null || modUser.ID == null)
@@ -78,7 +78,7 @@ namespace UHub.CoreLib.Security.Authentication.Management
             {
                 try
                 {
-                    authWorker.SetCurrentUser_ClientToken(false, modUser);
+                    authWorker.SetCurrentUser_ClientToken(false, modUser, Context);
                 }
                 catch
                 {
@@ -91,7 +91,7 @@ namespace UHub.CoreLib.Security.Authentication.Management
         /// <summary>
         /// Logout of all devices by incrementing user version
         /// </summary>
-        public void LogoutOfAllDevices(string Username, string Domain, bool ExcludeCurrent = false)
+        public void LogoutOfAllDevices(string Username, string Domain, HttpContext Context, bool ExcludeCurrent = false)
         {
             var modUser = UserReader.GetUser(Username, Domain);
             if (modUser == null || modUser.ID == null)
@@ -104,7 +104,7 @@ namespace UHub.CoreLib.Security.Authentication.Management
             {
                 try
                 {
-                    authWorker.SetCurrentUser_ClientToken(false, modUser);
+                    authWorker.SetCurrentUser_ClientToken(false, modUser, Context);
                 }
                 catch
                 {
