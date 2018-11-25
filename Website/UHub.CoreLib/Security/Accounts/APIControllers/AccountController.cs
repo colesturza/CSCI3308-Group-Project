@@ -36,14 +36,24 @@ namespace UHub.CoreLib.Security.Accounts.APIControllers
             HttpStatusCode statCode = HttpStatusCode.BadRequest;
             if (!this.ValidateSystemState(out status, out statCode))
             {
-                return Content(statCode, status);
+                var resultObj = new
+                {
+                    status,
+                    canLogin = false
+                };
+                return Content(statCode, resultObj);
             }
 
             var context = System.Web.HttpContext.Current;
             var recaptchaResult = await HandleRecaptchaAsync(context);
             if (!recaptchaResult.IsValid)
             {
-                return Content(statCode, recaptchaResult.Result);
+                var recapObj = new
+                {
+                    status = recaptchaResult.Result,
+                    canLogin = false
+                };
+                return Content(HttpStatusCode.BadRequest, recapObj);
             }
 
             if (user == null)

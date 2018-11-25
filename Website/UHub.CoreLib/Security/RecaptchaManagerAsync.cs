@@ -25,7 +25,7 @@ namespace UHub.CoreLib.Security
             var gResponse = Context.Request.Headers[RECAPTCHA_HEADER];
             if (gResponse.IsEmpty())
             {
-                gResponse = HttpContext.Current.Request.Form[RECAPTCHA_HEADER];
+                gResponse = Context.Request.Form[RECAPTCHA_HEADER];
             }
             return await IsCaptchaValidAsync(gResponse, Context);
         }

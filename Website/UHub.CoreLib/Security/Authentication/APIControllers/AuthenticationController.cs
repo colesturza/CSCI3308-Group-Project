@@ -46,7 +46,7 @@ namespace UHub.CoreLib.Security.Authentication.APIControllers
             var recaptchaResult = await HandleRecaptchaAsync(context);
             if (!recaptchaResult.IsValid)
             {
-                return Content(statCode, recaptchaResult.Result);
+                return Content(HttpStatusCode.BadRequest, recaptchaResult.Result);
             }
 
             if (user == null)

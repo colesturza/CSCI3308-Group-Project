@@ -32,13 +32,17 @@ var createUser = new Vue({
         sendData() {
             $("#btn_CreateUser").attr("disabled", "disabled");
             $("html").css({ cursor: "wait" });
+            var recapVal = grecaptcha.getResponse();
 
             $.ajax({
                 method: "POST",
-                url: "/uhubapi/account/createuser",
-                data: createUser.sendObj,
                 contentType: "application/json; charset=utf-8",
                 dataType: "json",
+                url: "/uhubapi/account/createuser",
+                headers: {
+                    "g-recaptcha-response": recapVal
+                },
+                data: createUser.sendObj,
                 complete: function () {
                     $("#btn_CreateUser").removeAttr("disabled");
                     $("html").css({ cursor: "default" });

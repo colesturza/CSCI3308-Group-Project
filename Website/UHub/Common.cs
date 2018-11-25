@@ -291,7 +291,7 @@ namespace UHub
                     AcctPswdRecoveryURL = "~/Account/Recover",
                     AcctPswdUpdateURL = "~/Account/UpdatePassword",
                     AcctPswdRecoveryLifespan = new TimeSpan(0, 0, 30, 0),
-                    EnableRecaptcha = false,                //CAPTCHA
+                    EnableRecaptcha = true,                //CAPTCHA
                     RecaptchaPublicKey = captchaPublicKey,
                     RecaptchaPrivateKey = captchaPrivateKey,
                     AutoConfirmNewAccounts = false,
