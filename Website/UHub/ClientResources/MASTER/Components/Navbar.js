@@ -22,7 +22,7 @@ Vue.component('navbar-component', {
         <div class="container">
             <div id="mainNav" class="container-fullwidth">
                 <nav class= "navbar navbar-expand navbar-dark bg-dark">
-                    <a class="navbar-brand" href="/School">UHUB</a>
+                    <a class="navbar-brand" href="/School" tabindex="-1">UHUB</a>
                     <div class="collapse navbar-collapse" id="navbarNavDropdown">
                         <ul class="navbar-nav mr-auto">
                             <li class="nav-item active dropdown">

@@ -68,6 +68,7 @@ namespace UHub.CoreLib.Entities.Posts.DataInterop.Tests
 
             {
                 var samples1 = new List<double>();
+                var countSet = new List<int>(iterCount);
                 var itmCount = 0;
 
                 var start_outer = FailoverDateTimeOffset.UtcNow;
@@ -86,6 +87,7 @@ namespace UHub.CoreLib.Entities.Posts.DataInterop.Tests
                     var end = FailoverDateTimeOffset.UtcNow;
 
 
+                    countSet.Add(set.Count);
                     itmCount = set.Count;
                     double sample = (end - start).TotalSeconds;
                     samples1.Add(sample);
@@ -96,7 +98,7 @@ namespace UHub.CoreLib.Entities.Posts.DataInterop.Tests
 
 
                 Console.WriteLine($"Synchronous:");
-                Console.WriteLine($"Iterations: {iterCount}");
+                Console.WriteLine($"Iterations: {countSet.Count}");
                 Console.WriteLine($"Total Time: {totalTime}ms");
                 Console.WriteLine($"ItemCount: {itmCount}");
                 Console.WriteLine();
@@ -112,6 +114,7 @@ namespace UHub.CoreLib.Entities.Posts.DataInterop.Tests
             }
             {
                 var samples1 = new List<double>();
+                var countSet = new List<int>(iterCount);
                 var itmCount = 0;
 
                 var start_outer = FailoverDateTimeOffset.UtcNow;
@@ -129,7 +132,7 @@ namespace UHub.CoreLib.Entities.Posts.DataInterop.Tests
 
                     var end = FailoverDateTimeOffset.UtcNow;
 
-
+                    countSet.Add(set.Count);
                     itmCount = set.Count;
                     double sample = (end - start).TotalSeconds;
                     samples1.Add(sample);
@@ -140,7 +143,7 @@ namespace UHub.CoreLib.Entities.Posts.DataInterop.Tests
 
 
                 Console.WriteLine($"Synchronous (threaded):");
-                Console.WriteLine($"Iterations: {iterCount}");
+                Console.WriteLine($"Iterations: {countSet.Count}");
                 Console.WriteLine($"Total Time: {totalTime}ms");
                 Console.WriteLine($"ItemCount: {itmCount}");
                 Console.WriteLine();
@@ -158,6 +161,7 @@ namespace UHub.CoreLib.Entities.Posts.DataInterop.Tests
 
             {
                 var samples1 = new ConcurrentBag<double>();
+                var countSet = new List<int>(iterCount);
                 var itmCount = 0;
 
 
@@ -170,8 +174,11 @@ namespace UHub.CoreLib.Entities.Posts.DataInterop.Tests
                         "[dbo].[Posts_GetAll]",
                         (cmd) => { });
 
+
+
                     var end = FailoverDateTimeOffset.UtcNow;
 
+                    countSet.Add(set.ToList().Count);
                     itmCount = set.Count();
                     double sample = (end - start).TotalSeconds;
                     samples1.Add(sample);
@@ -192,7 +199,7 @@ namespace UHub.CoreLib.Entities.Posts.DataInterop.Tests
 
 
                 Console.WriteLine($"Async:");
-                Console.WriteLine($"Iterations: {iterCount}");
+                Console.WriteLine($"Iterations: {countSet.Count}");
                 Console.WriteLine($"Total Time: {totalTime}ms");
                 Console.WriteLine($"ItemCount: {itmCount}");
                 Console.WriteLine();
