@@ -38,6 +38,7 @@
             {
                 SubmitText = "Login",
                 SubmitClass = "btn-outline-dark center_LR",
+                RenderScripts = false
             });
 
             <p>@ViewBag.ErrorMsg</p>
@@ -60,5 +61,11 @@
 
 </div>
 
-@Scripts.Render("~/ClientResources/Account/Scripts/Login.js")
-@Scripts.Render("~/bundles/jqueryval")
+
+@section scripts
+{
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    @Scripts.Render("~/ClientResources/Security/Scripts/RecaptchaPartial.js");
+    @Scripts.Render("~/ClientResources/Account/Scripts/Login.js")
+    @Scripts.Render("~/bundles/jqueryval")
+}

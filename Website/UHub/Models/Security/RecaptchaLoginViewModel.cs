@@ -24,5 +24,7 @@ namespace UHub.Models.Security
         /// </summary>
         public bool UseSubmitBehavior { get; set; } = true;
 
+        public bool RenderScripts { get; set; } = true;
+
     }
 }

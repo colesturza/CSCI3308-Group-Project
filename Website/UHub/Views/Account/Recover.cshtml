@@ -34,24 +34,27 @@
                 {
                     SubmitText = "Send Recovery Email",
                     SubmitClass = "btn-outline-dark",
+                    RenderScripts = false
                 });
 
             <p>@ViewBag.Message</p>
 
-
-
-
-            if (ViewBag.CanForward)
-            {
-                <script>
-                    $(function () {
-                        window.setTimeout(function () { window.location.href = "/"; }, 1500);
-                    });
-                </script>
-            }
         }
 
 
     </div>
 
 </div>
+
+
+
+
+@section scripts
+{
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    @if (ViewBag.CanForward)
+    {
+        Scripts.Render("~/ClientResources/Account/Scripts/Recover");
+    }
+    @Scripts.Render("~/ClientResources/Security/Scripts/RecaptchaPartial.js");
+}

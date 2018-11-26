@@ -11,7 +11,6 @@
 @section head
 {
     <link rel="stylesheet" href="/ClientResources/Account/Styles/CreateAccount.css" crossorigin="anonymous">
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 }
 
 
@@ -96,7 +95,7 @@
                 </div>
                 <p></p>
 
-                
+
                 if (hasRecaptcha)
                 {
                     <div class="g-recaptcha" data-sitekey="@publicKey"></div>
@@ -111,4 +110,10 @@
 </div>
 
 
-<script src="/ClientResources/Account/Scripts/CreateAccount.js"></script>
+
+@section scripts
+{
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    @Scripts.Render("~/ClientResources/Account/Scripts/CreateAccount.js");
+    @Scripts.Render("~/ClientResources/Security/Scripts/RecaptchaPartial.js");
+}

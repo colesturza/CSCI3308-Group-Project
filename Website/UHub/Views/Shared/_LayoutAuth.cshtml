@@ -14,7 +14,6 @@
     <div id="navbar-uhub">
         <navbar-component></navbar-component>
     </div>
-    @Scripts.Render("~/ClientResources/Master/Components/Navbar.js")
 }
 
 
@@ -25,5 +24,6 @@
 
 
 @section scripts{
+    @Scripts.Render("~/ClientResources/Master/Components/Navbar.js")
     @RenderSection("scripts", false)
 }
