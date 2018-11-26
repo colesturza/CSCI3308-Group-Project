@@ -1,6 +1,8 @@
 ﻿
 @{
     ViewBag.Title = "Create";
+    ViewBag.SkipMasterStyleLoading = true;
+    ViewBag.SkipMasterScriptLoading = true;
     Layout = "~/Views/Shared/_LayoutNoAuth.cshtml";
     var hasRecaptcha = CoreFactory.Singleton.Properties.EnableRecaptcha;
     var publicKey = CoreFactory.Singleton.Properties.RecaptchaPublicKey;
@@ -10,7 +12,7 @@
 
 @section head
 {
-    <link rel="stylesheet" href="/ClientResources/Account/Styles/CreateAccount.css" crossorigin="anonymous">
+    @Styles.Render("~/resources/account/createStyle");
 }
 
 
@@ -114,6 +116,5 @@
 @section scripts
 {
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-    @Scripts.Render("~/ClientResources/Account/Scripts/CreateAccount.js")
-    @Scripts.Render("~/ClientResources/Security/Scripts/RecaptchaPartial.js")
+    @Scripts.Render("~/resources/account/createScript")
 }
