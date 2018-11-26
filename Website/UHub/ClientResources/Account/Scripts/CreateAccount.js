@@ -92,6 +92,7 @@ $("#email").blur(function () {
                     majornames.push(data[i].Name);
                 }
             }
+            majornames.sort();
 
             $("#autocomplete").autocomplete({
                 source: majornames
@@ -101,6 +102,9 @@ $("#email").blur(function () {
 });
 
 $(function () {
-    $("#grad-date").datepicker();
+    $("#grad-date").datepicker({
+        changeMonth: true,
+        changeYear: true
+    });
     $("#grad-date").datepicker("option", "dateFormat", "yy-mm-dd");
 });

@@ -12,8 +12,7 @@ namespace UHub.CoreLib.HttpModules
     /// </summary>
     public sealed class ResponseHeaderModule : IHttpModule
     {
-        #region IHttpModule Members
-
+     
         public void Dispose()
         {
             //clean-up code here.
@@ -30,6 +29,7 @@ namespace UHub.CoreLib.HttpModules
             cspBuilder.Append("script-src 'self' 'unsafe-eval' *.u-hub.life *.google.com *.gstatic.com *.bootstrapcdn.com code.jquery.com cdn.jsdelivr.net cdnjs.cloudflare.com;");
             cspBuilder.Append("connect-src 'self' *.u-hub.life *.gstatic.com;");
             cspBuilder.Append("style-src 'self' 'unsafe-inline' *.u-hub.life *.google.com *.gstatic.com *.bootstrapcdn.com code.jquery.com;");
+            cspBuilder.Append("img-src *;");
             cspBuilder.Append("font-src 'self' *.u-hub.life fonts.gstatic.com;");
             cspBuilder.Append("child-src *.google.com;");
             csp = cspBuilder.ToString();
@@ -80,8 +80,6 @@ namespace UHub.CoreLib.HttpModules
             doHeaderWork("X-Frame-Options", "sameorigin");
 
         }
-
-        #endregion
 
     }
 }
