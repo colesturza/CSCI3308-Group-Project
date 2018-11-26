@@ -22,13 +22,13 @@ namespace UHub.CoreLib.Entities.Posts.DataInterop.Tests
         /*
             Synchronous:
             Iterations: 50
-            Total Time: 4081.6312ms
-            ItemCount: 10913
+            Total Time: 3602.6452ms
+            ItemCount: 11508
 
-            Min: 0.0748247ms
-            Max: 0.2132727ms
-            Avg: 0.081631628ms
-            Median: 0.08446805ms
+            Min: 68.463ms
+            Max: 172.457ms
+            Avg: 72.051536ms
+            Median: 69.3937ms
 
 
             -------------------------------------------------------
@@ -36,13 +36,13 @@ namespace UHub.CoreLib.Entities.Posts.DataInterop.Tests
 
             Synchronous (threaded):
             Iterations: 50
-            Total Time: 3064.1635ms
-            ItemCount: 10913
+            Total Time: 1509.9419ms
+            ItemCount: 11508
 
-            Min: 0.0769556ms
-            Max: 2.6999921ms
-            Avg: 0.437710032ms
-            Median: 0.1664047ms
+            Min: 95.0701ms
+            Max: 1270.5817ms
+            Avg: 312.75165ms
+            Median: 245.60905ms
 
 
             -------------------------------------------------------
@@ -50,13 +50,13 @@ namespace UHub.CoreLib.Entities.Posts.DataInterop.Tests
 
             Async:
             Iterations: 50
-            Total Time: 4085.8988ms
-            ItemCount: 10913
+            Total Time: 2731.1464ms
+            ItemCount: 11508
 
-            Min: 0.5083501ms
-            Max: 2.732319ms
-            Avg: 1.419883718ms
-            Median: 2.08540025ms
+            Min: 608.9696ms
+            Max: 2294.3514ms
+            Avg: 1529.740062ms
+            Median: 948.85225ms
         */
 
         //useful metric, but dont include in tests (too time consuming)
@@ -89,7 +89,7 @@ namespace UHub.CoreLib.Entities.Posts.DataInterop.Tests
 
                     countSet.Add(set.Count);
                     itmCount = set.Count;
-                    double sample = (end - start).TotalSeconds;
+                    double sample = (end - start).TotalMilliseconds;
                     samples1.Add(sample);
                 }
 
@@ -134,7 +134,7 @@ namespace UHub.CoreLib.Entities.Posts.DataInterop.Tests
 
                     countSet.Add(set.Count);
                     itmCount = set.Count;
-                    double sample = (end - start).TotalSeconds;
+                    double sample = (end - start).TotalMilliseconds;
                     samples1.Add(sample);
                 });
 
@@ -180,7 +180,7 @@ namespace UHub.CoreLib.Entities.Posts.DataInterop.Tests
 
                     countSet.Add(set.ToList().Count);
                     itmCount = set.Count();
-                    double sample = (end - start).TotalSeconds;
+                    double sample = (end - start).TotalMilliseconds;
                     samples1.Add(sample);
                 }
 
