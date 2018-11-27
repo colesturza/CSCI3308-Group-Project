@@ -97,14 +97,10 @@ namespace UHub.CoreLib.Config
             //friendly name
             ValidateString(Instance.SiteFriendlyName, nameof(Instance.SiteFriendlyName));
             //base url (only URL that cant be virtual)
-            ValidateString(Instance.CmsPublicBaseURL, nameof(Instance.CmsPublicBaseURL));
-            if (Instance.CmsPublicBaseURL.RgxIsMatch("[?#]") || !Instance.CmsPublicBaseURL.IsValidURL())
-            {
-                string err = $"{nameof(Instance.CmsPublicBaseURL)} is not a valid physical URL.";
-                throw new ArgumentException(err);
-            }
+            ValidateUrl(Instance.CmsPublicBaseURL, nameof(Instance.CmsPublicBaseURL), EnableVirtual: false);
+
             //resource url
-            ValidateURL(Instance.CmsStaticResourceURL, nameof(Instance.CmsStaticResourceURL));
+            ValidateUrl(Instance.CmsStaticResourceURL, nameof(Instance.CmsStaticResourceURL));
             ValidateString(Instance.SessionIDCookieName, nameof(Instance.SessionIDCookieName));
 
             //DB CONNECTIONS
@@ -172,49 +168,38 @@ namespace UHub.CoreLib.Config
             }
 
             //--LOGIN URL
-            ValidateURL(Security.LoginURL, nameof(Security.LoginURL));
+            ValidateUrl(Security.LoginURL, nameof(Security.LoginURL));
             //--DEFAULT URL
-            ValidateURL(Security.DefaultAuthFwdURL, nameof(Security.DefaultAuthFwdURL));
+            ValidateUrl(Security.DefaultAuthFwdURL, nameof(Security.DefaultAuthFwdURL));
             //--ACCT CONFIRMATION
             if (!Security.AutoConfirmNewAccounts)
             {
-                ValidateURL(Security.AcctConfirmURL, nameof(Security.AcctConfirmURL));
+                ValidateUrl(Security.AcctConfirmURL, nameof(Security.AcctConfirmURL));
             }
 
             //PASSWORD UPDATE
-            ValidateURL(Security.AcctPswdUpdateURL, nameof(Security.AcctPswdUpdateURL));
+            ValidateUrl(Security.AcctPswdUpdateURL, nameof(Security.AcctPswdUpdateURL));
 
 
             //PASSWORD RESET
             if (Security.EnablePswdRecovery)
             {
-                ValidateURL(Security.AcctPswdRecoveryURL, nameof(Security.AcctPswdRecoveryURL));
+                ValidateUrl(Security.AcctPswdRecoveryURL, nameof(Security.AcctPswdRecoveryURL));
 
                 //make sure that MailClient/Pswd reset meta is set if the proxy address is set
-                Mail.Provider.Validate(); 
+                Mail.Provider.Validate();
                 ValidateTimeSpan_Pos(Security.PswdAttemptPeriod, nameof(Security.PswdAttemptPeriod));
                 ValidateTimeSpan_Pos(Security.PswdLockResetPeriod, nameof(Security.PswdLockResetPeriod));
             }
 
 
             //VALIDATE EMAIL PROVIDER IF REQUIRED
-            if(!Security.AutoConfirmNewAccounts || Security.EnablePswdRecovery || Mail.ContactFormRecipientAddress.IsNotEmpty())
+            if (!Security.AutoConfirmNewAccounts || Security.EnablePswdRecovery || Mail.ContactFormRecipientAddress.IsNotEmpty())
             {
                 Mail.Provider.Validate();
                 ValidateEmail(Mail.ContactFormRecipientAddress, nameof(Mail.ContactFormRecipientAddress));
             }
 
-
-            if (Security.ForceHTTPS)
-            {
-                ValidateSecureUrl(Instance.CmsPublicBaseURL, nameof(Instance.CmsPublicBaseURL));
-                ValidateSecureUrl(Instance.CmsStaticResourceURL, nameof(Instance.CmsStaticResourceURL));
-                ValidateSecureUrl(Security.LoginURL, nameof(Security.LoginURL));
-                ValidateSecureUrl(Security.DefaultAuthFwdURL, nameof(Security.DefaultAuthFwdURL));
-                ValidateSecureUrl(Security.AcctConfirmURL, nameof(Security.AcctConfirmURL));
-                ValidateSecureUrl(Security.AcctPswdRecoveryURL, nameof(Security.AcctPswdRecoveryURL));
-                ValidateSecureUrl(Security.AcctPswdUpdateURL, nameof(Security.AcctPswdUpdateURL));
-            }
 
             //CACHING
             if (Caching.EnableDBPageCaching)
@@ -395,31 +380,42 @@ namespace UHub.CoreLib.Config
             }
         }
 
+
+
         /// <summary>
-        /// Ensure that url is valid, either virtual or physical
+        /// Ensure that url is valid, either virtual or physical, and uses HTTPS where required
         /// </summary>
         /// <param name="url">URL to test</param>
         /// <param name="argName">Name of URL variable</param>
-        private void ValidateURL(string url, string argName)
+        private void ValidateUrl(string url, string argName, bool EnableVirtual = true)
         {
+            //start with basic URL validation
             ValidateString(url, argName);
 
-            var isVirtual = url.RgxIsMatch($@"^{RgxPtrn.Config.INTERNAL_URL}$", RegexOptions.IgnoreCase);
-            var isPhysical = !url.RgxIsMatch("[?#]") && url.IsValidURL();
 
-            if (!isVirtual && !isPhysical)
+            if (EnableVirtual)
             {
-                throw new ArgumentException(argName + " is not a valid URL.  URL must be physical or a root-relative virtual path");
-            }
-        }
+                var isVirtual = url.RgxIsMatch(RgxPtrn.Config.INTERNAL_URL_B, RegexOptions.IgnoreCase);
+                var isPhysical = !url.RgxIsMatch("[?#]") && url.IsValidURL();
 
-        /// <summary>
-        /// Ensure that url uses HTTPS when ForceHTTPS=true
-        /// </summary>
-        /// <param name="url">Url to test</param>
-        /// <param name="argName">Name of the URL variable</param>
-        private void ValidateSecureUrl(string url, string argName)
-        {
+                if (!isVirtual && !isPhysical)
+                {
+                    throw new ArgumentException(argName + " is not a valid URL.  URL must be physical or a root-relative virtual path");
+                }
+            }
+            else
+            {
+                var isPhysical = !url.RgxIsMatch("[?#]") && url.IsValidURL();
+                if (!isPhysical)
+                {
+                    throw new ArgumentException(argName + " is not a valid URL.  URL must be physical path");
+                }
+
+            }
+
+
+
+            //check for secure URL if required
             if (!Security.ForceHTTPS)
             {
                 return;

@@ -136,7 +136,11 @@ namespace UHub.CoreLib.Extensions
         public static bool IsValidURL(this string url)
         {
             if (url.IsEmpty())
+            {
                 return false;
+            }
+
+
             Uri tempOut;
             return Uri.TryCreate(url, UriKind.Absolute, out tempOut) && (tempOut.Scheme == Uri.UriSchemeHttp || tempOut.Scheme == Uri.UriSchemeHttps);
         }
