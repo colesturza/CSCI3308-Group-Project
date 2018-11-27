@@ -90,7 +90,7 @@ namespace UHub.CoreLib.Management
             Properties.LogStoreDirectory = getDynamicFileDirectory(cmsConfig.Storage.LogStoreDirectory);
             //MAIL CONNECTIONS
             //TODO: finish deep copy constructor
-            Properties.MailProvider = cmsConfig.Mail.Provider;
+            Properties.MailProvider = cmsConfig.Mail.MailProvider;
             Properties.ContactFormRecipientAddress = cmsConfig.Mail.ContactFormRecipientAddress;
             //SECURITY
             Properties.PswdHashType = cmsConfig.Security.PswdHashType;

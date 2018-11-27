@@ -187,7 +187,6 @@ namespace UHub.CoreLib.Config
                 ValidateUrl(Security.AcctPswdRecoveryURL, nameof(Security.AcctPswdRecoveryURL));
 
                 //make sure that MailClient/Pswd reset meta is set if the proxy address is set
-                Mail.Provider.Validate();
                 ValidateTimeSpan_Pos(Security.PswdAttemptPeriod, nameof(Security.PswdAttemptPeriod));
                 ValidateTimeSpan_Pos(Security.PswdLockResetPeriod, nameof(Security.PswdLockResetPeriod));
             }
@@ -196,7 +195,9 @@ namespace UHub.CoreLib.Config
             //VALIDATE EMAIL PROVIDER IF REQUIRED
             if (!Security.AutoConfirmNewAccounts || Security.EnablePswdRecovery || Mail.ContactFormRecipientAddress.IsNotEmpty())
             {
-                Mail.Provider.Validate();
+                ValidateObject(Mail.MailProvider, nameof(Mail.MailProvider));
+
+                Mail.MailProvider.Validate();
                 ValidateEmail(Mail.ContactFormRecipientAddress, nameof(Mail.ContactFormRecipientAddress));
             }
 

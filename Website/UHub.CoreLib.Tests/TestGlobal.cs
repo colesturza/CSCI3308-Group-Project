@@ -104,7 +104,7 @@ namespace UHub.CoreLib.Tests
                 },
                 Mail = new CmsConfig_Mail
                 {
-                    Provider = new SmtpProvider(mailConfig),
+                    MailProvider = new SmtpProvider(mailConfig),
                     ContactFormRecipientAddress = ContactFormRecipient
                 },
                 Security = new CmsConfig_Security

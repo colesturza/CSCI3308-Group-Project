@@ -13,7 +13,7 @@ namespace UHub.CoreLib.Config
         /// <summary>
         /// Email provider for sending messages
         /// </summary>
-        public EmailProvider Provider { get; set; } = null;
+        public EmailProvider MailProvider { get; set; } = null;
         /// <summary>
         /// The email address that Contact Us emails will be delivered to
         /// <para></para>
