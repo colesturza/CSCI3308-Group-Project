@@ -9,7 +9,7 @@ using UHub.CoreLib.Extensions;
 using UHub.CoreLib.Management;
 using UHub.CoreLib.Tools;
 
-namespace UHub.CoreLib.Security.Authentication.Providers
+namespace UHub.CoreLib.Security.Authentication.Providers.Forms
 {
     internal sealed partial class FormsAuthProvider
     {

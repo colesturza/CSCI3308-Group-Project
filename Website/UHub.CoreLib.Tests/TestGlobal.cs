@@ -12,7 +12,7 @@ using UHub.CoreLib.DataInterop;
 using UHub.CoreLib.Logging;
 using UHub.CoreLib.Management;
 using UHub.CoreLib.Security;
-using UHub.CoreLib.SmtpInterop;
+using UHub.CoreLib.EmailInterop;
 using UHub.CoreLib.Tools;
 using UHub.CoreLib.Util;
 using UHub.CoreLib.Security.Authentication.APIControllers;
@@ -27,6 +27,7 @@ using System.Web.Http.Routing;
 using System.Web.Http.Filters;
 using NSubstitute;
 using UHub.CoreLib.Entities.Users.DTOs;
+using UHub.CoreLib.EmailInterop.Providers.SMTP;
 
 namespace UHub.CoreLib.Tests
 {
@@ -78,7 +79,7 @@ namespace UHub.CoreLib.Tests
                         FileCategory.Document
                     };
 
-            var mailConfig = new SmtpConfig(new MailAddress(mailFromAddr, mailFromName), false, true, mailHost, mailPort, mailUsername, mailPswd);
+            var mailConfig = new EmailConfig(new MailAddress(mailFromAddr, mailFromName), false, true, mailHost, mailPort, mailUsername, mailPswd);
 
             var cmsConfig = new CmsConfiguration_Grouped()
             {
@@ -103,7 +104,7 @@ namespace UHub.CoreLib.Tests
                 },
                 Mail = new CmsConfig_Mail
                 {
-                    NoReplyMailConfig = mailConfig,
+                    Provider = new SmtpProvider(mailConfig),
                     ContactFormRecipientAddress = ContactFormRecipient
                 },
                 Security = new CmsConfig_Security

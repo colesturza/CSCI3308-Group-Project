@@ -4,14 +4,15 @@ using System.Linq;
 using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
+using UHub.CoreLib.EmailInterop.Templates;
 using UHub.CoreLib.Management;
 
-namespace UHub.CoreLib.SmtpInterop
+namespace UHub.CoreLib.EmailInterop.Providers.SMTP
 {
     /// <summary>
     /// CMS SMTP (email) manager to send messages from the site
     /// </summary>
-    public sealed partial class SmtpManager
+    public sealed partial class SmtpProvider
     {
 
         /// <summary>
@@ -19,20 +20,21 @@ namespace UHub.CoreLib.SmtpInterop
         /// </summary>
         /// <param name="Message"></param>
         /// <returns></returns>
-        public async Task<SmtpResultCode> TrySendMessageAsync(SmtpMessage Message)
+        public override async Task<EmailResultCode> TrySendMessageAsync(EmailMessage Message)
         {
             if (!Message.Validate())
             {
-                return SmtpResultCode.ValidationError;
+                return EmailResultCode.ValidationError;
             }
 
-            var from = CoreFactory.Singleton.Properties.NoReplyMailConfig.FromAddress;
+            
+            var from = _config.FromAddress;
             var to = Message.Recipient;
             var subj = Message.Subject;
 
 
 
-            using (SmtpClient client = CoreFactory.Singleton.Properties.NoReplyMailConfig.GetSmtpClient())
+            using (SmtpClient client = GetSmtpClient())
             {
 
                 client.EnableSsl = true;
@@ -50,13 +52,13 @@ namespace UHub.CoreLib.SmtpInterop
                     {
                         await client.SendMailAsync(msgOut);
 
-                        return SmtpResultCode.Success;
+                        return EmailResultCode.Success;
                     }
                     catch (Exception ex)
                     {
                         await CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex);
 
-                        return SmtpResultCode.ValidationError;
+                        return EmailResultCode.ValidationError;
                     }
 
                 }

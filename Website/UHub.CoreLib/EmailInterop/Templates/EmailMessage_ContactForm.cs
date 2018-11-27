@@ -8,14 +8,14 @@ using UHub.CoreLib.Tools;
 using RgxPtrn = UHub.CoreLib.Regex.Patterns;
 
 
-namespace UHub.CoreLib.SmtpInterop
+namespace UHub.CoreLib.EmailInterop.Templates
 {
 
     /// <summary>
     /// User contact form with user info and message that is sent to site admin
     /// </summary>
 
-    public sealed class SmtpMessage_ContactForm : SmtpMessage
+    public sealed class EmailMessage_ContactForm : EmailMessage
     {
         private const int MinMsgLength = 10;
         private const int MaxMsgLength = 1000;
@@ -64,7 +64,7 @@ namespace UHub.CoreLib.SmtpInterop
         /// </summary>
         /// <param name="Subject">Email subject</param>
         /// <param name="ContactFormRecipient">Contact form recipient email address</param>
-        public SmtpMessage_ContactForm(string Subject, string ContactFormRecipient) : base(Subject, ContactFormRecipient)
+        public EmailMessage_ContactForm(string Subject, string ContactFormRecipient) : base(Subject, ContactFormRecipient)
         {
             
         }

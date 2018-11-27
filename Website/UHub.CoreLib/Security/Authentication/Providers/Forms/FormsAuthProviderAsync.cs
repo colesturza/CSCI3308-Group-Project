@@ -14,7 +14,7 @@ using UHub.CoreLib.Entities.Users.DataInterop;
 using System.Text.RegularExpressions;
 using System.Web;
 
-namespace UHub.CoreLib.Security.Authentication.Providers
+namespace UHub.CoreLib.Security.Authentication.Providers.Forms
 {
     internal sealed partial class FormsAuthProvider : AuthenticationProvider
     {

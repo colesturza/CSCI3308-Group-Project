@@ -5,12 +5,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UHub.CoreLib;
-using UHub.CoreLib.SmtpInterop;
 using UHub.CoreLib.Management;
 using UHub.CoreLib.Tests;
 using UHub.CoreLib.Tools;
+using UHub.CoreLib.EmailInterop;
+using UHub.CoreLib.EmailInterop.Templates;
 
-namespace UHub.CoreLib.SmtpInterop.Tests
+namespace UHub.CoreLib.EmailInterop.Tests
 {
     [TestClass]
     public class SmtpInteropTests
@@ -24,7 +25,7 @@ namespace UHub.CoreLib.SmtpInterop.Tests
 
             DateTimeOffset start, end;
 
-            var msg = new SmtpMessage_ConfirmAcct($"Confirm U-HUB Account (TEST1)", "U-HUB", "aual1780@colorado.edu")
+            var msg = new EmailMessage_ConfirmAcct($"Confirm U-HUB Account (TEST1)", "U-HUB", "aual1780@colorado.edu")
             {
                 ConfirmationURL = "https://u-hub.life"
             };
@@ -35,7 +36,7 @@ namespace UHub.CoreLib.SmtpInterop.Tests
 
             Console.WriteLine($"{(end - start).TotalMilliseconds}ms");
 
-            Assert.IsTrue(val1 == SmtpResultCode.Success);
+            Assert.IsTrue(val1 == EmailResultCode.Success);
 
         }
     }

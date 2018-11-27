@@ -5,14 +5,14 @@ using System.Text;
 using System.Threading.Tasks;
 using UHub.CoreLib.Extensions;
 
-namespace UHub.CoreLib.SmtpInterop
+namespace UHub.CoreLib.EmailInterop.Templates
 {
 
     /// <summary>
     /// Automatic account confirmation with confirmation link
     /// </summary>
 
-    public sealed class SmtpMessage_ConfirmAcct : SmtpMessage
+    public sealed class EmailMessage_ConfirmAcct : EmailMessage
     {
         private const int MinMsgLength = 10;
         private const int MaxMsgLength = 1000;
@@ -51,7 +51,7 @@ namespace UHub.CoreLib.SmtpInterop
         /// <param name="Subject">Email subject</param>
         /// <param name="SiteName">Client website name</param>
         /// <param name="ConfirmationRecipient">User email address</param>
-        public SmtpMessage_ConfirmAcct(string Subject, string SiteName, string ConfirmationRecipient) : base(Subject, ConfirmationRecipient)
+        public EmailMessage_ConfirmAcct(string Subject, string SiteName, string ConfirmationRecipient) : base(Subject, ConfirmationRecipient)
         {
             this.SiteName = SiteName;
         }

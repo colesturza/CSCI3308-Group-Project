@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace UHub.CoreLib.SmtpInterop
+namespace UHub.CoreLib.EmailInterop
 {
-    public enum SmtpResultCode
+    public enum EmailResultCode
     {
         ValidationError,
         SendError,

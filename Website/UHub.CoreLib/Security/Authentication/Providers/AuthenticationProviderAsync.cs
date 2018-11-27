@@ -28,7 +28,7 @@ namespace UHub.CoreLib.Security.Authentication.Providers
         /// <param name="GeneralFailHandler">Error handler in case DB cannot be reached or there is other unknown error</param>
         /// <param name="UserTokenHandler">Success handler to handle user token distribution</param>
         /// <returns>Status Flag</returns>
-        abstract internal Task<AuthResultCode> TryAuthenticateUserAsync(
+        internal abstract Task<AuthResultCode> TryAuthenticateUserAsync(
             string userEmail,
             string userPassword,
             Func<User, bool> UserTokenHandler = null);

@@ -14,6 +14,7 @@ using UHub.CoreLib.Entities.Users;
 using UHub.CoreLib.Entities.Users.Interfaces;
 using UHub.CoreLib.Entities.Users.DataInterop;
 using UHub.CoreLib.Security.Authentication.Providers;
+using UHub.CoreLib.Security.Authentication.Providers.Forms;
 
 namespace UHub.CoreLib.Security.Authentication.Management
 {

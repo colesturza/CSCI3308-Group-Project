@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web.Http;
 using UHub.CoreLib.Config;
+using UHub.CoreLib.EmailInterop.Providers;
 using UHub.CoreLib.Logging;
 using UHub.CoreLib.Logging.Management;
 using UHub.CoreLib.Logging.Providers;
@@ -15,7 +16,6 @@ using UHub.CoreLib.Security.Accounts.Management;
 using UHub.CoreLib.Security.Authentication;
 using UHub.CoreLib.Security.Authentication.Interfaces;
 using UHub.CoreLib.Security.Authentication.Management;
-using UHub.CoreLib.SmtpInterop;
 
 namespace UHub.CoreLib.Management
 {
@@ -47,8 +47,8 @@ namespace UHub.CoreLib.Management
         public LoggingManager Logging { get => _logging; }
 
         //MAIL
-        private SmtpManager _mail;
-        public SmtpManager Mail { get => _mail; }
+        private EmailProvider _mail;
+        public EmailProvider Mail { get => _mail; }
 
 
         /// <summary>
@@ -99,7 +99,7 @@ namespace UHub.CoreLib.Management
             _auth = new AuthenticationManager();
             _account = new AccountManager();
 
-            _mail = new SmtpManager();
+            _mail = Properties.MailProvider;
 
 
             System.Web.Http.GlobalConfiguration.Configure((config) =>

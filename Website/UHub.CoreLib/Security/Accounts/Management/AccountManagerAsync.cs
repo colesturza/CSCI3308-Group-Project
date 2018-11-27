@@ -14,7 +14,8 @@ using UHub.CoreLib.Extensions;
 using UHub.CoreLib.Entities.Users.Interfaces;
 using UHub.CoreLib.Management;
 using UHub.CoreLib.ClientFriendly;
-using UHub.CoreLib.SmtpInterop;
+using UHub.CoreLib.EmailInterop;
+using UHub.CoreLib.EmailInterop.Templates;
 using UHub.CoreLib.Tools;
 using UHub.CoreLib.Entities.Users.DataInterop;
 using UHub.CoreLib.Entities.Users;
@@ -28,7 +29,7 @@ namespace UHub.CoreLib.Security.Accounts.Management
     /// <summary>
     /// Wrapper for UserWriter functionality.  Controls user account create/edit/delete functionality while also adding error callback functionality
     /// </summary>
-    public partial class AccountManager : IAccountManager
+    public partial class AccountManager
     {
         /// <summary>
         /// Try to create a new user in the CMS system
@@ -286,13 +287,13 @@ namespace UHub.CoreLib.Security.Accounts.Management
                 }
 
 
-                var msg = new SmtpMessage_ConfirmAcct($"{siteName} Account Confirmation", siteName, NewUser.Email)
+                var msg = new EmailMessage_ConfirmAcct($"{siteName} Account Confirmation", siteName, NewUser.Email)
                 {
                     ConfirmationURL = confirmToken.GetURL()
                 };
 
                 var emailSendStatus = await CoreFactory.Singleton.Mail.TrySendMessageAsync(msg);
-                if (emailSendStatus != SmtpResultCode.Success)
+                if (emailSendStatus != EmailResultCode.Success)
                 {
                     CoreFactory.Singleton.Logging.CreateErrorLogAsync("0ADC52B0-89BB-4346-84F3-1F6CAC63DACF");
                     return AcctCreateResultCode.UnknownError;

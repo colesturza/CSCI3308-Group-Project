@@ -11,7 +11,8 @@ using UHub.CoreLib.Config;
 using UHub.CoreLib.DataInterop;
 using UHub.CoreLib.Logging;
 using UHub.CoreLib.Security;
-using UHub.CoreLib.SmtpInterop;
+using UHub.CoreLib.EmailInterop;
+using UHub.CoreLib.EmailInterop.Providers.SMTP;
 using UHub.CoreLib.Tools;
 using UHub.CoreLib.Util;
 
@@ -102,7 +103,7 @@ namespace UHub
                         FileCategory.Document
                     };
 
-            var mailConfig = new SmtpConfig(new MailAddress(mailFromAddr, mailFromName), false, true, mailHost, mailPort, mailUsername, mailPswd);
+            var mailConfig = new EmailConfig(new MailAddress(mailFromAddr, mailFromName), false, true, mailHost, mailPort, mailUsername, mailPswd);
 
 
 
@@ -131,7 +132,7 @@ namespace UHub
                 },
                 Mail = new CmsConfig_Mail
                 {
-                    NoReplyMailConfig = mailConfig,
+                    Provider = new SmtpProvider(mailConfig),
                     ContactFormRecipientAddress = ContactFormRecipient
                 },
                 Security = new CmsConfig_Security
@@ -243,7 +244,7 @@ namespace UHub
                         FileCategory.Document
                     };
 
-            var mailConfig = new SmtpConfig(new MailAddress(mailFromAddr, mailFromName), false, true, mailHost, mailPort, mailUsername, mailPswd);
+            var mailConfig = new EmailConfig(new MailAddress(mailFromAddr, mailFromName), false, true, mailHost, mailPort, mailUsername, mailPswd);
 
 
 
@@ -272,7 +273,7 @@ namespace UHub
                 },
                 Mail = new CmsConfig_Mail
                 {
-                    NoReplyMailConfig = mailConfig,
+                    Provider = new SmtpProvider(mailConfig),
                     ContactFormRecipientAddress = ContactFormRecipient
                 },
                 Security = new CmsConfig_Security

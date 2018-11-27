@@ -13,9 +13,9 @@ using UHub.CoreLib.Entities.Users.Interfaces;
 using UHub.CoreLib.Entities.Users.DataInterop;
 using System.Text.RegularExpressions;
 
-namespace UHub.CoreLib.Security.Authentication.Providers
+namespace UHub.CoreLib.Security.Authentication.Providers.Forms
 {
-    internal sealed partial class FormsAuthProvider : AuthenticationProvider
+    internal sealed partial class FormsAuthProvider
     {
         /// <summary>
         /// Try to authenticate a user account using the supplied account credentials.  Includes internal logging

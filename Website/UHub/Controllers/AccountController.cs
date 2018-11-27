@@ -12,7 +12,8 @@ using UHub.CoreLib.Management;
 using UHub.CoreLib.Security;
 using UHub.CoreLib.Security.Accounts;
 using UHub.CoreLib.Security.Authentication;
-using UHub.CoreLib.SmtpInterop;
+using UHub.CoreLib.EmailInterop;
+using UHub.CoreLib.EmailInterop.Templates;
 
 namespace UHub.Controllers
 {
@@ -311,7 +312,7 @@ namespace UHub.Controllers
 
             var path = data.RecoveryContext.RecoveryURL;
 
-            var recoveryMessage = new UHub.CoreLib.SmtpInterop.SmtpMessage_ForgotPswd("UHub Account Recovery", "UHub", txt_Email)
+            var recoveryMessage = new EmailMessage_ForgotPswd("UHub Account Recovery", "UHub", txt_Email)
             {
                 RecoveryURL = path,
                 RecoveryKey = data.RecoveryKey
@@ -320,7 +321,7 @@ namespace UHub.Controllers
 
             var mailResult = await CoreFactory.Singleton.Mail.TrySendMessageAsync(recoveryMessage);
 
-            if (mailResult == SmtpResultCode.Success)
+            if (mailResult == EmailResultCode.Success)
             {
                 ViewBag.Message = "Recovery email sent, please check your inbox";
                 return View();

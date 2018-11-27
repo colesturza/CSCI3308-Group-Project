@@ -139,7 +139,7 @@ namespace UHub.CoreLib.Config
             ValidateTimeSpan_NonNeg(Security.MaxAuthTokenLifespan, nameof(Security.MaxAuthTokenLifespan));
             ValidateTimeSpan_Pos(Security.AuthTokenTimeout, nameof(Security.AuthTokenTimeout));
 
-            
+
             if (Security.MaxPswdAge != null && Security.MaxPswdAge.Ticks > 0)
             {
                 if (!Security.EnablePswdRecovery)
@@ -178,35 +178,12 @@ namespace UHub.CoreLib.Config
             //--ACCT CONFIRMATION
             if (!Security.AutoConfirmNewAccounts)
             {
-                if (Mail.NoReplyMailConfig == null)
-                {
-                    string err = $"{nameof(Mail.NoReplyMailConfig)} must be set if AutoConfirmNewAccounts is false.";
-                    throw new ArgumentException(err);
-                }
-                else
-                {
-                    ValidateEmail(Mail.ContactFormRecipientAddress, nameof(Mail.ContactFormRecipientAddress));
-                }
-
-                try
-                {
-                    if (!Mail.NoReplyMailConfig.Validate())
-                    {
-                        string err = $"{nameof(Mail.NoReplyMailConfig)} is invalid.";
-                        throw new ArgumentException(err);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    string err = $"{nameof(Mail.NoReplyMailConfig)}: {ex.Message}";
-                    throw new ArgumentException(err);
-                }
-
                 ValidateURL(Security.AcctConfirmURL, nameof(Security.AcctConfirmURL));
             }
 
             //PASSWORD UPDATE
             ValidateURL(Security.AcctPswdUpdateURL, nameof(Security.AcctPswdUpdateURL));
+
 
             //PASSWORD RESET
             if (Security.EnablePswdRecovery)
@@ -214,10 +191,19 @@ namespace UHub.CoreLib.Config
                 ValidateURL(Security.AcctPswdRecoveryURL, nameof(Security.AcctPswdRecoveryURL));
 
                 //make sure that MailClient/Pswd reset meta is set if the proxy address is set
-                ValidateObject(Mail.NoReplyMailConfig, nameof(Mail.NoReplyMailConfig));
+                Mail.Provider.Validate(); 
                 ValidateTimeSpan_Pos(Security.PswdAttemptPeriod, nameof(Security.PswdAttemptPeriod));
                 ValidateTimeSpan_Pos(Security.PswdLockResetPeriod, nameof(Security.PswdLockResetPeriod));
             }
+
+
+            //VALIDATE EMAIL PROVIDER IF REQUIRED
+            if(!Security.AutoConfirmNewAccounts || Security.EnablePswdRecovery || Mail.ContactFormRecipientAddress.IsNotEmpty())
+            {
+                Mail.Provider.Validate();
+                ValidateEmail(Mail.ContactFormRecipientAddress, nameof(Mail.ContactFormRecipientAddress));
+            }
+
 
             if (Security.ForceHTTPS)
             {

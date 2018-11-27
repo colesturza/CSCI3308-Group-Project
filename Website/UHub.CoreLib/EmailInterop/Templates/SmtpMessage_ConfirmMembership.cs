@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 using UHub.CoreLib.Extensions;
 
 
-namespace UHub.CoreLib.SmtpInterop
+namespace UHub.CoreLib.EmailInterop.Templates
 {
 
     /// <summary>
     /// Confirm membership registration after users have completed their forms
     /// </summary>
-    public sealed class SmtpMessage_ConfirmMembership : SmtpMessage
+    public sealed class SmtpMessage_ConfirmMembership : EmailMessage
     {
 
         private const string Template =

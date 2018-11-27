@@ -6,12 +6,12 @@ using System.Text;
 using System.Threading.Tasks;
 using UHub.CoreLib.Extensions;
 
-namespace UHub.CoreLib.SmtpInterop
+namespace UHub.CoreLib.EmailInterop.Templates
 {
     /// <summary>
     /// SMTP (email) message to base
     /// </summary>
-    public abstract class SmtpMessage
+    public abstract class EmailMessage
     {
         /// <summary>
         /// Message subject
@@ -22,7 +22,7 @@ namespace UHub.CoreLib.SmtpInterop
         /// </summary>
         internal string Recipient { get; }
 
-        public SmtpMessage(string Subject, string Recipient)
+        public EmailMessage(string Subject, string Recipient)
         {
             this.Subject = Subject;
             this.Recipient = Recipient;

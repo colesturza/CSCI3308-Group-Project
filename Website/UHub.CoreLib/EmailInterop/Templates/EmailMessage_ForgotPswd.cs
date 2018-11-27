@@ -5,12 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using UHub.CoreLib.Extensions;
 
-namespace UHub.CoreLib.SmtpInterop
+namespace UHub.CoreLib.EmailInterop.Templates
 {
     /// <summary>
     /// Auto forgot password message with recovery link
     /// </summary>
-    public sealed class SmtpMessage_ForgotPswd : SmtpMessage
+    public sealed class EmailMessage_ForgotPswd : EmailMessage
     {
 
         private const string Template =
@@ -56,7 +56,7 @@ namespace UHub.CoreLib.SmtpInterop
         /// <param name="Subject">Email subject</param>
         /// <param name="SiteName">Client website name</param>
         /// <param name="PasswordResetRecipient">Password recovery recipient email address</param>
-        public SmtpMessage_ForgotPswd(string Subject, string SiteName, string PasswordResetRecipient) : base(Subject, PasswordResetRecipient)
+        public EmailMessage_ForgotPswd(string Subject, string SiteName, string PasswordResetRecipient) : base(Subject, PasswordResetRecipient)
         {
             this.SiteName = SiteName;
         }

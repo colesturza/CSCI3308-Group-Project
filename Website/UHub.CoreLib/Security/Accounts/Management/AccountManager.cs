@@ -13,7 +13,6 @@ using UHub.CoreLib.Extensions;
 using UHub.CoreLib.Entities.Users.Interfaces;
 using UHub.CoreLib.Management;
 using UHub.CoreLib.ClientFriendly;
-using UHub.CoreLib.SmtpInterop;
 using UHub.CoreLib.Tools;
 using UHub.CoreLib.Entities.Users.DataInterop;
 using UHub.CoreLib.Entities.Users;
@@ -21,13 +20,15 @@ using UHub.CoreLib.Security.Accounts.Interfaces;
 using UHub.CoreLib.Security.Authentication;
 using UHub.CoreLib.Entities.Schools.DataInterop;
 using UHub.CoreLib.Entities.SchoolMajors.DataInterop;
+using UHub.CoreLib.EmailInterop;
+using UHub.CoreLib.EmailInterop.Templates;
 
 namespace UHub.CoreLib.Security.Accounts.Management
 {
     /// <summary>
     /// Wrapper for UserWriter functionality.  Controls user account create/edit/delete functionality while also adding error callback functionality
     /// </summary>
-    public sealed partial class AccountManager : IAccountManager
+    public sealed partial class AccountManager
     {
 
         /// <summary>
@@ -272,13 +273,13 @@ namespace UHub.CoreLib.Security.Accounts.Management
             {
                 var siteName = CoreFactory.Singleton.Properties.SiteFriendlyName;
 
-                var msg = new SmtpMessage_ConfirmAcct($"{siteName} Account Confirmation", siteName, NewUser.Email)
+                var msg = new EmailMessage_ConfirmAcct($"{siteName} Account Confirmation", siteName, NewUser.Email)
                 {
                     ConfirmationURL = confirmToken.GetURL()
                 };
 
                 var emailSendStatus = CoreFactory.Singleton.Mail.TrySendMessage(msg);
-                if (emailSendStatus != SmtpResultCode.Success)
+                if (emailSendStatus != EmailResultCode.Success)
                 {
                     CoreFactory.Singleton.Logging.CreateErrorLogAsync("AEBDE62B-31D5-4B48-8D26-3123AA5219A3");
                     return AcctCreateResultCode.UnknownError;

@@ -4,35 +4,34 @@ using System.Linq;
 using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
+using UHub.CoreLib.EmailInterop.Templates;
 using UHub.CoreLib.Management;
 
-namespace UHub.CoreLib.SmtpInterop
+namespace UHub.CoreLib.EmailInterop.Providers.SMTP
 {
     /// <summary>
     /// CMS SMTP (email) manager to send messages from the site
     /// </summary>
-    public sealed partial class SmtpManager
+    public sealed partial class SmtpProvider
     {
-        internal SmtpManager() { }
-
-
         /// <summary>
         /// Attempt to send an email using the system configuration
         /// </summary>
         /// <param name="Message"></param>
         /// <returns></returns>
-        public SmtpResultCode TrySendMessage(SmtpMessage Message)
+        public override EmailResultCode TrySendMessage(EmailMessage Message)
         {
             if (!Message.Validate())
             {
-                return SmtpResultCode.ValidationError;
+                return EmailResultCode.ValidationError;
             }
 
-            var from = CoreFactory.Singleton.Properties.NoReplyMailConfig.FromAddress;
+            var from = _config.FromAddress;
             var to = Message.Recipient;
             var subj = Message.Subject;
 
-            using (SmtpClient client = CoreFactory.Singleton.Properties.NoReplyMailConfig.GetSmtpClient())
+
+            using (SmtpClient client = GetSmtpClient())
             {
                 client.EnableSsl = true;
 
@@ -45,12 +44,12 @@ namespace UHub.CoreLib.SmtpInterop
                     try
                     {
                         client.Send(msgOut);
-                        return SmtpResultCode.Success;
+                        return EmailResultCode.Success;
                     }
                     catch (Exception ex)
                     {
                         CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex);
-                        return SmtpResultCode.SendError;
+                        return EmailResultCode.SendError;
                     }
                 }
 

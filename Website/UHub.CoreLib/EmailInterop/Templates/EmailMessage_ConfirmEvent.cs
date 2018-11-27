@@ -5,13 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 using UHub.CoreLib.Extensions;
 
-namespace UHub.CoreLib.SmtpInterop
+namespace UHub.CoreLib.EmailInterop.Templates
 {
 
     /// <summary>
     /// Confirm membership event registration after users have completed the form
     /// </summary>
-    public sealed class SmtpMessage_ConfirmEvent : SmtpMessage
+    public sealed class EmailMessage_ConfirmEvent : EmailMessage
     {
 
         private const string Template =
@@ -146,7 +146,7 @@ namespace UHub.CoreLib.SmtpInterop
         /// <param name="Subject">Email subject</param>
         /// <param name="SiteName">Client website name</param>
         /// <param name="ConfirmationRecipient">Recipient email address</param>
-        public SmtpMessage_ConfirmEvent(string Subject, string SiteName, string ConfirmationRecipient) : base(Subject, ConfirmationRecipient)
+        public EmailMessage_ConfirmEvent(string Subject, string SiteName, string ConfirmationRecipient) : base(Subject, ConfirmationRecipient)
         {
             this.SiteName = SiteName;
         }

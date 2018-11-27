@@ -7,12 +7,12 @@ using System.Text;
 using System.Threading.Tasks;
 using UHub.CoreLib.Extensions;
 
-namespace UHub.CoreLib.SmtpInterop
+namespace UHub.CoreLib.EmailInterop
 {
     /// <summary>
     /// SMTP (email) server configuration 
     /// </summary>
-    public sealed class SmtpConfig
+    public sealed class EmailConfig
     {
         /// <summary>
         /// Mail server from address
@@ -50,7 +50,7 @@ namespace UHub.CoreLib.SmtpInterop
         public string Password { get; }
 
 
-        public SmtpConfig(MailAddress FromAddress, bool UseDefaultCredentials, bool EnableSSL, string Host, int Port)
+        public EmailConfig(MailAddress FromAddress, bool UseDefaultCredentials, bool EnableSSL, string Host, int Port)
         {
             this.FromAddress = FromAddress;
             this.UseDefaultCredentials = UseDefaultCredentials;
@@ -61,7 +61,7 @@ namespace UHub.CoreLib.SmtpInterop
             this.Password = null;
         }
 
-        public SmtpConfig(MailAddress FromAddress, bool UseDefaultCredentials, bool EnableSSL, string Host, int Port, string UserName, string Password)
+        public EmailConfig(MailAddress FromAddress, bool UseDefaultCredentials, bool EnableSSL, string Host, int Port, string UserName, string Password)
         {
             this.FromAddress = FromAddress;
             this.UseDefaultCredentials = UseDefaultCredentials;
@@ -72,7 +72,7 @@ namespace UHub.CoreLib.SmtpInterop
             this.Password = Password;
         }
 
-        public SmtpConfig(SmtpConfig config)
+        public EmailConfig(EmailConfig config)
         {
             this.FromAddress = new MailAddress(config.FromAddress.Address, config.FromAddress.DisplayName);
             this.UseDefaultCredentials = config.UseDefaultCredentials;
@@ -124,24 +124,6 @@ namespace UHub.CoreLib.SmtpInterop
             }
 
             return true;
-        }
-
-        /// <summary>
-        /// Generate SmtpClient object from configuration
-        /// </summary>
-        /// <returns></returns>
-        internal SmtpClient GetSmtpClient()
-        {
-            var smtpClient = new SmtpClient(this.Host, this.Port);
-
-            smtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
-            smtpClient.UseDefaultCredentials = this.UseDefaultCredentials;
-            smtpClient.EnableSsl = this.EnableSSL;
-            smtpClient.TargetName = $"STARTTLS/{this.Host}";
-
-            smtpClient.Credentials = new NetworkCredential(this.UserName, this.Password);
-
-            return smtpClient;
         }
 
     }

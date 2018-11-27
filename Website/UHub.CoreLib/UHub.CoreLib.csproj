@@ -53,6 +53,9 @@
     <Reference Include="Konscious.Security.Cryptography.Argon2.StrongNamed, Version=1.1.1.0, Culture=neutral, PublicKeyToken=d06af81c92c3cea1, processorArchitecture=MSIL">
       <HintPath>..\packages\Konscious.Security.Cryptography.Argon2.StrongNamed.1.0.4\lib\net40\Konscious.Security.Cryptography.Argon2.StrongNamed.dll</HintPath>
     </Reference>
+    <Reference Include="Mailjet.Client, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Mailjet.Api.1.0.1\lib\net45\Mailjet.Client.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
     </Reference>
@@ -176,6 +179,10 @@
     <Compile Include="DataInterop\SqlConverters.cs" />
     <Compile Include="DataInterop\SqlWorkerAsync.cs" />
     <Compile Include="DataInterop\SqlWorker.cs" />
+    <Compile Include="EmailInterop\Providers\EmailProviderCore.cs" />
+    <Compile Include="EmailInterop\Providers\EmailProviderAsync.cs" />
+    <Compile Include="EmailInterop\Providers\EmailProvider.cs" />
+    <Compile Include="EmailInterop\Providers\SMTP\SmtpProviderCore.cs" />
     <Compile Include="Entities\ClubModerators\APIControllers\ClubModeratorController_C.cs" />
     <Compile Include="Entities\ClubModerators\APIControllers\ClubModeratorControllerCore.cs" />
     <Compile Include="Entities\ClubModerators\ClubModerator.cs" />
@@ -394,10 +401,10 @@
     <Compile Include="Security\Authentication\Enums\PasswordValidationStatus.cs" />
     <Compile Include="Security\Authentication\Enums\TokenValidationStatus.cs" />
     <Compile Include="Security\Authentication\Enums\UserLoginScope.cs" />
-    <Compile Include="Security\Authentication\Providers\FormsAuthProviderAsync.cs" />
-    <Compile Include="Security\Authentication\Providers\FormsAuthProvider.cs" />
-    <Compile Include="Security\Authentication\Providers\FormsAuthProviderCore.cs" />
-    <Compile Include="Security\Authentication\Providers\FormsAuthProviderShared.cs" />
+    <Compile Include="Security\Authentication\Providers\Forms\FormsAuthProviderAsync.cs" />
+    <Compile Include="Security\Authentication\Providers\Forms\FormsAuthProvider.cs" />
+    <Compile Include="Security\Authentication\Providers\Forms\FormsAuthProviderCore.cs" />
+    <Compile Include="Security\Authentication\Providers\Forms\FormsAuthProviderShared.cs" />
     <Compile Include="Security\Authentication\Interfaces\IAuthenticationManagerAsync.cs" />
     <Compile Include="Security\Authentication\Interfaces\IAuthenticationManager.cs" />
     <Compile Include="Security\Authentication\Management\TokenManagerAsync.cs" />
@@ -409,17 +416,17 @@
     <Compile Include="Security\Enums\HtmlSanitizerMode.cs" />
     <Compile Include="Security\RecaptchaManagerAsync.cs" />
     <Compile Include="Security\RecaptchaManager.cs" />
-    <Compile Include="SmtpInterop\APIControllers\SmtpController.cs" />
-    <Compile Include="SmtpInterop\Enums\SmtpResultCode.cs" />
-    <Compile Include="SmtpInterop\SmtpConfig.cs" />
-    <Compile Include="SmtpInterop\SmtpManagerAsync.cs" />
-    <Compile Include="SmtpInterop\SmtpManager.cs" />
-    <Compile Include="SmtpInterop\SmtpMessage.cs" />
-    <Compile Include="SmtpInterop\SmtpMessage_ConfirmAcct.cs" />
-    <Compile Include="SmtpInterop\SmtpMessage_ConfirmEvent.cs" />
-    <Compile Include="SmtpInterop\SmtpMessage_ConfirmMembership.cs" />
-    <Compile Include="SmtpInterop\SmtpMessage_ContactForm.cs" />
-    <Compile Include="SmtpInterop\SmtpMessage_ForgotPswd.cs" />
+    <Compile Include="EmailInterop\APIControllers\SmtpController.cs" />
+    <Compile Include="EmailInterop\Enums\EmailResultCode.cs" />
+    <Compile Include="EmailInterop\EmailConfig.cs" />
+    <Compile Include="EmailInterop\Providers\SMTP\SmtpProviderAsync.cs" />
+    <Compile Include="EmailInterop\Providers\SMTP\SmtpProvider.cs" />
+    <Compile Include="EmailInterop\Templates\EmailMessage.cs" />
+    <Compile Include="EmailInterop\Templates\EmailMessage_ConfirmAcct.cs" />
+    <Compile Include="EmailInterop\Templates\EmailMessage_ConfirmEvent.cs" />
+    <Compile Include="EmailInterop\Templates\SmtpMessage_ConfirmMembership.cs" />
+    <Compile Include="EmailInterop\Templates\EmailMessage_ContactForm.cs" />
+    <Compile Include="EmailInterop\Templates\EmailMessage_ForgotPswd.cs" />
     <Compile Include="Tools\Base36.cs" />
     <Compile Include="Tools\BaseConverter.cs" />
     <Compile Include="Tools\FailoverDateTimeOffset.cs" />

@@ -7,7 +7,7 @@ using System.Web.Http;
 using UHub.CoreLib.APIControllers;
 using UHub.CoreLib.Tools;
 
-namespace UHub.CoreLib.SmtpInterop.APIControllers
+namespace UHub.CoreLib.EmailInterop.APIControllers
 {
     [RoutePrefix(Common.API_ROUTE_PREFIX + "/smtp")]
     public sealed class SmtpController : APIController

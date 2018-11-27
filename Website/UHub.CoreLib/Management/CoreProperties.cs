@@ -12,9 +12,11 @@ using UHub.CoreLib.DataInterop;
 using UHub.CoreLib.Extensions;
 using UHub.CoreLib.Logging;
 using UHub.CoreLib.Security;
-using UHub.CoreLib.SmtpInterop;
+using UHub.CoreLib.EmailInterop;
+using UHub.CoreLib.EmailInterop.Templates;
 using UHub.CoreLib.Tools;
 using UHub.CoreLib.Util;
+using UHub.CoreLib.EmailInterop.Providers;
 
 namespace UHub.CoreLib.Management
 {
@@ -87,7 +89,8 @@ namespace UHub.CoreLib.Management
             Properties.TempCacheDirectory = getDynamicFileDirectory(cmsConfig.Storage.TempCacheDirectory);
             Properties.LogStoreDirectory = getDynamicFileDirectory(cmsConfig.Storage.LogStoreDirectory);
             //MAIL CONNECTIONS
-            Properties.NoReplyMailConfig = new SmtpConfig(cmsConfig.Mail.NoReplyMailConfig);
+            //TODO: finish deep copy constructor
+            Properties.MailProvider = cmsConfig.Mail.Provider;
             Properties.ContactFormRecipientAddress = cmsConfig.Mail.ContactFormRecipientAddress;
             //SECURITY
             Properties.PswdHashType = cmsConfig.Security.PswdHashType;
@@ -209,9 +212,9 @@ namespace UHub.CoreLib.Management
         //---------------------------------------- MAIL CONNECTIONS ----------------------------------------
         //--------------------------------------------------------------------------------------------------
         /// <summary>
-        /// SMTP mail client to send "No Reply" emails
+        /// Email provider for sending messages
         /// </summary>
-        public SmtpConfig NoReplyMailConfig { get; private set; }
+        public EmailProvider MailProvider { get; set; } = null;
         /// <summary>
         /// The email address that Contact Us emails will be delivered to
         /// </summary>

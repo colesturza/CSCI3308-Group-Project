@@ -10,10 +10,11 @@ using UHub.CoreLib.Management;
 using UHub.CoreLib.Tools;
 using RgxPtrn = UHub.CoreLib.Regex.Patterns;
 using System.Text.RegularExpressions;
+using UHub.CoreLib.Security.Accounts.Interfaces;
 
 namespace UHub.CoreLib.Security.Accounts.Management
 {
-    public sealed partial class AccountManager
+    public sealed partial class AccountManager : IAccountManager
     {
 
         private const short EMAIL_MIN_LEN = 3;
