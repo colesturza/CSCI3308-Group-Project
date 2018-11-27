@@ -418,7 +418,7 @@
     <Compile Include="Security\RecaptchaManager.cs" />
     <Compile Include="EmailInterop\APIControllers\SmtpController.cs" />
     <Compile Include="EmailInterop\Enums\EmailResultCode.cs" />
-    <Compile Include="EmailInterop\EmailConfig.cs" />
+    <Compile Include="EmailInterop\Providers\SMTP\EmailConfig.cs" />
     <Compile Include="EmailInterop\Providers\SMTP\SmtpProviderAsync.cs" />
     <Compile Include="EmailInterop\Providers\SMTP\SmtpProvider.cs" />
     <Compile Include="EmailInterop\Templates\EmailMessage.cs" />

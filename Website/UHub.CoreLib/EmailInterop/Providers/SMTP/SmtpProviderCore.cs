@@ -15,12 +15,12 @@ namespace UHub.CoreLib.EmailInterop.Providers.SMTP
     /// </summary>
     public sealed partial class SmtpProvider : EmailProvider
     {
-        private EmailConfig _config = null;
+        private SmtpConfig _config = null;
         private bool hasPerformedValidation = false;
         private bool isValid = false;
 
 
-        public SmtpProvider(EmailConfig config)
+        public SmtpProvider(SmtpConfig config)
         {
             _config = config;
         }

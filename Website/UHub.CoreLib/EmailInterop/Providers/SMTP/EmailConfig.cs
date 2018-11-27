@@ -7,12 +7,12 @@ using System.Text;
 using System.Threading.Tasks;
 using UHub.CoreLib.Extensions;
 
-namespace UHub.CoreLib.EmailInterop
+namespace UHub.CoreLib.EmailInterop.Providers.SMTP
 {
     /// <summary>
     /// SMTP (email) server configuration 
     /// </summary>
-    public sealed class EmailConfig
+    public sealed class SmtpConfig
     {
         /// <summary>
         /// Mail server from address
@@ -50,7 +50,7 @@ namespace UHub.CoreLib.EmailInterop
         public string Password { get; }
 
 
-        public EmailConfig(MailAddress FromAddress, bool UseDefaultCredentials, bool EnableSSL, string Host, int Port)
+        public SmtpConfig(MailAddress FromAddress, bool UseDefaultCredentials, bool EnableSSL, string Host, int Port)
         {
             this.FromAddress = FromAddress;
             this.UseDefaultCredentials = UseDefaultCredentials;
@@ -61,7 +61,7 @@ namespace UHub.CoreLib.EmailInterop
             this.Password = null;
         }
 
-        public EmailConfig(MailAddress FromAddress, bool UseDefaultCredentials, bool EnableSSL, string Host, int Port, string UserName, string Password)
+        public SmtpConfig(MailAddress FromAddress, bool UseDefaultCredentials, bool EnableSSL, string Host, int Port, string UserName, string Password)
         {
             this.FromAddress = FromAddress;
             this.UseDefaultCredentials = UseDefaultCredentials;
@@ -72,7 +72,7 @@ namespace UHub.CoreLib.EmailInterop
             this.Password = Password;
         }
 
-        public EmailConfig(EmailConfig config)
+        public SmtpConfig(SmtpConfig config)
         {
             this.FromAddress = new MailAddress(config.FromAddress.Address, config.FromAddress.DisplayName);
             this.UseDefaultCredentials = config.UseDefaultCredentials;

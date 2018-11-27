@@ -79,7 +79,7 @@ namespace UHub.CoreLib.Tests
                         FileCategory.Document
                     };
 
-            var mailConfig = new EmailConfig(new MailAddress(mailFromAddr, mailFromName), false, true, mailHost, mailPort, mailUsername, mailPswd);
+            var mailConfig = new SmtpConfig(new MailAddress(mailFromAddr, mailFromName), false, true, mailHost, mailPort, mailUsername, mailPswd);
 
             var cmsConfig = new CmsConfiguration_Grouped()
             {

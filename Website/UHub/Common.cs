@@ -103,7 +103,7 @@ namespace UHub
                         FileCategory.Document
                     };
 
-            var mailConfig = new EmailConfig(new MailAddress(mailFromAddr, mailFromName), false, true, mailHost, mailPort, mailUsername, mailPswd);
+            var mailConfig = new SmtpConfig(new MailAddress(mailFromAddr, mailFromName), false, true, mailHost, mailPort, mailUsername, mailPswd);
 
 
 
@@ -244,7 +244,7 @@ namespace UHub
                         FileCategory.Document
                     };
 
-            var mailConfig = new EmailConfig(new MailAddress(mailFromAddr, mailFromName), false, true, mailHost, mailPort, mailUsername, mailPswd);
+            var mailConfig = new SmtpConfig(new MailAddress(mailFromAddr, mailFromName), false, true, mailHost, mailPort, mailUsername, mailPswd);
 
 
 
