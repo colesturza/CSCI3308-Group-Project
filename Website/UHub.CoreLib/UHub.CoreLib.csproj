@@ -331,6 +331,7 @@
     <Compile Include="Extensions\DataRowExtensions.cs" />
     <Compile Include="Extensions\DateTimeExtensions.cs" />
     <Compile Include="Extensions\DateTimeOffsetExtensions.cs" />
+    <Compile Include="Extensions\DynamicExtensions.cs" />
     <Compile Include="Extensions\FileInfoExtensions.cs" />
     <Compile Include="Extensions\HttpCookieExtensions.cs" />
     <Compile Include="Extensions\HttpRequestExtensions.cs" />

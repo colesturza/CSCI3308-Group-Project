@@ -1,4 +1,5 @@
-﻿using System.Web;
+﻿using System.Dynamic;
+using System.Web;
 using System.Web.Optimization;
 
 using BundleTransformer.Core.Builders;
@@ -31,8 +32,9 @@ namespace UHub
 
 
             //---------------------------------MASTER------------------------------------------------------
-            bundles.Add(new ScriptBundle("~/resources/scripts/master")
-                .IncludeDirectory("~/ClientResources/Master/Scripts", "*.js", true));
+            var masterBundle = new ScriptBundle("~/resources/scripts/master")
+                .IncludeDirectory("~/ClientResources/Master/Scripts", "*.js", true);
+            bundles.Add(masterBundle);
 
 
 

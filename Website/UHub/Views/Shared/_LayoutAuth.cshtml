@@ -24,6 +24,9 @@
 
 
 @section scripts{
-    @Scripts.Render("~/ClientResources/Master/Components/Navbar.js")
+    @if (ViewBag.SkipMasterScriptLoading != true)
+    {
+        @Scripts.Render("~/ClientResources/Master/Components/Navbar.js")
+    }
     @RenderSection("scripts", false)
 }
