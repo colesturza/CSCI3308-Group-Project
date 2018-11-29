@@ -1,0 +1,52 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using UHub.CoreLib.DataInterop;
+using UHub.CoreLib.ErrorHandling.Exceptions;
+using UHub.CoreLib.Extensions;
+using UHub.CoreLib.Management;
+using static UHub.CoreLib.DataInterop.SqlConverters;
+
+namespace UHub.CoreLib.Entities.Posts.DataInterop
+{
+
+    public static partial class PostReader
+    {
+
+        /// <summary>
+        /// Get DB post revision history by LONG ID
+        /// </summary>
+        /// <param name="PostID"></param>
+        /// <returns></returns>
+        public static IEnumerable<Post> TryGetPostRevisions(long PostID)
+        {
+            if (!CoreFactory.Singleton.IsEnabled)
+            {
+                throw new SystemDisabledException();
+            }
+
+
+            try
+            {
+
+                return SqlWorker.ExecBasicQuery<Post>(
+                    _dbConn,
+                    "[dbo].[Post_GetRevisions]",
+                    (cmd) =>
+                    {
+                        cmd.Parameters.Add("@PostID", SqlDbType.BigInt).Value = PostID;
+                    });
+
+            }
+            catch (Exception ex)
+            {
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("D9CCACBF-7D52-4941-AD6E-FE57DC32322F", ex);
+                return null;
+            }
+        }
+
+    }
+}

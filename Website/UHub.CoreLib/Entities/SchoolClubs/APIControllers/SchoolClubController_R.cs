@@ -10,11 +10,11 @@ using System.Web.Http;
 using UHub.CoreLib.APIControllers;
 using UHub.CoreLib.Attributes;
 using UHub.CoreLib.Entities.Posts.DTOs;
-using UHub.CoreLib.Entities.Posts.Management;
+using UHub.CoreLib.Entities.Posts.DataInterop;
 using UHub.CoreLib.Entities.SchoolClubs;
 using UHub.CoreLib.Entities.SchoolClubs.DTOs;
-using UHub.CoreLib.Entities.SchoolClubs.Management;
-using UHub.CoreLib.Entities.Users.Management;
+using UHub.CoreLib.Entities.SchoolClubs.DataInterop;
+using UHub.CoreLib.Entities.Users.DataInterop;
 using UHub.CoreLib.Extensions;
 using UHub.CoreLib.Management;
 using UHub.CoreLib.Tools;
@@ -30,13 +30,18 @@ namespace UHub.CoreLib.Entities.SchoolClubs.APIControllers
         public async Task<IHttpActionResult> GetAllBySchool()
         {
 
-            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser();
+            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser().CmsUser;
+
             var schoolID = cmsUser.SchoolID.Value;
 
-            var clubSet = await SchoolClubReader.GetClubsBySchoolAsync(schoolID);
+            var clubSet = await SchoolClubReader.TryGetClubsBySchoolAsync(schoolID);
+            if (clubSet == null)
+            {
+                return InternalServerError();
+            }
 
 
-            return Ok(clubSet.Select(x=>x.ToDto<SchoolClub_R_PublicDTO>()));
+            return Ok(clubSet.Select(x => x.ToDto<SchoolClub_R_PublicDTO>()));
         }
 
     }

@@ -41,9 +41,12 @@ namespace UHub.CoreLib.Security.Authentication.APIControllers
             {
                 return Content(statCode, status);
             }
-            if (!HandleRecaptcha(out status))
+
+            var context = System.Web.HttpContext.Current;
+            var recaptchaResult = await HandleRecaptchaAsync(context);
+            if (!recaptchaResult.IsValid)
             {
-                return Content(statCode, status);
+                return Content(HttpStatusCode.BadRequest, recaptchaResult.Result);
             }
 
             if (user == null)
@@ -62,7 +65,6 @@ namespace UHub.CoreLib.Security.Authentication.APIControllers
             string token = null;
             try
             {
-                var context = HttpContext.Current;
 
                 //if token generation fails, then create an error message to send to client
                 //if detailed errors are enabled, then give brief description
@@ -71,40 +73,27 @@ namespace UHub.CoreLib.Security.Authentication.APIControllers
                     email,
                     password,
                     persistent,
-                    context,
-                    GeneralFailHandler: (code) =>
-                    {
-                        statCode = HttpStatusCode.InternalServerError;
-                        if (enableFailCode)
-                        {
-                            status = code.ToString();
-                        }
-                    });
+                    context);
 
-                var ResultCode = authResultSet.ResultCode;
+                if (authResultSet.ResultCode == AuthResultCode.UnknownError)
+                {
+                    statCode = HttpStatusCode.InternalServerError;
+                    return Content(HttpStatusCode.InternalServerError, status);
+                }
+
+
+                var resultCode = authResultSet.ResultCode;
                 token = authResultSet.AuthToken;
+
 
                 if (enableDetail)
                 {
-                    switch (ResultCode)
-                    {
-                        case AuthResultCode.EmailEmpty: { status = "Email Empty"; break; }
-                        case AuthResultCode.EmailInvalid: { status = "Email Invalid"; break; }
-                        case AuthResultCode.PswdEmpty: { status = "Password Empty"; break; }
-                        case AuthResultCode.UserInvalid: { status = "Account Invalid"; break; }
-                        case AuthResultCode.UserLocked: { status = "Account Locked"; break; }
-                        case AuthResultCode.PendingApproval: { status = "Account Pending Approval"; break; }
-                        case AuthResultCode.PendingConfirmation: { status = "Account Pending Confirmation"; break; }
-                        case AuthResultCode.UserDisabled: { status = "Account Disabled"; break; }
-                        case AuthResultCode.PswdExpired: { status = "Password Expired"; break; }
-                        case AuthResultCode.CredentialsInvalid: { status = "Credentials Invalid"; break; }
-                        case AuthResultCode.Success: { status = "Unknown Error"; break; }
-                    }
+                    status = resultCode.ToString();
                 }
                 //this looks strange, but is relevant for a very specific edge case
                 //if the auth worker emits a "Success" code without a populated token
                 //then this will properly alert the user that some unknown internal error has occured
-                if (ResultCode == AuthResultCode.Success)
+                if (resultCode == AuthResultCode.Success)
                 {
                     statCode = HttpStatusCode.InternalServerError;
                 }
@@ -113,9 +102,7 @@ namespace UHub.CoreLib.Security.Authentication.APIControllers
             }
             catch (Exception ex)
             {
-                var errCode = "4717C1CF-7C2E-4596-9917-119FF7248B10";
-                Exception ex_outer = new Exception(errCode, ex);
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("4717C1CF-7C2E-4596-9917-119FF7248B10", ex);
 
                 return Content(HttpStatusCode.InternalServerError, status);
             }
@@ -155,7 +142,7 @@ namespace UHub.CoreLib.Security.Authentication.APIControllers
 
                 var resultSet = await CoreFactory.Singleton.Auth.TrySlideAuthTokenExpirationAsync(token, context);
 
-                string newToken = resultSet.Token;
+                string newToken = resultSet.AuthToken;
                 var status = resultSet.TokenStatus;
                 if (status == TokenValidationStatus.Success)
                 {
@@ -168,9 +155,7 @@ namespace UHub.CoreLib.Security.Authentication.APIControllers
             }
             catch (Exception ex)
             {
-                var errCode = "7D136E21-6F6C-436B-89E3-9F57E6C0861D";
-                Exception ex_outer = new Exception(errCode, ex);
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("7D136E21-6F6C-436B-89E3-9F57E6C0861D", ex);
 
 
                 //return original token

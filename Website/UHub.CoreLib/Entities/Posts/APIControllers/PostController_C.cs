@@ -10,15 +10,15 @@ using System.Web.Http;
 using UHub.CoreLib.APIControllers;
 using UHub.CoreLib.Attributes;
 using UHub.CoreLib.Entities.Posts.DTOs;
-using UHub.CoreLib.Entities.Posts.Management;
+using UHub.CoreLib.Entities.Posts.DataInterop;
 using UHub.CoreLib.Entities.SchoolClubs;
-using UHub.CoreLib.Entities.SchoolClubs.Management;
-using UHub.CoreLib.Entities.Users.Management;
+using UHub.CoreLib.Entities.SchoolClubs.DataInterop;
+using UHub.CoreLib.Entities.Users.DataInterop;
 using UHub.CoreLib.Extensions;
 using UHub.CoreLib.Management;
 using UHub.CoreLib.Security;
 using UHub.CoreLib.Tools;
-
+using UHub.CoreLib.Entities.Posts.Management;
 
 namespace UHub.CoreLib.Entities.Posts.APIControllers
 {
@@ -43,12 +43,12 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
 
 
             var tmpPost = post.ToInternal<Post>();
-            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser();
+            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser().CmsUser;
 
 
-            
-            var taskIsValidParent = UserReader.ValidatePostParentAsync((long)cmsUser.ID, tmpPost.ParentID);
-            var taskIsUserBanned = SchoolClubReader.IsUserBannedAsync(post.ParentID, cmsUser.ID.Value);
+
+            var taskIsValidParent = UserReader.TryValidatePostParentAsync((long)cmsUser.ID, tmpPost.ParentID);
+            var taskIsUserBanned = SchoolClubReader.TryIsUserBannedAsync(post.ParentID, cmsUser.ID.Value);
 
 
 
@@ -74,20 +74,27 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
 
             try
             {
-                var sanitizerMode = CoreFactory.Singleton.Properties.HtmlSanitizerMode;
-                if ((sanitizerMode & HtmlSanitizerMode.OnWrite) != 0)
-                {
-                    tmpPost.Content = tmpPost.Content.SanitizeHtml();
-                }
                 tmpPost.CreatedBy = cmsUser.ID.Value;
 
 
-                long? PostID = await PostWriter.TryCreatePostAsync(tmpPost);
+                var postResult = await PostManager.TryCreatePostAsync(tmpPost);
+                var ResultCode = postResult.ResultCode;
+                var PostID = postResult.PostID;
 
-                if (PostID != null)
+                if (ResultCode == 0)
                 {
-                    status = "Post created.";
+                    status = "Post created";
                     statCode = HttpStatusCode.OK;
+                }
+                else if (ResultCode == PostResultCode.UnknownError)
+                {
+                    status = "Unknown server error";
+                    statCode = HttpStatusCode.InternalServerError;
+                }
+                else
+                {
+                    status = "Invalid Field - " + ResultCode.ToString();
+                    statCode = HttpStatusCode.BadRequest;
                 }
 
             }
@@ -97,7 +104,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
                 Exception ex_outer = new Exception(errCode, ex);
                 CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
 
-                return Content(HttpStatusCode.InternalServerError, status);
+                statCode = HttpStatusCode.InternalServerError;
             }
 
 

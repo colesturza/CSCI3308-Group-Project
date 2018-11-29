@@ -19,29 +19,26 @@ namespace UHub.CoreLib.Security.Accounts.Interfaces
         /// <param name="GeneralFailHandler">Error handler in case DB cannot be reached or there is other unknown error</param>
         /// <param name="SuccessHandler">Args: new user object, auto login [T|F]</param>
         /// <returns>Status Flag</returns>
-        AccountResultCode TryCreateUser(
+        AcctCreateResultCode TryCreateUser(
             User NewUser,
             bool AttemptAutoLogin,
-            Action<Guid> GeneralFailHandler = null,
             Action<User, bool> SuccessHandler = null);
 
 
         /// <summary>
-        /// Confirm CMS user in DB
+        /// Attempt to update user attributes in DB
         /// </summary>
-        /// <param name="RefUID">User reference UID</param>
-        bool TryConfirmUser(string RefUID);
-        /// <summary>
-        /// Confirm CMS user in DB
-        /// </summary>
-        /// <param name="RefUID">User reference UID</param>
-        bool TryConfirmUser(string RefUID, out string Status);
+        /// <param name="CmsUser"></param>
+        /// <returns></returns>
+        AcctUpdateResultCode TryUpdateUser(User CmsUser);
+
+
         /// <summary>
         /// Confirm CMS user in DB
         /// </summary>
         /// <param name="RefUID">User reference UID</param>
         /// <exception cref="ArgumentException"></exception>
-        bool ConfirmUser(string RefUID, out string Status);
+        AcctConfirmResultCode TryConfirmUser(string RefUID);
 
 
 
@@ -51,12 +48,15 @@ namespace UHub.CoreLib.Security.Accounts.Interfaces
         /// <param name="UserID">User ID</param>
         /// <param name="IsApproved">Approval Status</param>
         bool TryUpdateApprovalStatus(long UserID, bool IsApproved);
+
+
+
         /// <summary>
-        /// Update the approval status of a user
+        /// Attempt to update the user token version
         /// </summary>
-        /// <param name="UserID">User ID</param>
-        /// <param name="IsApproved">Approval Status</param>
-        void UpdateUserApprovalStatus(long UserID, bool IsApproved);
+        /// <param name="UserID"></param>
+        /// <returns></returns>
+        bool TryUpdateUserVersion(long UserID);
 
 
 
@@ -69,12 +69,11 @@ namespace UHub.CoreLib.Security.Accounts.Interfaces
         /// <param name="DeviceLogout">If true, user will be logged out of all other devices</param>
         /// <param name="GeneralFailHandler">Error handler in case DB cannot be reached or there is other unknown error</param>
         /// <returns>Status flag</returns>
-        AccountResultCode TryUpdatePassword(
+        AcctPswdResultCode TryUpdatePassword(
             string UserEmail,
             string OldPassword,
             string NewPassword,
-            bool DeviceLogout,
-            Action<Guid> GeneralFailHandler = null);
+            bool DeviceLogout);
         /// <summary>
         /// Attempt to update a user password. Requires validation against the current password. User will be signed out of all locations upon completion
         /// </summary>
@@ -84,12 +83,11 @@ namespace UHub.CoreLib.Security.Accounts.Interfaces
         /// <param name="DeviceLogout">If true, user will be logged out of all other devices</param>
         /// <param name="GeneralFailHandler">Error handler in case DB cannot be reached or there is other unknown error</param>
         /// <returns>Status flag</returns>
-        AccountResultCode TryUpdatePassword(
+        AcctPswdResultCode TryUpdatePassword(
             long UserID,
             string OldPassword,
             string NewPassword,
-            bool DeviceLogout,
-            Action<Guid> GeneralFailHandler = null);
+            bool DeviceLogout);
 
 
 
@@ -102,12 +100,11 @@ namespace UHub.CoreLib.Security.Accounts.Interfaces
         /// <param name="DeviceLogout"></param>
         /// <param name="GeneralFailHandler"></param>
         /// <returns></returns>
-        AccountResultCode TryRecoverPassword(
+        AcctRecoveryResultCode TryRecoverPassword(
             string RecoveryContextID,
             string RecoveryKey,
             string NewPassword,
-            bool DeviceLogout,
-            Action<Guid> GeneralFailHandler = null);
+            bool DeviceLogout);
 
 
 
@@ -121,11 +118,10 @@ namespace UHub.CoreLib.Security.Accounts.Interfaces
         /// <exception cref="SystemDisabledException"></exception>
         /// <exception cref="InvalidOperationException"></exception>
         /// <returns>Status flag</returns>
-        AccountResultCode TryResetPassword(
+        AcctRecoveryResultCode TryResetPassword(
             string UserEmail,
             string NewPassword,
-            bool DeviceLogout,
-            Action<Guid> GeneralFailHandler = null);
+            bool DeviceLogout);
         /// <summary>
         /// Attempts to reset a user password.  System level function that overrides validation against the current password. User will be signed out of all locations upon completion
         /// </summary>
@@ -136,30 +132,19 @@ namespace UHub.CoreLib.Security.Accounts.Interfaces
         /// <exception cref="SystemDisabledException"></exception>
         /// <exception cref="InvalidOperationException"></exception>
         /// <returns>Status flag</returns>
-        AccountResultCode TryResetPassword(
+        AcctRecoveryResultCode TryResetPassword(
             long UserID,
             string NewPassword,
-            bool DeviceLogout,
-            Action<Guid> GeneralFailHandler = null);
+            bool DeviceLogout);
 
 
 
         /// <summary>
-        /// Delete user by ID.
+        /// Attempt to get a user's active recovery context (if one exists)
         /// </summary>
         /// <param name="UserID"></param>
-        void DeleteUser(long UserID);
-        /// <summary>
-        /// Delete user by Email
-        /// </summary>
-        /// <param name="Email"></param>
-        void DeleteUser(string Email);
-        /// <summary>
-        /// Delete user by Username and Domain
-        /// </summary>
-        /// <param name="Username"></param>
-        /// <param name="Domain"></param>
-        void DeleteUser(string Username, string Domain);
+        /// <returns></returns>
+        IUserRecoveryContext TryGetActiveRecoveryContext(long UserID);
 
 
         /// <summary>
@@ -169,10 +154,9 @@ namespace UHub.CoreLib.Security.Accounts.Interfaces
         /// <param name="IsOptional">Specify whether or not user will be forced to update password</param>
         /// <param name="GeneralFailHandler">Error handler in case DB cannot be reached or there is other unknown error</param>
         /// <returns></returns>
-        (AccountResultCode ResultCode, IUserRecoveryContext RecoveryContext, string RecoveryKey) TryCreateUserRecoveryContext(
+        (AcctRecoveryResultCode ResultCode, IUserRecoveryContext RecoveryContext, string RecoveryKey) TryCreateUserRecoveryContext(
             string UserEmail,
-            bool IsOptional,
-            Action<Guid> GeneralFailHandler = null);
+            bool IsOptional);
 
 
         /// <summary>
@@ -182,9 +166,27 @@ namespace UHub.CoreLib.Security.Accounts.Interfaces
         /// <param name="IsOptional">Specify whether or not user will be forced to update password</param>
         /// <param name="GeneralFailHandler">Error handler in case DB cannot be reached or there is other unknown error</param>
         /// <returns></returns>
-        (AccountResultCode ResultCode, IUserRecoveryContext RecoveryContext, string RecoveryKey) TryCreateUserRecoveryContext(
+        (AcctRecoveryResultCode ResultCode, IUserRecoveryContext RecoveryContext, string RecoveryKey) TryCreateUserRecoveryContext(
             long UserID,
-            bool IsOptional,
-            Action<Guid> GeneralFailHandler = null);
+            bool IsOptional);
+
+
+
+        /// <summary>
+        /// Delete user by ID.
+        /// </summary>
+        /// <param name="UserID"></param>
+        bool TryDeleteUser(long UserID);
+        /// <summary>
+        /// Delete user by Email
+        /// </summary>
+        /// <param name="Email"></param>
+        bool TryDeleteUser(string Email);
+        /// <summary>
+        /// Delete user by Username and Domain
+        /// </summary>
+        /// <param name="Username"></param>
+        /// <param name="Domain"></param>
+        bool TryDeleteUser(string Username, string Domain);
     }
 }

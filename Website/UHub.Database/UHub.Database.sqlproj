@@ -209,5 +209,19 @@
     <Build Include="dbo\Stored Procedures\Posts_GetClusteredCounts.sql" />
     <Build Include="dbo\Tables\Users_1.sql" />
     <Build Include="dbo\Tables\Entities_1.sql" />
+    <Build Include="dbo\Tables\UserConfirmation.sql" />
+    <Build Include="dbo\Stored Procedures\User_GetConfirmTokenByUserID.sql" />
+    <Build Include="dbo\Stored Procedures\User_GetConfirmTokenByID.sql" />
+    <Build Include="dbo\Stored Procedures\User_CreateConfirmToken.sql" />
+    <Build Include="dbo\Stored Procedures\Post_IncrementViewCount.sql" />
+    <Build Include="dbo\Views\vUsers_OLD.sql" />
+    <Build Include="dbo\Views\vSchools_OLD.sql" />
+    <Build Include="dbo\Views\vPosts_OLD.sql" />
+    <Build Include="dbo\Views\vComments_OLD.sql" />
+    <Build Include="dbo\Stored Procedures\User_Update.sql" />
+    <Build Include="dbo\Stored Procedures\User_GetRevisions.sql" />
+    <Build Include="dbo\Stored Procedures\Post_UpdateProp.sql" />
+    <Build Include="dbo\Stored Procedures\Post_Update.sql" />
+    <Build Include="dbo\Stored Procedures\Post_GetRevisions.sql" />
   </ItemGroup>
 </Project>

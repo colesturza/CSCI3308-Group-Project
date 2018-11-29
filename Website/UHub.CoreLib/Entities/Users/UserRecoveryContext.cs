@@ -9,7 +9,7 @@ using UHub.CoreLib.Extensions;
 using UHub.CoreLib.Management;
 using UHub.CoreLib.Security;
 using UHub.CoreLib.Entities.Users.Interfaces;
-using UHub.CoreLib.Entities.Users.Management;
+using UHub.CoreLib.Entities.Users.DataInterop;
 using UHub.CoreLib.Security.Accounts;
 
 namespace UHub.CoreLib.Entities.Users
@@ -64,24 +64,24 @@ namespace UHub.CoreLib.Entities.Users
         #endregion Constructors
 
 
-        public AccountResultCode ValidateRecoveryKey(string Key)
+        public AcctRecoveryResultCode ValidateRecoveryKey(string Key)
         {
 
             if (this.EffFromDate > DateTimeOffset.Now || this.EffToDate < DateTimeOffset.Now)
             {
-                this.Delete();
-                return AccountResultCode.RecoveryContextExpired;
+                this.TryDelete();
+                return AcctRecoveryResultCode.RecoveryContextExpired;
             }
 
             if (!this.IsEnabled)
             {
-                return AccountResultCode.RecoveryContextDisabled;
+                return AcctRecoveryResultCode.RecoveryContextDisabled;
             }
 
             if (this.AttemptCount > CoreFactory.Singleton.Properties.AcctPswdResetMaxAttemptCount)
             {
-                this.Delete();
-                return AccountResultCode.RecoveryContextDestroyed;
+                this.TryDelete();
+                return AcctRecoveryResultCode.RecoveryContextDestroyed;
             }
 
 
@@ -98,11 +98,11 @@ namespace UHub.CoreLib.Entities.Users
 
             if (isValid)
             {
-                return AccountResultCode.Success;
+                return AcctRecoveryResultCode.Success;
             }
             else
             {
-                return AccountResultCode.RecoveryKeyInvalid;
+                return AcctRecoveryResultCode.RecoveryKeyInvalid;
             }
         }
 
@@ -110,33 +110,54 @@ namespace UHub.CoreLib.Entities.Users
         /// <summary>
         /// Increment the attempt count in DB
         /// </summary>
-        public AccountResultCode IncrementAttemptCount()
+        public AcctRecoveryResultCode TryIncrementAttemptCount()
         {
+#pragma warning disable 612, 618
             if (AttemptCount >= CoreFactory.Singleton.Properties.AcctPswdResetMaxAttemptCount)
             {
-                this.Delete();
-                return AccountResultCode.RecoveryContextDestroyed;
+                this.TryDelete();
+                return AcctRecoveryResultCode.RecoveryContextDestroyed;
             }
 
             //Forced reset does not respect attempt count
             //But no error should be reported
             if (!this.IsOptional)
             {
-                return AccountResultCode.Success;
+                return AcctRecoveryResultCode.Success;
             }
 
 
             this.AttemptCount++;
-            UserWriter.LogFailedRecoveryContextAttempt(this.RecoveryID);
-            return AccountResultCode.Success;
+            try
+            {
+                UserWriter.LogFailedRecoveryContextAttempt(this.RecoveryID);
+                return AcctRecoveryResultCode.Success;
+            }
+            catch (Exception ex)
+            {
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("320E32EC-416F-4627-ADA1-D38EA201FCF0", ex);
+                return AcctRecoveryResultCode.UnknownError;
+            }
+#pragma warning restore
         }
 
         /// <summary>
         /// Delete this recovery context from the DB
         /// </summary>
-        public void Delete()
+        public bool TryDelete()
         {
-            UserWriter.DeleteRecoveryContext(this.RecoveryID);
+#pragma warning disable 612, 618
+            try
+            {
+                UserWriter.DeleteRecoveryContext(this.RecoveryID);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("AEB010D9-AF61-4108-9C5F-448CCAFE9EA8", ex);
+                return false;
+            }
+#pragma warning restore
         }
 
     }

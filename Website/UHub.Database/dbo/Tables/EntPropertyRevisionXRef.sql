@@ -6,14 +6,24 @@
     [CreatedBy]   BIGINT             NOT NULL,
     [CreatedDate] DATETIMEOFFSET (7) CONSTRAINT [DF_EntPropertyRevisionXRef_CreatedDate] DEFAULT (sysdatetimeoffset()) NOT NULL,
     CONSTRAINT [FK_EntPropertyRevisionXRef_Entities] FOREIGN KEY ([EntID], [EntTypeID]) REFERENCES [dbo].[Entities] ([ID], [EntTypeID]),
-    CONSTRAINT [FK_EntPropertyRevisionXRef_EntPropertyRevisionMap] FOREIGN KEY ([EntTypeID], [PropID]) REFERENCES [dbo].[EntPropertyRevisionMap] ([EntTypeID], [PropID]),
     CONSTRAINT [FK_EntPropertyRevisionXRef_Users] FOREIGN KEY ([CreatedBy]) REFERENCES [dbo].[Users] ([EntID])
 );
 
 
 
 
+
+
+
+
 GO
 CREATE NONCLUSTERED INDEX [IX_EntPropertyRevisionXRef]
-    ON [dbo].[EntPropertyRevisionXRef]([EntID] ASC, [EntTypeID] ASC, [PropID] ASC);
+    ON [dbo].[EntPropertyRevisionXRef]([EntID] ASC, [PropID] ASC);
+
+
+
+
+GO
+CREATE NONCLUSTERED INDEX [IX_EntPropertyRevisionXRef_Clustered]
+    ON [dbo].[EntPropertyRevisionXRef]([EntID] ASC, [CreatedDate] ASC, [PropID] ASC);
 

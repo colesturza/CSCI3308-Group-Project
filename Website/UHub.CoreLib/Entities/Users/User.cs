@@ -9,7 +9,7 @@ using UHub.CoreLib.DataInterop;
 using UHub.CoreLib.Extensions;
 using UHub.CoreLib.Management;
 using UHub.CoreLib.Entities.Users.Interfaces;
-using UHub.CoreLib.Entities.Users.Management;
+using UHub.CoreLib.Entities.Users.DataInterop;
 
 namespace UHub.CoreLib.Entities.Users
 {
@@ -18,7 +18,6 @@ namespace UHub.CoreLib.Entities.Users
     public sealed partial class User : DBEntityBase, IUserCredential, IUser_C_Public, IUser_R_Private, IUser_U_Private
     {
         private const short USER_VERSION_LENGTH = 10;
-        private const string CONFIRMATION_URL_FORMAT = "{0}/{1}";
 
 
         [DataProperty]
@@ -32,9 +31,6 @@ namespace UHub.CoreLib.Entities.Users
 
         [DataProperty]
         public bool IsReadOnly { get; set; }
-
-        [DataProperty]
-        public string RefUID { get; private set; }
 
         [DataProperty]
         public bool IsConfirmed { get; set; }
@@ -84,47 +80,14 @@ namespace UHub.CoreLib.Entities.Users
         [DataProperty]
         public long CreatedBy { get; set; }
 
+        [DataProperty]
+        public DateTimeOffset CreatedDate { get; set; }
 
+        [DataProperty]
+        public long? ModifiedBy { get; set; }
 
-        public string GetConfirmationURL()
-        {
-            if (this.ID == null || this.RefUID.IsEmpty())
-            {
-                return "/";
-            }
+        [DataProperty]
+        public DateTimeOffset? ModifiedDate { get; set; }
 
-            var url = CoreFactory.Singleton.Properties.AcctConfirmURL;
-            
-            return string.Format(CONFIRMATION_URL_FORMAT, url, this.RefUID);
-        }
-
-        public IUserRecoveryContext GetRecoveryContext()
-        {
-            if(this.ID == null)
-            {
-                throw new InvalidOperationException("Cannot get recovery context of anon user");
-            }
-            return UserReader.GetRecoveryContext(this.ID.Value);
-        }
-
-        public void Save()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void UpdateVersion()
-        {
-            if(ID == null)
-            {
-                return;
-            }
-
-            var version = Membership.GeneratePassword(USER_VERSION_LENGTH, 0);
-            //sterilize for token processing
-            version = version.Replace('|', '0');
-
-            UserWriter.UpdateUserVersion(this.ID.Value, version);
-
-        }
     }
 }

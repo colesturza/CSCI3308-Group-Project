@@ -1,5 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using UHub.CoreLib.Entities.Posts.Management;
+using UHub.CoreLib.Entities.Posts.DataInterop;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,28 +7,28 @@ using System.Text;
 using System.Threading.Tasks;
 using UHub.CoreLib.Extensions;
 using UHub.CoreLib.Tests;
-using UHub.CoreLib.Entities.Schools.Management;
-using UHub.CoreLib.Entities.SchoolClubs.Management;
+using UHub.CoreLib.Entities.Schools.DataInterop;
+using UHub.CoreLib.Entities.SchoolClubs.DataInterop;
 using UHub.CoreLib.Entities.Posts.DTOs;
 using UHub.CoreLib.Tools;
 using UHub.CoreLib.DataInterop;
 using UHub.CoreLib.Management;
 using System.Collections.Concurrent;
 
-namespace UHub.CoreLib.Entities.Posts.Management.Tests
+namespace UHub.CoreLib.Entities.Posts.DataInterop.Tests
 {
     public partial class PostReaderTests
     {
         /*
             Synchronous:
             Iterations: 50
-            Total Time: 4081.6312ms
-            ItemCount: 10913
+            Total Time: 3602.6452ms
+            ItemCount: 11508
 
-            Min: 0.0748247ms
-            Max: 0.2132727ms
-            Avg: 0.081631628ms
-            Median: 0.08446805ms
+            Min: 68.463ms
+            Max: 172.457ms
+            Avg: 72.051536ms
+            Median: 69.3937ms
 
 
             -------------------------------------------------------
@@ -36,13 +36,13 @@ namespace UHub.CoreLib.Entities.Posts.Management.Tests
 
             Synchronous (threaded):
             Iterations: 50
-            Total Time: 3064.1635ms
-            ItemCount: 10913
+            Total Time: 1509.9419ms
+            ItemCount: 11508
 
-            Min: 0.0769556ms
-            Max: 2.6999921ms
-            Avg: 0.437710032ms
-            Median: 0.1664047ms
+            Min: 95.0701ms
+            Max: 1270.5817ms
+            Avg: 312.75165ms
+            Median: 245.60905ms
 
 
             -------------------------------------------------------
@@ -50,13 +50,13 @@ namespace UHub.CoreLib.Entities.Posts.Management.Tests
 
             Async:
             Iterations: 50
-            Total Time: 4085.8988ms
-            ItemCount: 10913
+            Total Time: 2731.1464ms
+            ItemCount: 11508
 
-            Min: 0.5083501ms
-            Max: 2.732319ms
-            Avg: 1.419883718ms
-            Median: 2.08540025ms
+            Min: 608.9696ms
+            Max: 2294.3514ms
+            Avg: 1529.740062ms
+            Median: 948.85225ms
         */
 
         //useful metric, but dont include in tests (too time consuming)
@@ -68,6 +68,7 @@ namespace UHub.CoreLib.Entities.Posts.Management.Tests
 
             {
                 var samples1 = new List<double>();
+                var countSet = new List<int>(iterCount);
                 var itmCount = 0;
 
                 var start_outer = FailoverDateTimeOffset.UtcNow;
@@ -86,8 +87,9 @@ namespace UHub.CoreLib.Entities.Posts.Management.Tests
                     var end = FailoverDateTimeOffset.UtcNow;
 
 
+                    countSet.Add(set.Count);
                     itmCount = set.Count;
-                    double sample = (end - start).TotalSeconds;
+                    double sample = (end - start).TotalMilliseconds;
                     samples1.Add(sample);
                 }
 
@@ -96,7 +98,7 @@ namespace UHub.CoreLib.Entities.Posts.Management.Tests
 
 
                 Console.WriteLine($"Synchronous:");
-                Console.WriteLine($"Iterations: {iterCount}");
+                Console.WriteLine($"Iterations: {countSet.Count}");
                 Console.WriteLine($"Total Time: {totalTime}ms");
                 Console.WriteLine($"ItemCount: {itmCount}");
                 Console.WriteLine();
@@ -112,6 +114,7 @@ namespace UHub.CoreLib.Entities.Posts.Management.Tests
             }
             {
                 var samples1 = new List<double>();
+                var countSet = new List<int>(iterCount);
                 var itmCount = 0;
 
                 var start_outer = FailoverDateTimeOffset.UtcNow;
@@ -129,9 +132,9 @@ namespace UHub.CoreLib.Entities.Posts.Management.Tests
 
                     var end = FailoverDateTimeOffset.UtcNow;
 
-
+                    countSet.Add(set.Count);
                     itmCount = set.Count;
-                    double sample = (end - start).TotalSeconds;
+                    double sample = (end - start).TotalMilliseconds;
                     samples1.Add(sample);
                 });
 
@@ -140,7 +143,7 @@ namespace UHub.CoreLib.Entities.Posts.Management.Tests
 
 
                 Console.WriteLine($"Synchronous (threaded):");
-                Console.WriteLine($"Iterations: {iterCount}");
+                Console.WriteLine($"Iterations: {countSet.Count}");
                 Console.WriteLine($"Total Time: {totalTime}ms");
                 Console.WriteLine($"ItemCount: {itmCount}");
                 Console.WriteLine();
@@ -158,6 +161,7 @@ namespace UHub.CoreLib.Entities.Posts.Management.Tests
 
             {
                 var samples1 = new ConcurrentBag<double>();
+                var countSet = new List<int>(iterCount);
                 var itmCount = 0;
 
 
@@ -170,10 +174,13 @@ namespace UHub.CoreLib.Entities.Posts.Management.Tests
                         "[dbo].[Posts_GetAll]",
                         (cmd) => { });
 
+
+
                     var end = FailoverDateTimeOffset.UtcNow;
 
+                    countSet.Add(set.ToList().Count);
                     itmCount = set.Count();
-                    double sample = (end - start).TotalSeconds;
+                    double sample = (end - start).TotalMilliseconds;
                     samples1.Add(sample);
                 }
 
@@ -192,7 +199,7 @@ namespace UHub.CoreLib.Entities.Posts.Management.Tests
 
 
                 Console.WriteLine($"Async:");
-                Console.WriteLine($"Iterations: {iterCount}");
+                Console.WriteLine($"Iterations: {countSet.Count}");
                 Console.WriteLine($"Total Time: {totalTime}ms");
                 Console.WriteLine($"ItemCount: {itmCount}");
                 Console.WriteLine();

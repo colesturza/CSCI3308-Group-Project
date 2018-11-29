@@ -8,13 +8,14 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using UHub.CoreLib.ErrorHandling.Exceptions;
+using UHub.CoreLib.Extensions;
 
 namespace UHub.CoreLib.DataInterop
 {
     /// <summary>
     /// SQL encapsulation provider
     /// </summary>
-    public static partial class SqlWorker
+    internal static partial class SqlWorker
     {
 
         /// <summary>
@@ -59,17 +60,11 @@ namespace UHub.CoreLib.DataInterop
                     }
                 }
             }
-            catch (AggregateException ex)
+            catch (Exception ex)
             {
-                if (ex.InnerException is SystemDisabledException)
-                {
-                    throw;
-                }
 
-
-                var inner = ex.InnerException;
-                var errCode = inner.Message.Substring(0, 4);
-                var errMsg = inner.Message.Substring(inner.Message.IndexOf(": ") + 2);
+                var errCode = ex.Message.Substring(0, 4);
+                var errMsg = ex.Message.Substring(ex.Message.IndexOf(": ") + 2);
 
 
                 if (errCode == "400:")
@@ -78,7 +73,7 @@ namespace UHub.CoreLib.DataInterop
                     if (errMsg.Contains("Invalid request arguments"))
                         throw new ArgumentException(errMsg);
                     //specific argument does not meet requirements
-                    if (Regex.IsMatch(errMsg, "^Invalid [a-zA-Z ]+ argument$"))
+                    if (errMsg.RgxIsMatch("^Invalid [a-zA-Z ]+ argument$"))
                         throw new ArgumentOutOfRangeException("", errMsg);
                     //argument is null/empty
                     else if (errMsg.Contains("cannot be null or empty"))
@@ -121,10 +116,6 @@ namespace UHub.CoreLib.DataInterop
                     throw;
                 }
 
-            }
-            catch
-            {
-                throw;
             }
 
         }
@@ -166,17 +157,11 @@ namespace UHub.CoreLib.DataInterop
                     }
                 }
             }
-            catch (AggregateException ex)
+            catch (Exception ex)
             {
-                if (ex.InnerException is SystemDisabledException)
-                {
-                    throw;
-                }
 
-
-                var inner = ex.InnerException;
-                var errCode = inner.Message.Substring(0, 4);
-                var errMsg = inner.Message.Substring(inner.Message.IndexOf(": ") + 2);
+                var errCode = ex.Message.Substring(0, 4);
+                var errMsg = ex.Message.Substring(ex.Message.IndexOf(": ") + 2);
 
                 if (errCode == "400:")
                 {
@@ -184,7 +169,7 @@ namespace UHub.CoreLib.DataInterop
                     if (errMsg.Contains("Invalid request arguments"))
                         throw new ArgumentException(errMsg);
                     //specific argument does not meet requirements
-                    if (Regex.IsMatch(errMsg, "^Invalid [a-zA-Z ]+ argument$"))
+                    if (errMsg.RgxIsMatch("^Invalid [a-zA-Z ]+ argument$"))
                         throw new ArgumentOutOfRangeException("", errMsg);
                     //argument is null/empty
                     else if (errMsg.Contains("cannot be null or empty"))
@@ -226,10 +211,6 @@ namespace UHub.CoreLib.DataInterop
                 {
                     throw;
                 }
-            }
-            catch
-            {
-                throw;
             }
         }
 
@@ -284,16 +265,10 @@ namespace UHub.CoreLib.DataInterop
                         }
 
                     }
-                    catch (AggregateException ex)
+                    catch (Exception ex)
                     {
-                        if (ex.InnerException is SystemDisabledException)
-                        {
-                            throw;
-                        }
-
-                        var inner = ex.InnerException;
-                        var errCode = inner.Message.Substring(0, 4);
-                        var errMsg = inner.Message.Substring(inner.Message.IndexOf(": ") + 2);
+                        var errCode = ex.Message.Substring(0, 4);
+                        var errMsg = ex.Message.Substring(ex.Message.IndexOf(": ") + 2);
 
                         if (errCode == "400:")
                         {
@@ -301,7 +276,7 @@ namespace UHub.CoreLib.DataInterop
                             if (errMsg.Contains("Invalid request arguments"))
                                 throw new ArgumentException(errMsg);
                             //specific argument does not meet requirements
-                            if (Regex.IsMatch(errMsg, "^Invalid [a-zA-Z ]+ argument$"))
+                            if (errMsg.RgxIsMatch("^Invalid [a-zA-Z ]+ argument$"))
                                 throw new ArgumentOutOfRangeException("", errMsg);
                             //argument is null/empty
                             else if (errMsg.Contains("cannot be null or empty"))
@@ -344,10 +319,6 @@ namespace UHub.CoreLib.DataInterop
                             throw;
                         }
 
-                    }
-                    catch
-                    {
-                        throw;
                     }
                 }
             }
@@ -402,16 +373,11 @@ namespace UHub.CoreLib.DataInterop
                         }
 
                     }
-                    catch (AggregateException ex)
+                    catch (Exception ex)
                     {
-                        if (ex.InnerException is SystemDisabledException)
-                        {
-                            throw;
-                        }
 
-                        var inner = ex.InnerException;
-                        var errCode = inner.Message.Substring(0, 4);
-                        var errMsg = inner.Message.Substring(inner.Message.IndexOf(": ") + 2);
+                        var errCode = ex.Message.Substring(0, 4);
+                        var errMsg = ex.Message.Substring(ex.Message.IndexOf(": ") + 2);
 
                         if (errCode == "400:")
                         {
@@ -419,7 +385,7 @@ namespace UHub.CoreLib.DataInterop
                             if (errMsg.Contains("Invalid request arguments"))
                                 throw new ArgumentException(errMsg);
                             //specific argument does not meet requirements
-                            if (Regex.IsMatch(errMsg, "^Invalid [a-zA-Z ]+ argument$"))
+                            if (errMsg.RgxIsMatch("^Invalid [a-zA-Z ]+ argument$"))
                                 throw new ArgumentOutOfRangeException("", errMsg);
                             //argument is null/empty
                             else if (errMsg.Contains("cannot be null or empty"))
@@ -461,11 +427,6 @@ namespace UHub.CoreLib.DataInterop
                         {
                             throw;
                         }
-
-                    }
-                    catch
-                    {
-                        throw;
 
                     }
                 }
@@ -526,16 +487,11 @@ namespace UHub.CoreLib.DataInterop
                         }
 
                     }
-                    catch (AggregateException ex)
+                    catch (Exception ex)
                     {
-                        if (ex.InnerException is SystemDisabledException)
-                        {
-                            throw;
-                        }
 
-                        var inner = ex.InnerException;
-                        var errCode = inner.Message.Substring(0, 4);
-                        var errMsg = inner.Message.Substring(inner.Message.IndexOf(": ") + 2);
+                        var errCode = ex.Message.Substring(0, 4);
+                        var errMsg = ex.Message.Substring(ex.Message.IndexOf(": ") + 2);
 
                         if (errCode == "400:")
                         {
@@ -543,7 +499,7 @@ namespace UHub.CoreLib.DataInterop
                             if (errMsg.Contains("Invalid request arguments"))
                                 throw new ArgumentException(errMsg);
                             //specific argument does not meet requirements
-                            if (Regex.IsMatch(errMsg, "^Invalid [a-zA-Z ]+ argument$"))
+                            if (errMsg.RgxIsMatch("^Invalid [a-zA-Z ]+ argument$"))
                                 throw new ArgumentOutOfRangeException("", errMsg);
                             //argument is null/empty
                             else if (errMsg.Contains("cannot be null or empty"))
@@ -585,11 +541,6 @@ namespace UHub.CoreLib.DataInterop
                         {
                             throw;
                         }
-
-                    }
-                    catch
-                    {
-                        throw;
 
                     }
                 }

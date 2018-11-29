@@ -14,7 +14,7 @@ namespace UHub.Models.Security
         /// <summary>
         /// Text value on submit button
         /// </summary>
-        public string SubmitValue { get; set; } = "Submit";
+        public string SubmitText { get; set; } = "Submit";
         /// <summary>
         /// CSS class for submit button
         /// </summary>
@@ -23,6 +23,8 @@ namespace UHub.Models.Security
         /// Flag to set submit button behavior
         /// </summary>
         public bool UseSubmitBehavior { get; set; } = true;
+
+        public bool RenderScripts { get; set; } = true;
 
     }
 }

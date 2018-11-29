@@ -12,7 +12,7 @@ using UHub.CoreLib.Management;
 
 namespace UHub.CoreLib.Security
 {
-    public sealed class RecaptchaManager
+    public sealed partial class RecaptchaManager
     {
         public const string RECAPTCHA_HEADER = "g-recaptcha-response";
 

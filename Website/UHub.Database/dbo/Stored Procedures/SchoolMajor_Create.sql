@@ -84,16 +84,21 @@ begin
 			set @CreatedBy = 0
 		end
 
+		declare @CreatedDate datetimeoffset(7) = sysDateTimeOffset()
+
+
 		--insert item into ent table
 		insert into dbo.Entities
 		(
 			EntTypeID,
-			CreatedBy
+			CreatedBy,
+			CreatedDate
 		)
 		values
 		( 
 			@_entTypeID,
-			@CreatedBy
+			@CreatedBy,
+			@CreatedDate
 		)
 
 
@@ -139,6 +144,7 @@ begin
 			@PropID = 2,
 			@PropValue = @Name,
 			@ModifiedBy = @CreatedBy,
+			@ModifiedDate = @CreatedDate,
 			@IsNewRecord = @_isNew
 
 		--Description [24]
@@ -148,6 +154,7 @@ begin
 			@PropID = 24,
 			@PropValue = @Description,
 			@ModifiedBy = @CreatedBy,
+			@ModifiedDate = @CreatedDate,
 			@IsNewRecord = @_isNew
 
 		select @_entID

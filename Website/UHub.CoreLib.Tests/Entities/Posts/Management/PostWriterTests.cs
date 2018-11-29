@@ -4,7 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using UHub.CoreLib.Entities.Posts.DTOs;
 using UHub.CoreLib.Tests;
 
-namespace UHub.CoreLib.Entities.Posts.Management.Tests
+namespace UHub.CoreLib.Entities.Posts.DataInterop.Tests
 {
     [TestClass]
     public class PostWriterTests
@@ -30,7 +30,7 @@ namespace UHub.CoreLib.Entities.Posts.Management.Tests
             var post = testPost.ToInternal<Post>();
 
 
-            var postId = PostWriter.TryCreatePost(post);
+            var postId = PostWriter.CreatePost(post);
 
 
             if (postId == null)
@@ -70,16 +70,18 @@ namespace UHub.CoreLib.Entities.Posts.Management.Tests
             var post = testPost.ToInternal<Post>();
 
 
-            var postId = PostWriter.TryCreatePost(post, out var msg);
-
-
-            if (postId == null)
+            long? postID = null;
+            try
             {
-                Console.WriteLine(msg);
-            }
-            else
-            {
+                postID = PostWriter.CreatePost(post);
                 Assert.Fail();
+            }
+            catch
+            {
+                if (postID == null)
+                {
+                    Console.WriteLine("Post create failure");
+                }
             }
 
         }
@@ -109,7 +111,7 @@ namespace UHub.CoreLib.Entities.Posts.Management.Tests
                 var post = testPost.ToInternal<Post>();
 
 
-                postID = PostWriter.TryCreatePost(post);
+                postID = PostWriter.CreatePost(post);
             }
 
             if (postID == null)

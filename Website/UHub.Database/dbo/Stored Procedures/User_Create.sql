@@ -78,18 +78,21 @@ begin
 			set @CreatedBy = 0
 		end
 
+		declare @CreatedDate datetimeoffset(7) = sysDateTimeOffset()
 
 
 		--insert item into ent table
 		insert into dbo.Entities
 		(
 			EntTypeID,
-			CreatedBy
+			CreatedBy,
+			CreatedDate
 		)
 		values
 		( 
 			@_entTypeID,
-			@CreatedBy
+			@CreatedBy,
+			@CreatedDate
 		)
 
 		select @_entID = SCOPE_IDENTITY()
@@ -160,6 +163,7 @@ begin
 			@PropID = 2,
 			@PropValue = @Name,
 			@ModifiedBy = @_entID,
+			@ModifiedDate = @CreatedDate,
 			@IsNewRecord = @_isNew
 
 		--PhoneNum [6]
@@ -169,6 +173,7 @@ begin
 			@PropID = 6,
 			@PropValue = @PhoneNumber,
 			@ModifiedBy = @_entID,
+			@ModifiedDate = @CreatedDate,
 			@IsNewRecord = @_isNew
 
 		--Major [7]
@@ -178,6 +183,7 @@ begin
 			@PropID = 7,
 			@PropValue = @Major,
 			@ModifiedBy = @_entID,
+			@ModifiedDate = @CreatedDate,
 			@IsNewRecord = @_isNew
 
 		--Year [8]
@@ -187,6 +193,7 @@ begin
 			@PropID = 8,
 			@PropValue = @Year,
 			@ModifiedBy = @_entID,
+			@ModifiedDate = @CreatedDate,
 			@IsNewRecord = @_isNew
 		
 		--GradDate [10]
@@ -196,6 +203,7 @@ begin
 			@PropID = 10,
 			@PropValue = @GradDate,
 			@ModifiedBy = @_entID,
+			@ModifiedDate = @CreatedDate,
 			@IsNewRecord = @_isNew
 
 		--Company [30]
@@ -205,6 +213,7 @@ begin
 			@PropID = 30,
 			@PropValue = @Company,
 			@ModifiedBy = @_entID,
+			@ModifiedDate = @CreatedDate,
 			@IsNewRecord = @_isNew
 
 		--JobTitle [30]
@@ -214,6 +223,7 @@ begin
 			@PropID = 31,
 			@PropValue = @JobTitle,
 			@ModifiedBy = @_entID,
+			@ModifiedDate = @CreatedDate,
 			@IsNewRecord = @_isNew
 
 		--IsFinished [36]
@@ -223,8 +233,12 @@ begin
 			@PropID = 36,
 			@PropValue = @IsFinished,
 			@ModifiedBy = @_entID,
+			@ModifiedDate = @CreatedDate,
 			@IsNewRecord = @_isNew
 
+
+		exec [dbo].[User_CreateConfirmToken]
+			@UserID = @_entID
 
 
 		select @_entID

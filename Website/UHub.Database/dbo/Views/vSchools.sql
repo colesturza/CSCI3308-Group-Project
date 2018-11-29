@@ -1,24 +1,66 @@
 ﻿
-
-
-
-
-
-
-CREATE view [dbo].[vSchools]
+create view [dbo].[vSchools]
 as
 
+	with set1 as
+	(
+		select 
+			EntID,
+			--
+			case when epx.PropID = 2
+			then PropValue
+			else NULL
+			end [Name],
+			--
+			case when epx.PropID = 15
+			then PropValue
+			else NULL
+			end [State],
+			--
+			case when epx.PropID = 16
+			then PropValue
+			else NULL
+			end [City],
+			--
+			case when epx.PropID = 17
+			then PropValue
+			else NULL
+			end [DomainValidator],
+			--
+			case when epx.PropID = 24
+			then PropValue
+			else NULL
+			end [Description]
+
+		from
+			EntPropertyXRef epx
+		where
+			epx.EntTypeID = 2
+	),
+	set2 as
+	(
+		select
+			EntID,
+			min([Name])				[Name],
+			min([State])			[State],
+			min(City)				City,
+			min(DomainValidator)	DomainValidator,
+			min([Description])		[Description]
+		from set1
+		group by
+			EntID
+	)
 
 	select
 		ent.ID,
 		ent.EntTypeID,
 		ent.IsEnabled,
 		ent.IsReadonly,
-		xref_Name.PropValue				as [Name],
-		xref_State.PropValue			as [State],
-		xref_City.PropValue				as [City],
-		xref_DomainValidator.PropValue	as [DomainValidator],
-		xref_Description.PropValue		as [Description],
+		s2.[Name],
+		s2.[State],
+		s2.City,
+		s2.DomainValidator,
+		s2.[Description],
 		ent.IsDeleted,
 		ent.CreatedBy,
 		ent.CreatedDate,
@@ -26,44 +68,16 @@ as
 		ent.ModifiedDate,
 		ent.DeletedBy,
 		ent.DeletedDate
+	from Entities ent
 
+	inner join set2 s2
+	on
+		ent.ID = s2.EntID
 
-	from 
-		dbo.Entities ent
-
-	inner join dbo.EntPropertyXRef xref_Name
-	on 
-		xref_Name.EntID = ent.ID
-		and xref_Name.PropID = 2
-
-
-	inner join dbo.EntPropertyXRef xref_State
-	on 
-		xref_State.EntID = ent.ID
-		and xref_State.PropID = 15
-
-
-	inner join dbo.EntPropertyXRef xref_City
-	on 
-		xref_City.EntID = ent.ID
-		and xref_City.PropID = 16
-
-
-	inner join dbo.EntPropertyXRef xref_DomainValidator
-	on 
-		xref_DomainValidator.EntID = ent.ID
-		and xref_DomainValidator.PropID = 17
-
-
-	inner join dbo.EntPropertyXRef xref_Description
-	on 
-		xref_Description.EntID = ent.ID
-		and xref_Description.PropID = 24
-
+	
 
 	where
-		ent.EntTypeID = 2
-		AND ent.IsDeleted = 0
+		ent.IsDeleted = 0
 
 
 

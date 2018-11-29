@@ -7,11 +7,12 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using UHub.CoreLib.Attributes;
 using UHub.CoreLib.Entities.ClubModerators.DTOs;
-using UHub.CoreLib.Entities.ClubModerators.Management;
-using UHub.CoreLib.Entities.SchoolClubs.Management;
-using UHub.CoreLib.Entities.Users.Management;
+using UHub.CoreLib.Entities.ClubModerators.DataInterop;
+using UHub.CoreLib.Entities.SchoolClubs.DataInterop;
+using UHub.CoreLib.Entities.Users.DataInterop;
 using UHub.CoreLib.Management;
 using UHub.CoreLib.Tools;
+using UHub.CoreLib.Entities.ClubModerators.Management;
 
 namespace UHub.CoreLib.Entities.ClubModerators.APIControllers
 {
@@ -29,12 +30,15 @@ namespace UHub.CoreLib.Entities.ClubModerators.APIControllers
             {
                 return Content(statCode, status);
             }
-            if (!HandleRecaptcha(out status))
+
+            var context = System.Web.HttpContext.Current;
+            var recaptchaResult = await HandleRecaptchaAsync(context);
+            if (!recaptchaResult.IsValid)
             {
-                return Content(statCode, status);
+                return Content(statCode, recaptchaResult.Result);
             }
 
-            if(clubModerator == null)
+            if (clubModerator == null)
             {
                 return BadRequest();
             }
@@ -42,12 +46,12 @@ namespace UHub.CoreLib.Entities.ClubModerators.APIControllers
 
 
             var tmpClubModerator = clubModerator.ToInternal<ClubModerator>();
-            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser();
+            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser().CmsUser;
 
-            
-            var taskIsCurrentUserOwner = UserReader.ValidateClubModeratorAsync(clubID, (long)cmsUser.ID);
-            var taskIsCurrentUserBanned = SchoolClubReader.IsUserBannedAsync(clubID, (long)cmsUser.ID);
-            var taskIsNewUserBanned = SchoolClubReader.IsUserBannedAsync(clubID, tmpClubModerator.UserID);
+
+            var taskIsCurrentUserOwner = UserReader.TryValidateClubModeratorAsync(clubID, (long)cmsUser.ID);
+            var taskIsCurrentUserBanned = SchoolClubReader.TryIsUserBannedAsync(clubID, (long)cmsUser.ID);
+            var taskIsNewUserBanned = SchoolClubReader.TryIsUserBannedAsync(clubID, tmpClubModerator.UserID);
 
             await Task.WhenAll(taskIsCurrentUserOwner, taskIsCurrentUserBanned, taskIsNewUserBanned);
             var isCurrentUserBanned = taskIsCurrentUserBanned.Result;
@@ -77,22 +81,35 @@ namespace UHub.CoreLib.Entities.ClubModerators.APIControllers
             try
             {
 
-                long? clubModID = await ClubModeratorWriter.TryCreateClubModeratorAsync(tmpClubModerator, clubID);
+                var clubModResult = await ClubModeratorManager.TryCreateClubModeratorAsync(tmpClubModerator, clubID);
+                var clubModID = clubModResult.ClubModID;
+                var ResultCode = clubModResult.ResultCode;
 
-                if (clubModID != null)
+
+                if (ResultCode == 0)
                 {
-                    status = "Club moderator created.";
+                    status = "Club moderator created";
                     statCode = HttpStatusCode.OK;
+                }
+                else if(ResultCode == ClubModeratorResultCode.UnknownError)
+                {
+                    status = "Unknown server error";
+                    statCode = HttpStatusCode.InternalServerError;
+                }
+                else
+                {
+                    status = "Invalid Field - " + ResultCode.ToString();
+                    statCode = HttpStatusCode.BadRequest;
                 }
 
             }
             catch (Exception ex)
             {
-                var errCode = "185AB13F-2C5C-435B-8B87-AA48F1AB3C73";
+                var errCode = "69605919-C129-4409-BE24-3FFFBD702B39";
                 Exception ex_outer = new Exception(errCode, ex);
                 CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
 
-                return Content(HttpStatusCode.InternalServerError, status);
+                statCode = HttpStatusCode.InternalServerError;
             }
 
 

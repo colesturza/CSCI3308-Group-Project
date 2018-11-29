@@ -11,7 +11,8 @@ using UHub.CoreLib.Config;
 using UHub.CoreLib.DataInterop;
 using UHub.CoreLib.Logging;
 using UHub.CoreLib.Security;
-using UHub.CoreLib.SmtpInterop;
+using UHub.CoreLib.EmailInterop;
+using UHub.CoreLib.EmailInterop.Providers.SMTP;
 using UHub.CoreLib.Tools;
 using UHub.CoreLib.Util;
 
@@ -19,6 +20,7 @@ namespace UHub
 {
     public static class Common
     {
+
 
         public static CmsConfiguration_Grouped GetCmsConfig()
         {
@@ -130,7 +132,7 @@ namespace UHub
                 },
                 Mail = new CmsConfig_Mail
                 {
-                    NoReplyMailConfig = mailConfig,
+                    MailProvider = new SmtpProvider(mailConfig),
                     ContactFormRecipientAddress = ContactFormRecipient
                 },
                 Security = new CmsConfig_Security
@@ -138,17 +140,17 @@ namespace UHub
                     PswdHashType = CryptoHashType.HMACSHA512,
                     ForceHTTPS = true,
                     ForceSecureCookies = true,
-                    CookieDomain = ".u-hub.life",
+                    CookieDomain = domain,
                     ForceSecureResponseHeaders = true,
                     AuthTokenTimeout = new TimeSpan(0, 6, 0, 0),
                     MaxAuthTokenLifespan = new TimeSpan(30, 0, 0, 0),
                     EnableAuthTokenSlidingExpiration = true,
                     LoginURL = "~/Account/Login",
-                    DefaultAuthFwdURL = "~/Account",
+                    DefaultAuthFwdURL = "~/School",
                     AcctConfirmURL = "~/Account/Confirm",
                     AcctPswdRecoveryURL = "~/Account/Recover",
                     AcctPswdUpdateURL = "~/Account/UpdatePassword",
-                    AcctPswdRecoveryExpiration = new TimeSpan(0, 0, 30, 0),
+                    AcctPswdRecoveryLifespan = new TimeSpan(0, 0, 30, 0),
                     EnableRecaptcha = true,                //CAPTCHA
                     RecaptchaPublicKey = captchaPublicKey,
                     RecaptchaPrivateKey = captchaPrivateKey,
@@ -158,7 +160,7 @@ namespace UHub
                     CookieSameSiteMode = CookieSameSiteModes.Lax,
                     EnablePswdRecovery = true,
                     EnablePersistentAuthTokens = true,
-                    HtmlSanitizerMode = HtmlSanitizerMode.OnWrite | HtmlSanitizerMode.OnRead
+                    HtmlSanitizerMode = HtmlSanitizerMode.Both
                 },
                 Logging = new CmsConfig_Logging
                 {
@@ -271,7 +273,7 @@ namespace UHub
                 },
                 Mail = new CmsConfig_Mail
                 {
-                    NoReplyMailConfig = mailConfig,
+                    MailProvider = new SmtpProvider(mailConfig),
                     ContactFormRecipientAddress = ContactFormRecipient
                 },
                 Security = new CmsConfig_Security
@@ -279,21 +281,21 @@ namespace UHub
                     PswdHashType = CryptoHashType.HMACSHA512,
                     ForceHTTPS = true,
                     ForceSecureCookies = true,
-                    CookieDomain = ".u-hub.life",
+                    CookieDomain = domain,
                     ForceSecureResponseHeaders = true,
                     AuthTokenTimeout = new TimeSpan(0, 6, 0, 0),
                     MaxAuthTokenLifespan = new TimeSpan(30, 0, 0, 0),
                     EnableAuthTokenSlidingExpiration = true,
                     LoginURL = "~/Account/Login",
-                    DefaultAuthFwdURL = "~/Account",
+                    DefaultAuthFwdURL = "~/School",
                     AcctConfirmURL = "~/Account/Confirm",
                     AcctPswdRecoveryURL = "~/Account/Recover",
                     AcctPswdUpdateURL = "~/Account/UpdatePassword",
-                    AcctPswdRecoveryExpiration = new TimeSpan(0, 0, 30, 0),
-                    EnableRecaptcha = false,                //CAPTCHA
+                    AcctPswdRecoveryLifespan = new TimeSpan(0, 0, 30, 0),
+                    EnableRecaptcha = true,                //CAPTCHA
                     RecaptchaPublicKey = captchaPublicKey,
                     RecaptchaPrivateKey = captchaPrivateKey,
-                    AutoConfirmNewAccounts = true,
+                    AutoConfirmNewAccounts = false,
                     AutoApproveNewAccounts = true,
                     EnableTokenVersioning = false,           //VERSION
                     CookieSameSiteMode = CookieSameSiteModes.Lax,

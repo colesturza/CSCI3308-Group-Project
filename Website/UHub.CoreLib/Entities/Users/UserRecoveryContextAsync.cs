@@ -9,46 +9,68 @@ using UHub.CoreLib.Extensions;
 using UHub.CoreLib.Management;
 using UHub.CoreLib.Security;
 using UHub.CoreLib.Entities.Users.Interfaces;
-using UHub.CoreLib.Entities.Users.Management;
+using UHub.CoreLib.Entities.Users.DataInterop;
 using UHub.CoreLib.Security.Accounts;
 
 namespace UHub.CoreLib.Entities.Users
 {
-    
+
     internal sealed partial class UserRecoveryContext : DBEntityBase, IUserRecoveryContext
     {
 
         /// <summary>
         /// Increment the attempt count in DB
         /// </summary>
-        public async Task<AccountResultCode> IncrementAttemptCountAsync()
+        public async Task<AcctRecoveryResultCode> TryIncrementAttemptCountAsync()
         {
+#pragma warning disable 612, 618
             if (AttemptCount >= CoreFactory.Singleton.Properties.AcctPswdResetMaxAttemptCount)
             {
-                this.Delete();
-                return AccountResultCode.RecoveryContextDestroyed;
+                this.TryDelete();
+                return AcctRecoveryResultCode.RecoveryContextDestroyed;
             }
 
             //Forced reset does not respect attempt count
             //But no error should be reported
             if (!this.IsOptional)
             {
-                return AccountResultCode.Success;
+                return AcctRecoveryResultCode.Success;
             }
 
 
             this.AttemptCount++;
-            await UserWriter.TryLogFailedRecoveryContextAttemptAsync(this.RecoveryID);
-            return AccountResultCode.Success;
+            try
+            {
+                await UserWriter.LogFailedRecoveryContextAttemptAsync(this.RecoveryID);
+                return AcctRecoveryResultCode.Success;
+            }
+            catch (Exception ex)
+            {
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("1030F56D-0B6B-473C-9732-C828981FC332", ex);
+                return AcctRecoveryResultCode.UnknownError;
+            }
+#pragma warning restore
         }
 
 
         /// <summary>
         /// Delete this recovery context from the DB
         /// </summary>
-        public async Task DeleteAsync()
+        public async Task<bool> TryDeleteAsync()
         {
-            await UserWriter.TryDeleteRecoveryContextAsync(this.RecoveryID);
+#pragma warning disable 612, 618
+
+            try
+            {
+                await UserWriter.DeleteRecoveryContextAsync(this.RecoveryID);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                CoreFactory.Singleton.Logging.CreateErrorLogAsync("042119E4-FB51-49A9-866B-F78DCFA0C567", ex);
+                return false;
+            }
+#pragma warning restore
         }
 
     }

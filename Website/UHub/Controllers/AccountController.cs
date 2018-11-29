@@ -12,7 +12,8 @@ using UHub.CoreLib.Management;
 using UHub.CoreLib.Security;
 using UHub.CoreLib.Security.Accounts;
 using UHub.CoreLib.Security.Authentication;
-using UHub.CoreLib.SmtpInterop;
+using UHub.CoreLib.EmailInterop;
+using UHub.CoreLib.EmailInterop.Templates;
 
 namespace UHub.Controllers
 {
@@ -21,7 +22,7 @@ namespace UHub.Controllers
         [MvcAuthControl]
         public ActionResult Index()
         {
-            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser();
+            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser().CmsUser;
 
             var userName = cmsUser.Username;
 
@@ -41,7 +42,7 @@ namespace UHub.Controllers
         [System.Web.Mvc.HttpGet]
         public ActionResult Login()
         {
-            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser();
+            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser().CmsUser;
             if (cmsUser != null && cmsUser.ID != null)
             {
                 var url = CoreFactory.Singleton.Properties.DefaultAuthFwdURL;
@@ -53,7 +54,7 @@ namespace UHub.Controllers
 
 
         [System.Web.Mvc.HttpPost]
-        public ActionResult Login([FromBody] User_CredentialDTO creds)
+        public async Task<ActionResult> Login([FromBody] User_CredentialDTO creds)
         {
 
             if (!ModelState.IsValid)
@@ -61,10 +62,10 @@ namespace UHub.Controllers
                 return View();
             }
 
-
+            var context = System.Web.HttpContext.Current;
             if (CoreFactory.Singleton.Properties.EnableRecaptcha)
             {
-                var isCaptchaValid = CoreFactory.Singleton.Recaptcha.IsCaptchaValid();
+                var isCaptchaValid = await CoreFactory.Singleton.Recaptcha.IsCaptchaValidAsync(context);
                 if (!isCaptchaValid)
                 {
                     ViewBag.ErrorMsg = "Captcha is not valid";
@@ -78,13 +79,12 @@ namespace UHub.Controllers
             var pswd = creds.Password;
 
             var statusMsg = "An unknown authentication error has occured";
-            var isValid = CoreFactory.Singleton.Auth.TrySetClientAuthToken(
+            var ResultCode = CoreFactory.Singleton.Auth.TrySetClientAuthToken(
                 email,
                 pswd,
-                false,
-                out var ResultCode,
-                GeneralFailHandler: (id) => { });
+                false);
 
+            var isValid = (ResultCode == AuthResultCode.Success);
 
             switch (ResultCode)
             {
@@ -171,8 +171,8 @@ namespace UHub.Controllers
         }
 
 
-
-        public ActionResult Confirm()
+        [System.Web.Mvc.HttpGet]
+        public async Task<ActionResult> Confirm()
         {
             var idObj = Url.RequestContext.RouteData.Values["id"];
             if (idObj == null)
@@ -180,28 +180,89 @@ namespace UHub.Controllers
                 ViewBag.Message = "Unable to complete operation - must provide confirmation key";
                 return View();
             }
-
-
             var idStr = idObj.ToString();
 
-            if (CoreFactory.Singleton.Accounts.TryConfirmUser(idStr))
+
+            if(idStr.ToLower() == "new")
+            {
+                ViewBag.Message = "Your new account has been created, please check your email and follow the confirmation instructions";
+                return View();
+            }
+
+
+
+            var confResult = await CoreFactory.Singleton.Accounts.TryConfirmUserAsync(idStr);
+            if (confResult == 0)
             {
                 ViewBag.Message = "User account has been successfully confirmed";
             }
             else
             {
-                ViewBag.Message = "User confirmation key is not in a valid format";
+                ViewBag.Message = "User confirmation failed - " + confResult.ToString();
             }
 
             return View();
         }
 
 
+        [System.Web.Mvc.HttpGet]
         [MvcAuthControl]
         public ActionResult UpdatePassword()
         {
+            ViewBag.CanForward = false;
             return View();
         }
+
+
+        [System.Web.Mvc.HttpPost]
+        [MvcAuthControl]
+        public async Task<ActionResult> UpdatePassword(string txt_CurrentPswd, string txt_NewPswd, string txt_ConfirmPswd, bool chk_DeviceLogout = false)
+        {
+            var context = System.Web.HttpContext.Current;
+            if (CoreFactory.Singleton.Properties.EnableRecaptcha)
+            {
+                var isCaptchaValid = await CoreFactory.Singleton.Recaptcha.IsCaptchaValidAsync(context);
+                if (!isCaptchaValid)
+                {
+                    ViewBag.ErrorMsg = "Captcha is not valid";
+                    return View();
+                }
+            }
+
+
+            if (txt_NewPswd != txt_ConfirmPswd)
+            {
+                ViewBag.Message = "Passwords must match";
+                return View();
+            }
+
+
+            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser().CmsUser;
+
+
+            var result = await CoreFactory.Singleton.Accounts.TryUpdatePasswordAsync(
+                cmsUser.ID.Value,
+                txt_CurrentPswd,
+                txt_NewPswd,
+                chk_DeviceLogout,
+                context);
+
+
+            ViewBag.Message = result.ToString();
+
+            ViewBag.CanForward = (result == 0);
+
+            return View();
+        }
+
+
+
+        [System.Web.Mvc.HttpGet]
+        public ActionResult ForgotPassword()
+        {
+            return View();
+        }
+
 
 
         [System.Web.Mvc.HttpPost]
@@ -214,24 +275,25 @@ namespace UHub.Controllers
             }
 
 
+            var context = System.Web.HttpContext.Current;
             if (CoreFactory.Singleton.Properties.EnableRecaptcha)
             {
-                var isCaptchaValid = CoreFactory.Singleton.Recaptcha.IsCaptchaValid();
+                var isCaptchaValid = await CoreFactory.Singleton.Recaptcha.IsCaptchaValidAsync(context);
                 if (!isCaptchaValid)
                 {
-                    ViewBag.Message = "Captcha is not valid";
+                    ViewBag.ErrorMsg = "Captcha is not valid";
                     return View();
                 }
             }
 
+
             var data = await CoreFactory.Singleton.Accounts
                 .TryCreateUserRecoveryContextAsync(
                     UserEmail: txt_Email,
-                    IsOptional: true,
-                    GeneralFailHandler: null);
+                    IsOptional: true);
 
 
-            if (data.ResultCode != AccountResultCode.Success)
+            if (data.ResultCode != AcctRecoveryResultCode.Success)
             {
                 //*/
                 ViewBag.Message = data.ResultCode.ToString();
@@ -250,7 +312,7 @@ namespace UHub.Controllers
 
             var path = data.RecoveryContext.RecoveryURL;
 
-            var recoveryMessage = new UHub.CoreLib.SmtpInterop.SmtpMessage_ForgotPswd("UHub Account Recovery", "UHub", txt_Email)
+            var recoveryMessage = new EmailMessage_ForgotPswd("UHub Account Recovery", "UHub", txt_Email)
             {
                 RecoveryURL = path,
                 RecoveryKey = data.RecoveryKey
@@ -259,7 +321,7 @@ namespace UHub.Controllers
 
             var mailResult = await CoreFactory.Singleton.Mail.TrySendMessageAsync(recoveryMessage);
 
-            if (mailResult == SmtpResultCode.Success)
+            if (mailResult == EmailResultCode.Success)
             {
                 ViewBag.Message = "Recovery email sent, please check your inbox";
                 return View();
@@ -276,33 +338,48 @@ namespace UHub.Controllers
         [System.Web.Mvc.HttpGet]
         public ActionResult Recover()
         {
-
+            ViewBag.CanForward = false;
             return View();
         }
 
-        
+
         public async Task<ActionResult> Recover(string txt_RecoveryKey, string txt_NewPswd, string txt_ConfirmPswd)
         {
             var idObj = Url.RequestContext.RouteData.Values["id"];
             var recoveryID = idObj?.ToString() ?? "";
 
-            if(recoveryID.IsEmpty() || recoveryID.Length > 200)
+            if (recoveryID.IsEmpty() || recoveryID.Length > 200)
             {
+                ViewBag.Message = "Invalid Recovery Key";
                 return View();
             }
 
             if (txt_RecoveryKey.Length > 200)
             {
+                ViewBag.Message = "Invalid Recovery Key";
                 return View();
             }
 
-            if(txt_NewPswd != txt_ConfirmPswd)
+            if (txt_NewPswd != txt_ConfirmPswd)
             {
                 ViewBag.Message = "Passwords must match";
+                return View();
             }
 
 
             var context = System.Web.HttpContext.Current;
+            if (CoreFactory.Singleton.Properties.EnableRecaptcha)
+            {
+                var isCaptchaValid = await CoreFactory.Singleton.Recaptcha.IsCaptchaValidAsync(context);
+                if (!isCaptchaValid)
+                {
+                    ViewBag.ErrorMsg = "Captcha is not valid";
+                    return View();
+                }
+            }
+
+
+
             var result = await CoreFactory.Singleton.Accounts.TryRecoverPasswordAsync(
                 recoveryID,
                 txt_RecoveryKey,
@@ -312,6 +389,9 @@ namespace UHub.Controllers
 
 
             ViewBag.Message = result.ToString();
+
+            ViewBag.CanForward = (result == 0);
+
 
 
             return View();

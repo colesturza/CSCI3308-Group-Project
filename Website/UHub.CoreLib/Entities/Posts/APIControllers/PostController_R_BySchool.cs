@@ -10,11 +10,11 @@ using System.Web.Http;
 using UHub.CoreLib.APIControllers;
 using UHub.CoreLib.Attributes;
 using UHub.CoreLib.Entities.Posts.DTOs;
-using UHub.CoreLib.Entities.Posts.Management;
+using UHub.CoreLib.Entities.Posts.DataInterop;
 using UHub.CoreLib.Entities.SchoolClubs;
-using UHub.CoreLib.Entities.SchoolClubs.Management;
-using UHub.CoreLib.Entities.Schools.Management;
-using UHub.CoreLib.Entities.Users.Management;
+using UHub.CoreLib.Entities.SchoolClubs.DataInterop;
+using UHub.CoreLib.Entities.Schools.DataInterop;
+using UHub.CoreLib.Entities.Users.DataInterop;
 using UHub.CoreLib.Extensions;
 using UHub.CoreLib.Management;
 using UHub.CoreLib.Security;
@@ -40,13 +40,13 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             }
 
 
-            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser();
+            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser().CmsUser;
             var userID = cmsUser.ID.Value;
             var schoolID = cmsUser.SchoolID.Value;
 
 
-            var taskGetUserMemberships = UserReader.GetValidClubMembershipsAsync(userID);
-            var taskGetCountSet = PostReader.GetPostClusteredCountsAsync(schoolID);
+            var taskGetUserMemberships = UserReader.TryGetValidClubMembershipsAsync(userID);
+            var taskGetCountSet = PostReader.TryGetPostClusteredCountsAsync(schoolID);
 
             var membershipHash = (await taskGetUserMemberships).ToHashSet();
             await taskGetCountSet;
@@ -54,10 +54,10 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
 
             var count = 0L;
 
-            foreach(var counter in taskGetCountSet.Result)
+            foreach (var counter in taskGetCountSet.Result)
             {
                 count += counter.PublicPostCount;
-                if(counter.SchoolClubID != null && membershipHash.Contains(counter.SchoolClubID.Value))
+                if (counter.SchoolClubID != null && membershipHash.Contains(counter.SchoolClubID.Value))
                 {
                     count += counter.PrivatePostCount;
                 }
@@ -81,13 +81,13 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             }
 
 
-            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser();
+            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser().CmsUser;
             var userID = cmsUser.ID.Value;
             var schoolID = cmsUser.SchoolID.Value;
 
 
-            var taskGetUserMemberships = UserReader.GetValidClubMembershipsAsync(userID);
-            var taskGetCountSet = PostReader.GetPostClusteredCountsAsync(schoolID);
+            var taskGetUserMemberships = UserReader.TryGetValidClubMembershipsAsync(userID);
+            var taskGetCountSet = PostReader.TryGetPostClusteredCountsAsync(schoolID);
 
             var membershipHash = (await taskGetUserMemberships).ToHashSet();
             await taskGetCountSet;
@@ -140,12 +140,12 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
                 return Content(statCode, status);
             }
 
+            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser().CmsUser;
 
-            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser();
             var schoolID = cmsUser.SchoolID.Value;
 
 
-            var posts = await PostReader.GetPostsBySchoolAsync(schoolID);
+            var posts = await PostReader.TryGetPostsBySchoolAsync(schoolID);
 
 
             var sanitizerMode = CoreFactory.Singleton.Properties.HtmlSanitizerMode;
@@ -156,6 +156,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             if (shouldSanitize)
             {
                 outSet = posts
+                    .AsParallel()
                     .Select(x =>
                     {
                         x.Content = x.Content.SanitizeHtml();
@@ -165,6 +166,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             else
             {
                 outSet = posts
+                    .AsParallel()
                     .Select(x =>
                     {
                         return x.ToDto<Post_R_PublicDTO>();
@@ -189,11 +191,11 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             }
 
 
-            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser();
+            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser().CmsUser;
             var schoolID = cmsUser.SchoolID.Value;
 
 
-            var posts = await PostReader.GetPostsBySchoolPageAsync(schoolID, StartID, PageNum, PageSize);
+            var posts = await PostReader.TryGetPostsBySchoolPageAsync(schoolID, StartID, PageNum, PageSize);
 
             var sanitizerMode = CoreFactory.Singleton.Properties.HtmlSanitizerMode;
             var shouldSanitize = (sanitizerMode & HtmlSanitizerMode.OnRead) != 0;
@@ -203,6 +205,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             if (shouldSanitize)
             {
                 outSet = posts
+                    .AsParallel()
                     .Select(x =>
                     {
                         x.Content = x.Content.SanitizeHtml();
@@ -212,6 +215,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             else
             {
                 outSet = posts
+                    .AsParallel()
                     .Select(x =>
                     {
                         return x.ToDto<Post_R_PublicDTO>();

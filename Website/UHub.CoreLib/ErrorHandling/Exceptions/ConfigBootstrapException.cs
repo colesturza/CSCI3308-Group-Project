@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace UHub.CoreLib.ErrorHandling.Exceptions
 {
-    public class ConfigBootstrapException : Exception
+    public class CmsConfigBootstrapException : Exception
     {
     }
 }

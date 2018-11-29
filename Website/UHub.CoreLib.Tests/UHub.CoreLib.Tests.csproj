@@ -110,11 +110,12 @@
     <Compile Include="Entities\Posts\Management\PostReaderAPITests.cs" />
     <Compile Include="Entities\SchoolClubs\Management\SchoolClubReaderTests.cs" />
     <Compile Include="Entities\SchoolMajors\Management\SchoolMajorReaderTests.cs" />
+    <Compile Include="Entities\SchoolMajors\Management\SchoolMajorWriterTests.cs" />
     <Compile Include="Entities\Schools\Management\SchoolReaderTests.cs" />
     <Compile Include="Security\Accounts\AccountManagerTests.cs" />
     <Compile Include="Security\Authentication\APIControllers\AuthenticationAPITests.cs" />
     <Compile Include="Security\Authentication\AuthenticationManagerTests.cs" />
-    <Compile Include="SmtpInterop\SmtpInteropTests.cs" />
+    <Compile Include="EmailInterop\EmailInteropTests.cs" />
     <Compile Include="TestGlobal.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

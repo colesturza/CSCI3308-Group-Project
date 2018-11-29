@@ -174,7 +174,6 @@
     <Compile Include="Common.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
-    <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\PostController.cs" />
     <Compile Include="Controllers\SchoolClubController.cs" />
     <Compile Include="Controllers\SchoolController.cs" />
@@ -185,6 +184,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="ClientResources\Home\Styles\Home.scss" />
+    <Content Include="ClientResources\Account\Scripts\CreateAccount.js" />
+    <Content Include="ClientResources\Account\Scripts\Login.js" />
+    <Content Include="ClientResources\Account\Scripts\Recover.js" />
+    <Content Include="ClientResources\Account\Styles\CreateAccount.css" />
+    <Content Include="ClientResources\MASTER\Components\Navbar.js" />
     <Content Include="ClientResources\SampleUHUB_TESTING\homeVue.js" />
     <Content Include="ClientResources\SampleUHUB_TESTING\index.html" />
     <Content Include="ClientResources\SampleUHUB_TESTING\postPage.html" />
@@ -193,6 +198,9 @@
     <Content Include="ClientResources\Home\Scripts\Home.js" />
     <Content Include="ClientResources\Home\Scripts\homeVue.js" />
     <Content Include="ClientResources\MASTER\Scripts\Master.js" />
+    <Content Include="ClientResources\School\Scripts\School.js" />
+    <Content Include="ClientResources\Security\Scripts\RecaptchaPartialNoSubmit.js" />
+    <Content Include="ClientResources\Security\Scripts\RecaptchaPartial.js" />
     <Content Include="Content\bootstrap-grid.css" />
     <Content Include="Content\bootstrap-grid.min.css" />
     <Content Include="Content\bootstrap-reboot.css" />
@@ -262,7 +270,6 @@
     <Content Include="Views\Web.config" />
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Scripts\umd\popper.min.js.map" />
     <Content Include="Scripts\umd\popper.js.map" />
     <Content Include="Scripts\umd\popper-utils.min.js.map" />
@@ -292,12 +299,16 @@
     <Content Include="Views\Account\_AccountLinkMenuPartial.cshtml" />
     <Content Include="Views\Account\UpdatePassword.cshtml" />
     <Content Include="Views\Account\Create.cshtml" />
+    <Content Include="Views\Post\Index.cshtml" />
+    <Content Include="Views\Shared\_LayoutNoAuth.cshtml" />
+    <Content Include="Views\Shared\_LayoutAuth.cshtml" />
+    <Content Include="Views\Error\Startup.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="ClientResources\Imgs\" />
+    <Folder Include="ClientResources\School\Styles\" />
     <Folder Include="Models\Account\" />
-    <Folder Include="Views\Post\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

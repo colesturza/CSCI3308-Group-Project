@@ -4,10 +4,10 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using UHub.CoreLib.Entities.Comments.DTOs;
 using UHub.CoreLib.Entities.Posts;
 using UHub.CoreLib.Entities.Posts.DTOs;
-using UHub.CoreLib.Entities.Posts.Management;
+using UHub.CoreLib.Entities.Posts.DataInterop;
 using UHub.CoreLib.Tests;
 
-namespace UHub.CoreLib.Entities.Comments.Management.Tests
+namespace UHub.CoreLib.Entities.Comments.DataInterop.Tests
 {
     
     public partial class CommentWriterTests
@@ -31,7 +31,7 @@ namespace UHub.CoreLib.Entities.Comments.Management.Tests
             };
 
             var post = testPost.ToInternal<Post>();
-            var postId = await PostWriter.TryCreatePostAsync(post);
+            var postId = await PostWriter.CreatePostAsync(post);
 
             if(postId == null)
             {
@@ -50,7 +50,7 @@ namespace UHub.CoreLib.Entities.Comments.Management.Tests
             };
 
             var comment = testComment.ToInternal<Comment>();
-            var commentId = await CommentWriter.TryCreateCommentAsync(comment);
+            var commentId = await CommentWriter.CreateCommentAsync(comment);
 
 
             if (commentId == null)

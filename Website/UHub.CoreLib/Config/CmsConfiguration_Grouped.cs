@@ -14,6 +14,7 @@ using UHub.CoreLib.DataInterop;
 using UHub.CoreLib.Logging;
 using UHub.CoreLib.Tools;
 using UHub.CoreLib.Util;
+using RgxPtrn = UHub.CoreLib.Regex.Patterns;
 
 namespace UHub.CoreLib.Config
 {
@@ -96,14 +97,10 @@ namespace UHub.CoreLib.Config
             //friendly name
             ValidateString(Instance.SiteFriendlyName, nameof(Instance.SiteFriendlyName));
             //base url (only URL that cant be virtual)
-            ValidateString(Instance.CmsPublicBaseURL, nameof(Instance.CmsPublicBaseURL));
-            if (Instance.CmsPublicBaseURL.RgxIsMatch("[?#]") || !Instance.CmsPublicBaseURL.IsValidURL())
-            {
-                string err = $"{nameof(Instance.CmsPublicBaseURL)} is not a valid physical URL.";
-                throw new ArgumentException(err);
-            }
+            ValidateUrl(Instance.CmsPublicBaseURL, nameof(Instance.CmsPublicBaseURL), EnableVirtual: false);
+
             //resource url
-            ValidateURL(Instance.CmsStaticResourceURL, nameof(Instance.CmsStaticResourceURL));
+            ValidateUrl(Instance.CmsStaticResourceURL, nameof(Instance.CmsStaticResourceURL));
             ValidateString(Instance.SessionIDCookieName, nameof(Instance.SessionIDCookieName));
 
             //DB CONNECTIONS
@@ -132,13 +129,13 @@ namespace UHub.CoreLib.Config
 
 
             //SECURITY
-            ValidateObject(Security.MaxPswdAge, nameof(Security.MaxPswdAge));
+            ValidateTimeSpan_NonNeg(Security.AcctPswdRecoveryLifespan, nameof(Security.AcctPswdRecoveryLifespan));
+            ValidateTimeSpan_NonNeg(Security.AcctConfirmLifespan, nameof(Security.AcctConfirmLifespan));
+            ValidateTimeSpan_NonNeg(Security.MaxPswdAge, nameof(Security.MaxPswdAge));
+            ValidateTimeSpan_NonNeg(Security.MaxAuthTokenLifespan, nameof(Security.MaxAuthTokenLifespan));
+            ValidateTimeSpan_Pos(Security.AuthTokenTimeout, nameof(Security.AuthTokenTimeout));
 
-            if (Security.MaxPswdAge != null && Security.MaxPswdAge.Ticks < 0)
-            {
-                string err = $"{nameof(Security.MaxPswdAge)} cannot be less than 0.";
-                throw new ArgumentException(err);
-            }
+
             if (Security.MaxPswdAge != null && Security.MaxPswdAge.Ticks > 0)
             {
                 if (!Security.EnablePswdRecovery)
@@ -152,7 +149,7 @@ namespace UHub.CoreLib.Config
                 string err = $"Security Mismatch - {nameof(Security.ForceHTTPS)} and {nameof(Security.ForceSecureCookies)} must be set to the same value.";
                 throw new ArgumentException(err);
             }
-            if (Security.CookieDomain.IsNotEmpty() && !Security.CookieDomain.Split(',').All(dmn => dmn.RgxIsMatch($@"^{RgxPatterns.Cookie.DOMAIN}$", RegexOptions.IgnoreCase)))
+            if (Security.CookieDomain.IsNotEmpty() && !Security.CookieDomain.Split(',').All(dmn => dmn.RgxIsMatch($@"^{RgxPtrn.Cookie.DOMAIN}$", RegexOptions.IgnoreCase)))
             {
                 string err = "Invalid cookie domain format.";
                 throw new ArgumentException(err);
@@ -162,10 +159,8 @@ namespace UHub.CoreLib.Config
                 ValidateString(Security.RecaptchaPrivateKey, nameof(Security.RecaptchaPrivateKey));
                 ValidateString(Security.RecaptchaPublicKey, nameof(Security.RecaptchaPublicKey));
             }
-            ValidateObject(Security.MaxAuthTokenLifespan, nameof(Security.MaxAuthTokenLifespan));
-            ValidateTimeSpan(Security.AuthTokenTimeout, nameof(Security.AuthTokenTimeout));
-            //make sure the token timeout is longer than the token max age
-            //mut ensure max lifespan is not infinite
+            //check if the token timeout is longer than the token max age
+            //but ensure max lifespan is not infinite
             if (Security.AuthTokenTimeout.Ticks > Security.MaxAuthTokenLifespan.Ticks && Security.MaxAuthTokenLifespan.Ticks > 0)
             {
                 string err = nameof(Security.AuthTokenTimeout) + " must be greater than " + nameof(Security.MaxAuthTokenLifespan);
@@ -173,73 +168,49 @@ namespace UHub.CoreLib.Config
             }
 
             //--LOGIN URL
-            ValidateURL(Security.LoginURL, nameof(Security.LoginURL));
+            ValidateUrl(Security.LoginURL, nameof(Security.LoginURL));
             //--DEFAULT URL
-            ValidateURL(Security.DefaultAuthFwdURL, nameof(Security.DefaultAuthFwdURL));
+            ValidateUrl(Security.DefaultAuthFwdURL, nameof(Security.DefaultAuthFwdURL));
             //--ACCT CONFIRMATION
             if (!Security.AutoConfirmNewAccounts)
             {
-                if (Mail.NoReplyMailConfig == null)
-                {
-                    string err = $"{nameof(Mail.NoReplyMailConfig)} must be set if AutoConfirmNewAccounts is false.";
-                    throw new ArgumentException(err);
-                }
-                else
-                {
-                    ValidateEmail(Mail.ContactFormRecipientAddress, nameof(Mail.ContactFormRecipientAddress));
-                }
-
-                try
-                {
-                    if (!Mail.NoReplyMailConfig.Validate())
-                    {
-                        string err = $"{nameof(Mail.NoReplyMailConfig)} is invalid.";
-                        throw new ArgumentException(err);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    string err = $"{nameof(Mail.NoReplyMailConfig)}: {ex.Message}";
-                    throw new ArgumentException(err);
-                }
-
-                ValidateURL(Security.AcctConfirmURL, nameof(Security.AcctConfirmURL));
+                ValidateUrl(Security.AcctConfirmURL, nameof(Security.AcctConfirmURL));
             }
 
             //PASSWORD UPDATE
-            ValidateURL(Security.AcctPswdUpdateURL, nameof(Security.AcctPswdUpdateURL));
+            ValidateUrl(Security.AcctPswdUpdateURL, nameof(Security.AcctPswdUpdateURL));
+
 
             //PASSWORD RESET
             if (Security.EnablePswdRecovery)
             {
-                ValidateURL(Security.AcctPswdRecoveryURL, nameof(Security.AcctPswdRecoveryURL));
+                ValidateUrl(Security.AcctPswdRecoveryURL, nameof(Security.AcctPswdRecoveryURL));
 
                 //make sure that MailClient/Pswd reset meta is set if the proxy address is set
-                ValidateObject(Mail.NoReplyMailConfig, nameof(Mail.NoReplyMailConfig));
-                ValidateTimeSpan(Security.PswdAttemptPeriod, nameof(Security.PswdAttemptPeriod));
-                ValidateTimeSpan(Security.PswdLockResetPeriod, nameof(Security.PswdLockResetPeriod));
+                ValidateTimeSpan_Pos(Security.PswdAttemptPeriod, nameof(Security.PswdAttemptPeriod));
+                ValidateTimeSpan_Pos(Security.PswdLockResetPeriod, nameof(Security.PswdLockResetPeriod));
             }
 
-            if (Security.ForceHTTPS)
+
+            //VALIDATE EMAIL PROVIDER IF REQUIRED
+            if (!Security.AutoConfirmNewAccounts || Security.EnablePswdRecovery || Mail.ContactFormRecipientAddress.IsNotEmpty())
             {
-                ValidateSecureUrl(Instance.CmsPublicBaseURL, nameof(Instance.CmsPublicBaseURL));
-                ValidateSecureUrl(Instance.CmsStaticResourceURL, nameof(Instance.CmsStaticResourceURL));
-                ValidateSecureUrl(Security.LoginURL, nameof(Security.LoginURL));
-                ValidateSecureUrl(Security.DefaultAuthFwdURL, nameof(Security.DefaultAuthFwdURL));
-                ValidateSecureUrl(Security.AcctConfirmURL, nameof(Security.AcctConfirmURL));
-                ValidateSecureUrl(Security.AcctPswdRecoveryURL, nameof(Security.AcctPswdRecoveryURL));
-                ValidateSecureUrl(Security.AcctPswdUpdateURL, nameof(Security.AcctPswdUpdateURL));
+                ValidateObject(Mail.MailProvider, nameof(Mail.MailProvider));
+
+                Mail.MailProvider.Validate();
+                ValidateEmail(Mail.ContactFormRecipientAddress, nameof(Mail.ContactFormRecipientAddress));
             }
+
 
             //CACHING
             if (Caching.EnableDBPageCaching)
             {
-                ValidateTimeSpan(Caching.MaxDBCacheAge, nameof(Caching.MaxDBCacheAge));
+                ValidateTimeSpan_Pos(Caching.MaxDBCacheAge, nameof(Caching.MaxDBCacheAge));
             }
             if (Caching.EnableIISPageCaching)
             {
-                ValidateTimeSpan(Caching.MaxStaticCacheAge, nameof(Caching.MaxStaticCacheAge));
-                ValidateTimeSpan(Caching.MaxDynamicCacheAge, nameof(Caching.MaxDynamicCacheAge));
+                ValidateTimeSpan_Pos(Caching.MaxStaticCacheAge, nameof(Caching.MaxStaticCacheAge));
+                ValidateTimeSpan_Pos(Caching.MaxDynamicCacheAge, nameof(Caching.MaxDynamicCacheAge));
             }
 
             //API
@@ -307,15 +278,41 @@ namespace UHub.CoreLib.Config
         }
 
         /// <summary>
-        /// Ensure that timespan is not null/empty/0
+        /// Ensure that timespan is not null/empty
         /// </summary>
         /// <param name="tSpan">Timespan to test</param>
         /// <param name="argName">Name of timespan variable</param>
         private void ValidateTimeSpan(TimeSpan tSpan, string argName)
         {
-            if (tSpan == null || tSpan == TimeSpan.Zero)
+            if (tSpan == null)
             {
-                throw new ArgumentException(argName + " cannot be null or empty.");
+                throw new ArgumentException(argName + " cannot be null.");
+            }
+        }
+
+        /// <summary>
+        /// Ensure that timespan is not null/empty/less than 1
+        /// </summary>
+        /// <param name="tSpan">Timespan to test</param>
+        /// <param name="argName">Name of timespan variable</param>
+        private void ValidateTimeSpan_Pos(TimeSpan tSpan, string argName)
+        {
+            if (tSpan == null || tSpan.Ticks < 1)
+            {
+                throw new ArgumentException(argName + " cannot be null or less than 1.");
+            }
+        }
+
+        /// <summary>
+        /// Ensure that timespan is not null/empty/negative
+        /// </summary>
+        /// <param name="tSpan">Timespan to test</param>
+        /// <param name="argName">Name of timespan variable</param>
+        private void ValidateTimeSpan_NonNeg(TimeSpan tSpan, string argName)
+        {
+            if (tSpan == null || tSpan.Ticks < 0)
+            {
+                throw new ArgumentException(argName + " cannot be null or negative.");
             }
         }
 
@@ -384,31 +381,42 @@ namespace UHub.CoreLib.Config
             }
         }
 
+
+
         /// <summary>
-        /// Ensure that url is valid, either virtual or physical
+        /// Ensure that url is valid, either virtual or physical, and uses HTTPS where required
         /// </summary>
         /// <param name="url">URL to test</param>
         /// <param name="argName">Name of URL variable</param>
-        private void ValidateURL(string url, string argName)
+        private void ValidateUrl(string url, string argName, bool EnableVirtual = true)
         {
+            //start with basic URL validation
             ValidateString(url, argName);
 
-            var isVirtual = url.RgxIsMatch($@"^{RgxPatterns.Config.INTERNAL_URL}$", RegexOptions.IgnoreCase);
-            var isPhysical = !url.RgxIsMatch("[?#]") && url.IsValidURL();
 
-            if (!isVirtual && !isPhysical)
+            if (EnableVirtual)
             {
-                throw new ArgumentException(argName + " is not a valid URL.  URL must be physical or a root-relative virtual path");
-            }
-        }
+                var isVirtual = url.RgxIsMatch(RgxPtrn.Config.INTERNAL_URL_B, RegexOptions.IgnoreCase);
+                var isPhysical = !url.RgxIsMatch("[?#]") && url.IsValidURL();
 
-        /// <summary>
-        /// Ensure that url uses HTTPS when ForceHTTPS=true
-        /// </summary>
-        /// <param name="url">Url to test</param>
-        /// <param name="argName">Name of the URL variable</param>
-        private void ValidateSecureUrl(string url, string argName)
-        {
+                if (!isVirtual && !isPhysical)
+                {
+                    throw new ArgumentException(argName + " is not a valid URL.  URL must be physical or a root-relative virtual path");
+                }
+            }
+            else
+            {
+                var isPhysical = !url.RgxIsMatch("[?#]") && url.IsValidURL();
+                if (!isPhysical)
+                {
+                    throw new ArgumentException(argName + " is not a valid URL.  URL must be physical path");
+                }
+
+            }
+
+
+
+            //check for secure URL if required
             if (!Security.ForceHTTPS)
             {
                 return;

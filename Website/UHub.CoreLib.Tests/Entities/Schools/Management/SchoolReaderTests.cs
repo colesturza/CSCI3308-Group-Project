@@ -3,7 +3,7 @@ using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using UHub.CoreLib.Tests;
 
-namespace UHub.CoreLib.Entities.Schools.Management.Tests
+namespace UHub.CoreLib.Entities.Schools.DataInterop.Tests
 {
     [TestClass]
     public class SchoolReaderTests
@@ -14,7 +14,7 @@ namespace UHub.CoreLib.Entities.Schools.Management.Tests
 
             TestGlobal.TestInit();
 
-            SchoolReader.GetAllSchools();
+            SchoolReader.TryGetAllSchools();
 
         }
 
@@ -25,7 +25,7 @@ namespace UHub.CoreLib.Entities.Schools.Management.Tests
 
             TestGlobal.TestInit();
 
-            var schoolSet = SchoolReader.GetAllSchools().ToList();
+            var schoolSet = SchoolReader.TryGetAllSchools().ToList();
 
 
             if(schoolSet.Count == 0)
@@ -36,7 +36,7 @@ namespace UHub.CoreLib.Entities.Schools.Management.Tests
             var id = schoolSet.First().ID.Value;
 
 
-            SchoolReader.GetSchool(id);
+            SchoolReader.TryGetSchool(id);
         }
 
 
@@ -48,11 +48,11 @@ namespace UHub.CoreLib.Entities.Schools.Management.Tests
 
 
             School school;
-            school = SchoolReader.GetSchoolByName("CU Boulder");
+            school = SchoolReader.TryGetSchoolByName("CU Boulder");
             Assert.IsNotNull(school);
 
 
-            school = SchoolReader.GetSchoolByName("hu98fp2qghp9jfkiwe");
+            school = SchoolReader.TryGetSchoolByName("hu98fp2qghp9jfkiwe");
             Assert.IsNull(school);
 
 
@@ -67,15 +67,15 @@ namespace UHub.CoreLib.Entities.Schools.Management.Tests
 
 
             School school;
-            school = SchoolReader.GetSchoolByEmail("aual1780@colorado.edu");
+            school = SchoolReader.TryGetSchoolByEmail("aual1780@colorado.edu");
             Assert.IsNotNull(school);
 
 
-            school = SchoolReader.GetSchoolByEmail("test@colorado.edu");
+            school = SchoolReader.TryGetSchoolByEmail("test@colorado.edu");
             Assert.IsNotNull(school);
 
 
-            school = SchoolReader.GetSchoolByEmail("test@test.test");
+            school = SchoolReader.TryGetSchoolByEmail("test@test.test");
             Assert.IsNull(school);
 
         }
@@ -89,11 +89,11 @@ namespace UHub.CoreLib.Entities.Schools.Management.Tests
 
 
             School school;
-            school = SchoolReader.GetSchoolByEmail("@colorado.edu");
+            school = SchoolReader.TryGetSchoolByEmail("@colorado.edu");
             Assert.IsNotNull(school);
 
 
-            school = SchoolReader.GetSchoolByEmail("@test.test");
+            school = SchoolReader.TryGetSchoolByEmail("@test.test");
             Assert.IsNull(school);
 
         }
@@ -107,27 +107,27 @@ namespace UHub.CoreLib.Entities.Schools.Management.Tests
 
 
             bool isValid;
-            isValid = SchoolReader.IsEmailValid("");
+            isValid = SchoolReader.TryIsEmailValid("");
             Assert.IsFalse(isValid);
 
 
-            isValid = SchoolReader.IsEmailValid("asdafq");
+            isValid = SchoolReader.TryIsEmailValid("asdafq");
             Assert.IsFalse(isValid);
 
 
-            isValid = SchoolReader.IsEmailValid("a");
+            isValid = SchoolReader.TryIsEmailValid("a");
             Assert.IsFalse(isValid);
 
 
-            isValid = SchoolReader.IsEmailValid("@colorado.edu");
+            isValid = SchoolReader.TryIsEmailValid("@colorado.edu");
             Assert.IsFalse(isValid);
 
 
-            isValid = SchoolReader.IsEmailValid("test@test.test");
+            isValid = SchoolReader.TryIsEmailValid("test@test.test");
             Assert.IsFalse(isValid);
 
 
-            isValid = SchoolReader.IsEmailValid("aual1780@colorado.edu");
+            isValid = SchoolReader.TryIsEmailValid("aual1780@colorado.edu");
             Assert.IsTrue(isValid);
 
         }
@@ -141,35 +141,35 @@ namespace UHub.CoreLib.Entities.Schools.Management.Tests
 
 
             bool isValid;
-            isValid = SchoolReader.IsDomainValid("");
+            isValid = SchoolReader.TryIsDomainValid("");
             Assert.IsFalse(isValid);
 
 
-            isValid = SchoolReader.IsDomainValid("asdafq");
+            isValid = SchoolReader.TryIsDomainValid("asdafq");
             Assert.IsFalse(isValid);
 
 
-            isValid = SchoolReader.IsDomainValid("a");
+            isValid = SchoolReader.TryIsDomainValid("a");
             Assert.IsFalse(isValid);
 
 
-            isValid = SchoolReader.IsDomainValid("test@test.test");
+            isValid = SchoolReader.TryIsDomainValid("test@test.test");
             Assert.IsFalse(isValid);
 
 
-            isValid = SchoolReader.IsDomainValid("@test.test");
+            isValid = SchoolReader.TryIsDomainValid("@test.test");
             Assert.IsFalse(isValid);
 
 
-            isValid = SchoolReader.IsDomainValid("aual1780@colorado.edu");
+            isValid = SchoolReader.TryIsDomainValid("aual1780@colorado.edu");
             Assert.IsFalse(isValid);
 
 
-            isValid = SchoolReader.IsDomainValid("colorado.edu");
+            isValid = SchoolReader.TryIsDomainValid("colorado.edu");
             Assert.IsFalse(isValid);
 
 
-            isValid = SchoolReader.IsDomainValid("@colorado.edu");
+            isValid = SchoolReader.TryIsDomainValid("@colorado.edu");
             Assert.IsTrue(isValid);
 
         }

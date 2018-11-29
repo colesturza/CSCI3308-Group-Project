@@ -1,36 +1,60 @@
 ﻿@{
-    ViewBag.Title = "Account Recovery";
+    ViewBag.Title = "Forgot Password";
+    Layout = "~/Views/Shared/_LayoutNoAuth.cshtml";
 }
 
-<h2>Account Recovery</h2>
-
-@{
-    Html.BeginForm();
-}
+<div id="body-Content" class="container w-70">
 
 
+    <h2>Account Recovery</h2>
 
 
-<input type="password" name="txt_RecoveryKey" placeholder="Recovery Key:">
-
-<p></p>
-
-<input type="password" name="txt_NewPswd" placeholder="New Password:"><br />
-<input type="password" name="txt_ConfirmPswd" placeholder="Confirm Password:">
+    <div class="center_LR" style="display:inline-block; width:100%;max-width:500px">
+        @using (Html.BeginForm())
+        {
 
 
-<p>@ViewBag.Message</p>
+            <label for="txt_RecoveryKey">Please enter your recovery key from the email</label>
+            <br />
+            <input type="password" name="txt_RecoveryKey" placeholder="Recovery Key:" class="form-control">
 
-@{
-    Html.RenderPartial("~/Views/Security/_RecaptchaPartial.cshtml", new UHub.Models.Security.RecaptchaLoginViewModel
+            <br />
+            <br />
+
+            <label for="txt_RecoveryKey">Please enter your new password</label>
+            <br />
+            <input type="password" name="txt_NewPswd" placeholder="New Password:" class="form-control">
+            <br />
+            <input type="password" name="txt_ConfirmPswd" placeholder="Confirm Password:" class="form-control">
+            <p></p>
+
+            Html.RenderPartial(
+                "~/Views/Security/_RecaptchaPartial.cshtml",
+                new UHub.Models.Security.RecaptchaLoginViewModel
+                {
+                    SubmitText = "Send Recovery Email",
+                    SubmitClass = "btn-outline-dark",
+                    RenderScripts = false
+                });
+
+            <p>@ViewBag.Message</p>
+
+        }
+
+
+    </div>
+
+</div>
+
+
+
+
+@section scripts
+{
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    @if (ViewBag.CanForward)
     {
-        SubmitValue = "Login",
-        SubmitClass = "btn-outline-dark",
-    });
-}
-
-
-
-@{
-    Html.EndForm();
+        Scripts.Render("~/ClientResources/Account/Scripts/Recover");
+    }
+    @Scripts.Render("~/ClientResources/Security/Scripts/RecaptchaPartial.js")
 }

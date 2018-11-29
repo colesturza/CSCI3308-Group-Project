@@ -20,11 +20,18 @@ namespace UHub.CoreLib.Security.Accounts.Interfaces
         /// <param name="GeneralFailHandler">Error handler in case DB cannot be reached or there is other unknown error</param>
         /// <param name="SuccessHandler">Args: new user object, auto login [T|F]</param>
         /// <returns>Status Flag</returns>
-        Task<AccountResultCode> TryCreateUserAsync(
+        Task<AcctCreateResultCode> TryCreateUserAsync(
             User NewUser,
             bool AttemptAutoLogin,
-            Action<Guid> GeneralFailHandler = null,
             Action<User, bool> SuccessHandler = null);
+
+
+        /// <summary>
+        /// Attempt to update user attributes in DB
+        /// </summary>
+        /// <param name="CmsUser"></param>
+        /// <returns></returns>
+        Task<AcctUpdateResultCode> TryUpdateUserAsync(User CmsUser);
 
 
 
@@ -33,7 +40,7 @@ namespace UHub.CoreLib.Security.Accounts.Interfaces
         /// </summary>
         /// <param name="RefUID">User reference UID</param>
         /// <exception cref="ArgumentException"></exception>
-        Task<(bool StatusFlag, string StatusMsg)> ConfirmUserAsync(string RefUID);
+        Task<AcctConfirmResultCode> TryConfirmUserAsync(string RefUID);
 
 
 
@@ -43,7 +50,16 @@ namespace UHub.CoreLib.Security.Accounts.Interfaces
         /// </summary>
         /// <param name="UserID">User ID</param>
         /// <param name="IsApproved">Approval Status</param>
-        Task<bool> TryUpdateUserApprovalStatusAsync(long UserID, bool IsApproved);
+        Task<bool> TryUpdateApprovalStatusAsync(long UserID, bool IsApproved);
+
+
+
+        /// <summary>
+        /// Attempt to update the user token version
+        /// </summary>
+        /// <param name="UserID"></param>
+        /// <returns></returns>
+        Task<bool> TryUpdateUserVersionAsync(long UserID);
 
 
 
@@ -56,13 +72,12 @@ namespace UHub.CoreLib.Security.Accounts.Interfaces
         /// <param name="DeviceLogout">If true, user will be logged out of all other devices</param>
         /// <param name="GeneralFailHandler">Error handler in case DB cannot be reached or there is other unknown error</param>
         /// <returns>Status flag</returns>
-        Task<AccountResultCode> TryUpdatePasswordAsync(
+        Task<AcctPswdResultCode> TryUpdatePasswordAsync(
             string UserEmail,
             string OldPassword,
             string NewPassword,
             bool DeviceLogout,
-            HttpContext Context,
-            Action<Guid> GeneralFailHandler = null);
+            HttpContext Context);
 
 
 
@@ -75,13 +90,12 @@ namespace UHub.CoreLib.Security.Accounts.Interfaces
         /// <param name="DeviceLogout">If true, user will be logged out of all other devices</param>
         /// <param name="GeneralFailHandler">Error handler in case DB cannot be reached or there is other unknown error</param>
         /// <returns>Status flag</returns>
-        Task<AccountResultCode> TryUpdatePasswordAsync(
+        Task<AcctPswdResultCode> TryUpdatePasswordAsync(
             long UserID,
             string OldPassword,
             string NewPassword,
             bool DeviceLogout,
-            HttpContext Context,
-            Action<Guid> GeneralFailHandler = null);
+            HttpContext Context);
 
 
 
@@ -95,13 +109,12 @@ namespace UHub.CoreLib.Security.Accounts.Interfaces
         /// <param name="DeviceLogout"></param>
         /// <param name="GeneralFailHandler"></param>
         /// <returns></returns>
-        Task<AccountResultCode> TryRecoverPasswordAsync(
+        Task<AcctRecoveryResultCode> TryRecoverPasswordAsync(
             string RecoveryContextID,
             string RecoveryKey,
             string NewPassword,
             bool DeviceLogout,
-            HttpContext Context,
-            Action<Guid> GeneralFailHandler = null);
+            HttpContext Context);
 
 
 
@@ -115,12 +128,11 @@ namespace UHub.CoreLib.Security.Accounts.Interfaces
         /// <exception cref="SystemDisabledException"></exception>
         /// <exception cref="InvalidOperationException"></exception>
         /// <returns>Status flag</returns>
-        Task<AccountResultCode> TryResetPasswordAsync(
+        Task<AcctRecoveryResultCode> TryResetPasswordAsync(
             string UserEmail,
             string NewPassword,
             bool DeviceLogout,
-            HttpContext Context,
-            Action<Guid> GeneralFailHandler = null);
+            HttpContext Context);
 
 
 
@@ -134,34 +146,21 @@ namespace UHub.CoreLib.Security.Accounts.Interfaces
         /// <exception cref="SystemDisabledException"></exception>
         /// <exception cref="InvalidOperationException"></exception>
         /// <returns>Status flag</returns>
-        Task<AccountResultCode> TryResetPasswordAsync(
+        Task<AcctRecoveryResultCode> TryResetPasswordAsync(
             long UserID,
             string NewPassword,
             bool DeviceLogout,
-            HttpContext Context,
-            Action<Guid> GeneralFailHandler = null);
+            HttpContext Context);
+
 
 
 
         /// <summary>
-        /// Delete user by ID.
+        /// Attempt to get a user's active recovery context (if one exists)
         /// </summary>
         /// <param name="UserID"></param>
-        Task DeleteUserAsync(long UserID);
-
-        /// <summary>
-        /// Delete user by Email
-        /// </summary>
-        /// <param name="Email"></param>
-        Task DeleteUserAsync(string Email);
-
-        /// <summary>
-        /// Delete user by Username and Domain
-        /// </summary>
-        /// <param name="Username"></param>
-        /// <param name="Domain"></param>
-        Task DeleteUserAsync(string Username, string Domain);
-
+        /// <returns></returns>
+        Task<IUserRecoveryContext> TryGetActiveRecoveryContextAsync(long UserID);
 
         /// <summary>
         /// Create a user password recovery context. Allows users to create a new password if they forget their old password.  Can be used to force a user to reset their password by setting [IsOptional=TRUE]
@@ -170,10 +169,9 @@ namespace UHub.CoreLib.Security.Accounts.Interfaces
         /// <param name="IsOptional">Specify whether or not user will be forced to update password</param>
         /// <param name="GeneralFailHandler">Error handler in case DB cannot be reached or there is other unknown error</param>
         /// <returns></returns>
-        Task<(AccountResultCode ResultCode, IUserRecoveryContext RecoveryContext, string RecoveryKey)> TryCreateUserRecoveryContextAsync(
+        Task<(AcctRecoveryResultCode ResultCode, IUserRecoveryContext RecoveryContext, string RecoveryKey)> TryCreateUserRecoveryContextAsync(
             string UserEmail,
-            bool IsOptional,
-            Action<Guid> GeneralFailHandler = null);
+            bool IsOptional);
 
 
         /// <summary>
@@ -183,9 +181,30 @@ namespace UHub.CoreLib.Security.Accounts.Interfaces
         /// <param name="IsOptional">Specify whether or not user will be forced to update password</param>
         /// <param name="GeneralFailHandler">Error handler in case DB cannot be reached or there is other unknown error</param>
         /// <returns></returns>
-        Task<(AccountResultCode ResultCode, IUserRecoveryContext RecoveryContext, string RecoveryKey)> TryCreateUserRecoveryContextAsync(
+        Task<(AcctRecoveryResultCode ResultCode, IUserRecoveryContext RecoveryContext, string RecoveryKey)> TryCreateUserRecoveryContextAsync(
             long UserID,
-            bool IsOptional,
-            Action<Guid> GeneralFailHandler = null);
+            bool IsOptional);
+
+
+
+        /// <summary>
+        /// Delete user by ID.
+        /// </summary>
+        /// <param name="UserID"></param>
+        Task<bool> TryDeleteUserAsync(long UserID);
+
+        /// <summary>
+        /// Delete user by Email
+        /// </summary>
+        /// <param name="Email"></param>
+        Task<bool> TryDeleteUserAsync(string Email);
+
+        /// <summary>
+        /// Delete user by Username and Domain
+        /// </summary>
+        /// <param name="Username"></param>
+        /// <param name="Domain"></param>
+        Task<bool> TryDeleteUserAsync(string Username, string Domain);
+
     }
 }

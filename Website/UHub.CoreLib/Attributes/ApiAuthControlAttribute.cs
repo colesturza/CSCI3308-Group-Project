@@ -11,6 +11,7 @@ using UHub.CoreLib.Management;
 using UHub.CoreLib.Extensions;
 using System.Web;
 using UHub.CoreLib.Security.Authentication;
+using System.Threading;
 
 namespace UHub.CoreLib.Attributes
 {
@@ -34,38 +35,31 @@ namespace UHub.CoreLib.Attributes
                     authToken = valueSet.FirstOrDefault();
                 }
 
-                
-                var context = System.Web.HttpContext.Current;
-
                 if (authToken.IsEmpty())
                 {
                     //test for cookie auth
-                    var authResult = CoreFactory.Singleton.Auth.IsUserLoggedInAsync(context).Result;
-                    isLoggedIn = authResult.StatusFlag;
+                    isLoggedIn = CoreFactory.Singleton.Auth.IsUserLoggedIn();
                 }
                 else
                 {
                     //test for token auth
-                    var authResult = CoreFactory.Singleton.Auth.TrySetRequestUserAsync(authToken, context).Result;
-                    isLoggedIn = authResult.StatusFlag;
+                    var tokenStatus = CoreFactory.Singleton.Auth.TrySetRequestUser(authToken);
+                    isLoggedIn = (tokenStatus == TokenValidationStatus.Success);
                 }
 
-                if(!isLoggedIn)
+                if (!isLoggedIn)
                 {
                     return false;
                 }
 
 
-                var userResult = CoreFactory.Singleton.Auth.GetCurrentUserAsync(context).Result;
+                var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser().CmsUser;
 
-                if(userResult.TokenStatus != TokenValidationStatus.Success)
-                {
-                    return false;
-                }
 
-                var cmsUser = userResult.CmsUser;
-
-                return cmsUser.ID != null && cmsUser.IsEnabled && (!RequireAdmin || cmsUser.IsAdmin);
+                return 
+                    cmsUser.ID != null
+                    && cmsUser.IsEnabled
+                    && (!RequireAdmin || cmsUser.IsAdmin);
             }
             catch (Exception ex)
             {

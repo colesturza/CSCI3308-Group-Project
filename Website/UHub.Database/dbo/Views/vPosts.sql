@@ -3,28 +3,83 @@
 
 
 
-
-
-
-
-
 CREATE view [dbo].[vPosts]
 as
 
+	--select * from vPosts
+	with set1 as
+	(
+		select 
+			EntID,
+			case when epx.PropID = 2
+			then PropValue
+			else NULL
+			end [Name],
+			--
+			case when epx.PropID = 12
+			then PropValue
+			else NULL
+			end [Content],
+			--
+			case when epx.PropID = 13
+			then PropValue
+			else NULL
+			end [IsModified],
+			--
+			case when epx.PropID = 14
+			then PropValue
+			else NULL
+			end [ViewCount],
+			--
+			case when epx.PropID = 33
+			then PropValue
+			else NULL
+			end [IsLocked],
+			--
+			case when epx.PropID = 34
+			then PropValue
+			else NULL
+			end [CanComment],
+			--
+			case when epx.PropID = 35
+			then PropValue
+			else NULL
+			end [IsPublic]
+
+		from
+			dbo.EntPropertyXRef epx
+		where
+			epx.EntTypeID = 6
+	),
+	set2 as
+	(
+		select
+			EntID,
+			min([name])						[Name],
+			min(content)					Content,
+			cast(min(IsModified) as bit)	IsModified,
+			cast(min(ViewCount) as bigint)	ViewCount,
+			cast(min(IsLocked) as bit)		IsLocked,
+			cast(min(CanComment) as bit)	CanComment,
+			cast(min(IsPublic) as bit)		IsPublic
+		from set1
+		group by
+			EntID
+	)
 
 	select
 		ent.ID,
 		ent.EntTypeID,
 		ent.IsEnabled,
 		ent.IsReadonly,
-		xref_Name.PropValue							as [Name],
-		xref_Content.PropValue						as [Content],
-		cast(xref_IsModified.PropValue as bit)		as [IsModified],
-		cast(xref_ViewCount.PropValue as bigint)	as [ViewCount],
-		cast(xref_IsLocked.PropValue as bit)		as [IsLocked],
-		cast(xref_CanComment.PropValue as bit)		as [CanComment],
-		cast(xref_IsPublic.PropValue as bit)		as [IsPublic],
-		xref_Parent.ParentEntID						as [ParentID],
+		s2.[Name]					as [Name],
+		s2.Content					as [Content],
+		s2.IsModified				as [IsModified],
+		s2.ViewCount				as [ViewCount],
+		s2.IsLocked					as [IsLocked],
+		s2.CanComment				as [CanComment],
+		s2.IsPublic					as [IsPublic],
+		xref_Parent.ParentEntID		as [ParentID],
 		ent.IsDeleted,
 		ent.CreatedBy,
 		ent.CreatedDate,
@@ -32,61 +87,18 @@ as
 		ent.ModifiedDate,
 		ent.DeletedBy,
 		ent.DeletedDate
+	from dbo.Entities ent
 
+	inner join set2 s2
+	on
+		ent.ID = s2.EntID
 
-	from 
-		dbo.Entities ent
-
-	inner join dbo.EntPropertyXRef xref_Name
-	on 
-		xref_Name.EntID = ent.ID
-		and xref_Name.PropID = 2
-
-
-	inner join dbo.EntPropertyXRef xref_Content
-	on 
-		xref_Content.EntID = ent.ID
-		and xref_Content.PropID = 12
-
-
-	inner join dbo.EntPropertyXRef xref_IsModified
-	on 
-		xref_IsModified.EntID = ent.ID
-		and xref_IsModified.PropID = 13
-
-
-	inner join dbo.EntPropertyXRef xref_ViewCount
-	on 
-		xref_ViewCount.EntID = ent.ID
-		and xref_ViewCount.PropID = 14
-
-
-	inner join dbo.EntPropertyXRef xref_IsLocked
-	on 
-		xref_IsLocked.EntID = ent.ID
-		and xref_IsLocked.PropID = 33
-
-
-	inner join dbo.EntPropertyXRef xref_CanComment
-	on 
-		xref_CanComment.EntID = ent.ID
-		and xref_CanComment.PropID = 34
-
-
-	inner join dbo.EntPropertyXRef xref_IsPublic
-	on 
-		xref_IsPublic.EntID = ent.ID
-		and xref_IsPublic.PropID = 35
-
-
-	left join dbo.EntChildXRef xref_Parent
+	inner join dbo.EntChildXRef xref_Parent
 	on
 		xref_Parent.ChildEntID = ent.ID
 
-
-	where 
-		ent.EntTypeID = 6
-		AND ent.IsDeleted = 0
+	where
+		ent.IsDeleted = 0
 
 
 

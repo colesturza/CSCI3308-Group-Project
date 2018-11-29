@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using UHub.CoreLib.Tests;
 
-namespace UHub.CoreLib.Entities.Comments.Management.Tests
+namespace UHub.CoreLib.Entities.Comments.DataInterop.Tests
 {
     public partial class CommentReaderTests
     {
@@ -14,7 +14,7 @@ namespace UHub.CoreLib.Entities.Comments.Management.Tests
 
 
             long postID = 353;
-            var comments = await CommentReader.GetCommentsByPostAsync(postID);
+            var comments = await CommentReader.TryGetCommentsByPostAsync(postID);
 
             Assert.IsNotNull(comments);
         }
@@ -27,7 +27,7 @@ namespace UHub.CoreLib.Entities.Comments.Management.Tests
 
 
             long postID = 353;
-            var comments = await CommentReader.GetCommentsByParentAsync(postID);
+            var comments = await CommentReader.TryGetCommentsByParentAsync(postID);
 
             Assert.IsNotNull(comments);
         }

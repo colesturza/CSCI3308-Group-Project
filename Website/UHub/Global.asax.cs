@@ -13,7 +13,6 @@ using UHub.CoreLib.DataInterop;
 using UHub.CoreLib.Logging;
 using UHub.CoreLib.Management;
 using UHub.CoreLib.Security;
-using UHub.CoreLib.SmtpInterop;
 using UHub.CoreLib.Tools;
 using UHub.CoreLib.Util;
 using System.Management.Automation;
@@ -35,13 +34,10 @@ namespace UHub
 
 
             var cmsConfig = Common.GetCmsConfig();
-            if(cmsConfig == null)
+            if (cmsConfig != null)
             {
-                throw new ConfigBootstrapException();
+                CoreFactory.Initialize(cmsConfig);
             }
-
-
-            CoreFactory.Initialize(cmsConfig);
 
 
 

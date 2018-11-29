@@ -6,6 +6,7 @@ CREATE procedure [dbo].[_vEnts_Helper]
 	@PropID int,
 	@PropValue nvarchar(max),
 	@ModifiedBy bigint,
+	@ModifiedDate datetimeoffset(7),
 	@IsNewRecord bit
 
 as
@@ -135,11 +136,11 @@ begin
 					set 
 						PropValue = @PropValue,
 						ModifiedBy = @ModifiedBy,
-						ModifiedDate = sysdatetimeoffset()
+						ModifiedDate = @ModifiedDate
 					where
 						EntTypeID = @EntTypeID
 						AND EntID = @EntID
-						AND PropID = @PropID						
+						AND PropID = @PropID
 				end
 			
 
@@ -163,9 +164,9 @@ begin
 				set @_canWriteToHistory = 1
 				--insert standard property
 				insert into dbo.EntPropertyXRef
-					(EntID, EntTypeID, PropID, PropValue, CreatedBy, ModifiedBy)
+					(EntID, EntTypeID, PropID, PropValue, CreatedBy, CreatedDate, ModifiedBy)
 				values
-					(@EntID, @EntTypeID, @PropID, @PropValue, @ModifiedBy, @ModifiedBy)
+					(@EntID, @EntTypeID, @PropID, @PropValue, @ModifiedBy, @ModifiedDate, @ModifiedBy)
 			
 			
 			--end
@@ -174,15 +175,25 @@ begin
 		--if availble, write to revision history table
 		if (@_canWriteToHistory = 1)
 		begin
-			if(exists (select EntTypeID from dbo.EntPropertyRevisionMap where EntTypeID = @EntTypeID AND PropID = @PropID))
+			--force history write for all attributes on record instantiation,
+			--otherwise, respect mapping rules
+			if(@IsNewRecord = 1 or exists (select EntTypeID from dbo.EntPropertyRevisionMap where EntTypeID = @EntTypeID AND PropID = @PropID))
 			begin
 
 				insert into dbo.EntPropertyRevisionXRef
-					(EntID, EntTypeID, PropID, PropValue, CreatedBy)
+					(EntID, EntTypeID, PropID, PropValue, CreatedBy, CreatedDate)
 				values
-					(@EntID, @EntTypeID, @PropID, @PropValue, @ModifiedBy)
+					(@EntID, @EntTypeID, @PropID, @PropValue, @ModifiedBy, @ModifiedDate)
 
 			end
+			--return update status to caller so the entity 'ModifiedDate' can be updated properly
+			--1 indicates new update
+			return 1
+		end
+		else begin
+			--return update status to caller so the entity 'ModifiedDate' can be updated properly
+			--0 indicates no change
+			return 0
 		end
 
 		

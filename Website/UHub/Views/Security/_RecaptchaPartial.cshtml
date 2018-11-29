@@ -3,7 +3,6 @@
 
 @model UHub.Models.Security.RecaptchaLoginViewModel
 
-<script src="https://www.google.com/recaptcha/api.js" async defer></script>
 
 
 @{
@@ -11,37 +10,40 @@
     var hasRecaptcha = CoreFactory.Singleton.Properties.EnableRecaptcha;
     var publicKey = CoreFactory.Singleton.Properties.RecaptchaPublicKey;
 
+    if (Model.RenderScripts)
+    {
+        <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    }
 
 
     if (hasRecaptcha)
     {
         <div class="g-recaptcha" data-sitekey="@publicKey"></div>
+        <p></p>
     }
 
 
     if (UHub.CoreLib.Extensions.StringExtensions.IsEmpty(Model.SubmitPath))
     {
-        <input type="submit" name="btn_Submit" value="@Model.SubmitValue" class="@Model.SubmitClass" />
+        <input type="submit" name="btn_Submit" id="btn_Submit" value="@Model.SubmitText" class="@Model.SubmitClass" />
     }
     else
     {
-        <input type="submit" name="btn_Submit" value="@Model.SubmitValue" class="@Model.SubmitClass" formaction="@Model.SubmitPath" />
+        <input type="submit" name="btn_Submit" id="btn_Submit" value="@Model.SubmitText" class="@Model.SubmitClass" formaction="@Model.SubmitPath" />
     }
 
-    //block enter key except for textareas
-    if (!Model.UseSubmitBehavior)
+
+    if (Model.RenderScripts)
     {
-        <script>
-            $(document).ready(function () {
-                $(document).on("keypress", ":input:not(textarea)", function (event) {
-                    if (event.keyCode == 13) {
-                        event.preventDefault();
-                    }
-                });
-            });
-
-
-        </script>
+        //block enter key except for textareas
+        if (Model.UseSubmitBehavior)
+        {
+            <script src="~/ClientResources/Security/Scripts/RecaptchaPartial.js"></script>
+        }
+        else
+        {
+            <script src="~/ClientResources/Security/Scripts/RecaptchaPartialNoSubmit.js"></script>
+        }
     }
 
 }

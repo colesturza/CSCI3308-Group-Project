@@ -1,1 +1,30 @@
-﻿
+﻿@{
+    Layout = "~/Views/Shared/_LayoutAuth.cshtml";
+}
+
+
+<div id="body-content" class="container mt-4">
+    <div>
+        <ul id="post-list" class="list-group list-group-flush w-70 float-md-left">
+            <li class="list-group-item mb-3" v-for="post in posts">
+                <a v-bind:href="'/Post/' + post.ID">
+                    <h4>{{ post.Name }}</h4>
+                    <p>{{ post.Content }}</p>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div id="community-block" class="border bg-white p-3 w-25 float-md-right">
+        <h5 class="mx-auto d-flex justify-content-center p-2">Home</h5>
+        <div class="container">
+            <span class="m-1">You can find the most popular posts here.</span>
+        </div>
+    </div>
+</div>
+
+
+
+@section scripts
+{
+    <script src="~/ClientResources/School/Scripts/School.js"></script>
+}

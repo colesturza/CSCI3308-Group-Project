@@ -68,6 +68,7 @@ begin
 			set @ModifiedBy = 0
 		end
 
+		declare @ModifiedDate datetimeoffset(7) = sysDateTimeOffset()
 
 
 		--set props
@@ -79,6 +80,7 @@ begin
 			@PropID = 1,
 			@PropValue = @Name,
 			@ModifiedBy = @_entID,
+			@ModifiedDate = @ModifiedDate,
 			@IsNewRecord = @_isNew
 
 		--PhoneNum [6]
@@ -88,6 +90,7 @@ begin
 			@PropID = 6,
 			@PropValue = @PhoneNumber,
 			@ModifiedBy = @_entID,
+			@ModifiedDate = @ModifiedDate,
 			@IsNewRecord = @_isNew
 
 		--Major [7]
@@ -97,6 +100,7 @@ begin
 			@PropID = 7,
 			@PropValue = @Major,
 			@ModifiedBy = @_entID,
+			@ModifiedDate = @ModifiedDate,
 			@IsNewRecord = @_isNew
 
 		--Year [8]
@@ -106,6 +110,7 @@ begin
 			@PropID = 8,
 			@PropValue = @Year,
 			@ModifiedBy = @_entID,
+			@ModifiedDate = @ModifiedDate,
 			@IsNewRecord = @_isNew
 		
 		--GradDate [10]
@@ -115,6 +120,7 @@ begin
 			@PropID = 10,
 			@PropValue = @GradDate,
 			@ModifiedBy = @_entID,
+			@ModifiedDate = @ModifiedDate,
 			@IsNewRecord = @_isNew
 
 		--Company [30]
@@ -124,6 +130,7 @@ begin
 			@PropID = 30,
 			@PropValue = @Company,
 			@ModifiedBy = @_entID,
+			@ModifiedDate = @ModifiedDate,
 			@IsNewRecord = @_isNew
 
 		--JobTitle [30]
@@ -133,6 +140,7 @@ begin
 			@PropID = 31,
 			@PropValue = @JobTitle,
 			@ModifiedBy = @_entID,
+			@ModifiedDate = @ModifiedDate,
 			@IsNewRecord = @_isNew
 
 

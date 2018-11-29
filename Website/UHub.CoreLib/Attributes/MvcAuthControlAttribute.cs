@@ -13,6 +13,7 @@ using System.Web.Mvc;
 using System.Web.Routing;
 using UHub.CoreLib.Extensions;
 using UHub.CoreLib.Management;
+using UHub.CoreLib.Security.Authentication;
 
 namespace UHub.CoreLib.Attributes
 {
@@ -35,12 +36,13 @@ namespace UHub.CoreLib.Attributes
                 if (authToken.IsEmpty())
                 {
                     //test for cookie auth
-                    isLoggedIn = CoreFactory.Singleton.Auth.IsUserLoggedIn(out _, out _);
+                    isLoggedIn = CoreFactory.Singleton.Auth.IsUserLoggedIn();
                 }
                 else
                 {
                     //test for token auth
-                    isLoggedIn = CoreFactory.Singleton.Auth.TrySetRequestUser(authToken, out _);
+                    var tokenStatus = CoreFactory.Singleton.Auth.TrySetRequestUser(authToken);
+                    isLoggedIn = (tokenStatus == TokenValidationStatus.Success);
                 }
 
                 if (!isLoggedIn)
@@ -50,10 +52,12 @@ namespace UHub.CoreLib.Attributes
                 }
 
 
-                var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser();
+                var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser().CmsUser;
 
-
-                var isValid = cmsUser.ID != null && cmsUser.IsEnabled && (!RequireAdmin || cmsUser.IsAdmin);
+                var isValid = 
+                    cmsUser.ID != null 
+                    && cmsUser.IsEnabled 
+                    && (!RequireAdmin || cmsUser.IsAdmin);
 
 
                 if (!isValid)
@@ -80,6 +84,7 @@ namespace UHub.CoreLib.Attributes
         {
             var loginAddr = CoreFactory.Singleton.Properties.LoginURL;
             var fwrdCookieName = CoreFactory.Singleton.Properties.PostAuthCookieName;
+            var forceSecure = CoreFactory.Singleton.Properties.ForceSecureCookies;
 
 
 
@@ -87,6 +92,8 @@ namespace UHub.CoreLib.Attributes
             var cookie = new HttpCookie(fwrdCookieName);
             cookie.Value = targetAddr;
             cookie.Domain = CoreFactory.Singleton.Properties.CookieDomain;
+            cookie.Secure = forceSecure;
+            cookie.HttpOnly = forceSecure;
             cookie.Encrypt();
             filterContext.HttpContext.Response.SetCookie(cookie);
 

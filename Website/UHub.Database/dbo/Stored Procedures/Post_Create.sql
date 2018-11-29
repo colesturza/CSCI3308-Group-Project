@@ -69,7 +69,7 @@ begin
 		--validate parent enabled flag
 		if(@_prnt_IsEnabled = 0)
 		begin
-			;throw 51000, '403: This School Club cannot be modified', 1;
+			;throw 51000, '403: Parent cannot be modified', 1;
 		end
 		--validate parent readonly flag
 		--ensure that parent entity does not have the readonly flag set
@@ -86,16 +86,21 @@ begin
 			set @CreatedBy = 0
 		end
 
+		declare @CreatedDate datetimeoffset(7) = sysDateTimeOffset()
+
+
 		--insert item into ent table
 		insert into dbo.Entities
 		(
 			EntTypeID,
-			CreatedBy
+			CreatedBy,
+			CreatedDate
 		)
 		values
 		( 
 			@_entTypeID,
-			@CreatedBy
+			@CreatedBy,
+			@CreatedDate
 		)
 
 
@@ -141,6 +146,7 @@ begin
 			@PropID = 2,
 			@PropValue = @Name,
 			@ModifiedBy = @CreatedBy,
+			@ModifiedDate = @CreatedDate,
 			@IsNewRecord = @_isNew
 
 		--Content [12]
@@ -150,6 +156,7 @@ begin
 			@PropID = 12,
 			@PropValue = @Content,
 			@ModifiedBy = @CreatedBy,
+			@ModifiedDate = @CreatedDate,
 			@IsNewRecord = @_isNew
 
 		--IsModified [13]
@@ -159,6 +166,7 @@ begin
 			@PropID = 13,
 			@PropValue = NULL,
 			@ModifiedBy = @CreatedBy,
+			@ModifiedDate = @CreatedDate,
 			@IsNewRecord = @_isNew
 
 		--ViewCount [14]
@@ -168,6 +176,7 @@ begin
 			@PropID = 14,
 			@PropValue = NULL,
 			@ModifiedBy = @CreatedBy,
+			@ModifiedDate = @CreatedDate,
 			@IsNewRecord = @_isNew
 
 		--IsLocked [33]
@@ -177,6 +186,7 @@ begin
 			@PropID = 33,
 			@PropValue = @IsLocked,
 			@ModifiedBy = @CreatedBy,
+			@ModifiedDate = @CreatedDate,
 			@IsNewRecord = @_isNew
 
 		--CanComment [34]
@@ -186,6 +196,7 @@ begin
 			@PropID = 34,
 			@PropValue = @CanComment,
 			@ModifiedBy = @CreatedBy,
+			@ModifiedDate = @CreatedDate,
 			@IsNewRecord = @_isNew
 
 		--IsPublic [35]
@@ -195,6 +206,7 @@ begin
 			@PropID = 35,
 			@PropValue = @IsPublic,
 			@ModifiedBy = @CreatedBy,
+			@ModifiedDate = @CreatedDate,
 			@IsNewRecord = @_isNew
 
 		select @_entID

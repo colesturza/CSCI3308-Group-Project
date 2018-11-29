@@ -12,13 +12,13 @@ using UHub.CoreLib.Attributes;
 using UHub.CoreLib.DataInterop;
 using UHub.CoreLib.Entities.Posts.APIControllers;
 using UHub.CoreLib.Entities.Posts.DTOs;
-using UHub.CoreLib.Entities.SchoolClubs.Management;
+using UHub.CoreLib.Entities.SchoolClubs.DataInterop;
 using UHub.CoreLib.Extensions;
 using UHub.CoreLib.Management;
 using UHub.CoreLib.Tests;
 using UHub.CoreLib.Tools;
 
-namespace UHub.CoreLib.Entities.Posts.Management.Tests
+namespace UHub.CoreLib.Entities.Posts.DataInterop.Tests
 {
     [TestClass]
     public class PostReaderAPITests
@@ -82,7 +82,7 @@ namespace UHub.CoreLib.Entities.Posts.Management.Tests
             TestGlobal.TestInit();
 
 
-            var clubSet = SchoolClubReader.GetClubsByDomain("@colorado.edu").ToList();
+            var clubSet = SchoolClubReader.TryGetClubsByDomain("@colorado.edu").ToList();
             var clubID = clubSet.FirstOrDefault()?.ID;
 
             if (clubID == null)
@@ -108,7 +108,7 @@ namespace UHub.CoreLib.Entities.Posts.Management.Tests
         {
             TestGlobal.TestInit();
 
-            var clubSet = SchoolClubReader.GetClubsByDomain("@colorado.edu").ToList();
+            var clubSet = SchoolClubReader.TryGetClubsByDomain("@colorado.edu").ToList();
             var clubID = clubSet.FirstOrDefault()?.ID;
 
             if (clubID == null)
@@ -134,7 +134,7 @@ namespace UHub.CoreLib.Entities.Posts.Management.Tests
             TestGlobal.TestInit();
 
 
-            var clubSet = SchoolClubReader.GetClubsByDomain("@colorado.edu").ToList();
+            var clubSet = SchoolClubReader.TryGetClubsByDomain("@colorado.edu").ToList();
             var clubID = clubSet.FirstOrDefault()?.ID;
 
             if (clubID == null)

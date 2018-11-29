@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using UHub.CoreLib.Attributes;
 using UHub.CoreLib.Entities.Comments.DTOs;
-using UHub.CoreLib.Entities.Comments.Management;
+using UHub.CoreLib.Entities.Comments.DataInterop;
 using UHub.CoreLib.Management;
 
 namespace UHub.CoreLib.Entities.Comments.APIControllers
@@ -28,7 +28,12 @@ namespace UHub.CoreLib.Entities.Comments.APIControllers
 
 
 
-            var comments = await CommentReader.GetCommentsByParentAsync(parentID);
+            var comments = await CommentReader.TryGetCommentsByParentAsync(parentID);
+            if(comments == null)
+            {
+                return InternalServerError();
+            }
+
 
             var outSet = comments.Select(x => x.ToDto<Comment_R_PublicDTO>());
             return Ok(outSet);

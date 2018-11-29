@@ -13,7 +13,6 @@ select
 	vu.ID,
 	vu.IsEnabled,
 	vu.IsReadonly,
-	vu.RefUID,
 	vu.Email,
 	vu.Username,
 	vu.IsConfirmed,

@@ -1,7 +1,29 @@
 ﻿
 @{
     ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_LayoutAuth.cshtml";
 }
 
-<h2>Index</h2>
+<div id="navbar-uhub">
+    <navbar-component></navbar-component>
+</div>
+
+    <div id="body-content" class="container mt-4">
+        <div>
+        </div>
+        <div>
+            <div id="post-list">
+                <postlistcomp></postlistcomp>
+            </div>
+        </div>
+        <div id="community-block" class="border bg-white p-3 w-25 float-md-right">
+            <h5 class="mx-auto d-flex justify-content-center">Home</h5>
+            <div class="container">
+                <span class="m-1 justify-content-center">
+                    {{ description }}
+                </span>
+            </div>
+        </div>
+    </div>
+<!--</body>-->
 

@@ -9,13 +9,14 @@ using UHub.CoreLib.Attributes;
 using UHub.CoreLib.DataInterop;
 using UHub.CoreLib.Extensions;
 using UHub.CoreLib.Entities.Posts.DTOs;
-using UHub.CoreLib.Entities.Posts.Management;
+using UHub.CoreLib.Entities.Posts.DataInterop;
 using UHub.CoreLib.Entities.SchoolClubs;
-using UHub.CoreLib.Entities.SchoolClubs.Management;
-using UHub.CoreLib.Entities.Schools.Management;
+using UHub.CoreLib.Entities.SchoolClubs.DataInterop;
+using UHub.CoreLib.Entities.Schools.DataInterop;
 using UHub.CoreLib.Management;
 using UHub.CoreLib.Tools;
 using UHub.CoreLib.Security;
+using UHub.CoreLib.Entities.Posts.Management;
 
 namespace UHub.CoreLib.Entities.Posts.APIControllers
 {
@@ -33,29 +34,27 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
                 return Content(statCode, status);
             }
 
-            var postInternal = PostReader.GetPost(postID);
+
+            var postInternal = await PostReader.TryGetPostAsync(postID);
             if (postInternal == null)
             {
                 return NotFound();
             }
+
             var parentID = postInternal.ParentID;
-            bool IsUserBanned = true;
-            bool IsUserMember = false;
-            SchoolClub postClub = null;
-            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser();
+            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser().CmsUser;
 
 
-            TaskList tasks = new TaskList();
-            tasks.Add(() => { postClub = SchoolClubReader.GetClub(parentID); });
-            tasks.Add(() => { IsUserBanned = SchoolClubReader.IsUserBanned(parentID, cmsUser.ID.Value); });
-            tasks.Add(() => { IsUserMember = SchoolClubReader.ValidateMembership(parentID, cmsUser.ID.Value); });
-            tasks.ExecuteAll();
 
+            var taskPostClub = SchoolClubReader.TryGetClubAsync(parentID);
+            var taskIsUserBanned = SchoolClubReader.TryIsUserBannedAsync(parentID, cmsUser.ID.Value);
+            var taskIsUserMember = SchoolClubReader.TryValidateMembershipAsync(parentID, cmsUser.ID.Value);
 
 
 
             var postPublic = postInternal.ToDto<Post_R_PublicDTO>();
 
+            var postClub = await taskPostClub;
             if (postClub != null)
             {
                 //verify same school
@@ -64,6 +63,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
                     return NotFound();
                 }
 
+                var IsUserBanned = await taskIsUserBanned;
                 //ensure not banned
                 if (IsUserBanned)
                 {
@@ -77,6 +77,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
                 }
 
 
+                var IsUserMember = await taskIsUserMember;
                 //check for member status
                 if (IsUserMember)
                 {
@@ -103,6 +104,8 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             {
                 return NotFound();
             }
+            await PostManager.TryIncrementViewCountAsync(postInternal.ID.Value);
+
 
             return Ok(postPublic);
         }

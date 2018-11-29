@@ -12,7 +12,7 @@ using UHub.CoreLib.DataInterop;
 using UHub.CoreLib.Logging;
 using UHub.CoreLib.Management;
 using UHub.CoreLib.Security;
-using UHub.CoreLib.SmtpInterop;
+using UHub.CoreLib.EmailInterop;
 using UHub.CoreLib.Tools;
 using UHub.CoreLib.Util;
 using UHub.CoreLib.Security.Authentication.APIControllers;
@@ -27,6 +27,7 @@ using System.Web.Http.Routing;
 using System.Web.Http.Filters;
 using NSubstitute;
 using UHub.CoreLib.Entities.Users.DTOs;
+using UHub.CoreLib.EmailInterop.Providers.SMTP;
 
 namespace UHub.CoreLib.Tests
 {
@@ -103,7 +104,7 @@ namespace UHub.CoreLib.Tests
                 },
                 Mail = new CmsConfig_Mail
                 {
-                    NoReplyMailConfig = mailConfig,
+                    MailProvider = new SmtpProvider(mailConfig),
                     ContactFormRecipientAddress = ContactFormRecipient
                 },
                 Security = new CmsConfig_Security
@@ -120,7 +121,7 @@ namespace UHub.CoreLib.Tests
                     AcctConfirmURL = "https://u-hub.life/Account/Confirm",
                     AcctPswdRecoveryURL = "https://u-hub.life/Account/ResetPassword",
                     AcctPswdUpdateURL = "https://u-hub.life/Account/UpdatePassword",
-                    AcctPswdRecoveryExpiration = new TimeSpan(0, 0, 30, 0),
+                    AcctPswdRecoveryLifespan = new TimeSpan(0, 0, 30, 0),
                     EnableRecaptcha = false,                //CAPTCHA
                     RecaptchaPublicKey = captchaPublicKey,
                     RecaptchaPrivateKey = captchaPrivateKey,

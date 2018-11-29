@@ -70,16 +70,16 @@ namespace UHub.CoreLib.Entities.Users.Interfaces
         /// </summary>
         /// <param name="Key"></param>
         /// <returns></returns>
-        AccountResultCode ValidateRecoveryKey(string Key);
+        AcctRecoveryResultCode ValidateRecoveryKey(string Key);
 
         /// <summary>
         /// Update the failed attempt count
         /// </summary>
-        AccountResultCode IncrementAttemptCount();
+        AcctRecoveryResultCode TryIncrementAttemptCount();
 
         /// <summary>
         /// Delete this context to prevent it from being used again
         /// </summary>
-        void Delete();
+        bool TryDelete();
     }
 }
