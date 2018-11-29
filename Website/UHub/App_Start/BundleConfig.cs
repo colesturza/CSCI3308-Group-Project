@@ -68,6 +68,9 @@ namespace UHub
             bundles.Add(new CustomStyleBundle("~/resources/css/master")
                 .IncludeDirectory("~/ClientResources/Master/Styles", "*css", true));
 
+            bundles.Add(new CustomStyleBundle("~/resources/css/school")
+                .IncludeDirectory("~/ClientResources/School/Styles", "*css", true));
+
 
 
             BundleTable.EnableOptimizations = true;

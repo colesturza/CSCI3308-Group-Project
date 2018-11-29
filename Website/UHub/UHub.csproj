@@ -224,6 +224,7 @@
     <Content Include="ClientResources\SampleUHUB_TESTING\.homeVue.js.swp" />
     <Content Include="ClientResources\SampleUHUB_TESTING\.index.html.swp" />
     <Content Include="ClientResources\SampleUHUB_TESTING\postPage" />
+    <Content Include="ClientResources\School\Styles\School.scss" />
     <None Include="Properties\PublishProfiles\CustomProfile.pubxml" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
@@ -307,7 +308,6 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="ClientResources\Imgs\" />
-    <Folder Include="ClientResources\School\Styles\" />
     <Folder Include="Models\Account\" />
   </ItemGroup>
   <ItemGroup>
