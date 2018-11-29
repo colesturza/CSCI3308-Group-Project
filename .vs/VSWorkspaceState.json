@@ -1,12 +1,16 @@
 {
   "ExpandedNodes": [
     "",
+    "\\HtmlInProgress",
+    "\\HtmlInProgress\\Nick",
+    "\\HtmlInProgress\\Nick\\login",
+    "\\HtmlInProgress\\Nick\\login\\html",
     "\\Website",
     "\\Website\\UHub",
     "\\Website\\UHub.CoreLib",
-    "\\Website\\UHub\\ClientResources",
-    "\\Website\\UHub\\ClientResources\\SampleUHUB"
+    "\\Website\\UHub\\Views",
+    "\\Website\\UHub\\Views\\Account"
   ],
-  "SelectedNode": "\\Website\\UHub\\ClientResources\\SampleUHUB\\postPage.html",
+  "SelectedNode": "\\Website\\UHub\\Views\\Account\\Login.cshtml",
   "PreviewInSolutionExplorer": false
 }
