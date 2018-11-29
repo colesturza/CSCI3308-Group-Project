@@ -24,7 +24,12 @@ new Vue({
   },
   watch: {
     postobj: $.ajax({
-      method: "POST",
+        method: "POST",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        complete: function (data) {
+            console.log(data);
+        },
       data: this.postobj,
       url: "/uhubapi/posts/Create"
     })
