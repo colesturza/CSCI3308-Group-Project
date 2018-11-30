@@ -56,14 +56,6 @@
                             </li>
                         </ul>
                     </div>
-                    <div id="navbarDropdownMenu" class="dropdown-menu-UHUB scrollable-menu" aria-labelledby="navbarDropdownMenuLink">
-                        <a class="dropdown-item" href="/School/Clubs">-- View All --</a>
-                        <a class="dropdown-item"
-                            v-for="community in communities"
-                            v-bind:href="'/SchoolClub/' + community.ID">
-                            {{ community.Name }}
-                        </a>
-                    </div>
                     <div class="searchWrapper">
                         <input class="form-control" type="search" placeholder="Search" class="form-control" />
                         <div>
@@ -73,6 +65,14 @@
                     </div>
                     
                 </nav>
+                <div id="navbarDropdownMenu" class="dropdown-menu-UHUB scrollable-menu" aria-labelledby="navbarDropdownMenuLink">
+                    <a class="dropdown-item" href="/School/Clubs">-- View All --</a>
+                    <a class="dropdown-item"
+                        v-for="community in communities"
+                        v-bind:href="'/SchoolClub/' + community.ID">
+                        {{ community.Name }}
+                    </a>
+                </div>
             </div>
         </div>
         `
