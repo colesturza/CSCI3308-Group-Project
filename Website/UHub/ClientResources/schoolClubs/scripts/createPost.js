@@ -41,12 +41,12 @@ new Vue({
                     console.log(data);
                 },
                 success: function (data) {
-
-                    alert(data.status);
-
+                    console.log(data);
+                    //alert(data);
                 },
                 error: function (data) {
-                    alert(data.responseJSON.status);
+                    console.log(data);
+                    //alert(data.responseJSON.status);
                 }
             })
         }

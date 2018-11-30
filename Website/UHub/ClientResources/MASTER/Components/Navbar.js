@@ -1,4 +1,8 @@
-﻿var communities = [];
+﻿var url = window.location.href
+var seperated = url.split('/')
+var commentID = seperated.slice(-1)[0];
+
+var communities = [];
 Vue.component('navbar-component', {
     data: function () {
         $.ajax({
@@ -8,6 +12,9 @@ Vue.component('navbar-component', {
             success: function (data) {
                 communities = data;
                 communities.sort(dynamicSort("Name"));
+
+                for(communities)
+
             },
             error: function (error) {
                 console.log(error);
