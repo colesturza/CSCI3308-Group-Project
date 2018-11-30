@@ -80,13 +80,14 @@ var postDisplay = new Vue({
         var postReq = $.ajax({
             method: "POST",
             url: "#uhubapi/posts/GetByID",
+            data: url.split('/').slice(-1)[0],
             dataType: "json",
             error: function(jqAjax, errorText) {
               alert("Error " + errorText);
             },
             statusCode: {
                 200: function() {
-                    this.title = postReq.Name.html().text();
+                    this.title = postReq.Name;
                     this.content = postReq.Content;
                     this.postTime = postReq.CreatedDate;
                     if (postReq.CanComment && postReq.Name.html().text() != null) {

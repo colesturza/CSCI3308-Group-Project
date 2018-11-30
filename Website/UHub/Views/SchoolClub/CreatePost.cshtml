@@ -4,15 +4,12 @@
     Layout = "~/Views/Shared/_LayoutAuth.cshtml";
 }
 
-<h2>CreatePost</h2>
 
-<div id="createPostText" class="container-fullwidth">
-    <div class="jumbotron">
-        <h1 class="display-4" align="center">Create a post</h1>
-    </div>
-</div>
 
 <div id="enterInfo" class="container">
+    
+    <h2>Create Post</h2>
+    
     <div class="form-group">
         <label for="title">Title:</label>
         <textarea type="text" class="form-control" ref="inputTitle" rows="1" maxlength="40"></textarea>
@@ -31,10 +28,10 @@
         <label class="form-check-label" for="comment">Enable Comments</label>
     </div>
     <p></p>
-    <button v-on:click="readRefs">Submit</button>
+    <button id="btn_CreatePost" v-on:click="readRefs(); sendData();">Submit</button>
 </div>
 
-<script src="postVue.js"></script>
+
 @section scripts
 {
     @Scripts.Render("~/resources/schoolClub/createScript")

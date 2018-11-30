@@ -228,6 +228,7 @@
     <Content Include="ClientResources\SampleUHUB_TESTING\postPage" />
     <Content Include="ClientResources\MASTER\Components\PostBarStyle.scss" />
     <Content Include="ClientResources\School\Styles\School.scss" />
+    <Content Include="ClientResources\MASTER\Components\NavBarStyle.scss" />
     <None Include="Properties\PublishProfiles\CustomProfile.pubxml" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
