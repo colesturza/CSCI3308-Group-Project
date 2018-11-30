@@ -70,7 +70,7 @@ namespace UHub
 
             //---------------------------------SCHOOL CLUB------------------------------------------------------
             //CREATE POST
-            bundles.Add(new ScriptBundle("~/resources/schoolClub/createScript")
+            bundles.Add(new ScriptBundle("~/resources/schoolClub/createPostScript")
                 .Include("~/ClientResources/SchoolClubs/Scripts/createPost.js"));
 
 
@@ -79,6 +79,12 @@ namespace UHub
             //---------------------------------SCHOOL------------------------------------------------------
             bundles.Add(new CustomStyleBundle("~/resources/css/school")
                 .IncludeDirectory("~/ClientResources/School/Styles", "*css", true));
+
+
+            //CREATE POST
+            bundles.Add(new ScriptBundle("~/resources/school/createClubScript")
+                .Include("~/ClientResources/School/Scripts/createClub.js"));
+
 
 
             //---------------------------------COMPONENTS------------------------------------------------------

@@ -200,6 +200,7 @@
     <Content Include="ClientResources\MASTER\Scripts\Master.js" />
     <Content Include="ClientResources\SchoolClubs\Scripts\communityVue.js" />
     <Content Include="ClientResources\schoolClubs\scripts\createPost.js" />
+    <Content Include="ClientResources\School\Scripts\CreateClub.js" />
     <Content Include="ClientResources\School\Scripts\School.js" />
     <Content Include="ClientResources\Security\Scripts\RecaptchaPartialNoSubmit.js" />
     <Content Include="ClientResources\Security\Scripts\RecaptchaPartial.js" />
@@ -298,7 +299,7 @@
     <Content Include="Views\School\Index.cshtml" />
     <Content Include="Views\School\CreatePost.cshtml" />
     <Content Include="Views\School\Clubs.cshtml" />
-    <Content Include="Views\School\CreateClube.cshtml" />
+    <Content Include="Views\School\CreateClub.cshtml" />
     <Content Include="Views\SchoolClub\About.cshtml" />
     <Content Include="Views\SchoolClub\ModEdit.cshtml" />
     <Content Include="Views\Account\_AccountLinkMenuPartial.cshtml" />

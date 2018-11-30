@@ -44,12 +44,11 @@
                         console.log(data);
                     },
                     success: function (data) {
-                        console.log(data);
-                        //alert(data);
+                        alert(data);
                     },
                     error: function (data) {
                         console.log(data);
-                        //alert(data.responseJSON.status);
+                        alert(data.responseJSON);
                     }
                 })
             }
