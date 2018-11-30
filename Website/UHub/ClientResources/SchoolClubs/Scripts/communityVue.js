@@ -94,6 +94,9 @@ var postList = new Vue({
     },
     methods: {
         getPosts(){
+            this.posts = examplePosts;
+            /*
+            Need correct url
             var postRequest = $.ajax({
                 method: "POST",
                 url: "uhubapi/posts/GetAllByClub",
@@ -111,6 +114,7 @@ var postList = new Vue({
                     console.log(error);
                 }
             })
+            */
         }
     },
     beforeMount()
