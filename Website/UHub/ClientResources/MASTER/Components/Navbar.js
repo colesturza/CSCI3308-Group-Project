@@ -1,36 +1,42 @@
-﻿var communities = [];
-Vue.component('navbar-component', {
-    data: function () {
-        $.ajax({
-            method: "POST",
-            url: "/uhubapi/schoolclubs/GetAllBySchool",
-            async: false,
-            success: function (data) {
-                var url = window.location.href
-                var seperated = url.split('/')
-                var currCommID = seperated.slice(-1)[0];
+﻿(function () {
 
-                communities = data;
-                communities.sort(dynamicSort("Name"));
+    var communities = [];
+    var clubName = "Communities";
 
-                var commLen = communities.length;
-                for (var i = 0; i < commLen; i++) {
 
-                    if (communities[i].ID == currCommID) {
-                        $("#navbarDropdownMenuLink").text(communities[i].Name);
+    Vue.component('navbar-component', {
+        data: function () {
+            $.ajax({
+                method: "POST",
+                url: "/uhubapi/schoolclubs/GetAllBySchool",
+                async: false,
+                success: function (data) {
+                    var url = window.location.href;
+                    var seperated = url.split('/');
+                    var currCommID = seperated.slice(-1)[0];
+
+                    communities = data;
+                    communities.sort(dynamicSort("Name"));
+
+
+                    var commLen = communities.length;
+                    for (var i = 0; i < commLen; i++) {
+                        if (currCommID == communities[i].ID) {
+                            clubName = communities[i].Name;
+                        }
                     }
-                }
 
-            },
-            error: function (error) {
-                console.log(error);
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            });
+            return {
+                clubName: clubName,
+                communities: communities
             }
-        });
-        return {
-            communities
-        }
-    },
-    template: 
+        },
+        template:
         `
         <div class="container">
             <div id="mainNav" class="container-fullwidth">
@@ -89,6 +95,8 @@ Vue.component('navbar-component', {
             </div>
         </div>
         `
-})
+    });
 
-new Vue({ el: "#navbar-uhub" })
+    new Vue({ el: "#navbar-uhub" });
+
+})();
