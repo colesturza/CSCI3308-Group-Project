@@ -6,11 +6,6 @@
 
 <h2>CreatePost</h2>
 
-<div id="createPostText" class="container-fullwidth">
-    <div class="jumbotron">
-        <h1 class="display-4" align="center">Create a post</h1>
-    </div>
-</div>
 
 <div id="enterInfo" class="container">
     <div class="form-group">
@@ -31,10 +26,10 @@
         <label class="form-check-label" for="comment">Enable Comments</label>
     </div>
     <p></p>
-    <button v-on:click="readRefs">Submit</button>
+    <button id="btn_CreatePost" v-on:click="readRefs(); sendData();">Submit</button>
 </div>
 
-<script src="postVue.js"></script>
+
 @section scripts
 {
     @Scripts.Render("~/resources/schoolClub/createScript")
