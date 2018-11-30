@@ -79,8 +79,10 @@ var postDisplay = new Vue({
     beforeMount: function () {
         var postReq = $.ajax({
             method: "POST",
-            url: "#uhubapi/posts/GetByID",
-            data: window.location.href.split('/').slice(-1)[0],
+            url: "uhubapi/posts/GetByID",
+            data: {
+                PostID: window.location.href.split('/').slice(-1)[0]
+            },
             dataType: "json",
             error: function(jqAjax, errorText) {
               alert("Error " + errorText);
@@ -94,13 +96,15 @@ var postDisplay = new Vue({
                         var commentReq = $.ajax({
                             method: "POST",
                             url: "uhubapi/comments/GetByPost",
-                            data: postReq.ID,
+                            data: {
+                                PostID: postReq.ID
+                            },
                             dataType: "json",
                             error: function(jqAjax, errorText) {
                                 alert("Error" + errorText);
                                 },
                             success: function () {
-                                this.comments = commentReq.response;
+                                this.comments = commentReq.responseJSON;
                             }
                         });
                     }

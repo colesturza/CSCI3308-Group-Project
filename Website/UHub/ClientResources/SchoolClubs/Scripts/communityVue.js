@@ -101,7 +101,7 @@ var postList = new Vue({
                 dataType: "json",
                 statusCode: {
                     200: function () {
-                        this.posts = postRequest.response;
+                        this.posts = postRequest.responseJSON;
                     },
                     503: function() {
                         console.log("Internal Server Error");
