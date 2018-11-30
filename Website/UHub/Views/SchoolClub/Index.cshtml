@@ -4,26 +4,45 @@
     Layout = "~/Views/Shared/_LayoutAuth.cshtml";
 }
 
+@section head
+{
+    
+}
+
+@section header
+{
+    <div>
+        <postbar-component></postbar-component>
+    </div>
+}
+
 <div id="navbar-uhub">
     <navbar-component></navbar-component>
 </div>
 
-    <div id="body-content" class="container mt-4">
-        <div>
-        </div>
-        <div>
-            <div id="post-list">
-                <postlistcomp></postlistcomp>
-            </div>
-        </div>
-        <div id="community-block" class="border bg-white p-3 w-25 float-md-right">
-            <h5 class="mx-auto d-flex justify-content-center">Home</h5>
-            <div class="container">
-                <span class="m-1 justify-content-center">
-                    {{ description }}
-                </span>
-            </div>
+<div id="postbar-uhub">
+    <postbar-component></postbar-component>
+</div>
+
+<div id="body-content" class="container mt-4">
+    <div>
+    </div>
+    <div>
+        <div id="post-list">
+            <postlistcomp></postlistcomp>
         </div>
     </div>
-<!--</body>-->
+    <div id="community-block" class="border bg-white p-3 w-25 float-md-right">
+        <h5 class="mx-auto d-flex justify-content-center">Home</h5>
+        <div class="container">
+            <span class="m-1 justify-content-center">
+                {{ description }}
+            </span>
+        </div>
+    </div>
+</div>
 
+@section scripts
+{
+    <script src="~/ClientResources/schoolClubs/Scripts/communityVue.js"></script>
+}
