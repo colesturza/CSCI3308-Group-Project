@@ -80,7 +80,7 @@ var postDisplay = new Vue({
         var postReq = $.ajax({
             method: "POST",
             url: "#uhubapi/posts/GetByID",
-            data: url.split('/').slice(-1)[0],
+            data: window.location.href.split('/').slice(-1)[0],
             dataType: "json",
             error: function(jqAjax, errorText) {
               alert("Error " + errorText);
