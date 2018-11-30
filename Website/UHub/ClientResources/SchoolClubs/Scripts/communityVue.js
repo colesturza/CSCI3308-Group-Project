@@ -97,7 +97,7 @@ var postList = new Vue({
             var postRequest = $.ajax({
                 method: "POST",
                 url: "uhubapi/posts/GetAllByClub",
-                data: url.split('/').slice(-1)[0],
+                data: window.location.href.split('/').slice(-1)[0],
                 dataType: "json",
                 statusCode: {
                     200: function () {
