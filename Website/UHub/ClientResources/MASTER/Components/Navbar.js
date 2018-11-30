@@ -1,8 +1,4 @@
-﻿var url = window.location.href
-var seperated = url.split('/')
-var commentID = seperated.slice(-1)[0];
-
-var communities = [];
+﻿var communities = [];
 Vue.component('navbar-component', {
     data: function () {
         $.ajax({
@@ -10,10 +6,22 @@ Vue.component('navbar-component', {
             url: "/uhubapi/schoolclubs/GetAllBySchool",
             async: false,
             success: function (data) {
+                var url = window.location.href
+                var seperated = url.split('/')
+                var currCommID = seperated.slice(-1)[0];
+
                 communities = data;
                 communities.sort(dynamicSort("Name"));
 
-                for(communities)
+                var commLen = communities.length;
+                for (var i = 0; i < commLen; i++) {
+
+                    if (commLen[i].ID === currCommID){
+                        $("#navbarDropdownMenuLink").val(commLen[i].Name);
+                    }
+
+                    alert(myStringArray[i]);
+                }
 
             },
             error: function (error) {
