@@ -95,11 +95,12 @@ var postList = new Vue({
     methods: {
         getPosts(){
             this.posts = examplePosts;
+            console.log(window.location.href.split('/').slice(-1)[0]);
             /*
             Need correct url
             var postRequest = $.ajax({
                 method: "POST",
-                url: "uhubapi/posts/GetAllByClub",
+                url: "/uhubapi/posts/GetAllByClub",
                 data: window.location.href.split('/').slice(-1)[0],
                 dataType: "json",
                 statusCode: {
