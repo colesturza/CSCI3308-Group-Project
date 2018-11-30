@@ -86,7 +86,7 @@ var postDisplay = new Vue({
             },
             statusCode: {
                 200: function() {
-                    this.title = postReq.Name.html().text();
+                    this.title = postReq.Name;
                     this.content = postReq.Content;
                     this.postTime = postReq.CreatedDate;
                     if (postReq.CanComment && postReq.Name.html().text() != null) {
