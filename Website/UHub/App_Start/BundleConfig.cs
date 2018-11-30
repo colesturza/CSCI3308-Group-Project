@@ -37,6 +37,9 @@ namespace UHub
             bundles.Add(masterBundle);
 
 
+            bundles.Add(new CustomStyleBundle("~/resources/css/master")
+                .IncludeDirectory("~/ClientResources/Master/Styles", "*css", true));
+
 
 
             //---------------------------------ACCOUNT------------------------------------------------------
@@ -65,8 +68,17 @@ namespace UHub
 
 
 
-            bundles.Add(new CustomStyleBundle("~/resources/css/master")
-                .IncludeDirectory("~/ClientResources/Master/Styles", "*css", true));
+            //---------------------------------SCHOOL CLUB------------------------------------------------------
+            //CREATE POST
+            bundles.Add(new ScriptBundle("~/resources/schoolClub/createScript")
+                .Include("~/ClientResources/SchoolClubs/Scripts/createPost.js"));
+
+
+
+
+            //---------------------------------SCHOOL------------------------------------------------------
+            bundles.Add(new CustomStyleBundle("~/resources/css/school")
+                .IncludeDirectory("~/ClientResources/School/Styles", "*css", true));
 
 
 
