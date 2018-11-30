@@ -81,6 +81,11 @@ namespace UHub
                 .IncludeDirectory("~/ClientResources/School/Styles", "*css", true));
 
 
+            //---------------------------------COMPONENTS------------------------------------------------------
+            bundles.Add(new CustomStyleBundle("~/resources/css/components")
+                .IncludeDirectory("~/ClientResources/MASTER/Components", "*css", true));
+
+
 
             BundleTable.EnableOptimizations = true;
         }
