@@ -37,41 +37,40 @@
             }
         },
         template:
-        `
-        <div class="container">
-            <div id="mainNav" class="container-fullwidth">
-                <nav class= "navbar navbar-expand navbar-dark bg-dark">
-                    <a class="navbar-brand" href="/School" tabindex="-1">UHUB</a>
-                    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            `
+        <div >
+            <div id="mainNav">
+                <div class="logoWrapper">
+                    <a href="/School" tabindex="-1">UHUB</a>
+                </div>
+                <nav>
+                    <div id="navbarNavDropdown">
                         <ul class="navbar-nav mr-auto">
                             <li class="nav-item active dropdown">
                                 <a class="nav-link dropdown-toggle"
                                     id="navbarDropdownMenuLink"
-                                    data-toggle="dropdown"
                                     aria-haspopup="true"
                                     aria-expanded="false">
-                                    Communities
+                                    {{clubName}}
                                 </a>
-                                <div class="dropdown-menu scrollable-menu" aria-labelledby="navbarDropdownMenuLink">
-                                    <a class="dropdown-item"
-                                        v-for="community in communities"
-                                        v-bind:href="'/SchoolClub/' + community.ID">
-                                        {{ community.Name }}
-                                    </a>
-                                </div>
                             </li>
                         </ul>
-                        <form class="form-inline">
-                            <input class="form-control mx-2 my-auto d-inline"
-                                type="search" placeholder="Search"
-                                aria-label="Search">
-                                <button class="btn btn-secondary my-2 my-md-0"
-                                    type="submit">
-                                    Search
-                                </button>
-                        </form>
-                        <a href="/Account" class="btn btn-secondary my-2 my-md-0">My Account</a>
                     </div>
+                    <div id="navbarDropdownMenu" class="dropdown-menu-UHUB scrollable-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <a class="dropdown-item"
+                            v-for="community in communities"
+                            v-bind:href="'/SchoolClub/' + community.ID">
+                            {{ community.Name }}
+                        </a>
+                    </div>
+                    <div class="searchWrapper">
+                        <input class="form-control" type="search" placeholder="Search" class="form-control" />
+                        <div>
+                            <button class="form-control" type="submit" class="btn btn-secondary">Search</button>
+                            <a href="/Account" class="btn btn-secondary acctLnk">My Account</a>
+                        </div>
+                    </div>
+                    
                 </nav>
             </div>
 
@@ -98,5 +97,20 @@
     });
 
     new Vue({ el: "#navbar-uhub" });
+
+
+
+    $("*:not(#navbarDropdownMenuLink, #navbarDropdownMenuLink *, #navbarDropdownMenu, #navbarDropdownMenu *)")
+        .click(function () {
+            $("#navbarDropdownMenu").removeClass("show");
+        });
+
+
+    $("#navbarDropdownMenuLink")
+        .click(function (e) {
+            e.stopPropagation();
+            e.preventDefault();
+            $("#navbarDropdownMenu").toggleClass("show");
+        });
 
 })();
