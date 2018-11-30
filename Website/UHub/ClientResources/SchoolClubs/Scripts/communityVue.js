@@ -94,8 +94,22 @@ var postList = new Vue({
     },
     methods: {
         getPosts(){
-            this.posts = examplePosts;
-            console.log(this.posts);
+            var postRequest = $.ajax({
+                method: "POST",
+                url: "uhubapi/posts/GetAllByClub",
+                dataType: "json",
+                statusCode: {
+                    200: function () {
+                        this.posts = postRequest.response;
+                    },
+                    503: function() {
+                        console.log("Internal Server Error");
+                    }
+                },
+                error: function(error) {
+                    console.log(error);
+                }
+            })
         }
     },
     beforeMount()
