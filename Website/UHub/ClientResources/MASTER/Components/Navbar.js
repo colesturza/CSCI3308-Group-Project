@@ -16,11 +16,9 @@ Vue.component('navbar-component', {
                 var commLen = communities.length;
                 for (var i = 0; i < commLen; i++) {
 
-                    if (commLen[i].ID === currCommID){
+                    if (communities[i].ID == currCommID){
                         $("#navbarDropdownMenuLink").val(commLen[i].Name);
                     }
-
-                    alert(myStringArray[i]);
                 }
 
             },
