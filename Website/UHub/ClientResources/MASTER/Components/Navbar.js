@@ -17,7 +17,7 @@ Vue.component('navbar-component', {
                 for (var i = 0; i < commLen; i++) {
 
                     if (communities[i].ID == currCommID){
-                        $("#navbarDropdownMenuLink").val(commLen[i].Name);
+                        $("#navbarDropdownMenuLink").val(communities[i].Name);
                     }
                 }
 
