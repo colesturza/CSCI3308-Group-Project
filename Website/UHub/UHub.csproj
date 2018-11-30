@@ -190,6 +190,7 @@
     <Content Include="ClientResources\Account\Scripts\Recover.js" />
     <Content Include="ClientResources\Account\Styles\CreateAccount.css" />
     <Content Include="ClientResources\MASTER\Components\Navbar.js" />
+    <Content Include="ClientResources\MASTER\Components\PostBar.js" />
     <Content Include="ClientResources\SampleUHUB_TESTING\homeVue.js" />
     <Content Include="ClientResources\SampleUHUB_TESTING\index.html" />
     <Content Include="ClientResources\SampleUHUB_TESTING\postPage.html" />
@@ -197,6 +198,7 @@
     <Content Include="ClientResources\Home\Scripts\Home.js" />
     <Content Include="ClientResources\Home\Scripts\homeVue.js" />
     <Content Include="ClientResources\MASTER\Scripts\Master.js" />
+    <Content Include="ClientResources\SchoolClubs\Scripts\communityVue.js" />
     <Content Include="ClientResources\schoolClubs\scripts\createPost.js" />
     <Content Include="ClientResources\School\Scripts\School.js" />
     <Content Include="ClientResources\Security\Scripts\RecaptchaPartialNoSubmit.js" />
@@ -224,6 +226,7 @@
     <Content Include="ClientResources\SampleUHUB_TESTING\.homeVue.js.swp" />
     <Content Include="ClientResources\SampleUHUB_TESTING\.index.html.swp" />
     <Content Include="ClientResources\SampleUHUB_TESTING\postPage" />
+    <Content Include="ClientResources\MASTER\Components\PostBarStyle.scss" />
     <Content Include="ClientResources\School\Styles\School.scss" />
     <None Include="Properties\PublishProfiles\CustomProfile.pubxml" />
     <Content Include="Scripts\bootstrap.bundle.js" />
