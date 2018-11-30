@@ -1,6 +1,9 @@
 var url = window.location.href
 var seperated = url.split('/')
-console.log(seperated)
+var commentID = seperated.slice(-1)[0];
+console.log(commentID)
+
+
 new Vue({
   el: '#enterInfo',
   data: {
@@ -11,13 +14,14 @@ new Vue({
     parentID: ""
   },
   methods: {
-    readRefs:function(){
-      this.data = this.$refs
-      this.title = this.data.title.value
-      this.content = this.data.content.value
-      this.public = this.data.public.checked
-      this.comment = this.data.comment.checked
-      this.parentID = seperated.slice(-1)[0]
+      readRefs: function () {
+      let refs = this.$refs;
+      
+      this.title = refs.title.value
+      this.content = refs.content.value
+      this.public = refs.public.checked
+      this.comment = refs.comment.checked
+      this.parentID = commentID
       this.postobj = JSON.stringify(this.$data)
       console.log(JSON.stringify(this.$data))
     }
