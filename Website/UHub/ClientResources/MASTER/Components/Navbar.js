@@ -57,6 +57,7 @@
                         </ul>
                     </div>
                     <div id="navbarDropdownMenu" class="dropdown-menu-UHUB scrollable-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <a class="dropdown-item" href="/School/Clubs">-- View All --</a>
                         <a class="dropdown-item"
                             v-for="community in communities"
                             v-bind:href="'/SchoolClub/' + community.ID">
