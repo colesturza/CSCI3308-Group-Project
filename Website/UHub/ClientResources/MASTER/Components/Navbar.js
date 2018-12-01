@@ -66,7 +66,7 @@
                     
                 </nav>
                 <div id="navbarDropdownMenu" class="dropdown-menu-UHUB scrollable-menu" aria-labelledby="navbarDropdownMenuLink">
-                    <a class="dropdown-item" href="/School/Clubs">-- View All --</a>
+                    <a class="dropdown-item" href="/School/Clubs">— View All —</a>
                     <a class="dropdown-item"
                         v-for="community in communities"
                         v-bind:href="'/SchoolClub/' + community.ID">
@@ -85,6 +85,7 @@
     $("*:not(#navbarDropdownMenuLink, #navbarDropdownMenuLink *, #navbarDropdownMenu, #navbarDropdownMenu *)")
         .click(function () {
             $("#navbarDropdownMenu").removeClass("show");
+            $("#navbarDropdownMenu").scrollTop(0);
         });
 
 
@@ -93,6 +94,9 @@
             e.stopPropagation();
             e.preventDefault();
             $("#navbarDropdownMenu").toggleClass("show");
+            if (!$("#navbarDropdownMenu").hasClass("show")) {
+                $("#navbarDropdownMenu").scrollTop(0);
+            }
         });
 
 })();

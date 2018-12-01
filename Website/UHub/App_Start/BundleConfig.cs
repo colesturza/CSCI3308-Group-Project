@@ -86,6 +86,10 @@ namespace UHub
                 .Include("~/ClientResources/School/Scripts/createClub.js"));
 
 
+            //VIEW CLUBS
+            bundles.Add(new ScriptBundle("~/resources/school/ViewClubsScript")
+                .Include("~/ClientResources/School/Scripts/ViewClubs.js"));
+
 
             //---------------------------------COMPONENTS------------------------------------------------------
             bundles.Add(new CustomStyleBundle("~/resources/css/components")
