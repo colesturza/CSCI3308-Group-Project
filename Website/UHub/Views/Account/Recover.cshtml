@@ -32,7 +32,7 @@
                 "~/Views/Security/_RecaptchaPartial.cshtml",
                 new UHub.Models.Security.RecaptchaLoginViewModel
                 {
-                    SubmitText = "Send Recovery Email",
+                    SubmitText = "Update Password",
                     SubmitClass = "btn-outline-dark",
                     RenderScripts = false
                 });
@@ -52,9 +52,9 @@
 @section scripts
 {
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-    @if (ViewBag.CanForward)
-    {
-        Scripts.Render("~/ClientResources/Account/Scripts/Recover");
-    }
     @Scripts.Render("~/ClientResources/Security/Scripts/RecaptchaPartial.js")
+    @if (ViewBag.CanForward == true)
+    {
+        @Scripts.Render("~/ClientResources/Account/Scripts/Recover.js")
+    }
 }

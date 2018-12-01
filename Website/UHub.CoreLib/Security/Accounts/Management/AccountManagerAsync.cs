@@ -940,7 +940,7 @@ namespace UHub.CoreLib.Security.Accounts.Management
             long? id = null;
             try
             {
-                await UserReader.GetUserIDAsync(UserEmail);
+                id = await UserReader.GetUserIDAsync(UserEmail);
             }
             catch (Exception ex)
             {

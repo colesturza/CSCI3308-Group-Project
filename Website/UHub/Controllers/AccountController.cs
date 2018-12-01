@@ -303,6 +303,7 @@ namespace UHub.Controllers
 
                 //"security" measure
                 //make it more difficult to discover valid email addresses
+                //Only works if there is no error message presented to user (ie, pointless now)
                 Random rnd = new Random();
                 var fluff = rnd.Next(1900, 2400);
                 await Task.Delay(fluff);
@@ -391,7 +392,6 @@ namespace UHub.Controllers
             ViewBag.Message = result.ToString();
 
             ViewBag.CanForward = (result == 0);
-
 
 
             return View();

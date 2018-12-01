@@ -932,10 +932,12 @@ namespace UHub.CoreLib.Security.Accounts.Management
                 return (AcctRecoveryResultCode.UnknownError, null, null);
             }
 
+
             if (id == null)
             {
                 return (AcctRecoveryResultCode.UserInvalid, null, null);
             }
+
 
             return TryCreateUserRecoveryContext(
                 id.Value,
