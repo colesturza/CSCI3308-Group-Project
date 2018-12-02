@@ -103,7 +103,7 @@
                     this.content = mdConverter.makeHtml(data.Content);
                     this.postTime = data.CreatedDate;
 
-                    if (data.CanComment && data.Name.html().text() != null) {
+                    if (data.CanComment && data.Name != undefined && data.Name != null && data.Name != "") {
                         var commentReq = $.ajax({
                             method: "POST",
                             url: "uhubapi/comments/GetByPost?PostID=" + encodeURIComponent(data.ID),
