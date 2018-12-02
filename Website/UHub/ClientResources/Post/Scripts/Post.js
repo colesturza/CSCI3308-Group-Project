@@ -1,7 +1,5 @@
 ﻿(function () {
 
-    var mdConverter = new showdown.Converter();
-
     Vue.component('comment-component', {
         props: ['comment'],
         template: '<div class="container">' +
@@ -53,7 +51,7 @@
         }
     });
 
-    var postDisplay = new Vue({
+    new Vue({
         el: "#post-container",
         data: {
             title: "",
@@ -90,31 +88,37 @@
                 });
             }
         },
-        beforeMount: function () {
-            var postReq = $.ajax({
+        mounted: function () {
+            var mdConverter = new showdown.Converter();
+
+
+            $.ajax({
                 method: "POST",
                 url: "/uhubapi/posts/GetByID?PostID=" + encodeURIComponent(window.location.href.split('/').slice(-1)[0]),
+                success: function (data) {
+
+                    console.log(data);
+
+                    this.title = data.Name;
+                    this.content = data.makeHtml(postReq.Content);
+                    this.postTime = data.CreatedDate;
+
+                    if (postReq.CanComment && postReq.Name.html().text() != null) {
+                        var commentReq = $.ajax({
+                            method: "POST",
+                            url: "uhubapi/comments/GetByPost?PostID=" + encodeURIComponent(postReq.ID),
+                            error: function (jqAjax, errorText) {
+                                alert("Error" + errorText);
+                            },
+                            success: function () {
+                                this.comments = commentReq.responseJSON;
+                            }
+                        });
+                    }
+
+                },
                 error: function (jqAjax, errorText) {
                     alert("Error " + errorText);
-                },
-                statusCode: {
-                    200: function () {
-                        this.title = postReq.Name;
-                        this.content = mdConverter.makeHtml(postReq.Content);
-                        this.postTime = postReq.CreatedDate;
-                        if (postReq.CanComment && postReq.Name.html().text() != null) {
-                            var commentReq = $.ajax({
-                                method: "POST",
-                                url: "uhubapi/comments/GetByPost?PostID=" + encodeURIComponent(postReq.ID),
-                                error: function (jqAjax, errorText) {
-                                    alert("Error" + errorText);
-                                },
-                                success: function () {
-                                    this.comments = commentReq.responseJSON;
-                                }
-                            });
-                        }
-                    }
                 }
             });
         }
