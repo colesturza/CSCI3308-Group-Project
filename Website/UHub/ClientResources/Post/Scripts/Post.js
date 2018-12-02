@@ -30,13 +30,21 @@
                 this.$emit('custom-click', this.comment.ID);
             },
             submitComment: function () {
+
+                var formData = {
+                    Content: this.$refs.commentReply.value,
+                    ParentID: this.comment.ParentID
+                };
+
+                var jsonData = encodeURIComponent(formData);
+
+
                 $.ajax({
                     method: "POST",
                     url: "uhubapi/comments/Create",
-                    data: {
-                        Content: this.$refs.commentReply.value,
-                        ParentID: this.comment.ParentID
-                    },
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: jsonData,
                     error: function (jqAjax, errorText) {
                         alert("Error" + errorText);
                     }
@@ -62,13 +70,20 @@
                 $("#post-reply").toggle();
             },
             submitCommentPost: function () {
+
+                var formData = {
+                    Content: this.$refs.postReplyText.value,
+                    ParentID: 1
+                };
+
+                var jsonData = JSON.stringify(formData);
+
                 $.ajax({
                     method: "POST",
                     url: "uhubapi/comments/Create",
-                    data: {
-                        Content: this.$refs.postReplyText.value,
-                        ParentID: 1
-                    },
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: jsonData,
                     error: function (jqAjax, errorText) {
                         alert("Error" + errorText);
                     }
@@ -78,11 +93,7 @@
         beforeMount: function () {
             var postReq = $.ajax({
                 method: "POST",
-                url: "uhubapi/posts/GetByID",
-                data: {
-                    PostID: window.location.href.split('/').slice(-1)[0]
-                },
-                dataType: "json",
+                url: "uhubapi/posts/GetByID?PostID=" + encodeURIComponent(window.location.href.split('/').slice(-1)[0]),
                 error: function (jqAjax, errorText) {
                     alert("Error " + errorText);
                 },
@@ -94,11 +105,7 @@
                         if (postReq.CanComment && postReq.Name.html().text() != null) {
                             var commentReq = $.ajax({
                                 method: "POST",
-                                url: "uhubapi/comments/GetByPost",
-                                data: {
-                                    PostID: postReq.ID
-                                },
-                                dataType: "json",
+                                url: "uhubapi/comments/GetByPost?PostID=" + encodeURIComponent(postReq.ID),
                                 error: function (jqAjax, errorText) {
                                     alert("Error" + errorText);
                                 },
