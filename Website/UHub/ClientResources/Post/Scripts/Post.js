@@ -99,14 +99,15 @@
 
                     console.log(data);
 
-                    this.title = data.Name;
+                    this.title = htmlEncode(data.Name);
                     this.content = mdConverter.makeHtml(data.Content);
                     this.postTime = data.CreatedDate;
 
-                    if (data.CanComment && data.Name != undefined && data.Name != null && data.Name != "") {
+
+                    if (data.CanComment && this.title != undefined && this.title != null && this.title  != "") {
                         var commentReq = $.ajax({
                             method: "POST",
-                            url: "uhubapi/comments/GetByPost?PostID=" + encodeURIComponent(data.ID),
+                            url: "/uhubapi/comments/GetByPost?PostID=" + encodeURIComponent(data.ID),
                             error: function (jqAjax, errorText) {
                                 alert("Error" + errorText);
                             },
