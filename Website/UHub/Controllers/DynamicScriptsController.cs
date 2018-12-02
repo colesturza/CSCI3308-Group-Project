@@ -17,8 +17,8 @@ namespace UHub.Controllers
         }
 
 
-
-        [System.Web.Mvc.HttpGet]
+        [HttpGet]
+        [ActionName("[GAnalytics.js")]
         public ActionResult GAnalytics()
         {
             return this.JavaScriptFromView();
