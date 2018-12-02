@@ -89,6 +89,8 @@
             }
         },
         mounted: function () {
+
+            var self = this;
             var mdConverter = new showdown.Converter();
 
 
@@ -99,20 +101,20 @@
 
                     console.log(data);
 
-                    this.title = htmlEncode(data.Name);
-                    this.content = mdConverter.makeHtml(data.Content);
-                    this.postTime = data.CreatedDate;
+                    self.title = htmlEncode(data.Name);
+                    self.content = mdConverter.makeHtml(data.Content);
+                    self.postTime = data.CreatedDate;
 
 
-                    if (data.CanComment && this.title != undefined && this.title != null && this.title  != "") {
-                        var commentReq = $.ajax({
+                    if (data.CanComment && self.title != undefined && self.title != null && self.title  != "") {
+                        $.ajax({
                             method: "POST",
                             url: "/uhubapi/comments/GetByPost?PostID=" + encodeURIComponent(data.ID),
                             error: function (jqAjax, errorText) {
                                 alert("Error" + errorText);
                             },
-                            success: function () {
-                                this.comments = commentReq.responseJSON;
+                            success: function (data) {
+                                self.comments = data;
                             }
                         });
                     }
