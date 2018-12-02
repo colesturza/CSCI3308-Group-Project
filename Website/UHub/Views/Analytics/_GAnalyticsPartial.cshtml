@@ -1,0 +1,7 @@
+﻿@{
+    var apiKey = UHub.CoreLib.Management.CoreFactory.Singleton.Properties.GoogleAnalyticsKey;
+
+}
+
+<script async src="https://www.googletagmanager.com/gtag/js?id=@apiKey"></script>
+@Scripts.Render("~/DynamicScripts/GAnalytics.js");

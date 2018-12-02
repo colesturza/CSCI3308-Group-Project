@@ -81,13 +81,14 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
                 //check for member status
                 if (IsUserMember)
                 {
-
+                    await PostManager.TryIncrementViewCountAsync(postID);
                     return Ok(postPublic);
                 }
                 else
                 {
                     if (postInternal.IsPublic)
                     {
+                        await PostManager.TryIncrementViewCountAsync(postID);
                         return Ok(postPublic);
                     }
                     else
@@ -104,10 +105,99 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             {
                 return NotFound();
             }
+
             await PostManager.TryIncrementViewCountAsync(postInternal.ID.Value);
-
-
             return Ok(postPublic);
+        }
+
+
+
+        [HttpPost()]
+        [Route("GetRevisionsByID")]
+        [ApiAuthControl]
+        public async Task<IHttpActionResult> GetRevisionsByID(long postID)
+        {
+            string status = "";
+            HttpStatusCode statCode = HttpStatusCode.BadRequest;
+            if (!this.ValidateSystemState(out status, out statCode))
+            {
+                return Content(statCode, status);
+            }
+
+
+            var postEnum = await PostReader.TryGetPostRevisionsAsync(postID);
+            if (postEnum == null)
+            {
+                return NotFound();
+            }
+            var postList = postEnum.ToList();
+            if (postList.Count == 0)
+            {
+                return NotFound();
+            }
+
+
+            var postParentID = postList.First().ParentID;
+            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser().CmsUser;
+
+
+
+            var taskPostClub = SchoolClubReader.TryGetClubAsync(postParentID);
+            var taskIsUserBanned = SchoolClubReader.TryIsUserBannedAsync(postParentID, cmsUser.ID.Value);
+            var taskIsUserMember = SchoolClubReader.TryValidateMembershipAsync(postParentID, cmsUser.ID.Value);
+
+
+            List<Post_R_PublicDTO> postListPublic = postList.Select(x => x.ToDto<Post_R_PublicDTO>()).ToList();
+
+
+            var postClub = await taskPostClub;
+            if (postClub != null)
+            {
+                //verify same school
+                if (postClub.SchoolID != cmsUser.SchoolID)
+                {
+                    return NotFound();
+                }
+
+                var IsUserBanned = await taskIsUserBanned;
+                //ensure not banned
+                if (IsUserBanned)
+                {
+                    return Content(HttpStatusCode.Forbidden, "Access Denied");
+                }
+
+                var sanitizerMode = CoreFactory.Singleton.Properties.HtmlSanitizerMode;
+                if ((sanitizerMode & HtmlSanitizerMode.OnRead) != 0)
+                {
+                    postListPublic.ForEach(x =>
+                    {
+                        x.Content = x.Content.SanitizeHtml();
+                    });
+                }
+
+
+                var IsUserMember = await taskIsUserMember;
+                //check for member status
+                if (!IsUserMember)
+                {
+                    postListPublic = postListPublic.Where(x => x.IsPublic).ToList();
+                }
+
+                await PostManager.TryIncrementViewCountAsync(postID);
+                return Ok(postListPublic);
+            }
+
+
+            // This is what happens if the parent is a school.
+            //verify same school
+            if (postParentID != cmsUser.SchoolID)
+            {
+                return NotFound();
+            }
+            await PostManager.TryIncrementViewCountAsync(postID);
+
+
+            return Ok(postListPublic);
         }
     }
 }

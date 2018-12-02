@@ -48,7 +48,9 @@
     {
         @Scripts.Render("~/resources/scripts/master")
     }
+    
     @RenderSection("scripts", true)
+    @{Html.RenderPartial("~/Views/Analytics/_GAnalyticsPartial.cshtml");}
 </body>
 
 </html>
