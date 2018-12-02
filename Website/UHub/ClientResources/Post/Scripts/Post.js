@@ -41,7 +41,7 @@
 
                 $.ajax({
                     method: "POST",
-                    url: "uhubapi/comments/Create",
+                    url: "/uhubapi/comments/Create",
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     data: jsonData,
@@ -80,7 +80,7 @@
 
                 $.ajax({
                     method: "POST",
-                    url: "uhubapi/comments/Create",
+                    url: "/uhubapi/comments/Create",
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
                     data: jsonData,
@@ -93,7 +93,7 @@
         beforeMount: function () {
             var postReq = $.ajax({
                 method: "POST",
-                url: "uhubapi/posts/GetByID?PostID=" + encodeURIComponent(window.location.href.split('/').slice(-1)[0]),
+                url: "/uhubapi/posts/GetByID?PostID=" + encodeURIComponent(window.location.href.split('/').slice(-1)[0]),
                 error: function (jqAjax, errorText) {
                     alert("Error " + errorText);
                 },
