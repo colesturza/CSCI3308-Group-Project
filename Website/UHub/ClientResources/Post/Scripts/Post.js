@@ -6,7 +6,7 @@
             '            <div class="container-fluid">' +
             '                <div>' +
             '                    <span class="m-2 mr-0">Posted by</span>' +
-            '                    <a class="">{{ comment.CreatedBy }}</a>' +
+            '                    <a class="">[{{ comment.CreatedBy }}]</a>' +
             '                    <span>{{ comment.CreatedDate.substring(0,10) }}</span>' +
             '                </div>' +
             '                <div class="border border-dark rounded m-2 py-2">' +
@@ -17,7 +17,7 @@
             '                <button type="button" class="btn-sm btn-outline-dark m-2 mb-1" v-on:click="emit">Reply</button>' +
             '                <button v-bind:data-submitID="comment.ID" type="button" class="btn-sm btn-outline-primary m-2 mb-1" v-on:click="submitComment">Submit</button>' +
             '                <div>' +
-            '                    <form v-bind:data-cmtID="comment.ID" class="form-group">' +
+            '                    <form v-bind:data-cmtID="comment.ID" class="form-group" style="display: none;">' +
             '                        <textarea rows="2" class="mx-auto form-control" ref="commentReply"></textarea>' +
             '                    </form>' +
             '                </div>' +
@@ -117,6 +117,7 @@
                                 alert("Error" + errorText);
                             },
                             success: function (data) {
+                                data.sort(dynamicSort("-CreatedDate"));
                                 self.comments = data;
                             }
                         });
