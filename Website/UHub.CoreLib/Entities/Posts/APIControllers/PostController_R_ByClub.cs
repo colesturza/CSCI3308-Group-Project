@@ -153,6 +153,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
                 return Content(statCode, status);
             }
 
+            return InternalServerError();
 
             var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser().CmsUser;
 

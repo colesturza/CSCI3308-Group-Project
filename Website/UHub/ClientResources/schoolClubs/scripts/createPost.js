@@ -12,7 +12,7 @@
 
                 setTimeout(function () {
                     preview.innerHTML = mdConverter.makeHtml(plainText);
-                }, 50);
+                }, 100);
 
                 return "Loading...";
             },
