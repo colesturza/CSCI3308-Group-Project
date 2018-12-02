@@ -25,7 +25,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
         [HttpPost()]
         [Route("GetByID")]
         [ApiAuthControl]
-        public async Task<IHttpActionResult> GetByID(long postID)
+        public async Task<IHttpActionResult> GetByID(long PostID)
         {
             string status = "";
             HttpStatusCode statCode = HttpStatusCode.BadRequest;
@@ -35,7 +35,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             }
 
 
-            var postInternal = await PostReader.TryGetPostAsync(postID);
+            var postInternal = await PostReader.TryGetPostAsync(PostID);
             if (postInternal == null)
             {
                 return NotFound();
@@ -81,14 +81,14 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
                 //check for member status
                 if (IsUserMember)
                 {
-                    await PostManager.TryIncrementViewCountAsync(postID);
+                    await PostManager.TryIncrementViewCountAsync(PostID);
                     return Ok(postPublic);
                 }
                 else
                 {
                     if (postInternal.IsPublic)
                     {
-                        await PostManager.TryIncrementViewCountAsync(postID);
+                        await PostManager.TryIncrementViewCountAsync(PostID);
                         return Ok(postPublic);
                     }
                     else
@@ -115,7 +115,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
         [HttpPost()]
         [Route("GetRevisionsByID")]
         [ApiAuthControl]
-        public async Task<IHttpActionResult> GetRevisionsByID(long postID)
+        public async Task<IHttpActionResult> GetRevisionsByID(long PostID)
         {
             string status = "";
             HttpStatusCode statCode = HttpStatusCode.BadRequest;
@@ -125,7 +125,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             }
 
 
-            var postEnum = await PostReader.TryGetPostRevisionsAsync(postID);
+            var postEnum = await PostReader.TryGetPostRevisionsAsync(PostID);
             if (postEnum == null)
             {
                 return NotFound();
@@ -183,7 +183,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
                     postListPublic = postListPublic.Where(x => x.IsPublic).ToList();
                 }
 
-                await PostManager.TryIncrementViewCountAsync(postID);
+                await PostManager.TryIncrementViewCountAsync(PostID);
                 return Ok(postListPublic);
             }
 
@@ -194,7 +194,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             {
                 return NotFound();
             }
-            await PostManager.TryIncrementViewCountAsync(postID);
+            await PostManager.TryIncrementViewCountAsync(PostID);
 
 
             return Ok(postListPublic);

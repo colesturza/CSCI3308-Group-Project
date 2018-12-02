@@ -24,7 +24,7 @@ namespace UHub.CoreLib.Entities.Comments.APIControllers
         [HttpPost()]
         [Route("Create")]
         [ApiAuthControl]
-        public async Task<IHttpActionResult> Create([FromBody] Comment_C_PublicDTO comment)
+        public async Task<IHttpActionResult> Create([FromBody] Comment_C_PublicDTO Comment)
         {
             string status = "";
             HttpStatusCode statCode = HttpStatusCode.BadRequest;
@@ -33,13 +33,13 @@ namespace UHub.CoreLib.Entities.Comments.APIControllers
                 return Content(statCode, status);
             }
 
-            if (comment == null)
+            if (Comment == null)
             {
                 return BadRequest();
             }
 
 
-            var tmpComment = comment.ToInternal<Comment>();
+            var tmpComment = Comment.ToInternal<Comment>();
             var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser().CmsUser;
 
 
