@@ -1,15 +1,36 @@
 (function () {
     Vue.component('postlistcomp', {
         props: ['post'],
-        template: 
-        `
-           <div class="container bg-white w-70 mb-3">
-               <a v-bind:href="'/Post/' + post.ID">
-                <h4> {{ post.Name }} </h4>
-                <div v-html="post.Content"></div>
-               </a>
-           </div>
-        `
+        template: `
+   <div class="container bg-white mb-3">
+       <a v-bind:href="'/Post/' + post.ID">
+        <h4> {{ post.Name }} </h4>
+        <div v-html="post.Content"></div>
+       </a>
+   </div>`
+    });
+
+    var communityDropdown = new Vue({
+        el: "#communityDrop",
+        data: {
+            communities: [],
+            current: "Dropdown link"
+        },
+        methods: {
+            getCommunities() {
+                this.communities = exampleCommunities;
+                console.log(this.communities);
+            },
+            /*updateDisplay is an incomplete function intended to change the name of the dropdown when a community is selected.
+              Since we decided to update the dropdown based on the get request, there shouldn't be a need to use this
+              The function is provided in case it is useful*/
+            updateDisplay(newName) {
+                document.getElementById('navbarDropdownMenuLink').innerHTML = newName
+            }
+        },
+        beforeMount() {
+            this.getCommunities()
+        }
     });
 
     var communityblock = new Vue({

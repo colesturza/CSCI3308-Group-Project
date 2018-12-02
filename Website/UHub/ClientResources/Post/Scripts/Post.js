@@ -100,13 +100,13 @@
                     console.log(data);
 
                     this.title = data.Name;
-                    this.content = data.makeHtml(postReq.Content);
+                    this.content = mdConverter.makeHtml(data.Content);
                     this.postTime = data.CreatedDate;
 
-                    if (postReq.CanComment && postReq.Name.html().text() != null) {
+                    if (data.CanComment && data.Name != undefined && data.Name != null && data.Name != "") {
                         var commentReq = $.ajax({
                             method: "POST",
-                            url: "uhubapi/comments/GetByPost?PostID=" + encodeURIComponent(postReq.ID),
+                            url: "uhubapi/comments/GetByPost?PostID=" + encodeURIComponent(data.ID),
                             error: function (jqAjax, errorText) {
                                 alert("Error" + errorText);
                             },
