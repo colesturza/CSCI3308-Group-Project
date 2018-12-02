@@ -94,8 +94,8 @@ var postList = new Vue({
                 method: "POST",
                 url: "/uhubapi/posts/GetAllByClub?ClubID=" + encodeURIComponent(window.location.href.split('/').slice(-1)[0]),
                 //dataType: "json",                 //No need to set dataType for this request because it accepts a queryString
-                statusCode: {
-                    200: function (data) {
+                success: function (data) {
+                    console.log(data);
                         for (var i = 0; i < data.length; i++)
                         {
                             data[i].Content = mdConverter.makeHtml(data[i].Content);
@@ -103,10 +103,6 @@ var postList = new Vue({
                         data.sort(dynamicSort("-CreatedDate"));
                         this.posts = data;
                         
-                    },
-                    503: function () {
-                        console.log("Internal Server Error");
-                    }
                 },
                 error: function (error) {
                     console.log(error);
