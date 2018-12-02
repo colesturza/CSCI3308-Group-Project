@@ -65,35 +65,35 @@
         }
     });
 
-    var communityblock = new Vue({
-        el: "#community-block",
-        data: {
-            commmunity: null,
-        },
-        methods: {
-            getCommunity() {
-                var communityRequest = $.ajax({
-                    method: "POST",
-                    url: "/uhubapi/schoolclubs/GetByID?ClubID=" + encodeURIComponent(window.location.href.split('/').slice(-1)[0]),
-                    statusCode: {
-                        200: function (data) {
-                            console.log(data);
-                            this.commmunity = data;
-                        },
-                        503: function () {
-                            console.log("Internal Server Error");
-                        }
+var communityblock = new Vue({
+    el: "#community-block",
+    data: {
+        commmunity: null,
+    },
+    methods: {
+        getCommunity() {
+            var communityRequest = $.ajax({
+                method: "POST",
+                url: "/uhubapi/schoolclubs/GetByID?ClubID=" + encodeURIComponent(window.location.href.split('/').slice(-1)[0]),
+                statusCode: {
+                    200: function (data) {
+                        console.log(data);
+                        this.community = data;
                     },
-                    error: function (error) {
-                        console.log(error);
+                    503: function () {
+                        console.log("Internal Server Error");
                     }
-                })
-            }
-        },
-        beforeMount() {
-            this.getCommunity();
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            })
         }
-    });
+    },
+    beforeMount() {
+        this.getCommunity();
+    }
+});
 
     new Vue({
         el: "#post-list",
