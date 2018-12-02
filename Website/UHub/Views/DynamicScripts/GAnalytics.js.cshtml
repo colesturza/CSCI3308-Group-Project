@@ -12,9 +12,17 @@
     {
         userIdInclude = $"gtag('set', {{'user_id': {userID} }});";
     }
+
+    var jsBuilder = new System.Text.StringBuilder();
+    jsBuilder.Append("window.dataLayer=window.dataLayer||[];");
+    jsBuilder.Append("function gtag(){dataLayer.push(arguments);}");
+    jsBuilder.Append("gtag('js', new Date());");
+    jsBuilder.Append($"gtag('config', '{apiKey}');");
+    jsBuilder.Append(userIdInclude);
+
 }
 
 
 <script>
-    (function () {window.dataLayer = window.dataLayer || []; function gtag() { dataLayer.push(arguments); } gtag('js', new Date()); gtag('config', '@apiKey'); @userIdInclude})();
+    (function () {@{WriteLiteral(jsBuilder.ToString());}})();
 </script>
