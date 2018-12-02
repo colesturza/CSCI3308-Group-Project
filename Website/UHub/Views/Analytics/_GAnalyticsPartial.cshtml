@@ -1,7 +1,11 @@
 ﻿@{
     var apiKey = UHub.CoreLib.Management.CoreFactory.Singleton.Properties.GoogleAnalyticsKey;
+    var enableTelemetry = apiKey.IsNotEmpty();
 
 }
 
-<script async src="https://www.googletagmanager.com/gtag/js?id=@apiKey"></script>
-@Scripts.Render("~/DynamicScripts/GAnalytics.js");
+@if (enableTelemetry)
+{
+    <script async src="https://www.googletagmanager.com/gtag/js?id=@apiKey"></script>
+    @Scripts.Render("~/DynamicScripts/GAnalytics.js")
+}
