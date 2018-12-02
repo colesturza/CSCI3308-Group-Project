@@ -8,7 +8,7 @@
 <div id="post-container" class="container bg-white w-70 mt-4 py-3">
     <div>
         <h4 class="px-3 pt-3">{{title}}</h4>
-        <p class="p-2 pb-2 m-2">{{content}}</p>
+        <div class="p-2 pb-2 m-2" v-html="post.Content"></div>
         <button type="button" class="btn-sm btn-outline-dark m-2 mb-1 d-inline" v-on:click="postReply">Reply</button>
         <button id="post-submit-button" type="button" class="btn-sm btn-outline-primary m-2 mb-1 d-inline" v-on:click="submitCommentPost">Submit</button>
         <p class="d-inline justify-content-lg-end">{{postTime}}</p>
@@ -26,5 +26,6 @@
 
 @section scripts
 {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/1.9.0/showdown.min.js"></script>
     <script src="~/ClientResources/Post/Scripts/Post.js"></script>
 }
