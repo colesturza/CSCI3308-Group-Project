@@ -70,13 +70,14 @@ var communityblock = new Vue({
     },
     methods: {
         getCommunity() {
+            var self = this;
             var communityRequest = $.ajax({
                 method: "POST",
                 url: "/uhubapi/schoolclubs/GetByID?ClubID=" + encodeURIComponent(window.location.href.split('/').slice(-1)[0]),
                 statusCode: {
                     200: function (data) {
                         console.log(data);
-                        this.community = data;
+                        self.community = data;
                     },
                     503: function () {
                         console.log("Internal Server Error");
