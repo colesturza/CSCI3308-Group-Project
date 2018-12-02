@@ -87,8 +87,7 @@ var postList = new Vue({
     data: {
         posts: []
     },
-    methods: {
-        getPosts() {
+    mounted:function() {
             var self = this;
             var mdConverter = new showdown.Converter();
             var postRequest = $.ajax({
@@ -109,9 +108,6 @@ var postList = new Vue({
                     console.log(error);
                 }
             })
-        }
-    },
-    beforeMount() {
-        this.getPosts();
+        
     }
 });
