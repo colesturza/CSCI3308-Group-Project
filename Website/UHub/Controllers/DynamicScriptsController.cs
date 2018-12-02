@@ -18,10 +18,17 @@ namespace UHub.Controllers
 
 
         [HttpGet]
-        [ActionName("[GAnalytics.js")]
+        [ActionName("GAnalytics.js")]
         public ActionResult GAnalytics()
         {
             return this.JavaScriptFromView();
+        }
+
+        [HttpGet]
+        protected override void HandleUnknownAction(string actionName)
+        {
+            var res = this.JavaScriptFromView();
+            res.ExecuteResult(ControllerContext);
         }
     }
 }
