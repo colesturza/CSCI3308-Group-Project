@@ -8,8 +8,8 @@ namespace UHub.CoreLib.Regex.Patterns
 {
     public static class EntComment
     {
-        public const string CONTENT = ".{1,500}";
-        public const string CONTENT_B = "^.{1,500}$";
+        public const string CONTENT = ".{1,1000}";
+        public const string CONTENT_B = "^.{1,1000}$";
 
     }
 }

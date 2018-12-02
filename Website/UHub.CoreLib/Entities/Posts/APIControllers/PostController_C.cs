@@ -69,7 +69,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             }
 
 
-            status = "Failed to create post.";
+            status = "Failed to Create Post.";
             statCode = HttpStatusCode.BadRequest;
 
             try
@@ -83,12 +83,12 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
 
                 if (ResultCode == 0)
                 {
-                    status = "Post created";
+                    status = "Post Created";
                     statCode = HttpStatusCode.OK;
                 }
                 else if (ResultCode == PostResultCode.UnknownError)
                 {
-                    status = "Unknown server error";
+                    status = "Unknown Server Error";
                     statCode = HttpStatusCode.InternalServerError;
                 }
                 else

@@ -44,7 +44,7 @@ namespace UHub.CoreLib.Entities.Posts.Management
                 {
                     return PostResultCode.ContentEmpty;
                 }
-                if (!NewPost.Content.RgxIsMatch(RgxPtrn.EntPost.CONTENT_B))
+                if (!NewPost.Content.RgxIsMatch(RgxPtrn.EntPost.CONTENT_B, RegexOptions.Multiline))
                 {
                     return PostResultCode.ContentInvalid;
                 }

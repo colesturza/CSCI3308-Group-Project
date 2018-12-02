@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using UHub.CoreLib.Extensions;
 using UHub.CoreLib.Management;
@@ -31,7 +32,7 @@ namespace UHub.CoreLib.Entities.Comments.Management
                 {
                     return CommentResultCode.ContentEmpty;
                 }
-                if (!NewComment.Content.RgxIsMatch(RgxPtrn.EntComment.CONTENT_B))
+                if (!NewComment.Content.RgxIsMatch(RgxPtrn.EntComment.CONTENT_B, RegexOptions.Multiline))
                 {
                     return CommentResultCode.ContentInvalid;
                 }

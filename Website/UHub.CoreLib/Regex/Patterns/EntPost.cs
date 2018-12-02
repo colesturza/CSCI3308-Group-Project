@@ -11,8 +11,8 @@ namespace UHub.CoreLib.Regex.Patterns
         public const string NAME = @".{5,100}";
         public const string NAME_B = @"^.{5,100}$";
 
-        public const string CONTENT= @".{10,2000}";
-        public const string CONTENT_B = @"^.{10,2000}$";
+        public const string CONTENT= @".{10,10000}";
+        public const string CONTENT_B = @"^.{10,10000}$";
 
 
     }

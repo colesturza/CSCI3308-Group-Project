@@ -11,7 +11,7 @@ namespace UHub.CoreLib.Entities.Posts.DataInterop.Tests
     public class PostWriterTests
     {
         const int MAX_NAME_LEN = 100;
-        const int MAX_CONTENT_LEN = 2000;
+        const int MAX_CONTENT_LEN = 10000;
 
 
         [TestMethod]
@@ -56,7 +56,7 @@ namespace UHub.CoreLib.Entities.Posts.DataInterop.Tests
 
             TestGlobal.TestInit();
 
-            StringBuilder postNameBuilder = new StringBuilder();
+            StringBuilder postNameBuilder = new StringBuilder(210);
             for (int i = 0; i < 210; i++)
             {
                 postNameBuilder.Append("a");
@@ -139,7 +139,7 @@ namespace UHub.CoreLib.Entities.Posts.DataInterop.Tests
 
 
             //100 chars, 100 utf-16 code points
-            var str = new StringBuilder();
+            var str = new StringBuilder(MAX_CONTENT_LEN + 10);
             for (int i = 0; i < MAX_NAME_LEN; i++)
             {
                 str.Append("a");
@@ -187,7 +187,7 @@ namespace UHub.CoreLib.Entities.Posts.DataInterop.Tests
 
 
             //99 chars, 100 UTF-16 code points
-            var str = new StringBuilder();
+            var str = new StringBuilder(MAX_CONTENT_LEN + 10);
             for (int i = 0; i < MAX_NAME_LEN - 2; i++)
             {
                 str.Append("a");
@@ -236,7 +236,7 @@ namespace UHub.CoreLib.Entities.Posts.DataInterop.Tests
 
 
             //99 chars, 101 UTF-16 code points
-            var str = new StringBuilder();
+            var str = new StringBuilder(MAX_CONTENT_LEN + 10);
             for (int i = 0; i < MAX_NAME_LEN - 3; i++)
             {
                 str.Append("a");
@@ -285,7 +285,7 @@ namespace UHub.CoreLib.Entities.Posts.DataInterop.Tests
 
 
             //2000 chars, 2000 utf-16 code points
-            var str = new StringBuilder();
+            var str = new StringBuilder(MAX_CONTENT_LEN + 10);
             for (int i = 0; i < MAX_CONTENT_LEN; i++)
             {
                 str.Append("a");
@@ -336,7 +336,7 @@ namespace UHub.CoreLib.Entities.Posts.DataInterop.Tests
 
 
             //1999 chars, 2000 utf-16 code points
-            var str = new StringBuilder();
+            var str = new StringBuilder(MAX_CONTENT_LEN + 10);
             for (int i = 0; i < MAX_CONTENT_LEN - 2; i++)
             {
                 str.Append("a");
@@ -389,7 +389,7 @@ namespace UHub.CoreLib.Entities.Posts.DataInterop.Tests
 
 
             //1999 chars, 2001 utf-16 code points
-            var str = new StringBuilder();
+            var str = new StringBuilder(MAX_CONTENT_LEN + 10);
             for (int i = 0; i < MAX_CONTENT_LEN - 3; i++)
             {
                 str.Append("a");
@@ -408,7 +408,7 @@ namespace UHub.CoreLib.Entities.Posts.DataInterop.Tests
 
             var testPost = new Post_C_PublicDTO()
             {
-                Name = "POST TEST POST TEST POST TEST POST TEST POST TEST POST TEST POST TEST POST TEST POST TEST POST TEST",  //99 chars
+                Name = "POST TEST ",
                 Content = str.ToString(),
                 ParentID = cub,
                 CanComment = true,
@@ -424,6 +424,52 @@ namespace UHub.CoreLib.Entities.Posts.DataInterop.Tests
                 Assert.Fail();
             }
             catch { }
+
+        }
+
+
+
+        [TestMethod]
+        public void TryCreatePostTestConfirm()
+        {
+            TestGlobal.TestInit();
+            long? postID = null;
+
+
+            var cub = 1;    //CU Boulder
+
+            var str = new StringBuilder();
+            str.AppendLine("🙂🙂");
+            str.AppendLine("🙂🙂");
+            str.AppendLine("🙂🙂");
+
+
+            var testPost = new Post_C_PublicDTO()
+            {
+                Name = "POST TEST",
+                Content = str.ToString(),
+                ParentID = cub,
+                CanComment = true,
+                IsPublic = true
+            };
+
+            var post = testPost.ToInternal<Post>();
+
+
+
+            postID = PostWriter.CreatePost(post);
+
+            if (postID == null)
+            {
+                throw new Exception();
+            }
+            Console.WriteLine("New Post: " + postID);
+
+
+
+            var readPost = PostReader.TryGetPost(postID.Value);
+
+            Assert.AreEqual(str.ToString(), readPost.Content);
 
         }
 

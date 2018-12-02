@@ -2,7 +2,7 @@
     Layout = "~/Views/Shared/_LayoutAuth.cshtml";
 }
 
-@section head 
+@section head
 {
     @Styles.Render("~/resources/css/school")
 }
@@ -13,7 +13,7 @@
             <li class="list-group-item mb-3" v-for="post in posts">
                 <a v-bind:href="'/Post/' + post.ID">
                     <h4>{{ post.Name }}</h4>
-                    <p>{{ post.Content }}</p>
+                    <div v-html="post.Content"></div>
                 </a>
             </li>
         </ul>
@@ -30,5 +30,6 @@
 
 @section scripts
 {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/1.9.0/showdown.min.js"></script>
     <script src="~/ClientResources/School/Scripts/School.js"></script>
 }
