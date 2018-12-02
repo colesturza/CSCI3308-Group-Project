@@ -13,8 +13,8 @@
             <li class="list-group-item mb-3" v-for="post in posts">
                 <a v-bind:href="'/Post/' + post.ID">
                     <h4>{{ post.Name }}</h4>
-                    <div v-html="post.Content"></div>
                 </a>
+                <div v-html="post.Content"></div>
             </li>
         </ul>
     </div>

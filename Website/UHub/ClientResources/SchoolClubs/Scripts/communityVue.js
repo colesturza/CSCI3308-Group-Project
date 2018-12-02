@@ -6,8 +6,8 @@
            <div class="container bg-white mb-3">
                <a v-bind:href="'/Post/' + post.ID">
                 <h4> {{ post.Name }} </h4>
-                <div v-html="post.Content"></div>
                </a>
+               <div v-html="post.Content"></div>
            </div>
         `
     });
