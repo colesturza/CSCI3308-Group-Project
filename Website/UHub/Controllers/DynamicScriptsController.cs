@@ -16,14 +16,6 @@ namespace UHub.Controllers
             return View();
         }
 
-
-        [HttpGet]
-        [ActionName("GAnalytics.js")]
-        public ActionResult GAnalytics()
-        {
-            return this.JavaScriptFromView();
-        }
-
         [HttpGet]
         protected override void HandleUnknownAction(string actionName)
         {
