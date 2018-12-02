@@ -95,8 +95,7 @@ var postList = new Vue({
         getPosts() {
             var postRequest = $.ajax({
                 method: "POST",
-                url: "/uhubapi/posts/GetAllByClub",
-                data: { ClubID: window.location.href.split('/').slice(-1)[0] },
+                url: "/uhubapi/posts/GetAllByClub?ClubID=" + window.location.href.split('/').slice(-1)[0],
                 //dataType: "json",                 //No need to set dataType for this request because it accepts a queryString
                 statusCode: {
                     200: function () {
