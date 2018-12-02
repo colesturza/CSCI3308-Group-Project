@@ -34,7 +34,7 @@ Vue.component('postlistcomp', {
     template: `
    <div class="container w-70 mb-3">
        <a v-bind:href="'/Post' + post.ID>
-        <h4> {{ post.subject }} </h4>
+        <h4> {{ post.Name }} </h4>
         <div v-html="post.Content"></div>
        </a>
    </div>`
@@ -98,35 +98,27 @@ var postList = new Vue({
     data: {
         posts: []
     },
-    methods: {
-        getPosts() {
+    mounted:function() {
+            var self = this;
             var mdConverter = new showdown.Converter();
             var postRequest = $.ajax({
                 method: "POST",
                 url: "/uhubapi/posts/GetAllByClub?ClubID=" + encodeURIComponent(window.location.href.split('/').slice(-1)[0]),
                 //dataType: "json",                 //No need to set dataType for this request because it accepts a queryString
-                statusCode: {
-                    200: function (data) {
-                        console.log(data);
+                success: function (data) {
+                    console.log(data);
                         for (var i = 0; i < data.length; i++)
                         {
                             data[i].Content = mdConverter.makeHtml(data[i].Content);
                         }
                         data.sort(dynamicSort("-CreatedDate"));
-                        this.posts = data;
+                        self.posts = data;
                         
-                    },
-                    503: function () {
-                        console.log("Internal Server Error");
-                    }
                 },
                 error: function (error) {
                     console.log(error);
                 }
             })
-        }
-    },
-    beforeMount() {
-        this.getPosts();
+        
     }
 });
