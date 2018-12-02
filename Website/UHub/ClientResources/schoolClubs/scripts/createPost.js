@@ -1,10 +1,20 @@
 (function () {
 
+    var mdConverter = new showdown.Converter();
+
     var simplemde = new SimpleMDE(
         {
-            element: document.getElementById("inputContent"),
             autosave: {
                 enabled: false
+            },
+            element: document.getElementById("inputContent"),
+            previewRender: function (plainText, preview) { // Async method
+
+                setTimeout(function () {
+                    preview.innerHTML = mdConverter.makeHtml(plainText);
+                }, 50);
+
+                return "Loading...";
             },
             promptURLs: true,
             spellChecker: true,
