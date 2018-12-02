@@ -31,10 +31,10 @@
 
                 var formData = {
                     Content: this.$refs.commentReply.value,
-                    ParentID: this.comment.ParentID
+                    ParentID: this.comment.ID
                 };
 
-                var jsonData = encodeURIComponent(formData);
+                var jsonData = JSON.stringify(formData);
 
 
                 $.ajax({
@@ -69,9 +69,12 @@
             },
             submitCommentPost: function () {
 
+                var postId = encodeURIComponent(window.location.href.split('/').slice(-1)[0]);
+
+
                 var formData = {
                     Content: this.$refs.postReplyText.value,
-                    ParentID: 1
+                    ParentID: postId
                 };
 
                 var jsonData = JSON.stringify(formData);
@@ -92,11 +95,11 @@
 
             var self = this;
             var mdConverter = new showdown.Converter();
-
+            var postID = encodeURIComponent(window.location.href.split('/').slice(-1)[0]);
 
             $.ajax({
                 method: "POST",
-                url: "/uhubapi/posts/GetByID?PostID=" + encodeURIComponent(window.location.href.split('/').slice(-1)[0]),
+                url: "/uhubapi/posts/GetByID?PostID=" + postID,
                 success: function (data) {
 
                     console.log(data);
