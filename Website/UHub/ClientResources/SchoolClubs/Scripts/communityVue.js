@@ -96,6 +96,7 @@ var postList = new Vue({
                 //dataType: "json",                 //No need to set dataType for this request because it accepts a queryString
                 statusCode: {
                     200: function (data) {
+                        console.log(data);
                         for (var i = 0; i < data.length; i++)
                         {
                             data[i].Content = mdConverter.makeHtml(data[i].Content);
