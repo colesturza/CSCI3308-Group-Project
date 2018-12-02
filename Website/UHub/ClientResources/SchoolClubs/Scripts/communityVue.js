@@ -34,8 +34,8 @@
     Vue.component('postlistcomp', {
         props: ['post'],
         template: `
-   <div class="container w-70 mb-3">
-       <a v-bind:href="'/Post' + post.ID">
+   <div class="container bg-white w-70 mb-3">
+       <a v-bind:href="'/Post/' + post.ID">
         <h4> {{ post.Name }} </h4>
         <div v-html="post.Content"></div>
        </a>
@@ -68,17 +68,18 @@
 var communityblock = new Vue({
     el: "#community-block",
     data: {
-        commmunity: null,
+        community: null
     },
     methods: {
         getCommunity() {
+            var self = this;
             var communityRequest = $.ajax({
                 method: "POST",
                 url: "/uhubapi/schoolclubs/GetByID?ClubID=" + encodeURIComponent(window.location.href.split('/').slice(-1)[0]),
                 statusCode: {
                     200: function (data) {
                         console.log(data);
-                        this.community = data;
+                        self.community = data;
                     },
                     503: function () {
                         console.log("Internal Server Error");
