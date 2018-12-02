@@ -1,36 +1,4 @@
 (function () {
-
-    var examplePosts = [{ postid: 1, url: '#', subject: "LoremIpsum", postContent: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean eros mauris, mollis at fermentum mattis, interdum et ipsum." },
-    { postid: 2, url: '#', subject: "IpsumLorem", postContent: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean eros mauris, mollis at fermentum mattis, interdum et ipsum." },
-    { postid: 3, url: '#', subject: "LoremIpsum", postContent: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean eros mauris, mollis at fermentum mattis, interdum et ipsum." },
-    { postid: 4, url: '#', subject: "IpsumLorem", postContent: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean eros mauris, mollis at fermentum mattis, interdum et ipsum." },
-    { postid: 4, url: '#', subject: "IpsumLorem", postContent: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean eros mauris, mollis at fermentum mattis, interdum et ipsum." },
-    { postid: 4, url: '#', subject: "IpsumLorem", postContent: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean eros mauris, mollis at fermentum mattis, interdum et ipsum." },
-    { postid: 4, url: '#', subject: "IpsumLorem", postContent: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean eros mauris, mollis at fermentum mattis, interdum et ipsum." }];
-    var compsciPosts = [{ postid: 1, url: '#', subject: "LoremIpsum", postContent: "Foobar" },
-    { postid: 2, url: '#', subject: "IpsumLorem", postContent: "Else{ Heart.Break() }" },
-    { postid: 3, url: '#', subject: "LoremIpsum", postContent: "this.post = 'a post'" },
-    { postid: 4, url: '#', subject: "IpsumLorem", postContent: "this.post = 'another post'" },
-    { postid: 4, url: '#', subject: "IpsumLorem", postContent: "Exam avg: 70%" },
-    { postid: 4, url: '#', subject: "IpsumLorem", postContent: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean eros mauris, mollis at fermentum mattis, interdum et ipsum." },
-    { postid: 4, url: '#', subject: "IpsumLorem", postContent: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean eros mauris, mollis at fermentum mattis, interdum et ipsum." }];
-
-
-    var exampleCommunities = [{ name: "Anthropology", url: "www.google.com" }, { name: "Computer Science B.S.", url: "#" }, { name: "Mechanical Engineering", url: "#" }];
-
-    /*Sample variable to hold all of the values of the get request*/
-    var clubData = {
-        id: Number,
-        schoolID: Number,
-        isEnabled: Boolean,
-        isReadOnly: Boolean,
-        name: String,
-        description: String,
-        createdDate: Number,
-        modifiedDate: Number
-    }
-
-    /*Prototype for a post list component.*/
     Vue.component('postlistcomp', {
         props: ['post'],
         template: `
@@ -65,36 +33,36 @@
         }
     });
 
-var communityblock = new Vue({
-    el: "#community-block",
-    data: {
-        community: null
-    },
-    methods: {
-        getCommunity() {
-            var self = this;
-            var communityRequest = $.ajax({
-                method: "POST",
-                url: "/uhubapi/schoolclubs/GetByID?ClubID=" + encodeURIComponent(window.location.href.split('/').slice(-1)[0]),
-                statusCode: {
-                    200: function (data) {
-                        console.log(data);
-                        self.community = data;
+    var communityblock = new Vue({
+        el: "#community-block",
+        data: {
+            community: null
+        },
+        methods: {
+            getCommunity() {
+                var self = this;
+                var communityRequest = $.ajax({
+                    method: "POST",
+                    url: "/uhubapi/schoolclubs/GetByID?ClubID=" + encodeURIComponent(window.location.href.split('/').slice(-1)[0]),
+                    statusCode: {
+                        200: function (data) {
+                            console.log(data);
+                            self.community = data;
+                        },
+                        503: function () {
+                            console.log("Internal Server Error");
+                        }
                     },
-                    503: function () {
-                        console.log("Internal Server Error");
+                    error: function (error) {
+                        console.log(error);
                     }
-                },
-                error: function (error) {
-                    console.log(error);
-                }
-            })
+                })
+            }
+        },
+        beforeMount() {
+            this.getCommunity();
         }
-    },
-    beforeMount() {
-        this.getCommunity();
-    }
-});
+    });
 
     new Vue({
         el: "#post-list",
@@ -105,12 +73,9 @@ var communityblock = new Vue({
             var self = this;
             var mdConverter = new showdown.Converter();
             var id = encodeURIComponent(window.location.href.split('/').slice(-1)[0]);
-
-
             $.ajax({
                 method: "POST",
                 url: "/uhubapi/posts/GetAllByClub?ClubID=" + id,
-                //dataType: "json",                 //No need to set dataType for this request because it accepts a queryString
                 success: function (formData) {
                     console.log(formData);
 
@@ -125,8 +90,6 @@ var communityblock = new Vue({
                     console.log(error);
                 }
             })
-
         }
     });
-
 })();
