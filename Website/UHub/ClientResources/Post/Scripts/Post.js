@@ -103,6 +103,7 @@
                 success: function (data) {
 
                     console.log(data);
+                    var clubID = data.ParentID;
 
                     self.title = htmlEncode(data.Name);
                     self.content = mdConverter.makeHtml(data.Content);
@@ -121,6 +122,14 @@
                                 self.comments = data;
                             }
                         });
+                    }
+
+                    var comms = $("#navbarDropdownMenu a");
+                    var commLen = comms.length;
+                    for (var i = 0; i < commLen; i++) {
+                        if (clubID == $(comms[i]).attr("data-ClubID")) {
+                            $("#navbarDropdownMenuLink").text($(comms[i]).text());
+                        }
                     }
 
                 },

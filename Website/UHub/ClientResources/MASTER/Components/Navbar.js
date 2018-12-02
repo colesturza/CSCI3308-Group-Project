@@ -69,7 +69,8 @@
                     <a class="dropdown-item" href="/School/Clubs">— View All —</a>
                     <a class="dropdown-item"
                         v-for="community in communities"
-                        v-bind:href="'/SchoolClub/' + community.ID">
+                        v-bind:href="'/SchoolClub/' + community.ID"
+                        v-bind:data-ClubID="community.ID">
                         {{ community.Name }}
                     </a>
                 </div>
