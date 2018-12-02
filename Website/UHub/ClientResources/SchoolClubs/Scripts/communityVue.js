@@ -76,7 +76,7 @@ var communityblock = new Vue({
                 statusCode: {
                     200: function (data) {
                         console.log(data);
-                        this.commmunity = data;
+                        this.community = data;
                     },
                     503: function () {
                         console.log("Internal Server Error");
