@@ -10,7 +10,7 @@
     var userIdInclude = "";
     if (userStat == 0 && currentUser != null && userID != null)
     {
-        userIdInclude = $"gtag('set', {{'user_id': {userID} }});";
+        userIdInclude = $"gtag('set', {{'user_id': '{userID}' }});";
     }
 
     var jsBuilder = new System.Text.StringBuilder();
