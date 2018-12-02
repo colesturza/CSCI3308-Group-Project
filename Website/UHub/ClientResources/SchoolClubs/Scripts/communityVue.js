@@ -68,7 +68,7 @@
 var communityblock = new Vue({
     el: "#community-block",
     data: {
-        community: null,
+        community: null
     },
     methods: {
         getCommunity() {
