@@ -34,7 +34,7 @@
     Vue.component('postlistcomp', {
         props: ['post'],
         template: `
-   <div class="container bg-white w-70 mb-3">
+   <div class="container bg-white mb-3">
        <a v-bind:href="'/Post/' + post.ID">
         <h4> {{ post.Name }} </h4>
         <div v-html="post.Content"></div>
