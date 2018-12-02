@@ -63,22 +63,33 @@ var communityDropdown = new Vue({
     }
 });
 
-var descript = "This is a mounted description"
-
 var communityblock = new Vue({
     el: "#community-block",
     data: {
-        description: "Default Community Description"
+        commmunity: null,
     },
     methods: {
-        getDescription() {
-            this.description = descript;
+        getCommunity() {
+            var communityRequest = $.ajax({
+                method: "POST",
+                url: "/uhubapi/schoolclub/GetByID?ClubID=" + encodeURIComponent(window.location.href.split('/').slice(-1)[0]),
+                statusCode: {
+                    200: function (data) {
+                        console.log(data);
+                        this.commmunity = data;
+                    },
+                    503: function () {
+                        console.log("Internal Server Error");
+                    }
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            })
         }
     },
-    /*Updates the description when the instance is mounted to the value in descript.
-      This should be set up so we can update the community description on the get request*/
     beforeMount() {
-        description = this.getDescription();
+        this.getCommunity();
     }
 });
 
