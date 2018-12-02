@@ -72,7 +72,7 @@ var communityblock = new Vue({
         getCommunity() {
             var communityRequest = $.ajax({
                 method: "POST",
-                url: "/uhubapi/schoolclub/GetByID?ClubID=" + encodeURIComponent(window.location.href.split('/').slice(-1)[0]),
+                url: "/uhubapi/schoolclubs/GetByID?ClubID=" + encodeURIComponent(window.location.href.split('/').slice(-1)[0]),
                 statusCode: {
                     200: function (data) {
                         console.log(data);
