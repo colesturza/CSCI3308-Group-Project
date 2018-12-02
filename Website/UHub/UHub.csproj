@@ -192,6 +192,7 @@
     <Content Include="ClientResources\Account\Styles\CreateAccount.css" />
     <Content Include="ClientResources\MASTER\Components\Navbar.js" />
     <Content Include="ClientResources\MASTER\Components\PostBar.js" />
+    <Content Include="ClientResources\Post\Scripts\Post.js" />
     <Content Include="ClientResources\SampleUHUB_TESTING\homeVue.js" />
     <Content Include="ClientResources\SampleUHUB_TESTING\index.html" />
     <Content Include="ClientResources\SampleUHUB_TESTING\postPage.html" />
