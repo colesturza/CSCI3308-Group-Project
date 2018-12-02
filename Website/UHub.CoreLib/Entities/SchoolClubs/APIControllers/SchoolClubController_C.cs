@@ -28,7 +28,7 @@ namespace UHub.CoreLib.Entities.SchoolClubs.APIControllers
         [HttpPost]
         [Route("Create")]
         [ApiAuthControl]
-        public async Task<IHttpActionResult> Create([FromBody] SchoolClub_C_PublicDTO club)
+        public async Task<IHttpActionResult> Create([FromBody] SchoolClub_C_PublicDTO Club)
         {
             string status = "";
             HttpStatusCode statCode = HttpStatusCode.BadRequest;
@@ -44,13 +44,13 @@ namespace UHub.CoreLib.Entities.SchoolClubs.APIControllers
                 return Content(statCode, recaptchaResult.Result);
             }
 
-            if (club == null)
+            if (Club == null)
             {
                 return BadRequest();
             }
 
 
-            var tmpClub = club.ToInternal<SchoolClub>();
+            var tmpClub = Club.ToInternal<SchoolClub>();
             var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser().CmsUser;
 
 

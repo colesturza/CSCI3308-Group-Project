@@ -28,7 +28,7 @@ namespace UHub.CoreLib.Security.Accounts.APIControllers
 
         [HttpPost()]
         [Route("CreateUser")]
-        public async Task<IHttpActionResult> CreateUser([FromBody] User_C_PublicDTO user)
+        public async Task<IHttpActionResult> CreateUser([FromBody] User_C_PublicDTO User)
         {
 
 
@@ -56,12 +56,12 @@ namespace UHub.CoreLib.Security.Accounts.APIControllers
                 return Content(HttpStatusCode.BadRequest, recapObj);
             }
 
-            if (user == null)
+            if (User == null)
             {
                 return BadRequest();
             }
 
-            var tmpUser = user.ToInternal<User>();
+            var tmpUser = User.ToInternal<User>();
 
 
 

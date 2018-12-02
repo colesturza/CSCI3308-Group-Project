@@ -33,7 +33,7 @@ namespace UHub.CoreLib.Security.Authentication.APIControllers
 
         [Route("GetToken")]
         [HttpPost()]
-        public async Task<IHttpActionResult> GetToken([FromBody] User_CredentialDTO user, bool persistent = false)
+        public async Task<IHttpActionResult> GetToken([FromBody] User_CredentialDTO User, bool Persistent = false)
         {
             string status = "";
             HttpStatusCode statCode = HttpStatusCode.BadRequest;
@@ -49,12 +49,12 @@ namespace UHub.CoreLib.Security.Authentication.APIControllers
                 return Content(HttpStatusCode.BadRequest, recaptchaResult.Result);
             }
 
-            if (user == null)
+            if (User == null)
             {
                 return BadRequest();
             }
-            string email = user.Email;
-            string password = user.Password;
+            string email = User.Email;
+            string password = User.Password;
 
 
             var enableDetail = CoreFactory.Singleton.Properties.EnableDetailedAPIErrors;
@@ -72,7 +72,7 @@ namespace UHub.CoreLib.Security.Authentication.APIControllers
                 var authResultSet = await CoreFactory.Singleton.Auth.TryGetClientAuthTokenAsync(
                     email,
                     password,
-                    persistent,
+                    Persistent,
                     context);
 
                 if (authResultSet.ResultCode == AuthResultCode.UnknownError)

@@ -52,7 +52,7 @@ namespace UHub.CoreLib.Entities.Users.APIControllers
         [Route("GetByUname")]
         [HttpPost]
         [ApiAuthControl]
-        public async Task<IHttpActionResult> GetByUname(string username)
+        public async Task<IHttpActionResult> GetByUname(string Username)
         {
             string status = "";
             HttpStatusCode statCode = HttpStatusCode.BadRequest;
@@ -72,7 +72,7 @@ namespace UHub.CoreLib.Entities.Users.APIControllers
             User targetUser = null;
             try
             {
-                targetUser = await UserReader.GetUserAsync(username, domain);
+                targetUser = await UserReader.GetUserAsync(Username, domain);
             }
             catch (Exception ex)
             {

@@ -68,9 +68,9 @@ namespace UHub.CoreLib.Entities.Schools.APIControllers
         [HttpGet()]
         [Route("IsEmailValid")]
         [ApiCacheControl(1 * 3600)]
-        public async Task<IHttpActionResult> IsEmailValid(string email)
+        public async Task<IHttpActionResult> IsEmailValid(string Email)
         {
-            if (await SchoolReader.TryIsEmailValidAsync(email))
+            if (await SchoolReader.TryIsEmailValidAsync(Email))
             {
                 return BadRequest();
             }
