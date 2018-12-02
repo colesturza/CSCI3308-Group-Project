@@ -100,7 +100,7 @@
                     console.log(data);
 
                     this.title = data.Name;
-                    this.content = data.makeHtml(data.Content);
+                    this.content = mdConverter.makeHtml(data.Content);
                     this.postTime = data.CreatedDate;
 
                     if (data.CanComment && data.Name.html().text() != null) {
