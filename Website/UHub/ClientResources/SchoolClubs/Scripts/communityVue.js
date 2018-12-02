@@ -30,18 +30,14 @@ var clubData = {
 
 /*Prototype for a post list component.*/
 Vue.component('postlistcomp', {
+    props: ['post'],
     template: `
-   <ul  class="list-group list-group-flush w-70 float-md-left">
-   <li class="list-group-item mb-3"  v-for="post in posts">
-       <h4> {{ post.subject }} </h4>
-       <p> {{ post.postContent }} </p>
-   </li>
-   </ul>`,
-    data: function () {
-        return {
-            posts: examplePosts
-        }
-    }
+   <div class="container w-70 mb-3">
+       <a v-bind:href="'/Post' + post.ID>
+        <h4> {{ post.subject }} </h4>
+        <div v-html="post.Content"></div>
+       </a>
+   </div>`
 });
 
 var communityDropdown = new Vue({
@@ -93,13 +89,20 @@ var postList = new Vue({
     },
     methods: {
         getPosts() {
+            var mdConverter = new showdown.Converter();
             var postRequest = $.ajax({
                 method: "POST",
                 url: "/uhubapi/posts/GetAllByClub?ClubID=" + encodeURIComponent(window.location.href.split('/').slice(-1)[0]),
                 //dataType: "json",                 //No need to set dataType for this request because it accepts a queryString
                 statusCode: {
-                    200: function () {
-                        this.posts = postRequest.responseJSON;
+                    200: function (data) {
+                        for (var i = 0; i < data.length; i++)
+                        {
+                            data[i].Content = mdConverter.makeHtml(data[i].Content);
+                        }
+                        data.sort(dynamicSort("-CreatedDate"));
+                        this.posts = data;
+                        
                     },
                     503: function () {
                         console.log("Internal Server Error");

@@ -30,7 +30,7 @@
     </div>
     <div>
         <div id="post-list">
-            <postlistcomp></postlistcomp>
+            <postlistcomp v-for="post in posts" v-bind:post="post" v-bind:key="post.ID"></postlistcomp>
         </div>
     </div>
     <div id="community-block" class="border bg-white p-3 w-25 float-md-right">
@@ -45,6 +45,7 @@
 
 @section scripts
 {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/1.9.0/showdown.min.js"></script>
     <script src="~/ClientResources/schoolClubs/Scripts/communityVue.js"></script>
     <script src="~/ClientResources/MASTER/Components/PostBar.js"></script>
 }
