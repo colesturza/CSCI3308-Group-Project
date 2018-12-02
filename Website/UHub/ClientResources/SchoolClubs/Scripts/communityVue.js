@@ -89,6 +89,7 @@ var postList = new Vue({
     },
     methods: {
         getPosts() {
+            var self = this;
             var mdConverter = new showdown.Converter();
             var postRequest = $.ajax({
                 method: "POST",
@@ -101,7 +102,7 @@ var postList = new Vue({
                             data[i].Content = mdConverter.makeHtml(data[i].Content);
                         }
                         data.sort(dynamicSort("-CreatedDate"));
-                        this.posts = data;
+                        self.posts = data;
                         
                 },
                 error: function (error) {
