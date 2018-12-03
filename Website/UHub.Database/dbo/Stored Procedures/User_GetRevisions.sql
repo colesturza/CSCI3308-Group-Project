@@ -217,6 +217,4 @@ begin
 		NULL			as DeletedDate
 	from RecurseSet rs
 
-	order by ModifiedDate desc
-
 end

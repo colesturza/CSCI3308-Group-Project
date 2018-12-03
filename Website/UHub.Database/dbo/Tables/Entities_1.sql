@@ -21,6 +21,8 @@
 
 
 
+
+
 GO
 CREATE NONCLUSTERED INDEX [IX_Entities_EntType]
     ON [dbo].[Entities]([EntTypeID] ASC);
@@ -33,5 +35,17 @@ CREATE UNIQUE NONCLUSTERED INDEX [IX_Entities]
 
 GO
 CREATE NONCLUSTERED INDEX [IX_Entities_Deleted3]
-    ON [dbo].[Entities]([IsDeleted] ASC, [ID] ASC, [EntTypeID] ASC, [IsEnabled] ASC, [IsReadOnly] ASC, [CreatedBy] ASC, [CreatedDate] ASC, [ModifiedBy] ASC, [ModifiedDate] ASC, [DeletedBy] ASC, [DeletedDate] ASC);
+    ON [dbo].[Entities]([IsDeleted] ASC, [ID] ASC, [EntTypeID] ASC, [IsEnabled] ASC, [IsReadOnly] ASC, [CreatedDate] ASC, [CreatedBy] ASC, [ModifiedDate] ASC, [ModifiedBy] ASC, [DeletedBy] ASC, [DeletedDate] ASC);
+
+
+
+
+GO
+CREATE NONCLUSTERED INDEX [IX_Entities_Deleted2]
+    ON [dbo].[Entities]([IsDeleted] ASC, [ID] ASC);
+
+
+GO
+CREATE NONCLUSTERED INDEX [IX_Entities_Deleted]
+    ON [dbo].[Entities]([IsDeleted] ASC);
 
