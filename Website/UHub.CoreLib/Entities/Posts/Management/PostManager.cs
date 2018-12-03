@@ -87,13 +87,13 @@ namespace UHub.CoreLib.Entities.Posts.Management
 
 
 
-        public static bool? TryIncrementViewCount(long PostID)
+        public static bool? TryIncrementViewCount(long PostID, long UserID)
         {
 
             bool? val = null;
             try
             {
-                val = PostWriter.IncrementViewCount(PostID);
+                val = PostWriter.IncrementViewCount(PostID, UserID);
             }
             catch (Exception ex)
             {

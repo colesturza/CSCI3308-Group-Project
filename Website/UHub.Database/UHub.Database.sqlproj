@@ -219,5 +219,8 @@
     <Build Include="dbo\Stored Procedures\Post_UpdateProp.sql" />
     <Build Include="dbo\Stored Procedures\Post_Update.sql" />
     <Build Include="dbo\Stored Procedures\Post_GetRevisions.sql" />
+    <Build Include="dbo\Tables\EntViewXRef.sql" />
+    <Build Include="dbo\Tables\EntViewMap.sql" />
+    <Build Include="dbo\Tables\EntViewDateXRef.sql" />
   </ItemGroup>
 </Project>

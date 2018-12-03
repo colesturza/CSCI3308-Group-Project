@@ -81,14 +81,14 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
                 //check for member status
                 if (IsUserMember)
                 {
-                    await PostManager.TryIncrementViewCountAsync(PostID);
+                    await PostManager.TryIncrementViewCountAsync(PostID, cmsUser.ID.Value);
                     return Ok(postPublic);
                 }
                 else
                 {
                     if (postInternal.IsPublic)
                     {
-                        await PostManager.TryIncrementViewCountAsync(PostID);
+                        await PostManager.TryIncrementViewCountAsync(PostID, cmsUser.ID.Value);
                         return Ok(postPublic);
                     }
                     else
@@ -106,7 +106,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
                 return NotFound();
             }
 
-            await PostManager.TryIncrementViewCountAsync(postInternal.ID.Value);
+            await PostManager.TryIncrementViewCountAsync(postInternal.ID.Value, cmsUser.ID.Value);
             return Ok(postPublic);
         }
 
@@ -183,7 +183,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
                     postListPublic = postListPublic.Where(x => x.IsPublic).ToList();
                 }
 
-                await PostManager.TryIncrementViewCountAsync(PostID);
+
                 return Ok(postListPublic);
             }
 
@@ -194,7 +194,6 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             {
                 return NotFound();
             }
-            await PostManager.TryIncrementViewCountAsync(PostID);
 
 
             return Ok(postListPublic);

@@ -80,13 +80,13 @@ namespace UHub.CoreLib.Entities.Posts.Management
 
 
 
-        public static async Task<bool?> TryIncrementViewCountAsync(long PostID)
+        public static async Task<bool?> TryIncrementViewCountAsync(long PostID, long UserID)
         {
 
             bool? val = null;
             try
             {
-                val = await PostWriter.IncrementViewCountAsync(PostID);
+                val = await PostWriter.IncrementViewCountAsync(PostID, UserID);
             }
             catch (Exception ex)
             {
