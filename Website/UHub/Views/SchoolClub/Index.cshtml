@@ -26,18 +26,14 @@
 </div>
 
 <div id="body-content" class="container mt-4">
-    <div>
+    <div id="post-list" class="w-70 float-md-left">
+        <postlistcomp v-for="post in posts" v-bind:post="post" v-bind:key="post.ID"></postlistcomp>
     </div>
-    <div>
-        <div id="post-list">
-            <postlistcomp></postlistcomp>
-        </div>
-    </div>
-    <div id="community-block" class="border bg-white p-3 w-25 float-md-right">
-        <h5 class="mx-auto d-flex justify-content-center">Home</h5>
+    <div id="community-block" class="border bg-white p-3 w-25 d-md float-md-right d-sm-none d-xs-none d-md-inline">
+        <h5 class="mx-auto d-flex justify-content-center">{{ community.Name }}</h5>
         <div class="container">
             <span class="m-1 justify-content-center">
-                {{ description }}
+                {{ community.Description }}
             </span>
         </div>
     </div>
@@ -45,6 +41,7 @@
 
 @section scripts
 {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/1.9.0/showdown.min.js"></script>
     <script src="~/ClientResources/schoolClubs/Scripts/communityVue.js"></script>
     <script src="~/ClientResources/MASTER/Components/PostBar.js"></script>
 }

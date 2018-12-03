@@ -3,14 +3,43 @@
     Layout = "~/Views/Shared/_LayoutNoAuth.cshtml";
 }
 
-
-
 <div id="body-Content" class="container w-70">
 
     <h2>Find Account</h2>
+    <div id="body-content" class="container mt-4" style="background-color: white">
 
+        <div class="container section" style="padding: 15px 0px">
+            <div style="display:inline-block; vertical-align: top; padding-right: 10px">
+                <svg class="feather feather-user sc-dnqmqq jxshSx" xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+            </div>
+            <div style="display: inline-block;">
+                <div id="user-info">
+                    <ul style="width: 100%; padding: 0;">
+                        <li style="list-style: none;" v-for="attribute in user" v-bind:attribute="attribute">
+                            <h3><strong>@</strong>{{attribute.Username}}</h3>
+                            <h4>{{attribute.Major}}</h4>
+                            <h5>{{attribute.Year}}</strong></h5>
+                            <h5>{{attribute.GradDate}}</strong></h5>
+                            <h5>{{attribute.JobTitle}} at {{attribute.Company}}</h5>
+                            <div id="private">
+                                <h5><strong>Email: </strong>{{attribute.Email}}</h5>
+                                <h5><strong>Phone Number: </strong>{{attribute.PhoneNumber}}</h5>
+                                <h5><strong>School ID: </strong>{{attribute.SchoolID}}</h5>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    @ViewBag.Message
 
 
 </div>
+
+
+@section scripts{
+
+    <script src="~/ClientResources/Account/Scripts/AccountDetails.js"></script>
+
+}

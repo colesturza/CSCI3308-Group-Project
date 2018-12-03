@@ -173,6 +173,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Common.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\DynamicScriptsController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\PostController.cs" />
     <Compile Include="Controllers\SchoolClubController.cs" />
@@ -186,11 +187,13 @@
   <ItemGroup>
     <None Include="ClientResources\Home\Styles\Home.scss" />
     <Content Include="ClientResources\Account\Scripts\CreateAccount.js" />
+    <Content Include="ClientResources\Account\Scripts\AccountDetails.js" />
     <Content Include="ClientResources\Account\Scripts\Login.js" />
     <Content Include="ClientResources\Account\Scripts\Recover.js" />
     <Content Include="ClientResources\Account\Styles\CreateAccount.css" />
     <Content Include="ClientResources\MASTER\Components\Navbar.js" />
     <Content Include="ClientResources\MASTER\Components\PostBar.js" />
+    <Content Include="ClientResources\Post\Scripts\Post.js" />
     <Content Include="ClientResources\SampleUHUB_TESTING\homeVue.js" />
     <Content Include="ClientResources\SampleUHUB_TESTING\index.html" />
     <Content Include="ClientResources\SampleUHUB_TESTING\postPage.html" />
@@ -310,6 +313,9 @@
     <Content Include="Views\Shared\_LayoutNoAuth.cshtml" />
     <Content Include="Views\Shared\_LayoutAuth.cshtml" />
     <Content Include="Views\Error\Startup.cshtml" />
+    <Content Include="Views\DynamicScripts\Index.cshtml" />
+    <Content Include="Views\DynamicScripts\GAnalytics.js.cshtml" />
+    <Content Include="Views\Analytics\_GAnalyticsPartial.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

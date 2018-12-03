@@ -152,8 +152,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             {
                 return Content(statCode, status);
             }
-
-
+            
             var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser().CmsUser;
 
 
@@ -166,8 +165,13 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             var targetClub = taskTargetClub.Result;
             var IsUserBanned = taskIsUserBanned.Result;
 
+            if(targetClub == null)
+            {
+                return NotFound();
+            }
+
             //verify same school
-            if (targetClub.SchoolID != cmsUser.SchoolID)
+            if (targetClub.SchoolID != cmsUser.SchoolID.Value)
             {
                 return NotFound();
             }

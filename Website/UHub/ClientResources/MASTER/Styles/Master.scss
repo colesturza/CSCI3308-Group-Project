@@ -24,3 +24,10 @@ input[type=checkbox] {
     max-height: 200px;
     overflow-x: hidden;
 }
+
+main {
+    img {
+        max-width: 100%;
+        max-height: 100%;
+    }
+}

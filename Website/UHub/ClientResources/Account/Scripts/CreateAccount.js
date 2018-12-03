@@ -19,7 +19,7 @@
             JobTitle: ""
         },
         methods: {
-            readRefs() {
+            readRefs: function() {
                 let refs = this.$refs;
                 this.Username = refs.inputUSR.value;
                 this.Password = refs.inputPWD.value;
@@ -33,7 +33,7 @@
                 this.JobTitle = refs.inputJob.value;
                 this.sendObj = JSON.stringify(this.$data);
             },
-            sendData() {
+            sendData: function() {
                 $("#btn_CreateUser").attr("disabled", "disabled");
                 $("html").css({ cursor: "wait" });
                 var recapVal = grecaptcha.getResponse();

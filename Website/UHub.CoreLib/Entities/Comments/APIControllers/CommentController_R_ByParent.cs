@@ -17,7 +17,7 @@ namespace UHub.CoreLib.Entities.Comments.APIControllers
         [HttpPost()]
         [Route("GetByParent")]
         [ApiAuthControl]
-        public async Task<IHttpActionResult> GetByParent(long parentID)
+        public async Task<IHttpActionResult> GetByParent(long ParentID)
         {
             string status = "";
             HttpStatusCode statCode = HttpStatusCode.BadRequest;
@@ -28,7 +28,7 @@ namespace UHub.CoreLib.Entities.Comments.APIControllers
 
 
 
-            var comments = await CommentReader.TryGetCommentsByParentAsync(parentID);
+            var comments = await CommentReader.TryGetCommentsByParentAsync(ParentID);
             if(comments == null)
             {
                 return InternalServerError();

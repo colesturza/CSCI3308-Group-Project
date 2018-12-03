@@ -22,7 +22,7 @@ namespace UHub.CoreLib.Entities.ClubModerators.APIControllers
         [HttpPost()]
         [Route("Create")]
         [ApiAuthControl]
-        public async Task<IHttpActionResult> Create([FromBody] ClubModerator_C_PublicDTO clubModerator, long clubID)
+        public async Task<IHttpActionResult> Create([FromBody] ClubModerator_C_PublicDTO ClubModerator, long ClubID)
         {
             string status = "";
             HttpStatusCode statCode = HttpStatusCode.BadRequest;
@@ -38,20 +38,20 @@ namespace UHub.CoreLib.Entities.ClubModerators.APIControllers
                 return Content(statCode, recaptchaResult.Result);
             }
 
-            if (clubModerator == null)
+            if (ClubModerator == null)
             {
                 return BadRequest();
             }
 
 
 
-            var tmpClubModerator = clubModerator.ToInternal<ClubModerator>();
+            var tmpClubModerator = ClubModerator.ToInternal<ClubModerator>();
             var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser().CmsUser;
 
 
-            var taskIsCurrentUserOwner = UserReader.TryValidateClubModeratorAsync(clubID, (long)cmsUser.ID);
-            var taskIsCurrentUserBanned = SchoolClubReader.TryIsUserBannedAsync(clubID, (long)cmsUser.ID);
-            var taskIsNewUserBanned = SchoolClubReader.TryIsUserBannedAsync(clubID, tmpClubModerator.UserID);
+            var taskIsCurrentUserOwner = UserReader.TryValidateClubModeratorAsync(ClubID, (long)cmsUser.ID);
+            var taskIsCurrentUserBanned = SchoolClubReader.TryIsUserBannedAsync(ClubID, (long)cmsUser.ID);
+            var taskIsNewUserBanned = SchoolClubReader.TryIsUserBannedAsync(ClubID, tmpClubModerator.UserID);
 
             await Task.WhenAll(taskIsCurrentUserOwner, taskIsCurrentUserBanned, taskIsNewUserBanned);
             var isCurrentUserBanned = taskIsCurrentUserBanned.Result;
@@ -81,7 +81,7 @@ namespace UHub.CoreLib.Entities.ClubModerators.APIControllers
             try
             {
 
-                var clubModResult = await ClubModeratorManager.TryCreateClubModeratorAsync(tmpClubModerator, clubID);
+                var clubModResult = await ClubModeratorManager.TryCreateClubModeratorAsync(tmpClubModerator, ClubID);
                 var clubModID = clubModResult.ClubModID;
                 var ResultCode = clubModResult.ResultCode;
 
