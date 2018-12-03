@@ -4,12 +4,14 @@
     [ActorEntID]      BIGINT   NOT NULL,
     [TargetEntTypeID] SMALLINT NOT NULL,
     [ActorEntTypeID]  SMALLINT NOT NULL,
-    [ViewCount]       BIGINT   CONSTRAINT [DF_EntViewXRef_ViewCount] DEFAULT ((0)) NOT NULL,
+    [ViewCount]       BIGINT   CONSTRAINT [DF_EntViewXRef_ViewCount] DEFAULT ((1)) NOT NULL,
     CONSTRAINT [PK_EntViewXRef] PRIMARY KEY CLUSTERED ([ViewID] ASC),
     CONSTRAINT [FK_EntViewXRef_Entities] FOREIGN KEY ([TargetEntID], [TargetEntTypeID]) REFERENCES [dbo].[Entities] ([ID], [EntTypeID]),
     CONSTRAINT [FK_EntViewXRef_Entities1] FOREIGN KEY ([ActorEntID], [ActorEntTypeID]) REFERENCES [dbo].[Entities] ([ID], [EntTypeID]),
     CONSTRAINT [FK_EntViewXRef_EntViewMap] FOREIGN KEY ([TargetEntTypeID], [ActorEntTypeID]) REFERENCES [dbo].[EntViewMap] ([TargetEntTypeID], [ActorEntTypeID])
 );
+
+
 
 
 GO
