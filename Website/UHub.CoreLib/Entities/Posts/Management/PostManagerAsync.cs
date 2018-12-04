@@ -112,6 +112,7 @@ namespace UHub.CoreLib.Entities.Posts.Management
 
             Shared.TryCreate_AttrConversionHandler(ref CmsPost);
 
+
             var attrValidateCode = Shared.TryCreate_ValidatePostAttrs(CmsPost);
             if (attrValidateCode != 0)
             {

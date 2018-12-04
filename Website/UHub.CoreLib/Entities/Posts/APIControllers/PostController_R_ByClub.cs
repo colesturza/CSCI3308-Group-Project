@@ -201,7 +201,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
                     .AsParallel()
                     .Select(x =>
                     {
-                        x.Content = x.Content.SanitizeHtml();
+                        x.Content = x.Content.SanitizeHtml().HtmlDecode();
                         return x.ToDto<Post_R_PublicDTO>();
                     });
             }
@@ -284,7 +284,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
                     .AsParallel()
                     .Select(x =>
                     {
-                        x.Content = x.Content.SanitizeHtml();
+                        x.Content = x.Content.SanitizeHtml().HtmlDecode();
                         return x.ToDto<Post_R_PublicDTO>();
                     });
             }

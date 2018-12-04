@@ -1,5 +1,6 @@
 ﻿(function () {
     var mdConverter = new showdown.Converter();
+    setShowdownDefaults(mdConverter);
 
 
     new Vue({

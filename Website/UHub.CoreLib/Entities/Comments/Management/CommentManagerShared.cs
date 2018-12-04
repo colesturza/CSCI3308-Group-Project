@@ -49,7 +49,7 @@ namespace UHub.CoreLib.Entities.Comments.Management
                 var sanitizerMode = CoreFactory.Singleton.Properties.HtmlSanitizerMode;
                 if ((sanitizerMode & HtmlSanitizerMode.OnWrite) != 0)
                 {
-                    NewComment.Content = NewComment.Content?.SanitizeHtml();
+                    NewComment.Content = NewComment.Content?.SanitizeHtml().HtmlDecode();
                 }
 
             }

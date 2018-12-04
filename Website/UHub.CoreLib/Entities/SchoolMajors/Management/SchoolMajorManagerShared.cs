@@ -63,7 +63,7 @@ namespace UHub.CoreLib.Entities.SchoolMajors.Management
                 var sanitizerMode = CoreFactory.Singleton.Properties.HtmlSanitizerMode;
                 if ((sanitizerMode & HtmlSanitizerMode.OnWrite) != 0)
                 {
-                    NewMajor.Description = NewMajor.Description?.SanitizeHtml();
+                    NewMajor.Description = NewMajor.Description?.SanitizeHtml().HtmlDecode();
                 }
 
             }

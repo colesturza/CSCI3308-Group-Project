@@ -73,7 +73,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
                 var sanitizerMode = CoreFactory.Singleton.Properties.HtmlSanitizerMode;
                 if ((sanitizerMode & HtmlSanitizerMode.OnRead) != 0)
                 {
-                    postPublic.Content = postPublic.Content.SanitizeHtml();
+                    postPublic.Content = postPublic.Content.SanitizeHtml().HtmlDecode();
                 }
 
 
@@ -171,7 +171,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
                 {
                     postListPublic.ForEach(x =>
                     {
-                        x.Content = x.Content.SanitizeHtml();
+                        x.Content = x.Content.SanitizeHtml().HtmlDecode();
                     });
                 }
 

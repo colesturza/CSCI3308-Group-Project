@@ -1,10 +1,10 @@
 ﻿(function () {
+
     var mdConverter = new showdown.Converter();
     setShowdownDefaults(mdConverter);
 
-    var vueInstance;
+    var simplemde;
     var postRawData;
-
 
     Vue.component('comment-component', {
         props: ['comment'],
@@ -75,6 +75,8 @@
             }
         }
     });
+
+
 
     new Vue({
         el: "#post-container",
@@ -147,11 +149,16 @@
                 url: "/uhubapi/posts/GetByID?PostID=" + postID,
                 success: function (data) {
                     postRawData = data;
+
                     var clubID = data.ParentID;
 
                     self.title = htmlEncode(data.Name);
-                    self.content = mdConverter.makeHtml(data.Content);
                     self.postTime = data.CreatedDate;
+
+
+                    window.setTimeout(function () {
+                        simplemde.value(data.Content);
+                    }, 1);
 
 
                     //fetch comments if necessary
@@ -181,16 +188,15 @@
                                     window.clearInterval(cmtInterval);
                                 }, 10);
 
-
                             }
                         });
                     }
 
 
+
                     if (data.CanComment) {
                         $("#btn_ToggleReply").style('display', null);
                     }
-
 
 
                     //set navbar title to current club
@@ -209,5 +215,87 @@
             });
         }
     });
+
+
+    simplemde = new SimpleMDE(
+        {
+            autosave: {
+                enabled: false
+            },
+            element: document.getElementById("txt_PostArea"),
+            previewRender: function (plainText) {
+                return mdConverter.makeHtml(plainText);
+            },
+            promptURLs: true,
+            spellChecker: true,
+            status: ["lines", "words", {
+                className: "charCount",
+                defaultValue: function (el) {
+                    this.charCount = 0;
+                    el.innerHTML = "Characters: 0 (10 - 10k)";
+                },
+                onUpdate: function (el) {
+                    var ct = simplemde.value().length;
+                    el.innerHTML = "Characters: " + ct + " (10 - 10k)";
+                }
+            }]
+        });
+
+
+
+
+
+    function getData() {
+        postRawData.Content = simplemde.value();
+
+
+        return {
+            ID: postRawData.ID,
+            Name: postRawData.Name,
+            Content: postRawData.Content,
+            IsPublic: postRawData.IsPublic,
+            CanComment: postRawData.CanComment
+        };
+
+    }
+
+    function sendData(formData) {
+        $("#btn_UpdatePost").attr("disabled", "disabled");
+        $("html").css({ cursor: "wait" });
+
+        var jsonData = JSON.stringify(formData);
+
+        $.ajax({
+            method: "POST",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: jsonData,
+            url: "/uhubapi/posts/Update",
+            complete: function (data) {
+                $("#btn_UpdatePost").removeAttr("disabled");
+                $("html").css({ cursor: "default" });
+                console.log(data);
+            },
+            success: function (data) {
+                alert(data);
+            },
+            error: function (data) {
+                alert(data.responseJSON);
+            }
+        });
+    }
+
+
+    $("#btn_UpdatePost").click(function () {
+        var data = getData();
+        sendData(data);
+    });
+
+
+
+
+
+
+
 
 })();

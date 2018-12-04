@@ -95,6 +95,15 @@ function dynamicSort(property) {
 }
 
 
+function setShowdownDefaults(converter) {
+    converter.setOption('literalMidWordUnderscores', 'true');
+    converter.setOption('tables', 'true');
+    converter.setOption('tasklists', 'true');
+    converter.setOption('backslashEscapesHTMLTags', 'true');
+    converter.setOption('literalMidWordUnderscores', 'true');
+}
+
+
 function htmlEncode(value) {
     return $('<div/>').text(value).html();
 }

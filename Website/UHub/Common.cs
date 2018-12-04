@@ -151,12 +151,12 @@ namespace UHub
                     AcctPswdRecoveryURL = "~/Account/Recover",
                     AcctPswdUpdateURL = "~/Account/UpdatePassword",
                     AcctPswdRecoveryLifespan = new TimeSpan(0, 0, 30, 0),
-                    EnableRecaptcha = true,                //CAPTCHA
+                    EnableRecaptcha = true,                                         //CAPTCHA
                     RecaptchaPublicKey = captchaPublicKey,
                     RecaptchaPrivateKey = captchaPrivateKey,
                     AutoConfirmNewAccounts = false,
                     AutoApproveNewAccounts = true,
-                    EnableTokenVersioning = true,           //VERSION
+                    EnableTokenVersioning = true,                                   //VERSION
                     CookieSameSiteMode = CookieSameSiteModes.Lax,
                     EnablePswdRecovery = true,
                     EnablePersistentAuthTokens = true,
@@ -292,16 +292,16 @@ namespace UHub
                     AcctPswdRecoveryURL = "~/Account/Recover",
                     AcctPswdUpdateURL = "~/Account/UpdatePassword",
                     AcctPswdRecoveryLifespan = new TimeSpan(0, 0, 30, 0),
-                    EnableRecaptcha = true,                //CAPTCHA
+                    EnableRecaptcha = true,                                         //CAPTCHA
                     RecaptchaPublicKey = captchaPublicKey,
                     RecaptchaPrivateKey = captchaPrivateKey,
                     AutoConfirmNewAccounts = false,
                     AutoApproveNewAccounts = true,
-                    EnableTokenVersioning = false,           //VERSION
+                    EnableTokenVersioning = false,                                  //VERSION
                     CookieSameSiteMode = CookieSameSiteModes.Lax,
                     EnablePswdRecovery = true,
                     EnablePersistentAuthTokens = true,
-                    HtmlSanitizerMode = HtmlSanitizerMode.OnWrite | HtmlSanitizerMode.OnRead
+                    HtmlSanitizerMode = HtmlSanitizerMode.Both
                 },
                 Logging = new CmsConfig_Logging
                 {

@@ -1,6 +1,10 @@
 (function () {
 
     var mdConverter = new showdown.Converter();
+    setShowdownDefaults(mdConverter);
+
+
+
 
     var simplemde = new SimpleMDE(
         {
@@ -8,13 +12,8 @@
                 enabled: false
             },
             element: document.getElementById("inputContent"),
-            previewRender: function (plainText, preview) { // Async method
-
-                setTimeout(function () {
-                    preview.innerHTML = mdConverter.makeHtml(plainText);
-                }, 100);
-
-                return "Loading...";
+            previewRender: function (plainText) {
+                return mdConverter.makeHtml(plainText);
             },
             promptURLs: true,
             spellChecker: true,
@@ -22,11 +21,11 @@
                 className: "charCount",
                 defaultValue: function (el) {
                     this.charCount = 0;
-                    el.innerHTML = "0 Characters (10 - 10k)";
+                    el.innerHTML = "Characters: 0 (10 - 10k)";
                 },
                 onUpdate: function (el) {
                     var ct = simplemde.value().length;
-                    el.innerHTML = ct + " Characters (10 - 10k)";
+                    el.innerHTML = "Characters: " + ct + " (10 - 10k)";
                 }
             }]
         });

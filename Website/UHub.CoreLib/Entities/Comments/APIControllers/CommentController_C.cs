@@ -66,7 +66,7 @@ namespace UHub.CoreLib.Entities.Comments.APIControllers
 
                 if (ResultCode == 0)
                 {
-                    status = "Comment created.";
+                    status = PostID.ToString();
                     statCode = HttpStatusCode.OK;
                 }
                 else if(ResultCode == CommentResultCode.UnknownError)

@@ -193,6 +193,7 @@
     <Content Include="ClientResources\Account\Styles\CreateAccount.css" />
     <Content Include="ClientResources\MASTER\Components\Navbar.js" />
     <Content Include="ClientResources\MASTER\Components\PostBar.js" />
+    <Content Include="ClientResources\Post\Scripts\PostUpdateable.js" />
     <Content Include="ClientResources\Post\Scripts\Post.js" />
     <Content Include="ClientResources\SampleUHUB_TESTING\homeVue.js" />
     <Content Include="ClientResources\SampleUHUB_TESTING\index.html" />
@@ -251,6 +252,7 @@
     <Content Include="Scripts\esm\popper.js.map" />
     <Content Include="Scripts\esm\popper-utils.min.js.map" />
     <Content Include="Scripts\esm\popper-utils.js.map" />
+    <None Include="Properties\PublishProfiles\CustomProfile1.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
@@ -316,6 +318,7 @@
     <Content Include="Views\DynamicScripts\Index.cshtml" />
     <Content Include="Views\DynamicScripts\GAnalytics.js.cshtml" />
     <Content Include="Views\Analytics\_GAnalyticsPartial.cshtml" />
+    <Content Include="Views\Post\Index_Updateable.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -51,6 +51,8 @@
         mounted: function () {
             var self = this;
             var mdConverter = new showdown.Converter();
+            setShowdownDefaults(mdConverter);
+
             var id = encodeURIComponent(window.location.href.split('/').slice(-1)[0]);
             $.ajax({
                 method: "POST",

@@ -402,8 +402,14 @@ namespace UHub.Controllers
         public ActionResult Find()
         {
             var idObj = Url.RequestContext.RouteData.Values["id"];
-            var idStr = idObj?.ToString() ?? "0";
-            var valid = int.TryParse(idStr, out var id);
+            var idStr = idObj?.ToString() ?? "";
+            var valid = int.TryParse(idStr, out var userId);
+
+            if (!valid)
+            {
+                return Redirect("~/Error/400");
+            }
+
 
             return View();
         }

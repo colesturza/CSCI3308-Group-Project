@@ -222,6 +222,7 @@
     <Compile Include="Entities\Images\DataInterop\ImageReaderCore.cs" />
     <Compile Include="Entities\Images\DataInterop\ImageWriterCore.cs" />
     <Compile Include="Entities\Images\Image.cs" />
+    <Compile Include="Entities\Posts\APIControllers\PostController_U.cs" />
     <Compile Include="Entities\Posts\APIControllers\PostController_C.cs" />
     <Compile Include="Entities\Posts\APIControllers\PostController_Core.cs" />
     <Compile Include="Entities\Posts\APIControllers\PostController_R.cs" />
@@ -242,9 +243,11 @@
     <Compile Include="Entities\Posts\DataInterop\PostWriter.cs" />
     <Compile Include="Entities\Posts\DataInterop\PostWriterAsync.cs" />
     <Compile Include="Entities\Posts\DataInterop\PostWriterCore.cs" />
+    <Compile Include="Entities\Posts\DTOs\Post_U_PublicDTO.cs" />
     <Compile Include="Entities\Posts\DTOs\Post_C_PublicDTO.cs" />
     <Compile Include="Entities\Posts\DTOs\Post_R_PublicDTO.cs" />
     <Compile Include="Entities\Posts\Enums\PostResultCode.cs" />
+    <Compile Include="Entities\Posts\Interfaces\IPost_U_Public.cs" />
     <Compile Include="Entities\Posts\Interfaces\IPost_C_Public.cs" />
     <Compile Include="Entities\Posts\Interfaces\IPost_R_Public.cs" />
     <Compile Include="Entities\Posts\Management\PostManager.cs" />
