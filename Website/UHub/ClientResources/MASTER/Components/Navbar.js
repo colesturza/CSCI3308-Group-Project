@@ -57,9 +57,9 @@
                         </ul>
                     </div>
                     <div class="searchWrapper">
-                        <input class="form-control" type="search" placeholder="Search" class="form-control" />
+                        <!--<input class="form-control" type="search" placeholder="Search" class="form-control" />-->
                         <div>
-                            <button class="form-control" type="submit" class="btn btn-secondary">Search</button>
+                            <!--<button class="form-control" type="submit" class="btn btn-secondary">Search</button>-->
                             <a href="/Account" class="btn btn-secondary acctLnk">My Account</a>
                         </div>
                     </div>
