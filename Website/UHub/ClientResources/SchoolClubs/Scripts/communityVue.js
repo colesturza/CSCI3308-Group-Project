@@ -3,7 +3,7 @@
         props: ['post'],
         template: 
         `
-           <div class="container bg-white mb-3">
+           <div class="container bg-white mb-3" style="padding: .75rem 1.25rem">
                <a v-bind:href="'/Post/' + post.ID">
                 <h4> {{ post.Name }} </h4>
                </a>
@@ -58,7 +58,6 @@
                 method: "POST",
                 url: "/uhubapi/posts/GetAllByClub?ClubID=" + id,
                 success: function (formData) {
-                    console.log(formData);
 
                     for (var i = 0; i < formData.length; i++) {
                         formData[i].Content = mdConverter.makeHtml(formData[i].Content);
@@ -66,6 +65,7 @@
                     formData.sort(dynamicSort("-CreatedDate"));
                     self.posts = formData;
 
+                    $("#body-content").style('display', null);
                 },
                 error: function (error) {
                     console.log(error);

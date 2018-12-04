@@ -79,7 +79,7 @@ namespace UHub.CoreLib.Entities.SchoolClubs.Management
 
             if (id == null)
             {
-                return (id, SchoolClubResultCode.UnknownError);
+                return (null, SchoolClubResultCode.UnknownError);
             }
             return (id, SchoolClubResultCode.Success);
 

@@ -22,6 +22,8 @@
                     data.sort(dynamicSort("-CreatedDate"));
 
                     self.posts = data;
+
+                    $("#post-list").style('display', null);
                 },
                 error: function (error) {
                     console.log(error);

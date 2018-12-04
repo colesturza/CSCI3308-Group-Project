@@ -79,6 +79,7 @@
     new Vue({
         el: "#post-container",
         data: {
+            parentID: "",
             title: "",
             content: "",
             postTime: "",
@@ -149,9 +150,17 @@
                     postRawData = data;
                     var clubID = data.ParentID;
 
+
+                    self.parentID = data.ParentID;
                     self.title = htmlEncode(data.Name);
                     self.content = mdConverter.makeHtml(data.Content);
                     self.postTime = data.CreatedDate;
+
+
+                    $("#post-container").style('display', null);
+                    if (data.CanComment) {
+                        $("#btn_ToggleReply").style('display', null);
+                    }
 
 
                     //fetch comments if necessary
@@ -184,11 +193,6 @@
 
                             }
                         });
-                    }
-
-
-                    if (data.CanComment) {
-                        $("#btn_ToggleReply").style('display', null);
                     }
 
 

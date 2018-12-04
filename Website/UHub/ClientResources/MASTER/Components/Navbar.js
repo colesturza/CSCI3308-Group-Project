@@ -85,8 +85,8 @@
 
     $("*:not(#navbarDropdownMenuLink, #navbarDropdownMenuLink *, #navbarDropdownMenu, #navbarDropdownMenu *)")
         .click(function () {
-            $("#navbarDropdownMenu").removeClass("show");
             $("#navbarDropdownMenu").scrollTop(0);
+            $("#navbarDropdownMenu").removeClass("show");
         });
 
 
@@ -94,10 +94,10 @@
         .click(function (e) {
             e.stopPropagation();
             e.preventDefault();
-            $("#navbarDropdownMenu").toggleClass("show");
-            if (!$("#navbarDropdownMenu").hasClass("show")) {
+            if ($("#navbarDropdownMenu").hasClass("show")) {
                 $("#navbarDropdownMenu").scrollTop(0);
             }
+            $("#navbarDropdownMenu").toggleClass("show");
         });
 
 })();

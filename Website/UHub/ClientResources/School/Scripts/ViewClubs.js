@@ -14,6 +14,8 @@
                 200: function (data) {
                     self.clubs = data;
                     self.clubs.sort(dynamicSort("Name"));
+
+                    $("#club-list").style('display', null);
                 },
                 503: function () {
                     console.log("Internal Server Error");

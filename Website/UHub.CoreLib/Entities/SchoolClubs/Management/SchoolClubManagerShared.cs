@@ -42,7 +42,7 @@ namespace UHub.CoreLib.Entities.SchoolClubs.Management
                 //validate description
                 if(NewClub.Description.IsNotEmpty())
                 {
-                    if(!NewClub.Description.RgxIsMatch(RgxPtrn.EntSchoolClub.DESCRIPTION_B))
+                    if(!NewClub.Description.RgxIsMatch(RgxPtrn.EntSchoolClub.DESCRIPTION_B, RegexOptions.Multiline))
                     {
                         return SchoolClubResultCode.DescriptionInvalid;
                     }
@@ -59,7 +59,7 @@ namespace UHub.CoreLib.Entities.SchoolClubs.Management
                 var sanitizerMode = CoreFactory.Singleton.Properties.HtmlSanitizerMode;
                 if ((sanitizerMode & HtmlSanitizerMode.OnWrite) != 0)
                 {
-                    NewClub.Description = NewClub.Description?.SanitizeHtml();
+                    NewClub.Description = NewClub.Description?.SanitizeHtml().HtmlDecode();
                 }
 
             }

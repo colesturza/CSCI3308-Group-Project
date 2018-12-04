@@ -63,7 +63,6 @@
             complete: function (data) {
                 $("#btn_CreatePost").removeAttr("disabled");
                 $("html").css({ cursor: "default" });
-                console.log(data);
             },
             success: function (data) {
                 $("#inputTitle").val("");
@@ -71,7 +70,9 @@
                 $("#inputMakePrivate")[0].checked = false;
                 $("#inputCanComment")[0].checked = true;
 
-                alert(data);
+                alert("Post Created");
+
+                window.location.href = "/Post/" + data;
             },
             error: function (data) {
                 alert(data.responseJSON);
