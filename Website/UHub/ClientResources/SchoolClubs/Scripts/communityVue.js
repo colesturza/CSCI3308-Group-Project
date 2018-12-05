@@ -70,7 +70,7 @@
                 //AJAX -> /uhubapi/posts/GetAllByClub
                 .done(function (formData) {
 
-                    if (data.length > 0) {
+                    if (formData.length > 0) {
 
                         for (var i = 0; i < formData.length; i++) {
                             formData[i].Content = mdConverter.makeHtml(formData[i].Content);
