@@ -7,12 +7,14 @@
     var RGX_PSWD = /^.{8,150}$/;
     var RGX_NAME = /^(([ \u00c0-\u01ffA-z'\-])+){2,200}$/;
     var RGX_PHONE = /^([0-1][ .-])?((\([0-9]{3}\)[ .-]?)|([0-9]{3}[ .-]?))([0-9]{3}[ .-]?)([0-9]{4})$/;
+    var RGX_GRAD_DATE = /^[0-9]{4}\-[0-1][0-9]\-[0-3][0-9]$/;
+    var RGX_YEAR = /^Freshman|Sophomore|Junior|Senior\+?$/
     var RGX_COMPANY = /^.{0,100}$/;
     var RGX_JOB_TITLE = /^.{0,100}$/;
 
 
     var oldEmail = "";
-    var oldUserObj = null;
+    var UserObjOld = null;
     var oldResponseErr = null;
 
 
@@ -57,6 +59,18 @@
         }
         else if (formData.PhoneNumber != "" && !formData.PhoneNumber.match(RGX_PHONE)) {
             oldResponseErr = 'Phone Invalid';
+            alert(oldResponseErr);
+            clearWaitState();
+            return;
+        }
+        else if (!formData.GradDate.match(RGX_GRAD_DATE)) {
+            oldResponseErr = 'Grad Date Invalid';
+            alert(oldResponseErr);
+            clearWaitState();
+            return;
+        }
+        else if (!formData.Year.match(RGX_YEAR)) {
+            oldResponseErr = 'Year Invalid';
             alert(oldResponseErr);
             clearWaitState();
             return;
@@ -218,8 +232,10 @@
     registerInputValidator($("#firstname"), RGX_NAME);
     registerInputValidator($("#lastname"), RGX_NAME);
     registerInputValidator($("#phone"), RGX_PHONE, true);
-    registerInputValidator($("#company"), RGX_COMPANY);
-    registerInputValidator($("#job-title"), RGX_JOB_TITLE);
+    registerInputValidator($("#grad-date"), RGX_GRAD_DATE, true);
+    registerInputValidator($("#year"), RGX_YEAR, true);
+    registerInputValidator($("#company"), RGX_COMPANY, true);
+    registerInputValidator($("#job-title"), RGX_JOB_TITLE, true);
 
 
 })();
