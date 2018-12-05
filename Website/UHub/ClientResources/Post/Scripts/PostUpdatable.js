@@ -161,6 +161,57 @@
                         vueInstance.comments.splice(0, 0, newCmt);
                     });
 
+            },
+            getCommentById: function(cmtID, cmtList) {
+                for(var j=0; j<comments.length; j++){
+                    if(cmtList[j].ID == cmtID) {
+                        return cmtList[j];
+                    }
+                }
+            },
+            getCommentDepth: function(theCmt, cmtList) {
+                var depthLevel;
+                // Finds the comment's degrees of separation from post
+                while(theCmt.parentID != postID) {
+                    theCmt = getCommentById(theCmt.parentID, cmtList);
+                    depthLevel++;
+                }
+                return depthLevel;
+            },
+            arrangeCommentTree: function(cmtList) {
+                var maxDepth=0;
+                var listLength = cmtList.length;
+                for(var i=listLength - 1; i >= 0; i++) {
+                    if(!cmtList[i].isEnabled) {
+                        cmtList.splice(i, 1);
+                    }
+                }
+                for(i=0; i<listLength; i++) {
+                    cmtList[i].cmt_children = [];
+                    var date = cmtList[i].CreatedDate.split(" ").join("T").concat("Z");
+                    cmtList[i].CreatedDate = new Date(date);
+                    cmtList[i].DepthLevel = this.getCommentDepth(cmtList[i], cmtList);
+                    if (cmtList[i] > maxDepth) {
+                        maxDepth = cmtList.DepthLevel;
+                    }
+                }
+                for(i=maxDepth; i > 0; i--) {
+                    for(var j=0; j < listLength; j++) {
+                        if(cmtList[j].DepthLevel == i) {
+                            for(var k=0; k < listLength; k++) {
+                                if(cmtList[j].parentID == cmtList[k].ID) {
+                                    cmtList[k].cmt_children.push(cmtList[j]);
+                                }
+                            }
+                        }
+                    }
+                }
+                for(i=(cmtList.length - 1); i >= 0; i--) {
+                    if(cmtList[i].parentID == postID) {
+                        cmtList.slice(i, 1);
+                    }
+                }
+                return cmtList;
             }
         },
         mounted: function () {
