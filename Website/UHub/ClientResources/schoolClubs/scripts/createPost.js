@@ -1,10 +1,17 @@
 (function () {
 
+    var jsonPostDataOld = null;
+    var oldResponseErr = null;
+
+
+    var url = window.location.href;
+    var seperated = url.split('/');
+    var clubID = seperated.slice(-1)[0];
+
+
     var mdConverter = new showdown.Converter();
     setShowdownDefaults(mdConverter);
 
-    var jsonPostDataOld = null;
-    var oldResponseErr = null;
 
 
     var simplemde = new SimpleMDE(
@@ -32,13 +39,7 @@
         });
 
 
-
-    var url = window.location.href;
-    var seperated = url.split('/');
-    var clubID = seperated.slice(-1)[0];
-
-
-    function getData() {
+    function getFormData() {
 
         return {
             Name: $("#inputTitle").val(),
@@ -49,41 +50,54 @@
         };
     }
 
+
+    function setWaitState() {
+        $("#btn_CreateUser").removeAttr("disabled");
+        $("html").css({ cursor: "default" });
+    }
+
+    function clearWaitState() {
+        $("#btn_CreateUser").removeAttr("disabled");
+        $("html").css({ cursor: "default" });
+    }
+
+
+    function processInputValidation() {
+
+        if (!$("#inputTitle").val().match(/^.{1,100}$/)) {
+            oldResponseErr = 'Post Name Invalid';
+            alert(oldResponseErr);
+            clearWaitState();
+            return false;
+        }
+        else if (!$("#inputContent").val().match(/^.{10,10000}$/)) {
+            oldResponseErr = 'Post Content Invalid';
+            alert(oldResponseErr);
+            clearWaitState();
+            return false;
+        }
+
+        return true;
+    }
+
+
     function sendData(formData) {
-        $("#btn_CreatePost").attr("disabled", "disabled");
-        $("html").css({ cursor: "wait" });
+        setWaitState();
 
         var jsonPostData = JSON.stringify(formData);
 
 
         if (jsonPostData == jsonPostDataOld) {
             alert(oldResponseErr);
-            $("#btn_CreateUser").removeAttr("disabled");
-            $("html").css({ cursor: "default" });
+            clearWaitState();
             return;
         }
         jsonPostDataOld = jsonPostData;
 
 
-
-
-        if (!$("#inputTitle").val().match(/^.{1,100}$/)) {
-            oldResponseErr = 'Post Name Invalid';
-            alert(oldResponseErr);
-            $("#btn_UpdatePost").removeAttr("disabled");
-            $("html").css({ cursor: "default" });
+        if (!processInputValidation) {
             return;
         }
-        else if (!$("#inputContent").val().match(/^.{10,10000}$/)) {
-            oldResponseErr = 'Post Content Invalid';
-            alert(oldResponseErr);
-            $("#btn_UpdatePost").removeAttr("disabled");
-            $("html").css({ cursor: "default" });
-            return;
-        }
-
-
-
 
 
         $.ajax({
@@ -91,12 +105,9 @@
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             data: jsonPostData,
-            url: "/uhubapi/posts/Create",
-            complete: function (data) {
-                $("#btn_CreatePost").removeAttr("disabled");
-                $("html").css({ cursor: "default" });
-            },
-            success: function (data) {
+            url: "/uhubapi/posts/Create"
+        })
+            .done(function (data) {
                 $("#inputTitle").val("");
                 simplemde.value("");
                 $("#inputMakePrivate")[0].checked = false;
@@ -105,17 +116,21 @@
                 alert("Post Created");
 
                 window.location.href = "/Post/" + data;
-            },
-            error: function (data) {
-                oldResponseErr = data.responseJSON;
+            })
+            .fail(function (resp) {
+                oldResponseErr = resp.responseJSON;
                 alert(oldResponseErr);
-            }
-        });
+            })
+            .always(function () {
+                clearWaitState();
+            });
+
     }
 
 
+
     $("#btn_CreatePost").click(function () {
-        var data = getData();
+        var data = getFormData();
         sendData(data);
     });
 

@@ -195,10 +195,6 @@
     <Content Include="ClientResources\MASTER\Components\PostBar.js" />
     <Content Include="ClientResources\Post\Scripts\PostUpdatable.js" />
     <Content Include="ClientResources\Post\Scripts\Post.js" />
-    <Content Include="ClientResources\SampleUHUB_TESTING\homeVue.js" />
-    <Content Include="ClientResources\SampleUHUB_TESTING\index.html" />
-    <Content Include="ClientResources\SampleUHUB_TESTING\postPage.html" />
-    <Content Include="ClientResources\SampleUHUB_TESTING\utilUHUB.css" />
     <Content Include="ClientResources\Home\Scripts\Home.js" />
     <Content Include="ClientResources\Home\Scripts\homeVue.js" />
     <Content Include="ClientResources\MASTER\Scripts\Master.js" />
@@ -229,9 +225,6 @@
     <Content Include="ClientResources\MASTER\Styles\Master_Footer.scss" />
     <Content Include="ClientResources\MASTER\Styles\Master_Header.scss" />
     <Content Include="ClientResources\MASTER\Styles\Master.scss" />
-    <Content Include="ClientResources\SampleUHUB_TESTING\.homeVue.js.swp" />
-    <Content Include="ClientResources\SampleUHUB_TESTING\.index.html.swp" />
-    <Content Include="ClientResources\SampleUHUB_TESTING\postPage" />
     <Content Include="ClientResources\MASTER\Components\PostBarStyle.scss" />
     <Content Include="ClientResources\School\Styles\School.scss" />
     <Content Include="ClientResources\MASTER\Components\NavBarStyle.scss" />

@@ -15,10 +15,10 @@
             <p class="d-inline justify-content-lg-end">{{postTime.substring(0,10)}}</p>
         </div>
         <div class="container-fluid">
-            <form id="post-reply" class="form-group" style="display: none;">
+            <div id="post-reply" class="form-group" style="display: none;">
                 <textarea rows="2" class="mx-auto form-control" ref="postReplyText"></textarea>
                 <button id="post-submit-button" type="button" class="btn-sm btn-outline-primary m-2 mb-1 d-inline" v-on:click="submitCommentPost">Submit</button>
-            </form>
+            </div> 
         </div>
 
         <hr>

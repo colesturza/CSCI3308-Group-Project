@@ -25,10 +25,10 @@
             '                </div>' +
             '                <button type="button" class="btn-sm btn-outline-dark m-2 mb-1" v-on:click="emit" data-reply="reply" style="display:none !important">Reply</button>' +
             '                <div>' +
-            '                    <form v-bind:data-cmtID="comment.ID" class="form-group" style="display: none;">' +
+            '                    <div v-bind:data-cmtID="comment.ID" class="form-group" style="display: none;">' +
             '                        <textarea rows="2" class="mx-auto form-control" ref="commentReply"></textarea>' +
             '                        <button v-bind:data-submitID="comment.ID" type="button" class="btn-sm btn-outline-primary m-2 mb-1" v-on:click="submitComment">Submit</button>' +
-            '                    </form>' +
+            '                    </div>' +
             '                </div>' +
             '            </div>' +
             '        </div>',
