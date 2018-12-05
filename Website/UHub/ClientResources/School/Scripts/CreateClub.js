@@ -119,6 +119,6 @@
 
 
     registerInputValidator($("#txt_Name"), RGX_NAME);
-    registerInputValidator($("#txt_Description"), RGX_DESCRIPTION);
+    registerInputValidator($("#txt_Description"), RGX_DESCRIPTION, true);
 
 })();
