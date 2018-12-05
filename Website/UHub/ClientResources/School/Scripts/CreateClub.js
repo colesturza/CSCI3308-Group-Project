@@ -67,7 +67,7 @@
         jsonClubDataOld = jsonClubData;
 
 
-        if (!processInputValidation()) {
+        if (!processInputValidation(data)) {
             return;
         }
 

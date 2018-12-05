@@ -98,7 +98,7 @@
         jsonPostDataOld = jsonPostData;
 
 
-        if (!processInputValidation) {
+        if (!processInputValidation(formData)) {
             return;
         }
 
