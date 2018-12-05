@@ -217,7 +217,7 @@
     registerInputValidator($("#pwd"), RGX_PSWD);
     registerInputValidator($("#firstname"), RGX_NAME);
     registerInputValidator($("#lastname"), RGX_NAME);
-    registerInputValidator($("#phone"), RGX_PHONE);
+    registerInputValidator($("#phone"), RGX_PHONE, true);
     registerInputValidator($("#company"), RGX_COMPANY);
     registerInputValidator($("#job-title"), RGX_JOB_TITLE);
 

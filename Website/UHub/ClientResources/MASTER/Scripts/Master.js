@@ -104,20 +104,34 @@ function setShowdownDefaults(converter) {
 }
 
 
-function registerInputValidator(obj, rgxStr) {
+function registerInputValidator(obj, rgxStr, allowEmpty) {
+
+    if (allowEmpty == undefined || allowEmpty == null) {
+        allowEmpty = false;
+    }
 
     $(obj).on('change, keydown, keyup', function () {
 
         var col = null;
         var rgb = null;
-        if ($(this).val().match(rgxStr)) {
+
+
+        if (allowEmpty && $(this).val() == "") {
             col = 'green';
             rgb = 'rgba(0, 255, 0, .2)';
         }
         else {
-            col = 'red';
-            rgb = 'rgba(255, 0, 0, .2)';
+            if ($(this).val().match(rgxStr)) {
+                col = 'green';
+                rgb = 'rgba(0, 255, 0, .2)';
+            }
+            else {
+                col = 'red';
+                rgb = 'rgba(255, 0, 0, .2)';
+            }
         }
+
+
         $(this).style('outline-color', col, "important");
         $(this).style('border-color', col, "important");
         $(this).style('box-shadow', "0 0 .1rem 0.2rem " + rgb, "important");

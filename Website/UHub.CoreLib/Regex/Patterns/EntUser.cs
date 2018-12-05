@@ -30,8 +30,8 @@ namespace UHub.CoreLib.Regex.Patterns
         public const string PHONE = @"([0-1][ .-])?((\([0-9]{3}\)[ .-]?)|([0-9]{3}[ .-]?))([0-9]{3}[ .-]?)([0-9]{4})";
         public const string PHONE_B = @"^([0-1][ .-])?((\([0-9]{3}\)[ .-]?)|([0-9]{3}[ .-]?))([0-9]{3}[ .-]?)([0-9]{4})$";
 
-        public const string MAJOR = @".{2,200}";
-        public const string MAJOR_B = @"^.{2,200}$";
+        public const string MAJOR = @".{2,250}";
+        public const string MAJOR_B = @"^.{2,250}$";
 
         public const string YEAR = @"Freshman|Sophomore|Junior|Senior\+?";
         public const string YEAR_B = @"^Freshman|Sophomore|Junior|Senior\+?$";
