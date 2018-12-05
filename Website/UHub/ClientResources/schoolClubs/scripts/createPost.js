@@ -58,6 +58,8 @@
 
         if (jsonPostData == jsonPostDataOld) {
             alert(oldResponseErr);
+            $("#btn_CreateUser").removeAttr("disabled");
+            $("html").css({ cursor: "default" });
             return;
         }
         jsonPostDataOld = jsonPostData;

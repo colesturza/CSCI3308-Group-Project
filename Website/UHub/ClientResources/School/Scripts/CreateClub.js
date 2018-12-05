@@ -28,6 +28,8 @@
 
         if (jsonClubData == jsonClubDataOld) {
             alert(oldResponseErr);
+            $("#btn_CreateUser").removeAttr("disabled");
+            $("html").css({ cursor: "default" });
             return;
         }
         jsonClubDataOld = jsonClubData;

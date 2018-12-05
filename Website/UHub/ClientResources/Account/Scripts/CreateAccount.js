@@ -44,6 +44,8 @@
 
                 if (userObj == userObjOld) {
                     alert(oldResponseErr);
+                    $("#btn_CreateUser").removeAttr("disabled");
+                    $("html").css({ cursor: "default" });
                     return;
                 }
                 userObjOld = userObj;
