@@ -14,10 +14,10 @@
     window.setInterval(function () {
 
         if ($("#Email").attr('data-isValid') === 'true' && $("#Password").attr('data-isValid') === 'true') {
-            $("#Email").removeAttr("disabled");
+            $("submit").removeAttr("disabled");
         }
         else {
-            $("#Email").attr("disabled", "disabled");
+            $("submit").attr("disabled", "disabled");
         }
 
     }, 100);
