@@ -99,19 +99,19 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ContextUtil.cs" />
-    <Compile Include="Entities\Comments\Management\CommentReaderAsyncTests.cs" />
-    <Compile Include="Entities\Comments\Management\CommentWriterAsyncTests.cs" />
-    <Compile Include="Entities\Comments\Management\CommentWriterTests.cs" />
-    <Compile Include="Entities\Comments\Management\CommentReaderTests.cs" />
-    <Compile Include="Entities\Posts\Management\PostReaderAsyncTests.cs" />
-    <Compile Include="Entities\Posts\Management\PostReaderStats.cs" />
-    <Compile Include="Entities\Posts\Management\PostReaderTests.cs" />
-    <Compile Include="Entities\Posts\Management\PostWriterTests.cs" />
-    <Compile Include="Entities\Posts\Management\PostReaderAPITests.cs" />
-    <Compile Include="Entities\SchoolClubs\Management\SchoolClubReaderTests.cs" />
-    <Compile Include="Entities\SchoolMajors\Management\SchoolMajorReaderTests.cs" />
-    <Compile Include="Entities\SchoolMajors\Management\SchoolMajorWriterTests.cs" />
-    <Compile Include="Entities\Schools\Management\SchoolReaderTests.cs" />
+    <Compile Include="Entities\Comments\DataInterop\CommentReaderAsyncTests.cs" />
+    <Compile Include="Entities\Comments\DataInterop\CommentWriterAsyncTests.cs" />
+    <Compile Include="Entities\Comments\DataInterop\CommentWriterTests.cs" />
+    <Compile Include="Entities\Comments\DataInterop\CommentReaderTests.cs" />
+    <Compile Include="Entities\Posts\DataInterop\PostReaderAsyncTests.cs" />
+    <Compile Include="Entities\Posts\DataInterop\PostReaderStats.cs" />
+    <Compile Include="Entities\Posts\DataInterop\PostReaderTests.cs" />
+    <Compile Include="Entities\Posts\DataInterop\PostWriterTests.cs" />
+    <Compile Include="Entities\Posts\APIControllers\PostReaderAPITests.cs" />
+    <Compile Include="Entities\SchoolClubs\DataInterop\SchoolClubReaderTests.cs" />
+    <Compile Include="Entities\SchoolMajors\DataInterop\SchoolMajorReaderTests.cs" />
+    <Compile Include="Entities\SchoolMajors\DataInterop\SchoolMajorWriterTests.cs" />
+    <Compile Include="Entities\Schools\DataInterop\SchoolReaderTests.cs" />
     <Compile Include="Security\Accounts\AccountManagerTests.cs" />
     <Compile Include="Security\Authentication\APIControllers\AuthenticationAPITests.cs" />
     <Compile Include="Security\Authentication\AuthenticationManagerTests.cs" />
@@ -137,6 +137,7 @@
       <Name>UHub.CoreLib</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

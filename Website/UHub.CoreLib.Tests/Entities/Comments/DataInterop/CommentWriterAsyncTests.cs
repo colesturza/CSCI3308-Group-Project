@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using UHub.CoreLib.Entities.Comments.DTOs;
 using UHub.CoreLib.Entities.Posts;
@@ -6,13 +7,13 @@ using UHub.CoreLib.Entities.Posts.DTOs;
 using UHub.CoreLib.Entities.Posts.DataInterop;
 using UHub.CoreLib.Tests;
 
-namespace UHub.CoreLib.Entities.Comments.DataInterop.Tests
+namespace UHub.CoreLib.Entities.Comments.DataInterop.Test
 {
-    [TestClass]
+    
     public partial class CommentWriterTests
     {
         [TestMethod]
-        public void TryCreateCommentTest()
+        public async Task TryCreateCommentAsyncTest()
         {
             var cub = 1;    //CU Boulder ID
 
@@ -30,7 +31,7 @@ namespace UHub.CoreLib.Entities.Comments.DataInterop.Tests
             };
 
             var post = testPost.ToInternal<Post>();
-            var postId = PostWriter.CreatePost(post);
+            var postId = await PostWriter.CreatePostAsync(post);
 
             if(postId == null)
             {
@@ -49,7 +50,7 @@ namespace UHub.CoreLib.Entities.Comments.DataInterop.Tests
             };
 
             var comment = testComment.ToInternal<Comment>();
-            var commentId = CommentWriter.CreateComment(comment);
+            var commentId = await CommentWriter.CreateCommentAsync(comment);
 
 
             if (commentId == null)

@@ -18,7 +18,7 @@ using UHub.CoreLib.Management;
 using UHub.CoreLib.Tests;
 using UHub.CoreLib.Tools;
 
-namespace UHub.CoreLib.Entities.Posts.DataInterop.Tests
+namespace UHub.CoreLib.Entities.Posts.APIControllers.Test
 {
     [TestClass]
     public class PostReaderAPITests

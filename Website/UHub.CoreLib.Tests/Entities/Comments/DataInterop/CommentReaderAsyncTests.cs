@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using UHub.CoreLib.Tests;
 
-namespace UHub.CoreLib.Entities.Comments.DataInterop.Tests
+namespace UHub.CoreLib.Entities.Comments.DataInterop.Test
 {
     public partial class CommentReaderTests
     {
