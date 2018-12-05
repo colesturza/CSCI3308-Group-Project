@@ -37,13 +37,11 @@
         if (!formData.Name.match(RGX_NAME)) {
             oldResponseErr = 'Club Name Invalid';
             alert(oldResponseErr);
-            clearWaitState();
             return false;
         }
         else if (!formData.Description.match(RGX_DESCRIPTION)) {
             oldResponseErr = 'Club Description Invalid';
             alert(oldResponseErr);
-            clearWaitState();
             return false;
         }
 
@@ -68,6 +66,7 @@
 
 
         if (!processInputValidation(data)) {
+            clearWaitState();
             return;
         }
 

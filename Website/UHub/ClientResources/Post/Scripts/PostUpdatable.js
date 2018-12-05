@@ -345,8 +345,6 @@
         if (!formData.Content.match(RGX_CONTENT)) {
             oldResponseErr = 'Post Content Invalid';
             alert(oldResponseErr);
-            $("#btn_UpdatePost").removeAttr("disabled");
-            $("html").css({ cursor: "default" });
             return false;
         }
 
@@ -361,13 +359,14 @@
 
         if (jsonPostData == jsonPostDataOld) {
             alert(oldResponseErr);
-            clearWaitState()
+            clearWaitState();
             return;
         }
         jsonPostDataOld = jsonPostData;
 
 
         if (!processInputValidation(formData)) {
+            clearWaitState();
             return false;
         }
         
@@ -382,7 +381,7 @@
         })
             //AJAX -> /uhubapi/posts/Update
             .done(function (data) {
-                jsonPostDataOld = null;
+                oldResponseErr = 'Nothing to Update';
                 alert(data);
             })
             //AJAX -> /uhubapi/posts/Update

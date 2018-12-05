@@ -70,13 +70,11 @@
         if (!formData.Name.match(RGX_NAME)) {
             oldResponseErr = 'Post Name Invalid';
             alert(oldResponseErr);
-            clearWaitState();
             return false;
         }
         else if (!formData.Content.match(RGX_CONTENT)) {
             oldResponseErr = 'Post Content Invalid';
             alert(oldResponseErr);
-            clearWaitState();
             return false;
         }
 
@@ -99,6 +97,7 @@
 
 
         if (!processInputValidation(formData)) {
+            clearWaitState();
             return;
         }
 
