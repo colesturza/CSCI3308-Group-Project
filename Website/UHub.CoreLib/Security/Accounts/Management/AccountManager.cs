@@ -22,6 +22,7 @@ using UHub.CoreLib.Entities.Schools.DataInterop;
 using UHub.CoreLib.Entities.SchoolMajors.DataInterop;
 using UHub.CoreLib.EmailInterop;
 using UHub.CoreLib.EmailInterop.Templates;
+using UHub.CoreLib.Logging;
 
 namespace UHub.CoreLib.Security.Accounts.Management
 {
@@ -259,7 +260,7 @@ namespace UHub.CoreLib.Security.Accounts.Management
                     CoreFactory.Singleton.Auth.TrySetClientAuthToken(NewUser.Email, NewUser.Password, false);
 
                     //TODO: log to DB
-                    //CoreFactory.Singleton.Logging.CreateDBActivityLog(ActivityLogTypes.UserLogin);
+                    //CoreFactory.Singleton.Logging.CreateApiActionLogAsync(UsageLogType.UserLogin);
                 }
                 catch
                 {

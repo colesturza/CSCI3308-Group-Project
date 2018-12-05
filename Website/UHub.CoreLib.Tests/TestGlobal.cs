@@ -137,7 +137,7 @@ namespace UHub.CoreLib.Tests
                 {
                     //EnableUserSessionLogging = true,
                     //EnableUserActivityLogging = true,
-                    LocalLogMode = EventLoggingMode.LocalFile,
+                    EventLogMode = EventLoggingMode.LocalFile,
                     LoggingSource = LocalSysLoggingSource.UHUB_CMS
                 },
                 Errors = new CmsConfig_Errors

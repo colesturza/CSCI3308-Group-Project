@@ -14,7 +14,7 @@ namespace UHub.CoreLib.Config
         /// <para></para>
         /// Default: LocalFile
         /// </summary>
-        public EventLoggingMode LocalLogMode { get; set; } = EventLoggingMode.LocalFile;
+        public EventLoggingMode EventLogMode { get; set; } = EventLoggingMode.LocalFile;
         /// <summary>
         /// Name of log folder if using SystemEvents
         /// <para></para>

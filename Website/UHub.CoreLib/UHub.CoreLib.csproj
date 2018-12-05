@@ -360,7 +360,7 @@
     <Compile Include="Logging\EventLogData.cs" />
     <Compile Include="Logging\Providers\EventDatabaseProvider.cs" />
     <Compile Include="Logging\Providers\EventFileProvider.cs" />
-    <Compile Include="Logging\Interfaces\ILocalLogProvider.cs" />
+    <Compile Include="Logging\Interfaces\IEventLogProvider.cs" />
     <Compile Include="Logging\Interfaces\IUsageLogProvider.cs" />
     <Compile Include="Logging\Util\LoggingHelpers.cs" />
     <Compile Include="Logging\Management\LoggingManager_Usage.cs" />

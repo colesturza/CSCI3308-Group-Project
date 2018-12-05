@@ -115,7 +115,7 @@ namespace UHub.CoreLib.Config
             ValidateDirectory(Storage.FileStoreDirectory, nameof(Storage.FileStoreDirectory));
             ValidateDirectory(Storage.ImageStoreDirectory, nameof(Storage.ImageStoreDirectory));
             ValidateDirectory(Storage.TempCacheDirectory, nameof(Storage.TempCacheDirectory));
-            if ((Logging.LocalLogMode & EventLoggingMode.LocalFile) != 0)
+            if ((Logging.EventLogMode & EventLoggingMode.LocalFile) != 0)
             {
                 ValidateDirectory(Storage.LogStoreDirectory, nameof(Storage.LogStoreDirectory));
             }

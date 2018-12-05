@@ -166,7 +166,7 @@ namespace UHub
                 {
                     //EnableUserSessionLogging = true,
                     //EnableUserActivityLogging = true,
-                    LocalLogMode = EventLoggingMode.SystemEvents,
+                    EventLogMode = EventLoggingMode.SystemEvents,
                     LoggingSource = LocalSysLoggingSource.UHUB_CMS,
                     UsageLogMode = UsageLoggingMode.None,
                     GoogleAnalyticsKey = googleAnalyticsKey
@@ -307,7 +307,7 @@ namespace UHub
                 {
                     //EnableUserSessionLogging = true,
                     //EnableUserActivityLogging = true,
-                    LocalLogMode = EventLoggingMode.SystemEvents,
+                    EventLogMode = EventLoggingMode.SystemEvents,
                     LoggingSource = LocalSysLoggingSource.UHUB_CMS,
                     UsageLogMode = UsageLoggingMode.None,
                     GoogleAnalyticsKey = googleAnalyticsKey

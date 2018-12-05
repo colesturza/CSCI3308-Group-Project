@@ -11,7 +11,7 @@ using UHub.CoreLib.Management;
 
 namespace UHub.CoreLib.Logging.Providers
 {
-    internal sealed class EventDatabaseProvider : ILocalLogProvider
+    internal sealed class EventDatabaseProvider : IEventLogProvider
     {
         public bool CreateLog(EventLogData EventData)
         {

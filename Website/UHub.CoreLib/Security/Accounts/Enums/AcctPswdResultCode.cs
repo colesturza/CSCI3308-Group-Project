@@ -1,7 +1,5 @@
 ﻿namespace UHub.CoreLib.Security.Accounts
 {
-    //TODO: break into mutliple covariant enums
-    //Allow consumers to properly handle codes by only seeing relevant outputs
     public enum AcctPswdResultCode : short
     {
         Success = 0,

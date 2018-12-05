@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace UHub.CoreLib.Logging.Interfaces
 {
-    internal interface ILocalLogProvider
+    public interface IEventLogProvider
     {
 
         /// <summary>

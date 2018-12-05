@@ -10,7 +10,7 @@ using UHub.CoreLib.Management;
 
 namespace UHub.CoreLib.Logging.Providers
 {
-    internal sealed class EventFileProvider : ILocalLogProvider
+    internal sealed class EventFileProvider : IEventLogProvider
     {
         internal EventFileProvider()
         {

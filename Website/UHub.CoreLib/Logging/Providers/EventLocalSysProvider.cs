@@ -10,7 +10,7 @@ using UHub.CoreLib.Management;
 
 namespace UHub.CoreLib.Logging.Providers
 {
-    internal sealed class EventLocalSysProvider : ILocalLogProvider
+    internal sealed class EventLocalSysProvider : IEventLogProvider
     {
         //EVENT FOLDER
         private const string uhubEventSource = "UHUB-CMS";
