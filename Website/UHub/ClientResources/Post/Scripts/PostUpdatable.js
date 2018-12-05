@@ -162,6 +162,8 @@
                     });
 
             },
+            // getCommentById and getCommentDepth  are helper functions for arrangeCommentTree
+            // Returns matching comment object
             getCommentById: function(cmtID, cmtList) {
                 for(var j=0; j<comments.length; j++){
                     if(cmtList[j].ID == cmtID) {
@@ -169,15 +171,16 @@
                     }
                 }
             },
+            // Finds the comment's degrees of separation from post
             getCommentDepth: function(theCmt, cmtList) {
                 var depthLevel;
-                // Finds the comment's degrees of separation from post
                 while(theCmt.parentID != postID) {
                     theCmt = getCommentById(theCmt.parentID, cmtList);
                     depthLevel++;
                 }
                 return depthLevel;
             },
+            // Arranges array so that children are within parent comments
             arrangeCommentTree: function(cmtList) {
                 var maxDepth=0;
                 var listLength = cmtList.length;
@@ -207,7 +210,7 @@
                     }
                 }
                 for(i=(cmtList.length - 1); i >= 0; i--) {
-                    if(cmtList[i].parentID == postID) {
+                    if(cmtList[i].parentID != postID) {
                         cmtList.slice(i, 1);
                     }
                 }
