@@ -6,10 +6,10 @@
     var RGX_USERNAME = /^\S{3,50}$/;
     var RGX_PSWD = /^.{8,150}$/;
     var RGX_NAME = /^(([ \u00c0-\u01ffA-z'\-])+){2,200}$/;
-    var RGX_MAJOR = /^.{2,250}$/
+    var RGX_MAJOR = /^.{2,250}$/;
     var RGX_PHONE = /^([0-1][ .-])?((\([0-9]{3}\)[ .-]?)|([0-9]{3}[ .-]?))([0-9]{3}[ .-]?)([0-9]{4})$/;
     var RGX_GRAD_DATE = /^[0-9]{4}\-[0-1][0-9]\-[0-3][0-9]$/;
-    var RGX_YEAR = /^Freshman|Sophomore|Junior|Senior\+?$/
+    var RGX_YEAR = /^Freshman|Sophomore|Junior|Senior\+?$/;
     var RGX_COMPANY = /^.{0,100}$/;
     var RGX_JOB_TITLE = /^.{0,100}$/;
 
