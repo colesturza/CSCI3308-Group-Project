@@ -66,4 +66,7 @@
 
 
 
+    validateInputElement($("#txt_Name"), /^(([ \u00c0-\u01ffA-z0-9'\-])+){3,100}$/);
+    validateInputElement($("#txt_Description"), /^.{0,2000}$/);
+
 })();

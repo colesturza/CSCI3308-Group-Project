@@ -296,7 +296,7 @@
 
 
 
-
+    validateInputElement($("#txt_PostArea"), /^.{10,10000}$/);
 
 
 

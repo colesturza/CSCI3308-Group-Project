@@ -105,6 +105,7 @@
         });
     });
 
+
     $(function () {
         $("#grad-date").datepicker({
             changeMonth: true,
@@ -112,6 +113,17 @@
         });
         $("#grad-date").datepicker("option", "dateFormat", "yy-mm-dd");
     });
+
+
+
+    validateInputElement($("#email"), /^[\w-]+@([\w-]+\.)+[\w-]+$/);
+    validateInputElement($("#usr"), /^\S{3,50}$/);
+    validateInputElement($("#pwd"), /^{8,150}$/);
+    validateInputElement($("#firstname"), /^(([ \u00c0-\u01ffA-z'\-])+){1,100}$/);
+    validateInputElement($("#lastname"), /^(([ \u00c0-\u01ffA-z'\-])+){1,100}$/);
+    validateInputElement($("#phone"), /^([0-1][ .-])?((\([0-9]{3}\)[ .-]?)|([0-9]{3}[ .-]?))([0-9]{3}[ .-]?)([0-9]{4})$/);
+    validateInputElement($("#company"), /^.{0,100}$/);
+    validateInputElement($("#job-title"), /^.{0,100}$/);
 
 
 })();

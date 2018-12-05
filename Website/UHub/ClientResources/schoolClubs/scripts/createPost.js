@@ -86,4 +86,9 @@
         sendData(data);
     });
 
+
+    validateInputElement($("#inputTitle"), /^.{1,100}$/);
+    validateInputElement($("#inputContent"), /^.{10,10000}$/);
+
+
 })();
