@@ -5,6 +5,9 @@
 
     var simplemde;
     var postRawData;
+    var jsonPostDataOld = null;
+    var oldResponseErr = null;
+
 
     Vue.component('comment-component', {
         props: ['comment'],
@@ -157,6 +160,9 @@
                     self.title = htmlEncode(data.Name);
                     window.setTimeout(function () {
                         simplemde.value(data.Content);
+                        //set old value to prevent clean updates
+                        oldResponseErr = 'Nothing to Update';
+                        jsonPostDataOld = JSON.stringify(getData());
                     }, 1);
                     self.postTime = data.CreatedDate;
 
@@ -250,7 +256,6 @@
     function getData() {
         postRawData.Content = simplemde.value();
 
-
         return {
             ID: postRawData.ID,
             Name: postRawData.Name,
@@ -261,17 +266,36 @@
 
     }
 
+
+    
     function sendData(formData) {
         $("#btn_UpdatePost").attr("disabled", "disabled");
         $("html").css({ cursor: "wait" });
 
-        var jsonData = JSON.stringify(formData);
+        var jsonPostData = JSON.stringify(formData);
+
+        if (jsonPostData == jsonPostDataOld) {
+            alert(oldResponseErr);
+        }
+        jsonPostDataOld = jsonPostData;
+
+
+
+        if (!$("#txt_PostArea").val().match(/^.{10,10000}$/)) {
+            oldResponseErr = 'Post Content Invalid';
+            alert(oldResponseErr);
+            $("#btn_UpdatePost").removeAttr("disabled");
+            $("html").css({ cursor: "default" });
+            return;
+        }
+
+
 
         $.ajax({
             method: "POST",
             contentType: "application/json; charset=utf-8",
             dataType: "json",
-            data: jsonData,
+            data: jsonPostData,
             url: "/uhubapi/posts/Update",
             complete: function (data) {
                 $("#btn_UpdatePost").removeAttr("disabled");
@@ -279,10 +303,12 @@
                 console.log(data);
             },
             success: function (data) {
+                jsonPostDataOld = null;
                 alert(data);
             },
             error: function (data) {
-                alert(data.responseJSON);
+                oldResponseErr = data.responseJSON;
+                alert(oldResponseErr);
             }
         });
     }
@@ -296,7 +322,7 @@
 
 
 
-    validateInputElement($("#txt_PostArea"), /^.{10,10000}$/);
+    registerInputValidator($("#txt_PostArea"), /^.{10,10000}$/);
 
 
 

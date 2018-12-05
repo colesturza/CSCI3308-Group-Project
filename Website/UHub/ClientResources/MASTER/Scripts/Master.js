@@ -104,8 +104,7 @@ function setShowdownDefaults(converter) {
 }
 
 
-function validateInputElement(obj, rgxStr) {
-
+function registerInputValidator(obj, rgxStr) {
 
     $(obj).on('change, keydown, keyup', function () {
 
@@ -122,10 +121,7 @@ function validateInputElement(obj, rgxStr) {
         $(this).style('outline-color', col, "important");
         $(this).style('border-color', col, "important");
         $(this).style('box-shadow', "0 0 .1rem 0.2rem " + rgb, "important");
-
     });
-
-
 }
 
 

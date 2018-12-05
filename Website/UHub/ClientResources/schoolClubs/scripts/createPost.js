@@ -3,7 +3,8 @@
     var mdConverter = new showdown.Converter();
     setShowdownDefaults(mdConverter);
 
-
+    var jsonPostDataOld = null;
+    var oldResponseErr = null;
 
 
     var simplemde = new SimpleMDE(
@@ -52,13 +53,41 @@
         $("#btn_CreatePost").attr("disabled", "disabled");
         $("html").css({ cursor: "wait" });
 
-        var jsonData = JSON.stringify(formData);
+        var jsonPostData = JSON.stringify(formData);
+
+
+        if (jsonPostData == jsonPostDataOld) {
+            alert(oldResponseErr);
+        }
+        jsonPostDataOld = jsonPostData;
+
+
+
+
+        if (!$("#inputTitle").val().match(/^.{1,100}$/)) {
+            oldResponseErr = 'Post Name Invalid';
+            alert(oldResponseErr);
+            $("#btn_UpdatePost").removeAttr("disabled");
+            $("html").css({ cursor: "default" });
+            return;
+        }
+        else if (!$("#inputContent").val().match(/^.{10,10000}$/)) {
+            oldResponseErr = 'Post Content Invalid';
+            alert(oldResponseErr);
+            $("#btn_UpdatePost").removeAttr("disabled");
+            $("html").css({ cursor: "default" });
+            return;
+        }
+
+
+
+
 
         $.ajax({
             method: "POST",
             contentType: "application/json; charset=utf-8",
             dataType: "json",
-            data: jsonData,
+            data: jsonPostData,
             url: "/uhubapi/posts/Create",
             complete: function (data) {
                 $("#btn_CreatePost").removeAttr("disabled");
@@ -75,7 +104,8 @@
                 window.location.href = "/Post/" + data;
             },
             error: function (data) {
-                alert(data.responseJSON);
+                oldResponseErr = data.responseJSON;
+                alert(oldResponseErr);
             }
         });
     }
@@ -87,8 +117,9 @@
     });
 
 
-    validateInputElement($("#inputTitle"), /^.{1,100}$/);
-    validateInputElement($("#inputContent"), /^.{10,10000}$/);
+
+    registerInputValidator($("#inputTitle"), /^.{1,100}$/);
+    registerInputValidator($("#inputContent"), /^.{10,10000}$/);
 
 
 })();

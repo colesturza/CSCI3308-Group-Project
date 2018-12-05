@@ -1,6 +1,9 @@
 ﻿(function () {
 
 
+    var jsonClubDataOld = null;
+    var oldResponseErr = null;
+
 
     function GetDataObj() {
 
@@ -20,7 +23,34 @@
         $("html").css({ cursor: "wait" });
 
 
-        var jsonData = JSON.stringify(data);
+        var jsonClubData = JSON.stringify(data);
+
+
+        if (jsonClubData == jsonClubDataOld) {
+            alert(oldResponseErr);
+        }
+        jsonClubDataOld = jsonClubData;
+
+
+
+
+        if (!$("#txt_Name").val().match(/^(([ \u00c0-\u01ffA-z0-9'\-])+){3,100}$/)) {
+            oldResponseErr = 'Club Name Invalid';
+            alert(oldResponseErr);
+            $("#btn_CreateClub").removeAttr("disabled");
+            $("html").css({ cursor: "default" });
+            return;
+        }
+        else if (!$("#txt_Description").val().match(/^.{0,2000}$/)) {
+            oldResponseErr = 'Club Description Invalid';
+            alert(oldResponseErr);
+            $("#btn_CreateClub").removeAttr("disabled");
+            $("html").css({ cursor: "default" });
+            return;
+        }
+
+
+
 
         var recapVal = grecaptcha.getResponse();
 
@@ -34,7 +64,7 @@
             headers: {
                 "g-recaptcha-response": recapVal
             },
-            data: jsonData,
+            data: jsonClubData,
             complete: function () {
 
                 $("#btn_CreateClub").removeAttr("disabled");
@@ -51,7 +81,8 @@
                 window.location.href = "/SchoolClub/" + data;
             },
             error: function (data) {
-                alert(data.responseJSON);
+                oldResponseErr = data.responseJSON;
+                alert(oldResponseErr);
             }
         });
     }
@@ -66,7 +97,7 @@
 
 
 
-    validateInputElement($("#txt_Name"), /^(([ \u00c0-\u01ffA-z0-9'\-])+){3,100}$/);
-    validateInputElement($("#txt_Description"), /^.{0,2000}$/);
+    registerInputValidator($("#txt_Name"), /^(([ \u00c0-\u01ffA-z0-9'\-])+){3,100}$/);
+    registerInputValidator($("#txt_Description"), /^.{0,2000}$/);
 
 })();
