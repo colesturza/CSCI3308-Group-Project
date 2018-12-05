@@ -28,7 +28,7 @@ namespace UHub.CoreLib.Entities.SchoolClubs.APIControllers
         [HttpPost]
         [Route("Create")]
         [ApiAuthControl]
-        public async Task<IHttpActionResult> Create([FromBody] SchoolClub_C_PublicDTO Club)
+        public async Task<IHttpActionResult> Create([FromBody] SchoolClub_C_PublicDTO ClubDTO)
         {
             string status = "";
             HttpStatusCode statCode = HttpStatusCode.BadRequest;
@@ -44,30 +44,30 @@ namespace UHub.CoreLib.Entities.SchoolClubs.APIControllers
                 return Content(statCode, recaptchaResult.Result);
             }
 
-            if (Club == null)
+            if (ClubDTO == null)
             {
                 return BadRequest();
             }
 
 
-            var tmpClub = Club.ToInternal<SchoolClub>();
+            var clubInternal = ClubDTO.ToInternal<SchoolClub>();
             var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser().CmsUser;
 
 
             try
             {
-                tmpClub.SchoolID = cmsUser.SchoolID.Value;
-                tmpClub.CreatedBy = cmsUser.ID.Value;
+                clubInternal.SchoolID = cmsUser.SchoolID.Value;
+                clubInternal.CreatedBy = cmsUser.ID.Value;
 
 
-                var ClubResult = await SchoolClubManager.TryCreateClubAsync(tmpClub);
-                var ClubID = ClubResult.ClubID;
+                var ClubResult = await SchoolClubManager.TryCreateClubAsync(clubInternal);
+                var ClubID = ClubResult.ClubID.Value;
                 var ResultCode = ClubResult.ResultCode;
 
 
                 if (ResultCode == 0)
                 {
-                    status = "Club Created";
+                    status = ClubID.ToString();
                     statCode = HttpStatusCode.OK;
                 }
                 else if (ResultCode == SchoolClubResultCode.UnknownError)
@@ -83,7 +83,7 @@ namespace UHub.CoreLib.Entities.SchoolClubs.APIControllers
             }
             catch (Exception ex)
             {
-                var errCode = "d4bcfc43-5247-45a3-b448-5baeea96058e";
+                var errCode = "C3546EA7-AF05-43C0-A9F0-3C6E724EFF20";
                 Exception ex_outer = new Exception(errCode, ex);
                 CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
 

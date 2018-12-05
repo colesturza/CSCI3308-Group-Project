@@ -81,6 +81,7 @@
     new Vue({
         el: "#post-container",
         data: {
+            parentID: "",
             title: "",
             content: "",
             postTime: "",
@@ -152,13 +153,18 @@
 
                     var clubID = data.ParentID;
 
+                    self.parentID = data.ParentID;
                     self.title = htmlEncode(data.Name);
-                    self.postTime = data.CreatedDate;
-
-
                     window.setTimeout(function () {
                         simplemde.value(data.Content);
                     }, 1);
+                    self.postTime = data.CreatedDate;
+
+
+                    $("#post-container").style('display', null);
+                    if (data.CanComment) {
+                        $("#btn_ToggleReply").style('display', null);
+                    }
 
 
                     //fetch comments if necessary
@@ -193,10 +199,6 @@
                     }
 
 
-
-                    if (data.CanComment) {
-                        $("#btn_ToggleReply").style('display', null);
-                    }
 
 
                     //set navbar title to current club

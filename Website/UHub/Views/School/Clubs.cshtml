@@ -17,9 +17,21 @@
 <div id="body-Content" class="container w-70">
     <h4>School Clubs</h4>
 
+    <p></p>
+
+    <div class="list-group-item mb-3">
+        <a href="/School/CreateClub">
+            <h4> Create New Club </h4>
+        </a>
+    </div>
+
+    <p></p>
+    <hr />
+    <hr />
+    <p></p>
 
 
-    <ul id="club-list" class="list-group list-group-flush w-70 float-md-left">
+    <ul id="club-list" class="list-group list-group-flush float-md-left" style="display:none !important; width:100%">
         <li class="list-group-item mb-3" v-for="club in clubs">
             <a v-bind:href="'/SchoolClub/' + club.ID">
                 <h4> {{ club.Name }} </h4>

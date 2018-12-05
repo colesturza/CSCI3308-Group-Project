@@ -40,17 +40,17 @@ namespace UHub.Controllers
 
 
             //get querystring value without key
-            bool enableUpdateable = true;
+            bool enableUpdatable = true;
             var querySet = Request.QueryString[null];
             if (querySet != null)
             {
-                enableUpdateable = !querySet.Contains(POST_PREVIEW_POSTFIX);
+                enableUpdatable = !querySet.Contains(POST_PREVIEW_POSTFIX);
             }
 
 
-            if (post.CreatedBy == cmsUser.ID.Value && enableUpdateable)
+            if (post.CreatedBy == cmsUser.ID.Value && enableUpdatable)
             {
-                return View("Index_Updateable");
+                return View("Index_Updatable");
             }
             else
             {

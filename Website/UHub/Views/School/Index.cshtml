@@ -9,7 +9,7 @@
 
 <div id="body-content" class="container mt-4">
     <div>
-        <ul id="post-list" class="list-group list-group-flush w-70 float-md-left">
+        <ul id="post-list" class="list-group list-group-flush w-70 float-md-left" style="display:none !important">
             <li class="list-group-item mb-3" v-for="post in posts">
                 <a v-bind:href="'/Post/' + post.ID">
                     <h4>{{ post.Name }}</h4>

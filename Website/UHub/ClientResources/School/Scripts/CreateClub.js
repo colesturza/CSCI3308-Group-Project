@@ -20,6 +20,8 @@
         $("html").css({ cursor: "wait" });
 
 
+        var jsonData = JSON.stringify(data);
+
         var recapVal = grecaptcha.getResponse();
 
 
@@ -28,15 +30,12 @@
             method: "POST",
             contentType: "application/json; charset=utf-8",
             dataType: "json",
-            url: "/uhubapi/posts/Create",
+            url: "/uhubapi/schoolClubs/Create",
             headers: {
                 "g-recaptcha-response": recapVal
             },
-
-
-            data: data,
+            data: jsonData,
             complete: function () {
-
 
                 $("#btn_CreateClub").removeAttr("disabled");
                 $("html").css({ cursor: "default" });
@@ -44,19 +43,15 @@
             },
             success: function (data) {
 
-                console.log(data);
+                Name: $("#txt_Name").val("");
+                Description: $("#txt_Description").val("");
 
-                alert(data);
+                alert("Club Created");
 
-                if (data.canLogin === true) {
-                    window.location.href = "/";
-                }
-                else {
-                    window.location.href = "/Account/Confirm/New";
-                }
+                window.location.href = "/SchoolClub/" + data;
             },
             error: function (data) {
-                alert(data.responseJSON.status);
+                alert(data.responseJSON);
             }
         });
     }

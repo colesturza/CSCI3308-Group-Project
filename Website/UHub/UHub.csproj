@@ -193,7 +193,7 @@
     <Content Include="ClientResources\Account\Styles\CreateAccount.css" />
     <Content Include="ClientResources\MASTER\Components\Navbar.js" />
     <Content Include="ClientResources\MASTER\Components\PostBar.js" />
-    <Content Include="ClientResources\Post\Scripts\PostUpdateable.js" />
+    <Content Include="ClientResources\Post\Scripts\PostUpdatable.js" />
     <Content Include="ClientResources\Post\Scripts\Post.js" />
     <Content Include="ClientResources\SampleUHUB_TESTING\homeVue.js" />
     <Content Include="ClientResources\SampleUHUB_TESTING\index.html" />
@@ -318,7 +318,7 @@
     <Content Include="Views\DynamicScripts\Index.cshtml" />
     <Content Include="Views\DynamicScripts\GAnalytics.js.cshtml" />
     <Content Include="Views\Analytics\_GAnalyticsPartial.cshtml" />
-    <Content Include="Views\Post\Index_Updateable.cshtml" />
+    <Content Include="Views\Post\Index_Updatable.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

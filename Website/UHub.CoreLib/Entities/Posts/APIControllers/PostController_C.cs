@@ -81,9 +81,11 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
                 var ResultCode = postResult.ResultCode;
                 var PostID = postResult.PostID;
 
+
+
                 if (ResultCode == 0)
                 {
-                    status = "Post Created";
+                    status = PostID.ToString();
                     statCode = HttpStatusCode.OK;
                 }
                 else if (ResultCode == PostResultCode.UnknownError)
