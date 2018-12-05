@@ -16,6 +16,9 @@
     setShowdownDefaults(mdConverter);
 
 
+    $("#auxNav a.btn").attr('href', '/SchoolClub/' + clubID);
+
+
 
     var simplemde = new SimpleMDE(
         {
