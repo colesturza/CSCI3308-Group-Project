@@ -44,6 +44,7 @@
 
                 if (userObj == userObjOld) {
                     alert(oldResponseErr);
+                    return;
                 }
                 userObjOld = userObj;
 

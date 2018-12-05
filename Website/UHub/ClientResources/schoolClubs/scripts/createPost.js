@@ -58,6 +58,7 @@
 
         if (jsonPostData == jsonPostDataOld) {
             alert(oldResponseErr);
+            return;
         }
         jsonPostDataOld = jsonPostData;
 

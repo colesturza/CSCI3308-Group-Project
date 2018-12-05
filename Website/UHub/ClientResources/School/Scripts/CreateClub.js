@@ -28,6 +28,7 @@
 
         if (jsonClubData == jsonClubDataOld) {
             alert(oldResponseErr);
+            return;
         }
         jsonClubDataOld = jsonClubData;
 
