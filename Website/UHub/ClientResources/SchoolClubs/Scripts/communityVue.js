@@ -70,17 +70,36 @@
                 //AJAX -> /uhubapi/posts/GetAllByClub
                 .done(function (formData) {
 
-                    for (var i = 0; i < formData.length; i++) {
-                        formData[i].Content = mdConverter.makeHtml(formData[i].Content);
-                    }
-                    formData.sort(dynamicSort("-CreatedDate"));
-                    self.posts = formData;
+                    if (data.length > 0) {
 
-                    $("#body-content").style('display', null);
+                        for (var i = 0; i < formData.length; i++) {
+                            formData[i].Content = mdConverter.makeHtml(formData[i].Content);
+                        }
+                        formData.sort(dynamicSort("-CreatedDate"));
+                        self.posts = formData;
+                    }
+                    else {
+                        self.posts = [{
+                            Name: "Nothing To See Here",
+                            Content: "This club currently does not have any posts"
+                        }];
+                    }
+                    
                 })
                 //AJAX -> /uhubapi/posts/GetAllByClub
                 .fail(function (error) {
                     console.log(error);
+
+                    self.posts = [{
+                        Name: "Nothing To See Here",
+                        Content: "Unfortunately, an error occured while fetching posts"
+                    }];
+                })
+                //AJAX -> /uhubapi/posts/GetAllByClub
+                .always(function(){
+
+                    $("#body-content").style('display', null);
+
                 });
         }
     });
