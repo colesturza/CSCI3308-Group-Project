@@ -194,7 +194,7 @@ namespace UHub.Controllers
             var confResult = await CoreFactory.Singleton.Accounts.TryConfirmUserAsync(idStr);
             if (confResult == 0)
             {
-                ViewBag.Message = "User account has been successfully confirmed";
+                ViewBag.Message = "User account has been successfully confirmed.  Please return home to log in";
             }
             else
             {
