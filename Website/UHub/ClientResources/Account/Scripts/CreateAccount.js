@@ -232,8 +232,8 @@
     registerInputValidator($("#firstname"), RGX_NAME);
     registerInputValidator($("#lastname"), RGX_NAME);
     registerInputValidator($("#phone"), RGX_PHONE, true);
-    registerInputValidator($("#grad-date"), RGX_GRAD_DATE, true);
-    registerInputValidator($("#year"), RGX_YEAR, true);
+    registerInputValidator($("#grad-date"), RGX_GRAD_DATE);
+    registerInputValidator($("#year"), RGX_YEAR);
     registerInputValidator($("#company"), RGX_COMPANY, true);
     registerInputValidator($("#job-title"), RGX_JOB_TITLE, true);
 
