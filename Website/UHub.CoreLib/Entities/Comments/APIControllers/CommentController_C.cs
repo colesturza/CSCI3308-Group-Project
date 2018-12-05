@@ -59,9 +59,9 @@ namespace UHub.CoreLib.Entities.Comments.APIControllers
             {
                 tmpComment.CreatedBy = cmsUser.ID.Value;
 
-                var PostResult = await CommentManager.TryCreateCommentAsync(tmpComment);
-                long? PostID = PostResult.CommentID;
-                var ResultCode = PostResult.ResultCode;
+                var CommentResult = await CommentManager.TryCreateCommentAsync(tmpComment);
+                long? PostID = CommentResult.CommentID;
+                var ResultCode = CommentResult.ResultCode;
 
 
                 if (ResultCode == 0)

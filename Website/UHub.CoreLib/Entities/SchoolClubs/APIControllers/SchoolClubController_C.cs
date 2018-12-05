@@ -61,7 +61,7 @@ namespace UHub.CoreLib.Entities.SchoolClubs.APIControllers
 
 
                 var ClubResult = await SchoolClubManager.TryCreateClubAsync(clubInternal);
-                var ClubID = ClubResult.ClubID.Value;
+                var ClubID = ClubResult.ClubID;
                 var ResultCode = ClubResult.ResultCode;
 
 
