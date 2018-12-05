@@ -6,6 +6,7 @@
     var RGX_USERNAME = /^\S{3,50}$/;
     var RGX_PSWD = /^.{8,150}$/;
     var RGX_NAME = /^(([ \u00c0-\u01ffA-z'\-])+){2,200}$/;
+    var RGX_MAJOR = /^.{2,250}$/
     var RGX_PHONE = /^([0-1][ .-])?((\([0-9]{3}\)[ .-]?)|([0-9]{3}[ .-]?))([0-9]{3}[ .-]?)([0-9]{4})$/;
     var RGX_GRAD_DATE = /^[0-9]{4}\-[0-1][0-9]\-[0-3][0-9]$/;
     var RGX_YEAR = /^Freshman|Sophomore|Junior|Senior\+?$/
@@ -20,7 +21,7 @@
 
 
     function setWaitState() {
-        $("#btn_CreateUser").removeAttr("disabled");
+        $("#btn_CreateUser").attr("disabled", "disabled");
         $("html").css({ cursor: "default" });
     }
 
@@ -53,6 +54,12 @@
         }
         else if (!formData.Name.match(RGX_NAME)) {
             oldResponseErr = 'Name Invalid';
+            alert(oldResponseErr);
+            clearWaitState();
+            return;
+        }
+        else if (!formData.Major.match(RGX_MAJOR)) {
+            oldResponseErr = 'Major Invalid';
             alert(oldResponseErr);
             clearWaitState();
             return;
@@ -231,6 +238,7 @@
     registerInputValidator($("#pwd"), RGX_PSWD);
     registerInputValidator($("#firstname"), RGX_NAME);
     registerInputValidator($("#lastname"), RGX_NAME);
+    registerInputValidator($("#autocomplete"), RGX_MAJOR);
     registerInputValidator($("#phone"), RGX_PHONE, true);
     registerInputValidator($("#grad-date"), RGX_GRAD_DATE);
     registerInputValidator($("#year"), RGX_YEAR);

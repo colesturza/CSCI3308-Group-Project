@@ -10,7 +10,7 @@
 
 
     function setWaitState() {
-        $("#btn_CreateClub").removeAttr("disabled");
+        $("#btn_CreateClub").attr("disabled", "disabled");
         $("html").css({ cursor: "default" });
     }
 

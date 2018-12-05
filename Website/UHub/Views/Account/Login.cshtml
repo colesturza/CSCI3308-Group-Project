@@ -19,17 +19,11 @@
         {
             @Html.LabelFor(x => x.Email)
             @Html.TextBoxFor(x => x.Email, new { type = "email", placeholder = "Email:", @class = "form-control" })
-            <br />
-            @Html.ValidationMessageFor(x => x.Email)
-            Html.ValidateFor(x => x.Email);
+
+
             <p></p>
-
-
             @Html.LabelFor(x => x.Password)
             @Html.PasswordFor(x => x.Password, new { placeholder = "Password:", @class = "form-control" })
-            <br />
-            @Html.ValidationMessageFor(x => x.Password)
-            Html.ValidateFor(x => x.Password);
 
 
             <p></p>

@@ -43,7 +43,7 @@
 
 
     function setWaitState() {
-        $("#btn_CreatePost").removeAttr("disabled");
+        $("#btn_CreatePost").attr("disabled", "disabled");
         $("html").css({ cursor: "default" });
     }
 
