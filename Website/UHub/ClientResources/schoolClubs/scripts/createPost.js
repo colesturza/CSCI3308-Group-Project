@@ -62,15 +62,15 @@
     }
 
 
-    function processInputValidation() {
+    function processInputValidation(formData) {
 
-        if (!$("#inputTitle").val().match(/^.{1,100}$/)) {
+        if (!formData.Name.match(/^.{1,100}$/)) {
             oldResponseErr = 'Post Name Invalid';
             alert(oldResponseErr);
             clearWaitState();
             return false;
         }
-        else if (!$("#inputContent").val().match(/^.{10,10000}$/)) {
+        else if (!formData.Content.match(/^.{10,10000}$/)) {
             oldResponseErr = 'Post Content Invalid';
             alert(oldResponseErr);
             clearWaitState();

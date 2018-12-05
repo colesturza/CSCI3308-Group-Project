@@ -1,12 +1,54 @@
 ﻿(function () {
 
-    var mdConverter = new showdown.Converter();
-    setShowdownDefaults(mdConverter);
-
     var simplemde;
     var postRawData;
     var jsonPostDataOld = null;
     var oldResponseErr = null;
+
+    var postID = encodeURIComponent(window.location.href.split('/').slice(-1)[0]);
+    postID = postID.match(/^[0-9]+/);
+
+
+    var mdConverter = new showdown.Converter();
+    setShowdownDefaults(mdConverter);
+
+
+    function getTodayDateStr() {
+        var today = new Date();
+        var dd = today.getDate();
+        var mm = today.getMonth() + 1; //January is 0!
+        var yyyy = today.getFullYear();
+        return yyyy.toString().padStart(4, '0') + '-' + mm.toString().padStart(2, '0') + '-' + dd.toString().padStart(2, '0');
+    }
+
+
+    function getPostUpdateData() {
+        postRawData.Content = simplemde.value();
+
+        return {
+            ID: postRawData.ID,
+            Name: postRawData.Name,
+            Content: postRawData.Content,
+            IsPublic: postRawData.IsPublic,
+            CanComment: postRawData.CanComment
+        };
+    }
+
+
+    function execCreateComment(jsonData) {
+
+        return $.ajax({
+            method: "POST",
+            url: "/uhubapi/comments/Create",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: jsonData
+        })
+            .fail(function (jqAjax, errorText) {
+                alert("Error" + errorText);
+            });
+    }
+
 
 
     Vue.component('comment-component', {
@@ -46,21 +88,14 @@
                 var jsonData = JSON.stringify(formData);
 
 
-                $.ajax({
-                    method: "POST",
-                    url: "/uhubapi/comments/Create",
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    data: jsonData,
-                    success: function (data) {
+                execCreateComment(jsonData)
+                    //AJAX -> /uhubapi/comments/Create
+                    .done(function (data) {
                         $("[data-cmtID=" + formData.ParentID + "] textarea").val("");
                         $("[data-cmtID=" + formData.ParentID + "]").toggle();
 
-                        var today = new Date();
-                        var dd = today.getDate();
-                        var mm = today.getMonth() + 1; //January is 0!
-                        var yyyy = today.getFullYear();
-                        var dtStr = yyyy.toString().padStart(4, '0') + '-' + mm.toString().padStart(2, '0') + '-' + dd.toString().padStart(2, '0');
+
+                        var dtStr = getTodayDateStr();
 
                         var newCmt = {
                             ID: data,
@@ -70,11 +105,8 @@
                         };
 
                         vueInstance.comments.splice(0, 0, newCmt);
-                    },
-                    error: function (jqAjax, errorText) {
-                        alert("Error" + errorText);
-                    }
-                });
+                    });
+
             }
         }
     });
@@ -99,31 +131,22 @@
             },
             submitCommentPost: function () {
 
-                var postId = encodeURIComponent(window.location.href.split('/').slice(-1)[0]);
-
 
                 var formData = {
                     Content: this.$refs.postReplyText.value,
-                    ParentID: postId
+                    ParentID: postID
                 };
 
                 var jsonData = JSON.stringify(formData);
 
-                $.ajax({
-                    method: "POST",
-                    url: "/uhubapi/comments/Create",
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    data: jsonData,
-                    success: function (data) {
+
+                execCreateComment(jsonData)
+                    //AJAX -> /uhubapi/comments/Create
+                    .done(function (data) {
                         $("#post-reply textarea").val("");
                         $("#post-reply").toggle();
 
-                        var today = new Date();
-                        var dd = today.getDate();
-                        var mm = today.getMonth() + 1; //January is 0!
-                        var yyyy = today.getFullYear();
-                        var dtStr = yyyy.toString().padStart(4, '0') + '-' + mm.toString().padStart(2, '0') + '-' + dd.toString().padStart(2, '0');
+                        var dtStr = getTodayDateStr();
 
                         var newCmt = {
                             ID: data,
@@ -133,25 +156,21 @@
                         };
 
                         vueInstance.comments.splice(0, 0, newCmt);
-                    },
-                    error: function (jqAjax, errorText) {
-                        alert("Error" + errorText);
-                    }
-                });
+                    });
+
             }
         },
         mounted: function () {
             vueInstance = this;
             var self = this;
 
-            var postID = encodeURIComponent(window.location.href.split('/').slice(-1)[0]);
-            postID = postID.match(/^[0-9]+/);
-
 
             $.ajax({
                 method: "POST",
-                url: "/uhubapi/posts/GetByID?PostID=" + postID,
-                success: function (data) {
+                url: "/uhubapi/posts/GetByID?PostID=" + encodeURIComponent(postID)
+            })
+                ///AJAX -> uhubapi/posts/GetByID
+                .done(function (data) {
                     postRawData = data;
 
                     var clubID = data.ParentID;
@@ -162,7 +181,7 @@
                         simplemde.value(data.Content);
                         //set old value to prevent clean updates
                         oldResponseErr = 'Nothing to Update';
-                        jsonPostDataOld = JSON.stringify(getData());
+                        jsonPostDataOld = JSON.stringify(getPostUpdateData());
                     }, 1);
                     self.postTime = data.CreatedDate;
 
@@ -177,11 +196,10 @@
                     if (self.title != undefined && self.title != null && self.title != "") {
                         $.ajax({
                             method: "POST",
-                            url: "/uhubapi/comments/GetByPost?PostID=" + encodeURIComponent(data.ID),
-                            error: function (jqAjax, errorText) {
-                                alert("Error" + errorText);
-                            },
-                            success: function (data) {
+                            url: "/uhubapi/comments/GetByPost?PostID=" + encodeURIComponent(postID)
+                        })
+                            //AJAX -> /uhubapi/comments/GetByPost
+                            .done(function (data) {
                                 data.sort(dynamicSort("-CreatedDate"));
                                 self.comments = data;
 
@@ -200,8 +218,11 @@
                                     window.clearInterval(cmtInterval);
                                 }, 10);
 
-                            }
-                        });
+                            })
+                            //AJAX -> /uhubapi/comments/GetByPost
+                            .fail(function (jqAjax, errorText) {
+                                alert("Error" + errorText);
+                            });
                     }
 
 
@@ -216,11 +237,11 @@
                         }
                     }
 
-                },
-                error: function (jqAjax, errorText) {
+                })
+                ///AJAX -> uhubapi/posts/GetByID
+                .fail(function (jqAjax, errorText) {
                     alert("Error " + errorText);
-                }
-            });
+                });
         }
     });
 
@@ -252,46 +273,47 @@
 
 
 
+    function setWaitState() {
+        $("#btn_UpdatePost").removeAttr("disabled");
+        $("html").css({ cursor: "default" });
+    }
 
-    function getData() {
-        postRawData.Content = simplemde.value();
-
-        return {
-            ID: postRawData.ID,
-            Name: postRawData.Name,
-            Content: postRawData.Content,
-            IsPublic: postRawData.IsPublic,
-            CanComment: postRawData.CanComment
-        };
-
+    function clearWaitState() {
+        $("#btn_UpdatePost").removeAttr("disabled");
+        $("html").css({ cursor: "default" });
     }
 
 
-    
+    function processInputValidation(formData) {
+        if (!formData.Content.match(/^.{10,10000}$/)) {
+            oldResponseErr = 'Post Content Invalid';
+            alert(oldResponseErr);
+            $("#btn_UpdatePost").removeAttr("disabled");
+            $("html").css({ cursor: "default" });
+            return false;
+        }
+
+        return true;
+    }
+
+
     function sendData(formData) {
-        $("#btn_UpdatePost").attr("disabled", "disabled");
-        $("html").css({ cursor: "wait" });
+        setWaitState();
 
         var jsonPostData = JSON.stringify(formData);
 
         if (jsonPostData == jsonPostDataOld) {
             alert(oldResponseErr);
-            $("#btn_CreateUser").removeAttr("disabled");
-            $("html").css({ cursor: "default" });
+            clearWaitState()
             return;
         }
         jsonPostDataOld = jsonPostData;
 
 
-
-        if (!$("#txt_PostArea").val().match(/^.{10,10000}$/)) {
-            oldResponseErr = 'Post Content Invalid';
-            alert(oldResponseErr);
-            $("#btn_UpdatePost").removeAttr("disabled");
-            $("html").css({ cursor: "default" });
-            return;
+        if (!processInputValidation(formData)) {
+            return false;
         }
-
+        
 
 
         $.ajax({
@@ -299,26 +321,28 @@
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             data: jsonPostData,
-            url: "/uhubapi/posts/Update",
-            complete: function (data) {
-                $("#btn_UpdatePost").removeAttr("disabled");
-                $("html").css({ cursor: "default" });
-                console.log(data);
-            },
-            success: function (data) {
+            url: "/uhubapi/posts/Update"
+        })
+            //AJAX -> /uhubapi/posts/Update
+            .done(function (data) {
                 jsonPostDataOld = null;
                 alert(data);
-            },
-            error: function (data) {
+            })
+            //AJAX -> /uhubapi/posts/Update
+            .fail(function (data) {
                 oldResponseErr = data.responseJSON;
                 alert(oldResponseErr);
-            }
-        });
+            })
+            //AJAX -> /uhubapi/posts/Update
+            .always(function (data) {
+                clearWaitState();
+            });
     }
 
 
+
     $("#btn_UpdatePost").click(function () {
-        var data = getData();
+        var data = getPostUpdateData();
         sendData(data);
     });
 

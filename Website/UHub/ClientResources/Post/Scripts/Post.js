@@ -1,9 +1,40 @@
 ﻿(function () {
-    var mdConverter = new showdown.Converter();
-    setShowdownDefaults(mdConverter);
 
     var vueInstance;
     var postRawData;
+
+    var postID = encodeURIComponent(window.location.href.split('/').slice(-1)[0]);
+    postID = postID.match(/^[0-9]+/);
+
+
+    var mdConverter = new showdown.Converter();
+    setShowdownDefaults(mdConverter);
+
+
+
+    function getTodayDateStr() {
+        var today = new Date();
+        var dd = today.getDate();
+        var mm = today.getMonth() + 1; //January is 0!
+        var yyyy = today.getFullYear();
+        return yyyy.toString().padStart(4, '0') + '-' + mm.toString().padStart(2, '0') + '-' + dd.toString().padStart(2, '0');
+    }
+
+
+    function execCreateComment(jsonData) {
+
+        return $.ajax({
+            method: "POST",
+            url: "/uhubapi/comments/Create",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            data: jsonData
+        })
+            .fail(function (jqAjax, errorText) {
+                alert("Error" + errorText);
+            });
+    }
+
 
 
     Vue.component('comment-component', {
@@ -43,21 +74,14 @@
                 var jsonData = JSON.stringify(formData);
 
 
-                $.ajax({
-                    method: "POST",
-                    url: "/uhubapi/comments/Create",
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    data: jsonData,
-                    success: function (data) {
+                execCreateComment(jsonData)
+                    .done(function (data) {
                         $("[data-cmtID=" + formData.ParentID + "] textarea").val("");
                         $("[data-cmtID=" + formData.ParentID + "]").toggle();
 
-                        var today = new Date();
-                        var dd = today.getDate();
-                        var mm = today.getMonth() + 1; //January is 0!
-                        var yyyy = today.getFullYear();
-                        var dtStr = yyyy.toString().padStart(4, '0') + '-' + mm.toString().padStart(2, '0') + '-' + dd.toString().padStart(2, '0');
+
+                        var dtStr = getTodayDateStr();
+
 
                         var newCmt = {
                             ID: data,
@@ -67,14 +91,15 @@
                         };
 
                         vueInstance.comments.splice(0, 0, newCmt);
-                    },
-                    error: function (jqAjax, errorText) {
-                        alert("Error" + errorText);
-                    }
-                });
+                    });
+
             }
         }
     });
+
+
+
+
 
     new Vue({
         el: "#post-container",
@@ -94,31 +119,22 @@
             },
             submitCommentPost: function () {
 
-                var postId = encodeURIComponent(window.location.href.split('/').slice(-1)[0]);
-
 
                 var formData = {
                     Content: this.$refs.postReplyText.value,
-                    ParentID: postId
+                    ParentID: postID
                 };
 
                 var jsonData = JSON.stringify(formData);
 
-                $.ajax({
-                    method: "POST",
-                    url: "/uhubapi/comments/Create",
-                    contentType: "application/json; charset=utf-8",
-                    dataType: "json",
-                    data: jsonData,
-                    success: function (data) {
+
+                execCreateComment(jsonData)
+                    .done(function (data) {
                         $("#post-reply textarea").val("");
                         $("#post-reply").toggle();
 
-                        var today = new Date();
-                        var dd = today.getDate();
-                        var mm = today.getMonth() + 1; //January is 0!
-                        var yyyy = today.getFullYear();
-                        var dtStr = yyyy.toString().padStart(4, '0') + '-' + mm.toString().padStart(2, '0') + '-' + dd.toString().padStart(2, '0');
+                        var dtStr = getTodayDateStr();
+
 
                         var newCmt = {
                             ID: data,
@@ -128,25 +144,19 @@
                         };
 
                         vueInstance.comments.splice(0, 0, newCmt);
-                    },
-                    error: function (jqAjax, errorText) {
-                        alert("Error" + errorText);
-                    }
-                });
+                    })
             }
         },
         mounted: function () {
             vueInstance = this;
             var self = this;
 
-            var postID = encodeURIComponent(window.location.href.split('/').slice(-1)[0]);
-            postID = postID.match(/^[0-9]+/);
-
 
             $.ajax({
                 method: "POST",
-                url: "/uhubapi/posts/GetByID?PostID=" + postID,
-                success: function (data) {
+                url: "/uhubapi/posts/GetByID?PostID=" + encodeURIComponent(postID)
+            })
+                .done(function (data) {
                     postRawData = data;
                     var clubID = data.ParentID;
 
@@ -167,11 +177,9 @@
                     if (self.title != undefined && self.title != null && self.title != "") {
                         $.ajax({
                             method: "POST",
-                            url: "/uhubapi/comments/GetByPost?PostID=" + encodeURIComponent(data.ID),
-                            error: function (jqAjax, errorText) {
-                                alert("Error" + errorText);
-                            },
-                            success: function (data) {
+                            url: "/uhubapi/comments/GetByPost?PostID=" + encodeURIComponent(postID)
+                        })
+                            .done(function (data) {
                                 data.sort(dynamicSort("-CreatedDate"));
                                 self.comments = data;
 
@@ -191,8 +199,10 @@
                                 }, 10);
 
 
-                            }
-                        });
+                            })
+                            .fail(function (jqAjax, errorText) {
+                                alert("Error" + errorText);
+                            });
                     }
 
 
@@ -206,11 +216,10 @@
                         }
                     }
 
-                },
-                error: function (jqAjax, errorText) {
+                })
+                .fail(function (jqAjax, errorText) {
                     alert("Error " + errorText);
-                }
-            });
+                });
         }
     });
 
