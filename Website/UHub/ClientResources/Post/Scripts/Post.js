@@ -3,6 +3,7 @@
     var vueInstance;
     var postRawData;
 
+
     var postID = encodeURIComponent(window.location.href.split('/').slice(-1)[0]);
     postID = postID.match(/^[0-9]+/);
 

@@ -5,6 +5,9 @@
     var jsonPostDataOld = null;
     var oldResponseErr = null;
 
+    var RGX_CONTENT = /^.{10,10000}$/;
+
+
     var postID = encodeURIComponent(window.location.href.split('/').slice(-1)[0]);
     postID = postID.match(/^[0-9]+/);
 
@@ -285,7 +288,7 @@
 
 
     function processInputValidation(formData) {
-        if (!formData.Content.match(/^.{10,10000}$/)) {
+        if (!formData.Content.match(RGX_CONTENT)) {
             oldResponseErr = 'Post Content Invalid';
             alert(oldResponseErr);
             $("#btn_UpdatePost").removeAttr("disabled");
@@ -349,7 +352,7 @@
 
 
 
-    registerInputValidator($("#txt_PostArea"), /^.{10,10000}$/);
+    registerInputValidator($("#txt_PostArea"), RGX_CONTENT);
 
 
 

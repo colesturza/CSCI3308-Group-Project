@@ -2,9 +2,82 @@
 (function () {
 
 
+    var RGX_EMAIL = /^[\w-]+@([\w-]+\.)+[\w-]+$/;
+    var RGX_USERNAME = /^\S{3,50}$/;
+    var RGX_PSWD = /^{8,150}$/;
+    var RGX_NAME = /^(([ \u00c0-\u01ffA-z'\-])+){2,200}$/;
+    var RGX_PHONE = /^([0-1][ .-])?((\([0-9]{3}\)[ .-]?)|([0-9]{3}[ .-]?))([0-9]{3}[ .-]?)([0-9]{4})$/;
+    var RGX_COMPANY = /^.{0,100}$/;
+    var RGX_JOB_TITLE = /^.{0,100}$/;
+
+
     var oldEmail = "";
     var oldUserObj = null;
     var oldResponseErr = null;
+
+
+
+    function setWaitState() {
+        $("#btn_CreateUser").removeAttr("disabled");
+        $("html").css({ cursor: "default" });
+    }
+
+    function clearWaitState() {
+        $("#btn_CreateUser").removeAttr("disabled");
+        $("html").css({ cursor: "default" });
+    }
+
+
+    function processInputValidation(formData) {
+
+
+        if (!formData.Email.match(RGX_EMAIL)) {
+            oldResponseErr = 'Email Invalid';
+            alert(oldResponseErr);
+            clearWaitState();
+            return;
+        }
+        else if (!formData.Username.match(RGX_USERNAME)) {
+            oldResponseErr = 'Username Invalid';
+            alert(oldResponseErr);
+            clearWaitState();
+            return;
+        }
+        else if (!formData.Password.match(RGX_PSWD)) {
+            oldResponseErr = 'Password Invalid';
+            alert(oldResponseErr);
+            clearWaitState();
+            return;
+        }
+        else if (!formData.Name.match(RGX_NAME)) {
+            oldResponseErr = 'Name Invalid';
+            alert(oldResponseErr);
+            clearWaitState();
+            return;
+        }
+        else if (formData.PhoneNumber != "" && !formData.PhoneNumber.match(RGX_PHONE)) {
+            oldResponseErr = 'Phone Invalid';
+            alert(oldResponseErr);
+            clearWaitState();
+            return;
+        }
+        else if (!formData.Company.match(RGX_COMPANY)) {
+            oldResponseErr = 'Company Invalid';
+            alert(oldResponseErr);
+            clearWaitState();
+            return;
+        }
+        else if (!formData.JobTitle.match(RGX_JOB_TITLE)) {
+            oldResponseErr = 'Job Title Invalid';
+            alert(oldResponseErr);
+            clearWaitState();
+            return;
+        }
+    }
+
+
+
+
 
     var createUser = new Vue({
         el: "#userForm",
@@ -36,68 +109,20 @@
                 this.sendObj = JSON.stringify(this.$data);
             },
             sendData: function () {
-                $("#btn_CreateUser").attr("disabled", "disabled");
-                $("html").css({ cursor: "wait" });
+                setWaitState();
                 var recapVal = grecaptcha.getResponse();
 
                 var userObj = createUser.sendObj;
 
                 if (userObj == userObjOld) {
                     alert(oldResponseErr);
-                    $("#btn_CreateUser").removeAttr("disabled");
-                    $("html").css({ cursor: "default" });
+                    clearWaitState();
                     return;
                 }
                 userObjOld = userObj;
 
 
-                if (!$("#email").val().match(/^[\w-]+@([\w-]+\.)+[\w-]+$/)) {
-                    oldResponseErr = 'Email Invalid';
-                    alert(oldResponseErr);
-                    $("#btn_CreateUser").removeAttr("disabled");
-                    $("html").css({ cursor: "default" });
-                    return;
-                }
-                else if (!$("#usr").val().match(/^\S{3,50}$/)) {
-                    oldResponseErr = 'Username Invalid';
-                    alert(oldResponseErr);
-                    $("#btn_CreateUser").removeAttr("disabled");
-                    $("html").css({ cursor: "default" });
-                    return;
-                }
-                else if (!$("#pwd").val().match(/^{8,150}$/)) {
-                    oldResponseErr = 'Password Invalid';
-                    alert(oldResponseErr);
-                    $("#btn_CreateUser").removeAttr("disabled");
-                    $("html").css({ cursor: "default" });
-                    return;
-                }
-                else if (!this.Name.val().match(/^(([ \u00c0-\u01ffA-z'\-])+){2,200}$/)) {
-                    oldResponseErr = 'Name Invalid';
-                    alert(oldResponseErr);
-                    $("#btn_CreateUser").removeAttr("disabled");
-                    $("html").css({ cursor: "default" });
-                    return;
-                }
-                else if ($("#phone").val() != "" && !$("#phone").val().match(/^([0-1][ .-])?((\([0-9]{3}\)[ .-]?)|([0-9]{3}[ .-]?))([0-9]{3}[ .-]?)([0-9]{4})$/)) {
-                    oldResponseErr = 'Phone Invalid';
-                    alert(oldResponseErr);
-                    $("#btn_CreateUser").removeAttr("disabled");
-                    $("html").css({ cursor: "default" });
-                    return;
-                }
-                else if (!$("#company").val().match(/^.{0,100}$/)) {
-                    oldResponseErr = 'Company Invalid';
-                    alert(oldResponseErr);
-                    $("#btn_CreateUser").removeAttr("disabled");
-                    $("html").css({ cursor: "default" });
-                    return;
-                }
-                else if (!$("#job-title").val().match(/^.{0,100}$/)) {
-                    oldResponseErr = 'Job Title Invalid';
-                    alert(oldResponseErr);
-                    $("#btn_CreateUser").removeAttr("disabled");
-                    $("html").css({ cursor: "default" });
+                if (!processInputValidation(this)) {
                     return;
                 }
 
@@ -107,16 +132,14 @@
                     method: "POST",
                     contentType: "application/json; charset=utf-8",
                     dataType: "json",
-                    url: "/uhubapi/account/createuser",
+                    url: "/uhubapi/Account/CreateUser",
                     headers: {
                         "g-recaptcha-response": recapVal
                     },
-                    data: userObj,
-                    complete: function () {
-                        $("#btn_CreateUser").removeAttr("disabled");
-                        $("html").css({ cursor: "default" });
-                    },
-                    success: function (data) {
+                    data: userObj
+                })
+                    //AJAX -> "/uhubapi/Account/CreateUser"
+                    .done(function (data) {
 
                         alert(data.status);
 
@@ -126,12 +149,17 @@
                         else {
                             window.location.href = "/Account/Confirm/New";
                         }
-                    },
-                    error: function (data) {
+                    })
+                    //AJAX -> "/uhubapi/Account/CreateUser"
+                    .fail(function (data) {
                         oldResponseErr = data.responseJSON.status;
                         alert(oldResponseErr);
-                    }
-                });
+                    })
+                    //AJAX -> "/uhubapi/Account/CreateUser"
+                    .always(function () {
+                        $("#btn_CreateUser").removeAttr("disabled");
+                        $("html").css({ cursor: "default" });
+                    });
             }
         }
     });
@@ -155,8 +183,10 @@
             url: "/uhubapi/schoolmajors/GetAllByEmail",
             data: {
                 email: val
-            },
-            success: function (data) {
+            }
+        })
+            //AJAX -> /uhubapi/schoolmajors/GetAllByEmail
+            .done(function (data) {
                 for (var i = 0; i < data.length; i++) {
                     if (data[i].IsEnabled === true) {
                         majornames.push(data[i].Name);
@@ -167,9 +197,9 @@
                 $("#autocomplete").autocomplete({
                     source: majornames
                 });
-            }
-        });
+            });
     });
+
 
 
     $(function () {
@@ -182,14 +212,14 @@
 
 
 
-    registerInputValidator($("#email"), /^[\w-]+@([\w-]+\.)+[\w-]+$/);
-    registerInputValidator($("#usr"), /^\S{3,50}$/);
-    registerInputValidator($("#pwd"), /^{8,150}$/);
-    registerInputValidator($("#firstname"), /^(([ \u00c0-\u01ffA-z'\-])+){1,100}$/);
-    registerInputValidator($("#lastname"), /^(([ \u00c0-\u01ffA-z'\-])+){1,100}$/);
-    registerInputValidator($("#phone"), /^([0-1][ .-])?((\([0-9]{3}\)[ .-]?)|([0-9]{3}[ .-]?))([0-9]{3}[ .-]?)([0-9]{4})$/);
-    registerInputValidator($("#company"), /^.{0,100}$/);
-    registerInputValidator($("#job-title"), /^.{0,100}$/);
+    registerInputValidator($("#email"), RGX_EMAIL);
+    registerInputValidator($("#usr"), RGX_USERNAME);
+    registerInputValidator($("#pwd"), RGX_PSWD);
+    registerInputValidator($("#firstname"), RGX_NAME);
+    registerInputValidator($("#lastname"), RGX_NAME);
+    registerInputValidator($("#phone"), RGX_PHONE);
+    registerInputValidator($("#company"), RGX_COMPANY);
+    registerInputValidator($("#job-title"), RGX_JOB_TITLE);
 
 
 })();

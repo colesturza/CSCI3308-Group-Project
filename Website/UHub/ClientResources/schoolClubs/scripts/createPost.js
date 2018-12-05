@@ -3,6 +3,9 @@
     var jsonPostDataOld = null;
     var oldResponseErr = null;
 
+    var RGX_NAME = /^.{1,100}$/;
+    var RGX_CONTENT = /^.{10,10000}$/;
+
 
     var url = window.location.href;
     var seperated = url.split('/');
@@ -39,6 +42,17 @@
         });
 
 
+    function setWaitState() {
+        $("#btn_CreatePost").removeAttr("disabled");
+        $("html").css({ cursor: "default" });
+    }
+
+    function clearWaitState() {
+        $("#btn_CreatePost").removeAttr("disabled");
+        $("html").css({ cursor: "default" });
+    }
+
+
     function getFormData() {
 
         return {
@@ -51,26 +65,15 @@
     }
 
 
-    function setWaitState() {
-        $("#btn_CreateUser").removeAttr("disabled");
-        $("html").css({ cursor: "default" });
-    }
-
-    function clearWaitState() {
-        $("#btn_CreateUser").removeAttr("disabled");
-        $("html").css({ cursor: "default" });
-    }
-
-
     function processInputValidation(formData) {
 
-        if (!formData.Name.match(/^.{1,100}$/)) {
+        if (!formData.Name.match(RGX_NAME)) {
             oldResponseErr = 'Post Name Invalid';
             alert(oldResponseErr);
             clearWaitState();
             return false;
         }
-        else if (!formData.Content.match(/^.{10,10000}$/)) {
+        else if (!formData.Content.match(RGX_CONTENT)) {
             oldResponseErr = 'Post Content Invalid';
             alert(oldResponseErr);
             clearWaitState();
@@ -136,8 +139,8 @@
 
 
 
-    registerInputValidator($("#inputTitle"), /^.{1,100}$/);
-    registerInputValidator($("#inputContent"), /^.{10,10000}$/);
+    registerInputValidator($("#inputTitle"), RGX_NAME);
+    registerInputValidator($("#inputContent"), RGX_CONTENT);
 
 
 })();

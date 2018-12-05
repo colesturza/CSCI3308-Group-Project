@@ -5,6 +5,22 @@
     var oldResponseErr = null;
 
 
+    var RGX_NAME = /^(([ \u00c0-\u01ffA-z0-9'\-])+){3,100}$/;
+    var RGX_DESCRIPTION = /^.{0,2000}$/;
+
+
+    function setWaitState() {
+        $("#btn_CreateClub").removeAttr("disabled");
+        $("html").css({ cursor: "default" });
+    }
+
+    function clearWaitState() {
+        $("#btn_CreateClub").removeAttr("disabled");
+        $("html").css({ cursor: "default" });
+    }
+
+
+
     function GetDataObj() {
 
         return {
@@ -16,11 +32,28 @@
 
 
 
+    function processInputValidation(formData) {
+
+        if (!formData.Name.match(RGX_NAME)) {
+            oldResponseErr = 'Club Name Invalid';
+            alert(oldResponseErr);
+            clearWaitState();
+            return false;
+        }
+        else if (!formData.Description.match(RGX_DESCRIPTION)) {
+            oldResponseErr = 'Club Description Invalid';
+            alert(oldResponseErr);
+            clearWaitState();
+            return false;
+        }
+
+        return true;
+    }
+
+
     function SendData(data) {
 
-
-        $("#btn_CreateClub").attr("disabled", "disabled");
-        $("html").css({ cursor: "wait" });
+        setWaitState();
 
 
         var jsonClubData = JSON.stringify(data);
@@ -28,31 +61,15 @@
 
         if (jsonClubData == jsonClubDataOld) {
             alert(oldResponseErr);
-            $("#btn_CreateUser").removeAttr("disabled");
-            $("html").css({ cursor: "default" });
+            clearWaitState();
             return;
         }
         jsonClubDataOld = jsonClubData;
 
 
-
-
-        if (!$("#txt_Name").val().match(/^(([ \u00c0-\u01ffA-z0-9'\-])+){3,100}$/)) {
-            oldResponseErr = 'Club Name Invalid';
-            alert(oldResponseErr);
-            $("#btn_CreateClub").removeAttr("disabled");
-            $("html").css({ cursor: "default" });
+        if (!processInputValidation()) {
             return;
         }
-        else if (!$("#txt_Description").val().match(/^.{0,2000}$/)) {
-            oldResponseErr = 'Club Description Invalid';
-            alert(oldResponseErr);
-            $("#btn_CreateClub").removeAttr("disabled");
-            $("html").css({ cursor: "default" });
-            return;
-        }
-
-
 
 
         var recapVal = grecaptcha.getResponse();
@@ -67,14 +84,10 @@
             headers: {
                 "g-recaptcha-response": recapVal
             },
-            data: jsonClubData,
-            complete: function () {
-
-                $("#btn_CreateClub").removeAttr("disabled");
-                $("html").css({ cursor: "default" });
-
-            },
-            success: function (data) {
+            data: jsonClubData
+        })
+            //AJAX -> /uhubapi/schoolClubs/Create
+            .done(function (data) {
 
                 Name: $("#txt_Name").val("");
                 Description: $("#txt_Description").val("");
@@ -82,12 +95,17 @@
                 alert("Club Created");
 
                 window.location.href = "/SchoolClub/" + data;
-            },
-            error: function (data) {
+
+            })
+            //AJAX -> /uhubapi/schoolClubs/Create
+            .fail(function (data) {
                 oldResponseErr = data.responseJSON;
                 alert(oldResponseErr);
-            }
-        });
+            })
+            //AJAX -> /uhubapi/schoolClubs/Create
+            .always(function () {
+                clearWaitState();
+            });
     }
 
 
@@ -100,7 +118,7 @@
 
 
 
-    registerInputValidator($("#txt_Name"), /^(([ \u00c0-\u01ffA-z0-9'\-])+){3,100}$/);
-    registerInputValidator($("#txt_Description"), /^.{0,2000}$/);
+    registerInputValidator($("#txt_Name"), RGX_NAME);
+    registerInputValidator($("#txt_Description"), RGX_DESCRIPTION);
 
 })();
