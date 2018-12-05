@@ -15,7 +15,7 @@
 
 
     var oldEmail = "";
-    var UserObjOld = null;
+    var userObjOld = null;
     var oldResponseErr = null;
 
 
@@ -38,62 +38,64 @@
             oldResponseErr = 'Email Invalid';
             alert(oldResponseErr);
             clearWaitState();
-            return;
+            return false;
         }
         else if (!formData.Username.match(RGX_USERNAME)) {
             oldResponseErr = 'Username Invalid';
             alert(oldResponseErr);
             clearWaitState();
-            return;
+            return false;
         }
         else if (!formData.Password.match(RGX_PSWD)) {
             oldResponseErr = 'Password Invalid';
             alert(oldResponseErr);
             clearWaitState();
-            return;
+            return false;
         }
         else if (!formData.Name.match(RGX_NAME)) {
             oldResponseErr = 'Name Invalid';
             alert(oldResponseErr);
             clearWaitState();
-            return;
+            return false;
         }
         else if (!formData.Major.match(RGX_MAJOR)) {
             oldResponseErr = 'Major Invalid';
             alert(oldResponseErr);
             clearWaitState();
-            return;
+            return false;
         }
         else if (formData.PhoneNumber != "" && !formData.PhoneNumber.match(RGX_PHONE)) {
             oldResponseErr = 'Phone Invalid';
             alert(oldResponseErr);
             clearWaitState();
-            return;
+            return false;
         }
         else if (!formData.GradDate.match(RGX_GRAD_DATE)) {
             oldResponseErr = 'Grad Date Invalid';
             alert(oldResponseErr);
             clearWaitState();
-            return;
+            return false;
         }
         else if (!formData.Year.match(RGX_YEAR)) {
             oldResponseErr = 'Year Invalid';
             alert(oldResponseErr);
             clearWaitState();
-            return;
+            return false;
         }
         else if (!formData.Company.match(RGX_COMPANY)) {
             oldResponseErr = 'Company Invalid';
             alert(oldResponseErr);
             clearWaitState();
-            return;
+            return false;
         }
         else if (!formData.JobTitle.match(RGX_JOB_TITLE)) {
             oldResponseErr = 'Job Title Invalid';
             alert(oldResponseErr);
             clearWaitState();
-            return;
+            return false;
         }
+
+        return true;
     }
 
 
