@@ -7,14 +7,14 @@ using System.Threading.Tasks;
 namespace UHub.CoreLib.Logging
 {
     [Flags]
-    public enum UsageLoggingMode
+    public enum EventLoggingMode
     {
         None = 0,
 
-        [Obsolete("Not Implemented")]
-        Database = 1,
-        GoogleAnalytics = 2,
+        LocalFile = 1,
+        SystemEvents = 2,
+        Database = 4,
 
-        All = GoogleAnalytics
+        All = LocalFile | SystemEvents | Database
     }
 }

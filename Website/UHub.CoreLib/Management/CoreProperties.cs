@@ -388,14 +388,14 @@ namespace UHub.CoreLib.Management
         /// <summary>
         /// Logging target mode.  Defines drop zone for log messages
         /// </summary>
-        public LocalLoggingMode LocalLogMode { get; private set; }
+        public EventLoggingMode LocalLogMode { get; private set; }
         public UsageLoggingMode UsageLogMode { get; private set; }
         /// <summary>
         /// Name of log folder if using SystemEvents
         /// <para></para>
         /// Default: Application
         /// </summary>
-        public LoggingSource LoggingSource { get; private set; }
+        public LocalSysLoggingSource LoggingSource { get; private set; }
         /// <summary>
         /// Key for google analytics tracking
         /// </summary>

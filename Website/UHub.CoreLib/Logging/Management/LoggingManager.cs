@@ -33,10 +33,5 @@ namespace UHub.CoreLib.Logging.Management
         }
 
 
-        #region Site Analytics/Usage Logs
-
-        #endregion
-
-
     }
 }

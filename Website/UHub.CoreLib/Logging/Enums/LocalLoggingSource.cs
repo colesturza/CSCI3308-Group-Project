@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace UHub.CoreLib.Logging
 {
-    public enum LoggingSource
+    public enum LocalSysLoggingSource
     {
         /// <summary>
         /// Default option. Used to create logs under the standard "Application" folder.

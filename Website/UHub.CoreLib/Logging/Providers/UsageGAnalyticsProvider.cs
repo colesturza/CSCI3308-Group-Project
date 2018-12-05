@@ -104,7 +104,7 @@ namespace UHub.CoreLib.Logging.Providers
         }
 
 
-        public void CreateClientEventLog(ActivityLogType EventType, UsageLogData Data)
+        public void CreateClientEventLog(UsageLogType EventType, UsageLogData Data)
         {
             try
             {

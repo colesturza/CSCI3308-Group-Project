@@ -14,23 +14,41 @@ namespace UHub.CoreLib.Logging.Management
     public sealed partial class LoggingManager
     {
 
-        #region Local File/Event Logs
+
         /// <summary>
         /// Create success message using anonymous type
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="data"></param>
-        public async Task CreateSuccessLogAsync<T>(T data)
+        public async Task CreateSuccessLogAsync<T>(T Data)
         {
-            await CreateSuccessLogAsync(data.ToFormattedJSON());
+            var eventData = new EventLogData
+            {
+                EventType = EventType.Success,
+                EventID = null,
+                Content = Data.ToFormattedJSON(),
+                CreatedBy = null,
+                CreatedDate = DateTimeOffset.UtcNow
+            };
+
+            await CreateLogAsync(eventData);
         }
         /// <summary>
         /// Create success message
         /// </summary>
         /// <param name="message"></param>
-        public async Task CreateSuccessLogAsync(string message)
+        public async Task CreateSuccessLogAsync(string Message)
         {
-            await Task.Run(() => localProviders.ForEach(x => x.CreateSuccessLog(message)));
+            var eventData = new EventLogData
+            {
+                EventType = EventType.Success,
+                EventID = null,
+                Content = Message,
+                CreatedBy = null,
+                CreatedDate = DateTimeOffset.UtcNow
+            };
+
+            await CreateLogAsync(eventData);
         }
 
 
@@ -39,17 +57,35 @@ namespace UHub.CoreLib.Logging.Management
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="data"></param>
-        public async Task CreateMessageLogAsync<T>(T data)
+        public async Task CreateInfoLogAsync<T>(T Data)
         {
-            await CreateMessageLogAsync(data.ToFormattedJSON());
+            var eventData = new EventLogData
+            {
+                EventType = EventType.Information,
+                EventID = null,
+                Content = Data.ToFormattedJSON(),
+                CreatedBy = null,
+                CreatedDate = DateTimeOffset.UtcNow
+            };
+
+            await CreateLogAsync(eventData);
         }
         /// <summary>
         /// Create information message
         /// </summary>
         /// <param name="message"></param>
-        public async Task CreateMessageLogAsync(string message)
+        public async Task CreateInfoLogAsync(string Message)
         {
-            await Task.Run(() => localProviders.ForEach(x => x.CreateMessageLog(message)));
+            var eventData = new EventLogData
+            {
+                EventType = EventType.Information,
+                EventID = null,
+                Content = Message,
+                CreatedBy = null,
+                CreatedDate = DateTimeOffset.UtcNow
+            };
+
+            await CreateLogAsync(eventData);
         }
 
 
@@ -58,17 +94,35 @@ namespace UHub.CoreLib.Logging.Management
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="data"></param>
-        public async Task CreateWarningLogAsync<T>(T data)
+        public async Task CreateWarningLogAsync<T>(T Data)
         {
-            await CreateWarningLogAsync(data.ToFormattedJSON());
+            var eventData = new EventLogData
+            {
+                EventType = EventType.Warning,
+                EventID = null,
+                Content = Data.ToFormattedJSON(),
+                CreatedBy = null,
+                CreatedDate = DateTimeOffset.UtcNow
+            };
+
+            await CreateLogAsync(eventData);
         }
         /// <summary>
         /// Create warning message
         /// </summary>
         /// <param name="message"></param>
-        public async Task CreateWarningLogAsync(string message)
+        public async Task CreateWarningLogAsync(string Message)
         {
-            await Task.Run(() => localProviders.ForEach(x => x.CreateWarningLog(message)));
+            var eventData = new EventLogData
+            {
+                EventType = EventType.Warning,
+                EventID = null,
+                Content = Message,
+                CreatedBy = null,
+                CreatedDate = DateTimeOffset.UtcNow
+            };
+
+            await CreateLogAsync(eventData);
         }
 
 
@@ -77,17 +131,35 @@ namespace UHub.CoreLib.Logging.Management
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="data"></param>
-        public async Task CreateFailureLogAsync<T>(T data)
+        public async Task CreateFailureLogAsync<T>(T Data)
         {
-            await CreateFailureLogAsync(data.ToFormattedJSON());
+            var eventData = new EventLogData
+            {
+                EventType = EventType.Failure,
+                EventID = null,
+                Content = Data.ToFormattedJSON(),
+                CreatedBy = null,
+                CreatedDate = DateTimeOffset.UtcNow
+            };
+
+            await CreateLogAsync(eventData);
         }
         /// <summary>
         /// Create failure message
         /// </summary>
         /// <param name="message"></param>
-        public async Task CreateFailureLogAsync(string message)
+        public async Task CreateFailureLogAsync(string Message)
         {
-            await Task.Run(() => localProviders.ForEach(x => x.CreateFailureLog(message)));
+            var eventData = new EventLogData
+            {
+                EventType = EventType.Failure,
+                EventID = null,
+                Content = Message,
+                CreatedBy = null,
+                CreatedDate = DateTimeOffset.UtcNow
+            };
+
+            await CreateLogAsync(eventData);
         }
 
 
@@ -97,33 +169,151 @@ namespace UHub.CoreLib.Logging.Management
         /// <param name="ex"></param>
         public async Task CreateErrorLogAsync(Exception ex)
         {
-            await CreateErrorLogAsync(ex?.ToString() ?? "UNKNOWN EXCEPTION");
+            var eventData = new EventLogData
+            {
+                EventType = EventType.Error,
+                EventID = null,
+                Content = ex?.ToString() ?? "UNKNOWN EXCEPTION",
+                CreatedBy = null,
+                CreatedDate = DateTimeOffset.UtcNow
+            };
+
+            await CreateLogAsync(eventData);
         }
         public async Task CreateErrorLogAsync(string UID, Exception exInner)
         {
-            Exception exOuter = new Exception(UID, exInner);
+            var eventData = new EventLogData
+            {
+                EventType = EventType.Error,
+                EventID = UID,
+                Content = exInner?.ToString() ?? "UNKNOWN EXCEPTION",
+                CreatedBy = null,
+                CreatedDate = DateTimeOffset.UtcNow
+            };
 
-            await CreateErrorLogAsync(exInner?.ToString() ?? "UNKNOWN EXCEPTION");
+            await CreateLogAsync(eventData);
         }
         /// <summary>
         /// Create error message using anonymous type
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="data"></param>
-        public async Task CreateErrorLogAsync<T>(T data)
+        public async Task CreateErrorLogAsync<T>(T Data)
         {
-            await CreateErrorLogAsync(data.ToFormattedJSON());
+            var eventData = new EventLogData
+            {
+                EventType = EventType.Error,
+                EventID = null,
+                Content = Data.ToFormattedJSON(),
+                CreatedBy = null,
+                CreatedDate = DateTimeOffset.UtcNow
+            };
+
+            await CreateLogAsync(eventData);
         }
         /// <summary>
-        /// Create error message
+        /// Create error message using anonymous type
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="data"></param>
+        public async Task CreateErrorLogAsync<T>(string UID, T Data)
+        {
+            var eventData = new EventLogData
+            {
+                EventType = EventType.Error,
+                EventID = UID,
+                Content = Data.ToFormattedJSON(),
+                CreatedBy = null,
+                CreatedDate = DateTimeOffset.UtcNow
+            };
+
+            await CreateLogAsync(eventData);
+        }
+
+
+
+
+        //---------------------------------------------------------------------------------------------------------
+        //---------------------------------------------------------------------------------------------------------
+        //---------------------------------------------------------------------------------------------------------
+
+        
+        /// <summary>
+        /// Create success message using anonymous type
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="data"></param>
+        public async Task CreateLogAsync<T>(T Data, EventType EventType)
+        {
+            var eventData = new EventLogData
+            {
+                EventType = EventType,
+                EventID = null,
+                Content = Data.ToFormattedJSON(),
+                CreatedBy = null,
+                CreatedDate = DateTimeOffset.UtcNow
+            };
+
+            await CreateLogAsync(eventData);
+        }
+        /// <summary>
+        /// Create success message using anonymous type
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="data"></param>
+        public async Task CreateLogAsync<T>(string UID, T Data, EventType EventType)
+        {
+            var eventData = new EventLogData
+            {
+                EventType = EventType,
+                EventID = UID,
+                Content = Data.ToFormattedJSON(),
+                CreatedBy = null,
+                CreatedDate = DateTimeOffset.UtcNow
+            };
+
+            await CreateLogAsync(eventData);
+        }
+        /// <summary>
+        /// Create success message
         /// </summary>
         /// <param name="message"></param>
-        public async Task CreateErrorLogAsync(string message)
+        public async Task CreateLogAsync(string Message, EventType EventType)
         {
-            await Task.Run(() => localProviders.ForEach(x => x.CreateErrorLog(message)));
-        }
-        #endregion Local File/Event Logs
+            var eventData = new EventLogData
+            {
+                EventType = EventType,
+                EventID = null,
+                Content = Message,
+                CreatedBy = null,
+                CreatedDate = DateTimeOffset.UtcNow
+            };
 
+            await CreateLogAsync(eventData);
+        }
+        /// <summary>
+        /// Create success message
+        /// </summary>
+        /// <param name="message"></param>
+        public async Task CreateLogAsync(string UID, string Message, EventType EventType)
+        {
+            var eventData = new EventLogData
+            {
+                EventType = EventType,
+                EventID = UID,
+                Content = Message,
+                CreatedBy = null,
+                CreatedDate = DateTimeOffset.UtcNow
+            };
+
+            await CreateLogAsync(eventData);
+        }
+
+
+        public async Task CreateLogAsync(EventLogData EventData)
+        {
+            await Task.Run(() => localProviders.ForEach(x => x.CreateLog(EventData)));
+        }
 
     }
 }

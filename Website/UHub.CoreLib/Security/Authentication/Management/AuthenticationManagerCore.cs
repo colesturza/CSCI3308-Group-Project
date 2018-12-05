@@ -132,11 +132,11 @@ namespace UHub.CoreLib.Security.Authentication.Management
             bool DEBUG = false;
             if (ErrorCode != -1 && DEBUG)
             {
-                CoreFactory.Singleton.Logging.CreateMessageLogAsync(ErrorCode.ToString());
+                CoreFactory.Singleton.Logging.CreateInfoLogAsync(ErrorCode.ToString());
             }
             if (key != null && DEBUG)
             {
-                CoreFactory.Singleton.Logging.CreateMessageLogAsync(key.ToString());
+                CoreFactory.Singleton.Logging.CreateInfoLogAsync(key.ToString());
             }
 
             try

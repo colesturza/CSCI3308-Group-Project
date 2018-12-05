@@ -14,13 +14,13 @@ namespace UHub.CoreLib.Config
         /// <para></para>
         /// Default: LocalFile
         /// </summary>
-        public LocalLoggingMode LocalLogMode { get; set; } = LocalLoggingMode.LocalFile;
+        public EventLoggingMode LocalLogMode { get; set; } = EventLoggingMode.LocalFile;
         /// <summary>
         /// Name of log folder if using SystemEvents
         /// <para></para>
         /// Default: Application
         /// </summary>
-        public LoggingSource LoggingSource { get; set; } = LoggingSource.Application;
+        public LocalSysLoggingSource LoggingSource { get; set; } = LocalSysLoggingSource.Application;
 
         public UsageLoggingMode UsageLogMode { get; set; } = UsageLoggingMode.None;
         /// <summary>

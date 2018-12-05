@@ -32,7 +32,7 @@ namespace UHub.CoreLib.Logging.Management
         }
 
 
-        public async Task CreateApiActionLogAsync(ActivityLogType EventType)
+        public async Task CreateApiActionLogAsync(UsageLogType EventType)
         {
             var data = LoggingHelpers.GetUserClientData();
 

@@ -9,7 +9,7 @@ namespace UHub.CoreLib.Logging
     /// <summary>
     /// CMS DB activity log event types
     /// </summary>
-    public enum ActivityLogType
+    public enum UsageLogType
     {
         /// <summary>
         /// User log in event
