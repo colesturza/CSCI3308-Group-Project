@@ -4,7 +4,7 @@
     var oldResponseErr = null;
 
     var RGX_NAME = /^.{1,100}$/;
-    var RGX_CONTENT = /^.{10,10000}$/;
+    var RGX_CONTENT = /^.{10,10000}$/s;
 
 
     var url = window.location.href;

@@ -5,11 +5,11 @@
     var jsonPostDataOld = null;
     var oldResponseErr = null;
 
-    var RGX_CONTENT = /^.{10,10000}$/;
+    var RGX_CONTENT = /^.{10,10000}$/s;
 
 
     var postID = encodeURIComponent(window.location.href.split('/').slice(-1)[0]);
-    postID = postID.match(/^[0-9]+/);
+    postID = postID.match(/^[0-9]+/)[0];
 
 
     var mdConverter = new showdown.Converter();

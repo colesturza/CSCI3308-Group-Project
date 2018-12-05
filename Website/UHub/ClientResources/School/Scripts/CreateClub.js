@@ -6,7 +6,7 @@
 
 
     var RGX_NAME = /^(([ \u00c0-\u01ffA-z0-9'\-])+){3,100}$/;
-    var RGX_DESCRIPTION = /^.{0,2000}$/;
+    var RGX_DESCRIPTION = /^.{0,2000}$/s;
 
 
     function setWaitState() {
