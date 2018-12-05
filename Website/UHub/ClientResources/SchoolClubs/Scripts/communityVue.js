@@ -13,18 +13,25 @@
         template:
             `
            <div class="container bg-white mb-3" style="padding: .75rem 1.25rem">
-               <a v-bind:href="'/Post/' + post.ID">
-                <h4> {{ post.Name }} </h4>
-               </a>
+                
+                <template v-if="post.ID != undefined" >
+                    <a v-bind:href="'/Post/' + post.ID">
+                        <h4> {{ post.Name }} </h4>
+                    </a>
+                </template>
+                <h4 v-else> {{ post.Name }} </h4>
+
                <div v-html="post.Content"></div>
            </div>
         `
     });
 
-    var communityblock = new Vue({
+
+
+    new Vue({
         el: "#community-block",
         data: {
-            community: null
+            community: {}
         },
         methods: {
             getCommunity() {
@@ -36,17 +43,17 @@
                     url: "/uhubapi/schoolclubs/GetByID?ClubID=" + encodeURIComponent(commID),
                     statusCode: {
                         200: function (data) {
-                            console.log(data);
+
                             self.community = data;
                         },
                         503: function () {
                             console.log("Internal Server Error");
                         }
-                    },
-                    error: function (error) {
-                        console.log(error);
                     }
-                });
+                })
+                    .fail(function (error) {
+                        console.log(error);
+                    });
             }
         },
         beforeMount() {
@@ -77,6 +84,7 @@
                         }
                         formData.sort(dynamicSort("-CreatedDate"));
                         self.posts = formData;
+
                     }
                     else {
                         self.posts = [{
@@ -84,7 +92,7 @@
                             Content: "This club currently does not have any posts"
                         }];
                     }
-                    
+
                 })
                 //AJAX -> /uhubapi/posts/GetAllByClub
                 .fail(function (error) {
@@ -96,7 +104,7 @@
                     }];
                 })
                 //AJAX -> /uhubapi/posts/GetAllByClub
-                .always(function(){
+                .always(function () {
 
                     $("#body-content").style('display', null);
 

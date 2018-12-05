@@ -10,6 +10,8 @@
         },
         mounted: function () {
             var self = this;
+
+
             $.ajax({
                 method: "POST",
                 url: "/uhubapi/posts/GetAllBySchool"
