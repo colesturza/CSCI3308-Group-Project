@@ -117,8 +117,11 @@ function registerInputValidator(obj, rgxStr, allowEmpty) {
 
 
         if (allowEmpty && $(this).val() == "") {
-            col = 'green';
-            rgb = 'rgba(0, 255, 0, .2)';
+            $(this).style('outline-color', null);
+            $(this).style('border-color', null);
+            $(this).style('box-shadow', null);
+
+            return;
         }
         else {
             if ($(this).val().match(rgxStr)) {
