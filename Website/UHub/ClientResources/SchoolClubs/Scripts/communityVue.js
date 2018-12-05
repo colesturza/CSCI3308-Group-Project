@@ -1,8 +1,17 @@
 (function () {
+
+    var commID = encodeURIComponent(window.location.href.split('/').slice(-1)[0]);
+
+
+    var mdConverter = new showdown.Converter();
+    setShowdownDefaults(mdConverter);
+
+
+
     Vue.component('postlistcomp', {
         props: ['post'],
-        template: 
-        `
+        template:
+            `
            <div class="container bg-white mb-3" style="padding: .75rem 1.25rem">
                <a v-bind:href="'/Post/' + post.ID">
                 <h4> {{ post.Name }} </h4>
@@ -20,9 +29,11 @@
         methods: {
             getCommunity() {
                 var self = this;
-                var communityRequest = $.ajax({
+
+
+                $.ajax({
                     method: "POST",
-                    url: "/uhubapi/schoolclubs/GetByID?ClubID=" + encodeURIComponent(window.location.href.split('/').slice(-1)[0]),
+                    url: "/uhubapi/schoolclubs/GetByID?ClubID=" + encodeURIComponent(commID),
                     statusCode: {
                         200: function (data) {
                             console.log(data);
@@ -35,7 +46,7 @@
                     error: function (error) {
                         console.log(error);
                     }
-                })
+                });
             }
         },
         beforeMount() {
@@ -50,14 +61,14 @@
         },
         mounted: function () {
             var self = this;
-            var mdConverter = new showdown.Converter();
-            setShowdownDefaults(mdConverter);
 
-            var id = encodeURIComponent(window.location.href.split('/').slice(-1)[0]);
+
             $.ajax({
                 method: "POST",
-                url: "/uhubapi/posts/GetAllByClub?ClubID=" + id,
-                success: function (formData) {
+                url: "/uhubapi/posts/GetAllByClub?ClubID=" + encodeURIComponent(commID)
+            })
+                //AJAX -> /uhubapi/posts/GetAllByClub
+                .done(function (formData) {
 
                     for (var i = 0; i < formData.length; i++) {
                         formData[i].Content = mdConverter.makeHtml(formData[i].Content);
@@ -66,11 +77,11 @@
                     self.posts = formData;
 
                     $("#body-content").style('display', null);
-                },
-                error: function (error) {
+                })
+                //AJAX -> /uhubapi/posts/GetAllByClub
+                .fail(function (error) {
                     console.log(error);
-                }
-            })
+                });
         }
     });
 })();
