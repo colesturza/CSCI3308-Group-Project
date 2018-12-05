@@ -110,16 +110,24 @@ function registerInputValidator(obj, rgxStr, allowEmpty) {
         allowEmpty = false;
     }
 
+    var outline = $(obj).style('outline-color');
+    var border = $(obj).style('border-color');
+    var shadow = $(obj).style('box-shadow');
+    $(obj).attr('data-baseStyles', outline + "|" + border + "|" + shadow);
+
+
     $(obj).on('change, keydown, keyup', function () {
 
         var col = null;
         var rgb = null;
 
-
         if (allowEmpty && $(this).val() == "") {
-            $(this).style('outline-color', null);
-            $(this).style('border-color', null);
-            $(this).style('box-shadow', null);
+            var baseStyles = $(this).attr('data-baseStyles');
+            var bStyleSet = baseStyles.split('|');
+
+            $(this).style('outline-color', bStyleSet[0]);
+            $(this).style('border-color', bStyleSet[1]);
+            $(this).style('box-shadow', bStyleSet[2]);
 
             return;
         }
