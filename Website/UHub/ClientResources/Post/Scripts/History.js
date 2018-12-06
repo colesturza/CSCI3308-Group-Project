@@ -17,7 +17,7 @@
                 method: "POST",
                 url: "/uhubapi/posts/GetRevisionsByID?PostID=" + encodeURIComponent(postID)
             })
-            //AJAX -> /uhubapi/posts/GetRevisionByID
+            //AJAX -> /uhubapi/posts/GetRevisionsByID
             .done(function (data) {
                 if (data.length > 0) {
 
@@ -34,16 +34,16 @@
                     }];
                 }
             })
-            //AJAX -> /uhubapi/posts/GetRevisionByID
+            //AJAX -> /uhubapi/posts/GetRevisionsByID
             .fail(function (error) {
                 console.log(error);
 
-                self.posts = [{
+                self.postVersions = [{
                     Name: "Nothing To See Here",
                     Content: "Unfortunately, an error occured while fetching this post's previous versions"
                 }];
             })
-            //AJAX -> /uhubapi/posts/GetRevisionByID
+            //AJAX -> /uhubapi/posts/GetRevisionsByID
             .always(function () {
                 $("#post-versions").style('display', null);
             });
