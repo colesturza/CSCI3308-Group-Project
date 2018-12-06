@@ -178,7 +178,7 @@
             getCommentDepth: function (theCmt, cmtList) {
                 console.log(theCmt)
 
-                var depthLevel;
+                var depthLevel = 0;
                 while(theCmt.ParentID != postID) {
                     theCmt = this.getCommentById(theCmt.ParentID, cmtList);
                     depthLevel++;
