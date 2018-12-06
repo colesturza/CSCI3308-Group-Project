@@ -12,7 +12,7 @@
         <ul id="post-list" class="list-group list-group-flush w-70 float-md-left" style="display:none !important">
             <li class="list-group-item mb-3" v-for="post in posts">
                 <template v-if="post.ID != undefined">
-                    <a v-bind:href="'/Post/' + post.ID">
+                    <a v-bind:href="'/Post/History/' + postID">
                         <h4>{{ post.Name }}</h4>
                     </a>
                 </template>

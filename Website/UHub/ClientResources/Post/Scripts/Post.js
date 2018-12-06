@@ -105,10 +105,12 @@
     new Vue({
         el: "#post-container",
         data: {
+            postID: "",
             parentID: "",
             title: "",
             content: "",
             postTime: "",
+            modifiedDate: null,
             comments: []
         },
         methods: {
@@ -161,11 +163,12 @@
                     postRawData = data;
                     var clubID = data.ParentID;
 
-
+                    self.postID = postID;
                     self.parentID = data.ParentID;
                     self.title = htmlEncode(data.Name);
                     self.content = mdConverter.makeHtml(data.Content);
                     self.postTime = data.CreatedDate;
+                    self.modifiedDate = data.ModifiedDate;
 
 
                     $("#post-container").style('display', null);
