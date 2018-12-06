@@ -195,6 +195,7 @@
     <Content Include="ClientResources\MASTER\Components\PostBar.js" />
     <Content Include="ClientResources\MASTER\Scripts\MasterRgx.js" />
     <Content Include="ClientResources\MASTER\Scripts\MasterValidator.js" />
+    <Content Include="ClientResources\Post\Scripts\History.js" />
     <Content Include="ClientResources\Post\Scripts\PostUpdatable.js" />
     <Content Include="ClientResources\Post\Scripts\Post.js" />
     <Content Include="ClientResources\Home\Scripts\Home.js" />
@@ -314,6 +315,7 @@
     <Content Include="Views\DynamicScripts\GAnalytics.js.cshtml" />
     <Content Include="Views\Analytics\_GAnalyticsPartial.cshtml" />
     <Content Include="Views\Post\Index_Updatable.cshtml" />
+    <Content Include="Views\Post\History.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
