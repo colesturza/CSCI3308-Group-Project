@@ -13,6 +13,8 @@
     var mdConverter = new showdown.Converter();
     setShowdownDefaults(mdConverter);
 
+    var rawCommentSet = []
+
 
     function getTodayDateStr() {
         var today = new Date();
@@ -109,7 +111,9 @@
                             Content: formData.Content
                         };
 
-                        vueInstance.comments.splice(0, 0, newCmt);
+                        rawCommentSet.splice(0, 0, newCmt);
+                        var cmtArrangedList = self.arrangeCommentTree(rawCommentSet);
+                        vueInstance.comments = cmtArrangedList;
                     });
 
             }
@@ -160,7 +164,9 @@
                             Content: formData.Content
                         };
 
-                        vueInstance.comments.splice(0, 0, newCmt);
+                        rawCommentSet.splice(0, 0, newCmt);
+                        var cmtArrangedList = self.arrangeCommentTree(rawCommentSet);
+                        vueInstance.comments = cmtArrangedList;
                     });
 
             },
@@ -270,10 +276,10 @@
                         })
                             //AJAX -> /uhubapi/comments/GetByPost
                             .done(function (cmtData) {
+                                rawCommentSet = cmtData;
+                                var cmtArrangedList = self.arrangeCommentTree(rawCommentSet);
+                                //console.log(JSON.parse(JSON.stringify(cmtArrangedList)));
 
-                                //cmtData.sort(dynamicSort("-CreatedDate"));
-                                var cmtArrangedList = self.arrangeCommentTree(cmtData);
-                                console.log(JSON.parse(JSON.stringify(cmtArrangedList)));
                                 self.comments = cmtArrangedList
 
 

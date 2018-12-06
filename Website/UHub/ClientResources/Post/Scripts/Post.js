@@ -2,6 +2,7 @@
 
     var vueInstance;
     var postRawData;
+    var rawCommentSet = []
 
 
     var postID = encodeURIComponent(window.location.href.split('/').slice(-1)[0]);
@@ -97,7 +98,9 @@
                             Content: formData.Content
                         };
 
-                        vueInstance.comments.splice(0, 0, newCmt);
+                        rawCommentSet.splice(0, 0, newCmt);
+                        var cmtArrangedList = self.arrangeCommentTree(rawCommentSet);
+                        vueInstance.comments = cmtArrangedList;
                     });
 
             }
@@ -150,8 +153,76 @@
                             Content: formData.Content
                         };
 
-                        vueInstance.comments.splice(0, 0, newCmt);
+
+                        rawCommentSet.splice(0, 0, newCmt);
+                        var cmtArrangedList = self.arrangeCommentTree(rawCommentSet);
+                        vueInstance.comments = cmtArrangedList;
                     })
+            },
+            // getCommentById and getCommentDepth  are helper functions for arrangeCommentTree
+            // Returns matching comment object
+            getCommentById: function (cmtID, cmtList) {
+                for (var j = 0; j < cmtList.length; j++) {
+                    if (cmtList[j].ID == cmtID) {
+                        return cmtList[j];
+                    }
+                }
+            },
+            // Finds the comment's degrees of separation from post
+            getCommentDepth: function (theCmt, cmtList) {
+
+                var depthLevel = 0;
+                while (theCmt.ParentID != postID) {
+                    theCmt = this.getCommentById(theCmt.ParentID, cmtList);
+                    depthLevel++;
+                }
+                return depthLevel;
+            },
+            // Arranges array so that children are within parent comments
+            arrangeCommentTree: function (cmtList) {
+                var maxDepth = 0;
+                var listLength = cmtList.length;
+
+                //Remove disabled comments
+                for (var i = listLength - 1; i >= 0; i--) {
+                    if (!cmtList[i].IsEnabled) {
+                        cmtList.splice(i, 1);
+                    }
+                }
+
+                //Get depth level for each comment
+                for (var i = 0; i < listLength; i++) {
+                    cmtList[i].cmt_children = [];
+                    cmtList[i].DepthLevel = this.getCommentDepth(cmtList[i], cmtList);
+                    if (cmtList[i].DepthLevel > maxDepth) {
+                        maxDepth = cmtList.DepthLevel;
+                    }
+                }
+
+                //create hierarchy
+                for (var j = 0; j < listLength; j++) {
+
+                    if (cmtList[j].DepthLevel == 0) {
+                        continue;
+                    }
+
+                    for (var k = 0; k < listLength; k++) {
+
+                        if (cmtList[k].ID == cmtList[j].ParentID) {
+                            cmtList[k].cmt_children.push(cmtList[j]);
+                            break;
+                        }
+                    }
+                }
+
+
+                for (var i = (cmtList.length - 1); i >= 0; i--) {
+                    if (cmtList[i].DepthLevel != 0) {
+                        cmtList.splice(i, 1);
+                    }
+                }
+
+                return cmtList;
             }
         },
         mounted: function () {
@@ -187,8 +258,13 @@
                             url: "/uhubapi/comments/GetByPost?PostID=" + encodeURIComponent(postID)
                         })
                             .done(function (data) {
-                                data.sort(dynamicSort("-CreatedDate"));
-                                self.comments = data;
+                                rawCommentSet = cmtData;
+                                var cmtArrangedList = self.arrangeCommentTree(rawCommentSet);
+                                //console.log(JSON.parse(JSON.stringify(cmtArrangedList)));
+
+                                self.comments = cmtArrangedList
+
+
 
                                 if (data.length == 0 || !postRawData.CanComment) {
                                     return;
