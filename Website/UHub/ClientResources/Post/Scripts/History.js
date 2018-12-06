@@ -15,7 +15,7 @@
             var self = this;
             $.ajax({
                 method: "POST",
-                url: "/uhubapi/posts/GetRevisionByID?PostID=" + encodeURIComponent(postID)
+                url: "/uhubapi/posts/GetRevisionsByID?PostID=" + encodeURIComponent(postID)
             })
             //AJAX -> /uhubapi/posts/GetRevisionByID
             .done(function (data) {
