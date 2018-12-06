@@ -75,6 +75,9 @@
             '                        <button v-bind:data-submitID="comment.ID" type="button" class="btn-sm btn-outline-primary m-2 mb-1" v-on:click="submitComment">Submit</button>' +
             '                    </div>' +
             '                </div>' +
+            '               <div>' +
+            '                   <comment-component v-for="comment in comment.cmt_children" :key="comment.id" v-bind:comment="comment"><comment-component>' +
+            '               </div>' +
             '            </div>' +
             '        </div>',
         methods: {
@@ -175,7 +178,7 @@
             getCommentDepth: function(theCmt, cmtList) {
                 var depthLevel;
                 while(theCmt.parentID != postID) {
-                    theCmt = getCommentById(theCmt.parentID, cmtList);
+                    theCmt = this.getCommentById(theCmt.parentID, cmtList);
                     depthLevel++;
                 }
                 return depthLevel;
@@ -258,7 +261,7 @@
                             //AJAX -> /uhubapi/comments/GetByPost
                             .done(function (data) {
                                 data.sort(dynamicSort("-CreatedDate"));
-                                self.comments = data;
+                                self.comments = this.arrangeCommentTree(data);
 
                                 if (data.length == 0 || !postRawData.CanComment) {
                                     return;
