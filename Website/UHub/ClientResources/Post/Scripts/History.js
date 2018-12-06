@@ -19,7 +19,7 @@
             })
             //AJAX -> /uhubapi/posts/GetRevisionsByID
             .done(function (data) {
-                if (data.length > 0) {
+                if (data.length > 1) {
 
                     for (var i = 0; i < data.length; i++) {
                         data[i].Content = mdConverter.makeHtml(data[i].Content);
@@ -30,7 +30,7 @@
                 } else {
                     self.postVersions = [{
                         Name: "Nothing To See Here",
-                        Content: "This post does not exist."
+                        Content: "This post only has one version."
                     }];
                 }
             })

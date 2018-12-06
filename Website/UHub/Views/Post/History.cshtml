@@ -7,7 +7,7 @@
     <div>
         <ul id="post-versions" class="list-group list-group-flush w-100 float-md-left" style="display:none !important">
             <li class="list-group-item mb-3" v-for="postVersion in postVersions">
-                <h4 v-else> {{ postVersion.ModifiedDate }} </h4>
+                <h4> {{ postVersion.ModifiedDate }} </h4>
                 <div v-html="postVersion.Content"></div>
             </li>
         </ul>
