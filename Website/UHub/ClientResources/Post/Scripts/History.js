@@ -1,4 +1,7 @@
 ﻿(function () {
+    var postID = encodeURIComponent(window.location.href.split('/').slice(-1)[0]);
+    postID = postID.match(/^[0-9]+/)[0];
+
     var mdConverter = new showdown.Converter();
     setShowdownDefaults(mdConverter);
 
