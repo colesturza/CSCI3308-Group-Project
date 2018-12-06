@@ -53,6 +53,12 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
 
 
             var postPublic = postInternal.ToDto<Post_R_PublicDTO>();
+            var sanitizerMode = CoreFactory.Singleton.Properties.HtmlSanitizerMode;
+            if ((sanitizerMode & HtmlSanitizerMode.OnRead) != 0)
+            {
+                postPublic.Content = postPublic.Content.SanitizeHtml().HtmlDecode();
+            }
+
 
             var postClub = await taskPostClub;
             if (postClub != null)
@@ -68,12 +74,6 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
                 if (IsUserBanned)
                 {
                     return Content(HttpStatusCode.Forbidden, "Access Denied");
-                }
-
-                var sanitizerMode = CoreFactory.Singleton.Properties.HtmlSanitizerMode;
-                if ((sanitizerMode & HtmlSanitizerMode.OnRead) != 0)
-                {
-                    postPublic.Content = postPublic.Content.SanitizeHtml().HtmlDecode();
                 }
 
 
@@ -128,12 +128,12 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             var postEnum = await PostReader.TryGetPostRevisionsAsync(PostID);
             if (postEnum == null)
             {
-                return NotFound();
+                return Content(HttpStatusCode.NotFound, "E1");
             }
             var postList = postEnum.ToList();
             if (postList.Count == 0)
             {
-                return NotFound();
+                return Content(HttpStatusCode.NotFound, "E2");
             }
 
 
@@ -148,6 +148,15 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
 
 
             List<Post_R_PublicDTO> postListPublic = postList.Select(x => x.ToDto<Post_R_PublicDTO>()).ToList();
+            var sanitizerMode = CoreFactory.Singleton.Properties.HtmlSanitizerMode;
+            if ((sanitizerMode & HtmlSanitizerMode.OnRead) != 0)
+            {
+                postListPublic.ForEach(x =>
+                {
+                    x.Content = x.Content.SanitizeHtml().HtmlDecode();
+                });
+            }
+
 
 
             var postClub = await taskPostClub;
@@ -156,7 +165,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
                 //verify same school
                 if (postClub.SchoolID != cmsUser.SchoolID)
                 {
-                    return NotFound();
+                    return Content(HttpStatusCode.NotFound, "E3");
                 }
 
                 var IsUserBanned = await taskIsUserBanned;
@@ -164,15 +173,6 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
                 if (IsUserBanned)
                 {
                     return Content(HttpStatusCode.Forbidden, "Access Denied");
-                }
-
-                var sanitizerMode = CoreFactory.Singleton.Properties.HtmlSanitizerMode;
-                if ((sanitizerMode & HtmlSanitizerMode.OnRead) != 0)
-                {
-                    postListPublic.ForEach(x =>
-                    {
-                        x.Content = x.Content.SanitizeHtml().HtmlDecode();
-                    });
                 }
 
 
@@ -192,7 +192,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             //verify same school
             if (postParentID != cmsUser.SchoolID)
             {
-                return NotFound();
+                return Content(HttpStatusCode.NotFound, "E4");
             }
 
 
