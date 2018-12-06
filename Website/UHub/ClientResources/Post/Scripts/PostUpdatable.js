@@ -60,6 +60,8 @@
             '                    <span class="m-2 mr-0">Posted by</span>' +
             '                    <a class="">[{{ comment.CreatedBy }}]</a>' +
             '                    <span>{{ comment.CreatedDate.toString().substring(0,10) }}</span>' +
+            '                    <span>Parent:{{ comment.ParentID }}</span>' +
+            '                    <span>Depth:{{ comment.DepthLevel }}</span>' +
             '                </div>' +
             '                <div class="border border-dark rounded m-2 py-2">' +
             '                    <span class="text-body p-2">' +
