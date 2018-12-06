@@ -242,8 +242,7 @@ namespace UHub.CoreLib.Entities.Users.DataInterop
             catch (Exception ex)
             {
                 var errCode = "84986584-BD1D-4DDB-8DAA-475A3BB874C1";
-                Exception ex_outer = new Exception(errCode, ex);
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
+                CoreFactory.Singleton.Logging.CreateErrorLog(errCode, ex);
 
                 return false;
             }
@@ -270,8 +269,7 @@ namespace UHub.CoreLib.Entities.Users.DataInterop
             catch (Exception ex)
             {
                 var errCode = "CDFB440C-2271-4DB4-BDE8-FC198D1FDACC";
-                Exception ex_outer = new Exception(errCode, ex);
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
+                CoreFactory.Singleton.Logging.CreateErrorLog(errCode, ex);
 
                 return false;
             }
@@ -300,7 +298,7 @@ namespace UHub.CoreLib.Entities.Users.DataInterop
             {
                 var errCode = "6FE73439-372D-4935-92C9-912B47822499";
                 Exception ex_outer = new Exception(errCode, ex);
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
+                CoreFactory.Singleton.Logging.CreateErrorLog(ex_outer);
             }
         }
 

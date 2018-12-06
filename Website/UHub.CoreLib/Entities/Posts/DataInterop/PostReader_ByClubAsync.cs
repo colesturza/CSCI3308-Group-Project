@@ -44,7 +44,7 @@ namespace UHub.CoreLib.Entities.Posts.DataInterop
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync("E4B4FFE6-9340-41D9-9F72-E01518E56B16", ex);
+                await CoreFactory.Singleton.Logging.CreateErrorLogAsync("E4B4FFE6-9340-41D9-9F72-E01518E56B16", ex);
                 return null;
             }
 
@@ -78,7 +78,7 @@ namespace UHub.CoreLib.Entities.Posts.DataInterop
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync("9DF4547A-C900-421B-8726-0C9418F1F316", ex);
+                await CoreFactory.Singleton.Logging.CreateErrorLogAsync("9DF4547A-C900-421B-8726-0C9418F1F316", ex);
                 return null;
             }
         }
@@ -120,7 +120,7 @@ namespace UHub.CoreLib.Entities.Posts.DataInterop
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync("363FF733-9C59-42BC-B4B1-D681A0A5DF68", ex);
+                await CoreFactory.Singleton.Logging.CreateErrorLogAsync("363FF733-9C59-42BC-B4B1-D681A0A5DF68", ex);
                 return null;
             }
         }
@@ -178,7 +178,7 @@ namespace UHub.CoreLib.Entities.Posts.DataInterop
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync("E4B4FFE6-9340-41D9-9F72-E01518E56B16", ex);
+                await CoreFactory.Singleton.Logging.CreateErrorLogAsync("E4B4FFE6-9340-41D9-9F72-E01518E56B16", ex);
                 return (null, 0);
             }
 

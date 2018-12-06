@@ -34,7 +34,7 @@ namespace UHub.CoreLib.Entities.Users.DataInterop
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync("F750F68E-728C-49E7-BA99-3DB3E1CBDB8E", ex);
+                CoreFactory.Singleton.Logging.CreateErrorLog("F750F68E-728C-49E7-BA99-3DB3E1CBDB8E", ex);
                 return false;
             }
 

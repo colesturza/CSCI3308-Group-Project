@@ -30,7 +30,7 @@ namespace UHub.CoreLib.Entities.SchoolClubs.DataInterop
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync("44219C4E-D8ED-4EFD-BA61-B5635D35C118", ex);
+                CoreFactory.Singleton.Logging.CreateErrorLog("44219C4E-D8ED-4EFD-BA61-B5635D35C118", ex);
                 return false;
             }
         }
@@ -52,7 +52,7 @@ namespace UHub.CoreLib.Entities.SchoolClubs.DataInterop
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync("948A81CC-83B7-4583-8BF9-A1D31A578A43", ex);
+                CoreFactory.Singleton.Logging.CreateErrorLog("948A81CC-83B7-4583-8BF9-A1D31A578A43", ex);
                 return true;
             }
         }

@@ -123,8 +123,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             catch (Exception ex)
             {
                 var errCode = "2EAA1B03-A569-4A16-A77F-403F7DB7CA36";
-                Exception ex_outer = new Exception(errCode, ex);
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
+                await CoreFactory.Singleton.Logging.CreateErrorLogAsync(errCode, ex);
 
                 statCode = HttpStatusCode.InternalServerError;
             }

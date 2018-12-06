@@ -32,9 +32,8 @@ namespace UHub.CoreLib.Entities.Users.APIControllers
         [ApiAuthControl]
         public IHttpActionResult GetMe()
         {
-            string status = "";
             HttpStatusCode statCode = HttpStatusCode.BadRequest;
-            if (!this.ValidateSystemState(out status, out statCode))
+            if (!this.ValidateSystemState(out string status, out statCode))
             {
                 return Content(statCode, status);
             }
@@ -54,15 +53,14 @@ namespace UHub.CoreLib.Entities.Users.APIControllers
         [ApiAuthControl]
         public async Task<IHttpActionResult> GetByUname(string Username)
         {
-            string status = "";
             HttpStatusCode statCode = HttpStatusCode.BadRequest;
-            if (!this.ValidateSystemState(out status, out statCode))
+            if (!this.ValidateSystemState(out string status, out statCode))
             {
                 return Content(statCode, status);
             }
 
-            var userStat = CoreFactory.Singleton.Auth.GetCurrentUser();
-            var cmsUser = userStat.CmsUser;
+            var (TokenStatus, CmsUser) = CoreFactory.Singleton.Auth.GetCurrentUser();
+            var cmsUser = CmsUser;
 
 
             var domain = cmsUser.Email.GetEmailDomain();
@@ -76,7 +74,7 @@ namespace UHub.CoreLib.Entities.Users.APIControllers
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync("D8EB78E4-3C48-4976-A234-6B5EACDC053A", ex);
+                CoreFactory.Singleton.Logging.CreateErrorLog("D8EB78E4-3C48-4976-A234-6B5EACDC053A", ex);
                 return InternalServerError();
             }
 
@@ -116,9 +114,8 @@ namespace UHub.CoreLib.Entities.Users.APIControllers
         [ApiAuthControl]
         public async Task<IHttpActionResult> GetByID(long UserID)
         {
-            string status = "";
             HttpStatusCode statCode = HttpStatusCode.BadRequest;
-            if (!this.ValidateSystemState(out status, out statCode))
+            if (!this.ValidateSystemState(out string status, out statCode))
             {
                 return Content(statCode, status);
             }
@@ -134,7 +131,7 @@ namespace UHub.CoreLib.Entities.Users.APIControllers
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync("D2D5D240-FEBB-43A0-8B27-2B44AB28AEF7", ex);
+                await CoreFactory.Singleton.Logging.CreateErrorLogAsync("D2D5D240-FEBB-43A0-8B27-2B44AB28AEF7", ex);
                 return InternalServerError();
             }
 

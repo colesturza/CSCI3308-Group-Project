@@ -68,7 +68,7 @@ namespace UHub.CoreLib.Entities.SchoolClubs.Management
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync("196DC520-0ADE-4B16-AF2E-E33A49F9CD73", ex);
+                CoreFactory.Singleton.Logging.CreateErrorLog("196DC520-0ADE-4B16-AF2E-E33A49F9CD73", ex);
                 return (null, SchoolClubResultCode.UnknownError);
             }
 

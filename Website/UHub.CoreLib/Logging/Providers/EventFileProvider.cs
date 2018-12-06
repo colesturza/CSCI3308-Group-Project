@@ -23,8 +23,6 @@ namespace UHub.CoreLib.Logging.Providers
         {
             var prefix = $"{EventData.EventType.ToString()}_";
 
-
-
             try
             {
                 string path1 = CoreFactory.Singleton.Properties.LogStoreDirectory;

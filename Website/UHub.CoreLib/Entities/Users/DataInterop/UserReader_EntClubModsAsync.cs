@@ -34,7 +34,7 @@ namespace UHub.CoreLib.Entities.Users.DataInterop
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync("99D05263-9224-41D4-B097-12EE87647303", ex);
+                await CoreFactory.Singleton.Logging.CreateErrorLogAsync("99D05263-9224-41D4-B097-12EE87647303", ex);
                 return false;
             }
 

@@ -64,7 +64,7 @@ namespace UHub.CoreLib.Entities.Posts.Management
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync("05D71E7E-0D15-4D87-8ADB-16BBFD966B0C", ex);
+                await CoreFactory.Singleton.Logging.CreateErrorLogAsync("05D71E7E-0D15-4D87-8ADB-16BBFD966B0C", ex);
                 return (null, PostResultCode.UnknownError);
             }
 
@@ -90,7 +90,7 @@ namespace UHub.CoreLib.Entities.Posts.Management
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync("7FB424FA-8548-47F1-AC05-A38183376902", ex);
+                await CoreFactory.Singleton.Logging.CreateErrorLogAsync("7FB424FA-8548-47F1-AC05-A38183376902", ex);
             }
 
 
@@ -155,7 +155,7 @@ namespace UHub.CoreLib.Entities.Posts.Management
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync("CDB83704-5E14-48DB-AEB9-FA947EA91D0B", ex);
+                await CoreFactory.Singleton.Logging.CreateErrorLogAsync("CDB83704-5E14-48DB-AEB9-FA947EA91D0B", ex);
                 return PostResultCode.UnknownError;
             }
 

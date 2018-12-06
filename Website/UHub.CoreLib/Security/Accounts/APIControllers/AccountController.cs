@@ -87,7 +87,7 @@ namespace UHub.CoreLib.Security.Accounts.APIControllers
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync("68934E91-EC89-41A4-A25A-C985496B99AA", ex);
+                await CoreFactory.Singleton.Logging.CreateErrorLogAsync("68934E91-EC89-41A4-A25A-C985496B99AA", ex);
            
             }
 

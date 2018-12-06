@@ -48,7 +48,7 @@ namespace UHub.CoreLib.EmailInterop.Providers.SMTP
                     }
                     catch (Exception ex)
                     {
-                        CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex);
+                        CoreFactory.Singleton.Logging.CreateErrorLog("052CD68D-D621-4549-BDFD-B4A0587C908A",ex);
                         return EmailResultCode.SendError;
                     }
                 }

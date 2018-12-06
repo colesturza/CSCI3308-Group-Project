@@ -20,7 +20,7 @@ namespace UHub.CoreLib.Logging.Management
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="data"></param>
-        public async Task CreateSuccessLogAsync<T>(T Data)
+        public void CreateSuccessLog<T>(T Data)
         {
             var eventData = new EventLogData
             {
@@ -31,13 +31,13 @@ namespace UHub.CoreLib.Logging.Management
                 CreatedDate = DateTimeOffset.UtcNow
             };
 
-            await CreateLogAsync(eventData);
+            CreateEventLog(eventData);
         }
         /// <summary>
         /// Create success message
         /// </summary>
         /// <param name="message"></param>
-        public async Task CreateSuccessLogAsync(string Message)
+        public void CreateSuccessLog(string Message)
         {
             var eventData = new EventLogData
             {
@@ -48,7 +48,7 @@ namespace UHub.CoreLib.Logging.Management
                 CreatedDate = DateTimeOffset.UtcNow
             };
 
-            await CreateLogAsync(eventData);
+            CreateEventLog(eventData);
         }
 
 
@@ -57,7 +57,7 @@ namespace UHub.CoreLib.Logging.Management
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="data"></param>
-        public async Task CreateInfoLogAsync<T>(T Data)
+        public void CreateInfoLog<T>(T Data)
         {
             var eventData = new EventLogData
             {
@@ -68,13 +68,13 @@ namespace UHub.CoreLib.Logging.Management
                 CreatedDate = DateTimeOffset.UtcNow
             };
 
-            await CreateLogAsync(eventData);
+            CreateEventLog(eventData);
         }
         /// <summary>
         /// Create information message
         /// </summary>
         /// <param name="message"></param>
-        public async Task CreateInfoLogAsync(string Message)
+        public void CreateInfoLog(string Message)
         {
             var eventData = new EventLogData
             {
@@ -85,7 +85,7 @@ namespace UHub.CoreLib.Logging.Management
                 CreatedDate = DateTimeOffset.UtcNow
             };
 
-            await CreateLogAsync(eventData);
+            CreateEventLog(eventData);
         }
 
 
@@ -94,7 +94,7 @@ namespace UHub.CoreLib.Logging.Management
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="data"></param>
-        public async Task CreateWarningLogAsync<T>(T Data)
+        public void  CreateWarningLog<T>(T Data)
         {
             var eventData = new EventLogData
             {
@@ -105,13 +105,13 @@ namespace UHub.CoreLib.Logging.Management
                 CreatedDate = DateTimeOffset.UtcNow
             };
 
-            await CreateLogAsync(eventData);
+            CreateEventLog(eventData);
         }
         /// <summary>
         /// Create warning message
         /// </summary>
         /// <param name="message"></param>
-        public async Task CreateWarningLogAsync(string Message)
+        public void CreateWarningLog(string Message)
         {
             var eventData = new EventLogData
             {
@@ -122,7 +122,7 @@ namespace UHub.CoreLib.Logging.Management
                 CreatedDate = DateTimeOffset.UtcNow
             };
 
-            await CreateLogAsync(eventData);
+            CreateEventLog(eventData);
         }
 
 
@@ -131,7 +131,7 @@ namespace UHub.CoreLib.Logging.Management
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="data"></param>
-        public async Task CreateFailureLogAsync<T>(T Data)
+        public void CreateFailureLog<T>(T Data)
         {
             var eventData = new EventLogData
             {
@@ -142,13 +142,13 @@ namespace UHub.CoreLib.Logging.Management
                 CreatedDate = DateTimeOffset.UtcNow
             };
 
-            await CreateLogAsync(eventData);
+            CreateEventLog(eventData);
         }
         /// <summary>
         /// Create failure message
         /// </summary>
         /// <param name="message"></param>
-        public async Task CreateFailureLogAsync(string Message)
+        public void CreateFailureLog(string Message)
         {
             var eventData = new EventLogData
             {
@@ -159,7 +159,7 @@ namespace UHub.CoreLib.Logging.Management
                 CreatedDate = DateTimeOffset.UtcNow
             };
 
-            await CreateLogAsync(eventData);
+            CreateEventLog(eventData);
         }
 
 
@@ -167,7 +167,7 @@ namespace UHub.CoreLib.Logging.Management
         /// Create error message
         /// </summary>
         /// <param name="ex"></param>
-        public async Task CreateErrorLogAsync(Exception ex)
+        public void CreateErrorLog(Exception ex)
         {
             var eventData = new EventLogData
             {
@@ -178,9 +178,9 @@ namespace UHub.CoreLib.Logging.Management
                 CreatedDate = DateTimeOffset.UtcNow
             };
 
-            await CreateLogAsync(eventData);
+            CreateEventLog(eventData);
         }
-        public async Task CreateErrorLogAsync(string UID, Exception exInner)
+        public void CreateErrorLog(string UID, Exception exInner)
         {
             var eventData = new EventLogData
             {
@@ -191,14 +191,14 @@ namespace UHub.CoreLib.Logging.Management
                 CreatedDate = DateTimeOffset.UtcNow
             };
 
-            await CreateLogAsync(eventData);
+            CreateEventLog(eventData);
         }
         /// <summary>
         /// Create error message using anonymous type
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="data"></param>
-        public async Task CreateErrorLogAsync<T>(T Data)
+        public void CreateErrorLog<T>(T Data)
         {
             var eventData = new EventLogData
             {
@@ -209,14 +209,14 @@ namespace UHub.CoreLib.Logging.Management
                 CreatedDate = DateTimeOffset.UtcNow
             };
 
-            await CreateLogAsync(eventData);
+            CreateEventLog(eventData);
         }
         /// <summary>
         /// Create error message using anonymous type
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="data"></param>
-        public async Task CreateErrorLogAsync<T>(string UID, T Data)
+        public void CreateErrorLog<T>(string UID, T Data)
         {
             var eventData = new EventLogData
             {
@@ -227,7 +227,7 @@ namespace UHub.CoreLib.Logging.Management
                 CreatedDate = DateTimeOffset.UtcNow
             };
 
-            await CreateLogAsync(eventData);
+            CreateEventLog(eventData);
         }
 
 
@@ -243,7 +243,7 @@ namespace UHub.CoreLib.Logging.Management
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="data"></param>
-        public async Task CreateLogAsync<T>(T Data, EventType EventType)
+        public void CreateEventLog<T>(T Data, EventType EventType)
         {
             var eventData = new EventLogData
             {
@@ -254,14 +254,14 @@ namespace UHub.CoreLib.Logging.Management
                 CreatedDate = DateTimeOffset.UtcNow
             };
 
-            await CreateLogAsync(eventData);
+            CreateEventLog(eventData);
         }
         /// <summary>
         /// Create success message using anonymous type
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="data"></param>
-        public async Task CreateLogAsync<T>(string UID, T Data, EventType EventType)
+        public void CreateEventLog<T>(string UID, T Data, EventType EventType)
         {
             var eventData = new EventLogData
             {
@@ -272,13 +272,13 @@ namespace UHub.CoreLib.Logging.Management
                 CreatedDate = DateTimeOffset.UtcNow
             };
 
-            await CreateLogAsync(eventData);
+            CreateEventLog(eventData);
         }
         /// <summary>
         /// Create success message
         /// </summary>
         /// <param name="message"></param>
-        public async Task CreateLogAsync(string Message, EventType EventType)
+        public void CreateEventLog(string Message, EventType EventType)
         {
             var eventData = new EventLogData
             {
@@ -289,13 +289,13 @@ namespace UHub.CoreLib.Logging.Management
                 CreatedDate = DateTimeOffset.UtcNow
             };
 
-            await CreateLogAsync(eventData);
+            CreateEventLog(eventData);
         }
         /// <summary>
         /// Create success message
         /// </summary>
         /// <param name="message"></param>
-        public async Task CreateLogAsync(string UID, string Message, EventType EventType)
+        public void CreateEventLog(string UID, string Message, EventType EventType)
         {
             var eventData = new EventLogData
             {
@@ -306,13 +306,13 @@ namespace UHub.CoreLib.Logging.Management
                 CreatedDate = DateTimeOffset.UtcNow
             };
 
-            await CreateLogAsync(eventData);
+            CreateEventLog(eventData);
         }
 
 
-        public async Task CreateLogAsync(EventLogData EventData)
+        public void CreateEventLog(EventLogData EventData)
         {
-            await Task.Run(() => localProviders.ForEach(x => x.CreateLog(EventData)));
+            localProviders.ForEach(x => x.CreateLog(EventData));
         }
 
     }

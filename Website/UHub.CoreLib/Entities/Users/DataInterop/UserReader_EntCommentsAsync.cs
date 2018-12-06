@@ -33,7 +33,7 @@ namespace UHub.CoreLib.Entities.Users.DataInterop
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync("806327DF-92D9-4400-974C-11D7EB2C1793", ex);
+                await CoreFactory.Singleton.Logging.CreateErrorLogAsync("806327DF-92D9-4400-974C-11D7EB2C1793", ex);
                 return false;
             }
 

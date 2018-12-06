@@ -65,21 +65,20 @@ namespace UHub.CoreLib.Security.Authentication.Providers
 
 
             var enableAuthSlide = CoreFactory.Singleton.Properties.EnableAuthTokenSlidingExpiration;
-            Action<AuthenticationToken> succHandler =
-                (token) =>
+            void succHandler(AuthenticationToken token)
+            {
+                //RE-DATE AUTH TICKET
+                //custom sliding expiration
+                if (enableAuthSlide)
                 {
-                    //RE-DATE AUTH TICKET
-                    //custom sliding expiration
-                    if (enableAuthSlide)
-                    {
-                        var isSlide = SlideAuthTokenExpiration(token);
+                    var isSlide = SlideAuthTokenExpiration(token);
 
-                        if (isSlide)
-                        {
-                            SetCurrentUser_ClientToken(token, Context);
-                        }
+                    if (isSlide)
+                    {
+                        SetCurrentUser_ClientToken(token, Context);
                     }
-                };
+                }
+            }
 
 
             return await ValidateAuthTokenAsync(authCookie.Value, Context, succHandler);
@@ -114,7 +113,7 @@ namespace UHub.CoreLib.Security.Authentication.Providers
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync("8959AB05-5BEF-4351-A980-A3A8AD140EE7", ex);
+                await CoreFactory.Singleton.Logging.CreateErrorLogAsync("8959AB05-5BEF-4351-A980-A3A8AD140EE7", ex);
 
                 var CmsUser = UserReader.GetAnonymousUser();
                 return (TokenValidationStatus.TokenAESFailure, CmsUser);

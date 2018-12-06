@@ -42,7 +42,7 @@ namespace UHub.CoreLib.Entities.SchoolMajors.DataInterop
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync("E80BCB26-D221-458A-999C-C885A0D4F018", ex);
+                await CoreFactory.Singleton.Logging.CreateErrorLogAsync("E80BCB26-D221-458A-999C-C885A0D4F018", ex);
                 return null;
             }
         }
@@ -68,7 +68,7 @@ namespace UHub.CoreLib.Entities.SchoolMajors.DataInterop
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync("B007CC88-B728-4BDE-854C-C125A263FDB5", ex);
+                await CoreFactory.Singleton.Logging.CreateErrorLogAsync("B007CC88-B728-4BDE-854C-C125A263FDB5", ex);
                 return null;
             }
         }
@@ -100,7 +100,7 @@ namespace UHub.CoreLib.Entities.SchoolMajors.DataInterop
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync("03710860-1CB4-4867-BFE8-2ED83F0ED6A2", ex);
+                await CoreFactory.Singleton.Logging.CreateErrorLogAsync("03710860-1CB4-4867-BFE8-2ED83F0ED6A2", ex);
                 return null;
             }
         }
@@ -137,7 +137,7 @@ namespace UHub.CoreLib.Entities.SchoolMajors.DataInterop
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync("EA923AAB-04CE-4B39-8F83-6DED5538CE76", ex);
+                await CoreFactory.Singleton.Logging.CreateErrorLogAsync("EA923AAB-04CE-4B39-8F83-6DED5538CE76", ex);
                 return null;
             }
         }
@@ -174,7 +174,7 @@ namespace UHub.CoreLib.Entities.SchoolMajors.DataInterop
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync("203FD5B2-3C56-4A67-9D8F-01DC54A1F5B2", ex);
+                await CoreFactory.Singleton.Logging.CreateErrorLogAsync("203FD5B2-3C56-4A67-9D8F-01DC54A1F5B2", ex);
                 return null;
             }
         }
