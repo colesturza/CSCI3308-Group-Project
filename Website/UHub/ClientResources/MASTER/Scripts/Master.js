@@ -116,7 +116,7 @@ function registerInputValidator(obj, rgxStr, allowEmpty) {
     $(obj).attr('data-baseStyles', outline + "|" + border + "|" + shadow);
 
 
-    $(obj).on('change, keydown, keyup', function () {
+    var validate = function () {
 
         var col = null;
         var rgb = null;
@@ -151,7 +151,12 @@ function registerInputValidator(obj, rgxStr, allowEmpty) {
         $(this).style('outline-color', col, "important");
         $(this).style('border-color', col, "important");
         $(this).style('box-shadow', "0 0 .1rem 0.2rem " + rgb, "important");
-    });
+    }
+
+
+
+    window.setInterval(validate, 100);
+    $(obj).on('change, keydown, keyup', validate);
 }
 
 
