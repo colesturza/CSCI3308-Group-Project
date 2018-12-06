@@ -67,7 +67,7 @@ namespace UHub.CoreLib.Entities.Comments.Management
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync("82EEC0B9-31CB-4CD2-9B0F-2CD56CAA83C4", ex);
+                await CoreFactory.Singleton.Logging.CreateErrorLogAsync("82EEC0B9-31CB-4CD2-9B0F-2CD56CAA83C4", ex);
                 return (null, CommentResultCode.UnknownError);
             }
 

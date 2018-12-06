@@ -42,7 +42,7 @@ namespace UHub.CoreLib.Entities.SchoolMajors.DataInterop
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync("DF24DBC5-577C-46E9-9E83-AF67CD1C40E3", ex);
+                CoreFactory.Singleton.Logging.CreateErrorLog("DF24DBC5-577C-46E9-9E83-AF67CD1C40E3", ex);
                 return null;
             }
         }
@@ -68,7 +68,7 @@ namespace UHub.CoreLib.Entities.SchoolMajors.DataInterop
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync("3D63B30C-80CE-4A2B-95E9-B51A13A49994", ex);
+                CoreFactory.Singleton.Logging.CreateErrorLog("3D63B30C-80CE-4A2B-95E9-B51A13A49994", ex);
                 return null;
             }
         }
@@ -100,7 +100,7 @@ namespace UHub.CoreLib.Entities.SchoolMajors.DataInterop
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync("411B43FA-9F3E-4C9F-9433-BA366EA20D55", ex);
+                CoreFactory.Singleton.Logging.CreateErrorLog("411B43FA-9F3E-4C9F-9433-BA366EA20D55", ex);
                 return null;
             }
         }
@@ -138,7 +138,7 @@ namespace UHub.CoreLib.Entities.SchoolMajors.DataInterop
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync("EEE91FB7-9F50-4D13-A88D-349421B3EA6D", ex);
+                CoreFactory.Singleton.Logging.CreateErrorLog("EEE91FB7-9F50-4D13-A88D-349421B3EA6D", ex);
                 return null;
             }
         }
@@ -175,7 +175,7 @@ namespace UHub.CoreLib.Entities.SchoolMajors.DataInterop
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync("2B103763-54EE-4DBE-8372-E0659F246100", ex);
+                CoreFactory.Singleton.Logging.CreateErrorLog("2B103763-54EE-4DBE-8372-E0659F246100", ex);
                 return null;
             }
         }

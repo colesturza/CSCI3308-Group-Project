@@ -208,7 +208,7 @@ begin
 		rs.JobTitle,
 		rs.IsFinished,
 		@parentID		as ParentID,
-		0				as IsDeleted,
+		cast(0 as bit)	as IsDeleted,
 		@createdBy		as CreatedBy,
 		@createdDate	as CreatedDate,
 		rs.ModifiedBy,

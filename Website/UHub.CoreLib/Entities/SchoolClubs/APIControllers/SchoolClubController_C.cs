@@ -30,18 +30,17 @@ namespace UHub.CoreLib.Entities.SchoolClubs.APIControllers
         [ApiAuthControl]
         public async Task<IHttpActionResult> Create([FromBody] SchoolClub_C_PublicDTO ClubDTO)
         {
-            string status = "";
             HttpStatusCode statCode = HttpStatusCode.BadRequest;
-            if (!this.ValidateSystemState(out status, out statCode))
+            if (!this.ValidateSystemState(out string status, out statCode))
             {
                 return Content(statCode, status);
             }
 
             var context = System.Web.HttpContext.Current;
-            var recaptchaResult = await HandleRecaptchaAsync(context);
-            if (!recaptchaResult.IsValid)
+            var (IsValid, Result) = await HandleRecaptchaAsync(context);
+            if (!IsValid)
             {
-                return Content(statCode, recaptchaResult.Result);
+                return Content(statCode, Result);
             }
 
             if (ClubDTO == null)
@@ -84,8 +83,7 @@ namespace UHub.CoreLib.Entities.SchoolClubs.APIControllers
             catch (Exception ex)
             {
                 var errCode = "C3546EA7-AF05-43C0-A9F0-3C6E724EFF20";
-                Exception ex_outer = new Exception(errCode, ex);
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
+                await CoreFactory.Singleton.Logging.CreateErrorLogAsync(errCode, ex);
 
 
                 statCode = HttpStatusCode.InternalServerError;

@@ -41,7 +41,7 @@ namespace UHub.CoreLib.Entities.SchoolClubs.DataInterop
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync("DB0F9B85-F015-4898-9640-AC932B7BE290", ex);
+                CoreFactory.Singleton.Logging.CreateErrorLog("DB0F9B85-F015-4898-9640-AC932B7BE290", ex);
                 return null;
             }
         }
@@ -68,7 +68,7 @@ namespace UHub.CoreLib.Entities.SchoolClubs.DataInterop
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync("1632E25F-B6D8-4597-B45C-F96A6E3B2EE1", ex);
+                CoreFactory.Singleton.Logging.CreateErrorLog("1632E25F-B6D8-4597-B45C-F96A6E3B2EE1", ex);
                 return null;
             }
         }
@@ -100,7 +100,7 @@ namespace UHub.CoreLib.Entities.SchoolClubs.DataInterop
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync("9F041C9F-1ACC-4BFE-BAEF-04906E62FCC4", ex);
+                CoreFactory.Singleton.Logging.CreateErrorLog("9F041C9F-1ACC-4BFE-BAEF-04906E62FCC4", ex);
                 return null;
             }
         }
@@ -137,7 +137,7 @@ namespace UHub.CoreLib.Entities.SchoolClubs.DataInterop
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync("47AC2532-FABD-4709-A436-07F307472741", ex);
+                CoreFactory.Singleton.Logging.CreateErrorLog("47AC2532-FABD-4709-A436-07F307472741", ex);
                 return null;
             }
         }
@@ -174,7 +174,7 @@ namespace UHub.CoreLib.Entities.SchoolClubs.DataInterop
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync("9ED9915C-F4C5-4CB7-991F-B40ABDD6A965", ex);
+                CoreFactory.Singleton.Logging.CreateErrorLog("9ED9915C-F4C5-4CB7-991F-B40ABDD6A965", ex);
                 return null;
             }
         }

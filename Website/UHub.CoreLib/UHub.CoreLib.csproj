@@ -358,13 +358,14 @@
     <Compile Include="Logging\Enums\LocalLoggingSource.cs" />
     <Compile Include="Logging\Enums\UsageLoggingMode.cs" />
     <Compile Include="Logging\EventLogData.cs" />
+    <Compile Include="Logging\Management\LoggingManager_Event.cs" />
     <Compile Include="Logging\Providers\EventDatabaseProvider.cs" />
     <Compile Include="Logging\Providers\EventFileProvider.cs" />
     <Compile Include="Logging\Interfaces\IEventLogProvider.cs" />
     <Compile Include="Logging\Interfaces\IUsageLogProvider.cs" />
     <Compile Include="Logging\Util\LoggingHelpers.cs" />
-    <Compile Include="Logging\Management\LoggingManager_Usage.cs" />
-    <Compile Include="Logging\Management\LoggingManager_Local.cs" />
+    <Compile Include="Logging\Management\LoggingManager_UsageAsync.cs" />
+    <Compile Include="Logging\Management\LoggingManager_EventAsync.cs" />
     <Compile Include="Logging\Management\LoggingManager.cs" />
     <Compile Include="Logging\Providers\EventLocalSysProvider.cs" />
     <Compile Include="Logging\Providers\UsageGAnalyticsProvider.cs" />

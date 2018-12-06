@@ -53,6 +53,12 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
 
 
             var postPublic = postInternal.ToDto<Post_R_PublicDTO>();
+            var sanitizerMode = CoreFactory.Singleton.Properties.HtmlSanitizerMode;
+            if ((sanitizerMode & HtmlSanitizerMode.OnRead) != 0)
+            {
+                postPublic.Content = postPublic.Content.SanitizeHtml().HtmlDecode();
+            }
+
 
             var postClub = await taskPostClub;
             if (postClub != null)
@@ -68,12 +74,6 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
                 if (IsUserBanned)
                 {
                     return Content(HttpStatusCode.Forbidden, "Access Denied");
-                }
-
-                var sanitizerMode = CoreFactory.Singleton.Properties.HtmlSanitizerMode;
-                if ((sanitizerMode & HtmlSanitizerMode.OnRead) != 0)
-                {
-                    postPublic.Content = postPublic.Content.SanitizeHtml().HtmlDecode();
                 }
 
 
@@ -148,6 +148,15 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
 
 
             List<Post_R_PublicDTO> postListPublic = postList.Select(x => x.ToDto<Post_R_PublicDTO>()).ToList();
+            var sanitizerMode = CoreFactory.Singleton.Properties.HtmlSanitizerMode;
+            if ((sanitizerMode & HtmlSanitizerMode.OnRead) != 0)
+            {
+                postListPublic.ForEach(x =>
+                {
+                    x.Content = x.Content.SanitizeHtml().HtmlDecode();
+                });
+            }
+
 
 
             var postClub = await taskPostClub;
@@ -164,15 +173,6 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
                 if (IsUserBanned)
                 {
                     return Content(HttpStatusCode.Forbidden, "Access Denied");
-                }
-
-                var sanitizerMode = CoreFactory.Singleton.Properties.HtmlSanitizerMode;
-                if ((sanitizerMode & HtmlSanitizerMode.OnRead) != 0)
-                {
-                    postListPublic.ForEach(x =>
-                    {
-                        x.Content = x.Content.SanitizeHtml().HtmlDecode();
-                    });
                 }
 
 

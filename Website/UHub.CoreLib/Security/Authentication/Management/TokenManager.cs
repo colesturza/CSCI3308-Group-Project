@@ -32,7 +32,7 @@ namespace UHub.CoreLib.Security.Authentication.Management
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex);
+                CoreFactory.Singleton.Logging.CreateErrorLog(ex);
                 return null;
             }
 

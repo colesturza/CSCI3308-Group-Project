@@ -110,7 +110,7 @@ namespace UHub.CoreLib.Security.Authentication.Providers
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync("BCB41528-CF1B-48B9-B7EA-4F622AE7F047", ex);
+                CoreFactory.Singleton.Logging.CreateErrorLog("BCB41528-CF1B-48B9-B7EA-4F622AE7F047", ex);
 
                 var cmsUser = UserReader.GetAnonymousUser();
                 return (TokenValidationStatus.TokenAESFailure, cmsUser);

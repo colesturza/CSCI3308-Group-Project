@@ -43,7 +43,7 @@ namespace UHub.CoreLib.Entities.Posts.DataInterop
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync("CCE3A0A5-DC88-42B6-ADC0-F2F95995203C", ex);
+                CoreFactory.Singleton.Logging.CreateErrorLog("CCE3A0A5-DC88-42B6-ADC0-F2F95995203C", ex);
                 return null;
             }
         }
@@ -70,7 +70,7 @@ namespace UHub.CoreLib.Entities.Posts.DataInterop
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync("00877A2B-2DE3-492A-9EFE-5FDB837E9C59", ex);
+                CoreFactory.Singleton.Logging.CreateErrorLog("00877A2B-2DE3-492A-9EFE-5FDB837E9C59", ex);
                 return Enumerable.Empty<Post>();
             }
         }
@@ -96,7 +96,7 @@ namespace UHub.CoreLib.Entities.Posts.DataInterop
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync("D93AA28B-A453-4BC1-B32C-882BEAEDCEDE", ex);
+                CoreFactory.Singleton.Logging.CreateErrorLog("D93AA28B-A453-4BC1-B32C-882BEAEDCEDE", ex);
                 return null;
             }
         }

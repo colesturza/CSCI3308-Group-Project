@@ -157,7 +157,7 @@ namespace UHub.CoreLib.APIControllers
             }
             catch
             {
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync(new Guid("2773EC77-FA18-4445-9EBB-41780638D993"));
+                await CoreFactory.Singleton.Logging.CreateErrorLogAsync(new Guid("2773EC77-FA18-4445-9EBB-41780638D993"));
 
                 return (false, "Recaptcha Failed");
             }

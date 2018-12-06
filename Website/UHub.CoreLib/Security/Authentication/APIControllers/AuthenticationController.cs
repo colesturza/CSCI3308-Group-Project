@@ -102,7 +102,7 @@ namespace UHub.CoreLib.Security.Authentication.APIControllers
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync("4717C1CF-7C2E-4596-9917-119FF7248B10", ex);
+                await CoreFactory.Singleton.Logging.CreateErrorLogAsync("4717C1CF-7C2E-4596-9917-119FF7248B10", ex);
 
                 return Content(HttpStatusCode.InternalServerError, status);
             }
@@ -155,7 +155,7 @@ namespace UHub.CoreLib.Security.Authentication.APIControllers
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync("7D136E21-6F6C-436B-89E3-9F57E6C0861D", ex);
+                await CoreFactory.Singleton.Logging.CreateErrorLogAsync("7D136E21-6F6C-436B-89E3-9F57E6C0861D", ex);
 
 
                 //return original token

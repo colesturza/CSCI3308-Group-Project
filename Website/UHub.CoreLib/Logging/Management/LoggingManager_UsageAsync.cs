@@ -15,7 +15,7 @@ namespace UHub.CoreLib.Logging.Management
     public sealed partial class LoggingManager
     {
 
-        #region Site Analytics/Usage Logs
+        
         public async Task CreatePageActionLogAsync(string Url)
         {
             var data = LoggingHelpers.GetUserClientData();
@@ -38,8 +38,6 @@ namespace UHub.CoreLib.Logging.Management
 
             await Task.Run(() => usageProviders.ForEach(x => x.CreateClientEventLog(EventType, data)));
         }
-
-        #endregion
 
 
     }
