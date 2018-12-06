@@ -349,8 +349,9 @@
     <Compile Include="Extensions\TimeSpanExtensions.cs" />
     <Compile Include="Extensions\TypeExtensions.cs" />
     <Compile Include="HttpModules\ResponseHeaderModule.cs" />
-    <Compile Include="Logging\DataInterop\LocalEventWriterAsync.cs" />
-    <Compile Include="Logging\DataInterop\LocalEventWriter.cs" />
+    <Compile Include="Logging\DataInterop\EventWriterCore.cs" />
+    <Compile Include="Logging\DataInterop\EventWriterAsync.cs" />
+    <Compile Include="Logging\DataInterop\EventWriter.cs" />
     <Compile Include="Logging\Enums\UsageLogType.cs" />
     <Compile Include="Logging\Enums\EventType.cs" />
     <Compile Include="Logging\Enums\LocationLogType.cs" />

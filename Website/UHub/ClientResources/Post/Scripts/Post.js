@@ -2,6 +2,7 @@
 
     var vueInstance;
     var postRawData;
+    var rawCommentSet = []
 
 
     var postID = encodeURIComponent(window.location.href.split('/').slice(-1)[0]);
@@ -45,25 +46,31 @@
             '                <div>' +
             '                    <span class="m-2 mr-0">Posted by</span>' +
             '                    <a class="">[{{ comment.CreatedBy }}]</a>' +
-            '                    <span>{{ comment.CreatedDate.substring(0,10) }}</span>' +
+            '                    <span>{{ comment.CreatedDate.toString().substring(0,10) }}</span>' +
             '                </div>' +
             '                <div class="border border-dark rounded m-2 py-2">' +
             '                    <span class="text-body p-2">' +
             '                        {{ comment.Content }}' +
             '                    </span>' +
             '                </div>' +
-            '                <button type="button" class="btn-sm btn-outline-dark m-2 mb-1" v-on:click="emit" data-reply="reply" style="display:none !important">Reply</button>' +
+            '                <button type="button" class="btn-sm btn-outline-dark m-2 mb-1" v-on:click="emit(comment.ID)" data-reply="reply" style="display:none !important">Reply</button>' +
             '                <div>' +
             '                    <div v-bind:data-cmtID="comment.ID" class="form-group" style="display: none;">' +
             '                        <textarea rows="2" class="mx-auto form-control" ref="commentReply"></textarea>' +
             '                        <button v-bind:data-submitID="comment.ID" type="button" class="btn-sm btn-outline-primary m-2 mb-1" v-on:click="submitComment">Submit</button>' +
             '                    </div>' +
             '                </div>' +
+            '               <div>' +
+            '                   <comment-component v-for="comment in comment.cmt_children" v-on:custom-click="buttonHandler" :key="comment.id" v-bind:comment="comment"><comment-component>' +
+            '               </div>' +
             '            </div>' +
             '        </div>',
         methods: {
-            emit: function () {
-                this.$emit('custom-click', this.comment.ID);
+            emit: function (cmtID) {
+                this.$emit('custom-click', cmtID);
+            },
+            buttonHandler: function (commentID) {
+                $("[data-cmtID=" + commentID + "]").toggle();
             },
             submitComment: function () {
 
@@ -76,13 +83,13 @@
 
 
                 execCreateComment(jsonData)
+                    //AJAX -> /uhubapi/comments/Create
                     .done(function (data) {
                         $("[data-cmtID=" + formData.ParentID + "] textarea").val("");
                         $("[data-cmtID=" + formData.ParentID + "]").toggle();
 
 
                         var dtStr = getTodayDateStr();
-
 
                         var newCmt = {
                             ID: data,
@@ -91,7 +98,9 @@
                             Content: formData.Content
                         };
 
-                        vueInstance.comments.splice(0, 0, newCmt);
+                        rawCommentSet.splice(0, 0, newCmt);
+                        var cmtArrangedList = self.arrangeCommentTree(rawCommentSet);
+                        vueInstance.comments = cmtArrangedList;
                     });
 
             }
@@ -146,8 +155,76 @@
                             Content: formData.Content
                         };
 
-                        vueInstance.comments.splice(0, 0, newCmt);
+
+                        rawCommentSet.splice(0, 0, newCmt);
+                        var cmtArrangedList = self.arrangeCommentTree(rawCommentSet);
+                        vueInstance.comments = cmtArrangedList;
                     })
+            },
+            // getCommentById and getCommentDepth  are helper functions for arrangeCommentTree
+            // Returns matching comment object
+            getCommentById: function (cmtID, cmtList) {
+                for (var j = 0; j < cmtList.length; j++) {
+                    if (cmtList[j].ID == cmtID) {
+                        return cmtList[j];
+                    }
+                }
+            },
+            // Finds the comment's degrees of separation from post
+            getCommentDepth: function (theCmt, cmtList) {
+
+                var depthLevel = 0;
+                while (theCmt.ParentID != postID) {
+                    theCmt = this.getCommentById(theCmt.ParentID, cmtList);
+                    depthLevel++;
+                }
+                return depthLevel;
+            },
+            // Arranges array so that children are within parent comments
+            arrangeCommentTree: function (cmtList) {
+                var maxDepth = 0;
+                var listLength = cmtList.length;
+
+                //Remove disabled comments
+                for (var i = listLength - 1; i >= 0; i--) {
+                    if (!cmtList[i].IsEnabled) {
+                        cmtList.splice(i, 1);
+                    }
+                }
+
+                //Get depth level for each comment
+                for (var i = 0; i < listLength; i++) {
+                    cmtList[i].cmt_children = [];
+                    cmtList[i].DepthLevel = this.getCommentDepth(cmtList[i], cmtList);
+                    if (cmtList[i].DepthLevel > maxDepth) {
+                        maxDepth = cmtList.DepthLevel;
+                    }
+                }
+
+                //create hierarchy
+                for (var j = 0; j < listLength; j++) {
+
+                    if (cmtList[j].DepthLevel == 0) {
+                        continue;
+                    }
+
+                    for (var k = 0; k < listLength; k++) {
+
+                        if (cmtList[k].ID == cmtList[j].ParentID) {
+                            cmtList[k].cmt_children.push(cmtList[j]);
+                            break;
+                        }
+                    }
+                }
+
+
+                for (var i = (cmtList.length - 1); i >= 0; i--) {
+                    if (cmtList[i].DepthLevel != 0) {
+                        cmtList.splice(i, 1);
+                    }
+                }
+
+                return cmtList;
             }
         },
         mounted: function () {
@@ -184,8 +261,13 @@
                             url: "/uhubapi/comments/GetByPost?PostID=" + encodeURIComponent(postID)
                         })
                             .done(function (data) {
-                                data.sort(dynamicSort("-CreatedDate"));
-                                self.comments = data;
+                                rawCommentSet = cmtData;
+                                var cmtArrangedList = self.arrangeCommentTree(rawCommentSet);
+                                //console.log(JSON.parse(JSON.stringify(cmtArrangedList)));
+
+                                self.comments = cmtArrangedList
+
+
 
                                 if (data.length == 0 || !postRawData.CanComment) {
                                     return;
@@ -226,5 +308,7 @@
                 });
         }
     });
+
+
 
 })();
