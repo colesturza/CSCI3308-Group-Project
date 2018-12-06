@@ -13,12 +13,14 @@ namespace UHub.CoreLib.Logging.Providers
 {
     internal sealed class EventDatabaseProvider : IEventLogProvider
     {
+#pragma warning disable
         public bool CreateLog(EventLogData EventData)
         {
 
             return EventWriter.TryWriteEvent(EventData);
 
         }
+#pragma warning restore
 
     }
 }
