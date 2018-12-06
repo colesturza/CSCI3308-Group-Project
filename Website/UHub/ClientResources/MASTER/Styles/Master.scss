@@ -53,14 +53,19 @@ blockquote p {
     display: inline;
 }
 
+#post-list a[href^="/post/" i]{
+    word-break: break-word;
+}
+
+
 /*JQ UI AutoComplete Fix*/
 .ui-autocomplete {
     .ui-menu-item-wrapper {
         margin: 0 !important;
-        outline: 0!important;
+        outline: 0 !important;
         border: 0 !important;
 
-        &:hover{
+        &:hover {
             box-shadow: inset 0px 0px 0px 1px rgba(150, 150, 150, 1);
         }
     }
