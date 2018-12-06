@@ -5,9 +5,6 @@
     var oldResponseErr = null;
 
 
-    var RGX_NAME = /^(([ \u00c0-\u01ffA-z0-9'\-])+){3,100}$/;
-    var RGX_DESCRIPTION = /^.{0,2000}$/s;
-
 
     function setWaitState() {
         $("#btn_CreateClub").attr("disabled", "disabled");
@@ -34,12 +31,12 @@
 
     function processInputValidation(formData) {
 
-        if (!formData.Name.match(RGX_NAME)) {
+        if (!formData.Name.match(RgxPtrns.Club.NAME)) {
             oldResponseErr = 'Club Name Invalid';
             alert(oldResponseErr);
             return false;
         }
-        else if (!formData.Description.match(RGX_DESCRIPTION)) {
+        else if (!formData.Description.match(RgxPtrns.Club.DESCRIPTION)) {
             oldResponseErr = 'Club Description Invalid';
             alert(oldResponseErr);
             return false;
@@ -117,7 +114,7 @@
 
 
 
-    registerInputValidator($("#txt_Name"), RGX_NAME);
-    registerInputValidator($("#txt_Description"), RGX_DESCRIPTION, true);
+    registerInputValidator($("#txt_Name"), RgxPtrns.Club.NAME);
+    registerInputValidator($("#txt_Description"), RgxPtrns.Club.DESCRIPTION, true);
 
 })();

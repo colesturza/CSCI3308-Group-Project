@@ -2,17 +2,6 @@
 (function () {
 
 
-    var RGX_EMAIL = /^[\w-]+@([\w-]+\.)+[\w-]+$/;
-    var RGX_USERNAME = /^\S{3,50}$/;
-    var RGX_PSWD = /^.{8,150}$/;
-    var RGX_NAME = /^(([ \u00c0-\u01ffA-z'\-])+){2,200}$/;
-    var RGX_MAJOR = /^.{2,250}$/;
-    var RGX_PHONE = /^([0-1][ .-])?((\([0-9]{3}\)[ .-]?)|([0-9]{3}[ .-]?))([0-9]{3}[ .-]?)([0-9]{4})$/;
-    var RGX_GRAD_DATE = /^[0-9]{4}\-[0-1][0-9]\-[0-3][0-9]$/;
-    var RGX_YEAR = /^Freshman|Sophomore|Junior|Senior\+?$/;
-    var RGX_COMPANY = /^.{0,100}$/;
-    var RGX_JOB_TITLE = /^.{0,100}$/;
-
 
     var oldEmail = "";
     var userObjOld = null;
@@ -34,52 +23,52 @@
     function processInputValidation(formData) {
 
 
-        if (!formData.Email.match(RGX_EMAIL)) {
+        if (!formData.Email.match(RgxPtrns.User.EMAIL)) {
             oldResponseErr = 'Email Invalid';
             alert(oldResponseErr);
             return false;
         }
-        else if (!formData.Username.match(RGX_USERNAME)) {
+        else if (!formData.Username.match(RgxPtrns.User.USERNAME)) {
             oldResponseErr = 'Username Invalid';
             alert(oldResponseErr);
             return false;
         }
-        else if (!formData.Password.match(RGX_PSWD)) {
+        else if (!formData.Password.match(RgxPtrns.User.PSWD)) {
             oldResponseErr = 'Password Invalid';
             alert(oldResponseErr);
             return false;
         }
-        else if (!formData.Name.match(RGX_NAME)) {
+        else if (!formData.Name.match(RgxPtrns.User.NAME)) {
             oldResponseErr = 'Name Invalid';
             alert(oldResponseErr);
             return false;
         }
-        else if (!formData.Major.match(RGX_MAJOR)) {
+        else if (!formData.Major.match(RgxPtrns.User.MAJOR)) {
             oldResponseErr = 'Major Invalid';
             alert(oldResponseErr);
             return false;
         }
-        else if (formData.PhoneNumber != "" && !formData.PhoneNumber.match(RGX_PHONE)) {
+        else if (formData.PhoneNumber != "" && !formData.PhoneNumber.match(RgxPtrns.User.PHONE)) {
             oldResponseErr = 'Phone Invalid';
             alert(oldResponseErr);
             return false;
         }
-        else if (!formData.GradDate.match(RGX_GRAD_DATE)) {
+        else if (!formData.GradDate.match(RgxPtrns.User.GRAD_DATE)) {
             oldResponseErr = 'Grad Date Invalid';
             alert(oldResponseErr);
             return false;
         }
-        else if (!formData.Year.match(RGX_YEAR)) {
+        else if (!formData.Year.match(RgxPtrns.User.YEAR)) {
             oldResponseErr = 'Year Invalid';
             alert(oldResponseErr);
             return false;
         }
-        else if (!formData.Company.match(RGX_COMPANY)) {
+        else if (!formData.Company.match(RgxPtrns.User.COMPANY)) {
             oldResponseErr = 'Company Invalid';
             alert(oldResponseErr);
             return false;
         }
-        else if (!formData.JobTitle.match(RGX_JOB_TITLE)) {
+        else if (!formData.JobTitle.match(RgxPtrns.User.JOB_TITLE)) {
             oldResponseErr = 'Job Title Invalid';
             alert(oldResponseErr);
             return false;
@@ -226,17 +215,17 @@
 
 
 
-    registerInputValidator($("#email"), RGX_EMAIL);
-    registerInputValidator($("#usr"), RGX_USERNAME);
-    registerInputValidator($("#pwd"), RGX_PSWD);
-    registerInputValidator($("#firstname"), RGX_NAME);
-    registerInputValidator($("#lastname"), RGX_NAME);
-    registerInputValidator($("#autocomplete"), RGX_MAJOR);
-    registerInputValidator($("#phone"), RGX_PHONE, true);
-    registerInputValidator($("#grad-date"), RGX_GRAD_DATE);
-    registerInputValidator($("#year"), RGX_YEAR);
-    registerInputValidator($("#company"), RGX_COMPANY, true);
-    registerInputValidator($("#job-title"), RGX_JOB_TITLE, true);
+    registerInputValidator($("#email"), RgxPtrns.User.EMAIL);
+    registerInputValidator($("#usr"), RgxPtrns.User.USERNAME);
+    registerInputValidator($("#pwd"), RgxPtrns.User.PSWD);
+    registerInputValidator($("#firstname"), RgxPtrns.User.NAME);
+    registerInputValidator($("#lastname"), RgxPtrns.User.NAME);
+    registerInputValidator($("#autocomplete"), RgxPtrns.User.MAJOR);
+    registerInputValidator($("#phone"), RgxPtrns.User.PHONE, true);
+    registerInputValidator($("#grad-date"), RgxPtrns.User.GRAD_DATE);
+    registerInputValidator($("#year"), RgxPtrns.User.YEAR);
+    registerInputValidator($("#company"), RgxPtrns.User.COMPANY, true);
+    registerInputValidator($("#job-title"), RgxPtrns.User.JOB_TITLE, true);
 
 
 })();

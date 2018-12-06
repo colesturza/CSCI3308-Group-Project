@@ -1,14 +1,10 @@
 ﻿(function () {
 
-    var RGX_EMAIL = /^[\w-]+@([\w-]+\.)+[\w-]+$/;
-    var RGX_PSWD = /^.{8,150}$/;
-
-
     $(function () { $("#Email").focus(); });
 
 
-    registerInputValidator($("#Email"), RGX_EMAIL);
-    registerInputValidator($("#Password"), RGX_PSWD);
+    registerInputValidator($("#Email"), RgxPtrns.User.EMAIL);
+    registerInputValidator($("#Password"), RgxPtrns.User.PSWD);
 
 
     window.setInterval(function () {

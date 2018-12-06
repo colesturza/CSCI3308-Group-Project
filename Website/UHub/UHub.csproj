@@ -193,6 +193,8 @@
     <Content Include="ClientResources\Account\Styles\CreateAccount.css" />
     <Content Include="ClientResources\MASTER\Components\Navbar.js" />
     <Content Include="ClientResources\MASTER\Components\PostBar.js" />
+    <Content Include="ClientResources\MASTER\Scripts\MasterRgx.js" />
+    <Content Include="ClientResources\MASTER\Scripts\MasterValidator.js" />
     <Content Include="ClientResources\Post\Scripts\PostUpdatable.js" />
     <Content Include="ClientResources\Post\Scripts\Post.js" />
     <Content Include="ClientResources\Home\Scripts\Home.js" />
