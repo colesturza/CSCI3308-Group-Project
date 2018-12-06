@@ -11,7 +11,7 @@ using static UHub.CoreLib.DataInterop.SqlConverters;
 
 namespace UHub.CoreLib.Logging.DataInterop
 {
-    internal static partial class LocalEventWriter
+    internal static partial class EventWriter
     {
         public static bool TryWriteEvent(EventLogData EventData)
         {

@@ -16,7 +16,7 @@ namespace UHub.CoreLib.Logging.Providers
         public bool CreateLog(EventLogData EventData)
         {
 
-            return LocalEventWriter.TryWriteEvent(EventData);
+            return EventWriter.TryWriteEvent(EventData);
 
         }
 
