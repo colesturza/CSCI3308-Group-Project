@@ -59,7 +59,7 @@
             '                <div>' +
             '                    <span class="m-2 mr-0">Posted by</span>' +
             '                    <a class="">[{{ comment.CreatedBy }}]</a>' +
-            '                    <span>{{ comment.CreatedDate.substring(0,10) }}</span>' +
+            '                    <span>{{ comment.CreatedDate.toString().substring(0,10) }}</span>' +
             '                </div>' +
             '                <div class="border border-dark rounded m-2 py-2">' +
             '                    <span class="text-body p-2">' +
@@ -166,17 +166,19 @@
             // getCommentById and getCommentDepth  are helper functions for arrangeCommentTree
             // Returns matching comment object
             getCommentById: function(cmtID, cmtList) {
-                for(var j=0; j<comments.length; j++){
+                for (var j = 0; j < cmtList.length; j++){
                     if(cmtList[j].ID == cmtID) {
                         return cmtList[j];
                     }
                 }
             },
             // Finds the comment's degrees of separation from post
-            getCommentDepth: function(theCmt, cmtList) {
+            getCommentDepth: function (theCmt, cmtList) {
+                console.log(theCmt)
+
                 var depthLevel;
-                while(theCmt.parentID != postID) {
-                    theCmt = this.getCommentById(theCmt.parentID, cmtList);
+                while(theCmt.ParentID != postID) {
+                    theCmt = this.getCommentById(theCmt.ParentID, cmtList);
                     depthLevel++;
                 }
                 return depthLevel;
@@ -185,12 +187,16 @@
             arrangeCommentTree: function(cmtList) {
                 var maxDepth=0;
                 var listLength = cmtList.length;
-                for(var i=listLength - 1; i >= 0; i++) {
-                    if(!cmtList[i].isEnabled) {
+                
+
+                for(var i = listLength - 1; i >= 0; i--) {
+                    if(!cmtList[i].IsEnabled) {
                         cmtList.splice(i, 1);
                     }
                 }
-                for(i=0; i<listLength; i++) {
+                console.log(cmtList)
+
+                for(var i = 0; i < listLength; i++) {
                     cmtList[i].cmt_children = [];
                     var date = cmtList[i].CreatedDate.split(" ").join("T").concat("Z");
                     cmtList[i].CreatedDate = new Date(date);
@@ -199,22 +205,25 @@
                         maxDepth = cmtList.DepthLevel;
                     }
                 }
-                for(i=maxDepth; i > 0; i--) {
+                for(var i = maxDepth; i > 0; i--) {
                     for(var j=0; j < listLength; j++) {
                         if(cmtList[j].DepthLevel == i) {
                             for(var k=0; k < listLength; k++) {
-                                if(cmtList[j].parentID == cmtList[k].ID) {
+                                if(cmtList[j].ParentID == cmtList[k].ID) {
                                     cmtList[k].cmt_children.push(cmtList[j]);
                                 }
                             }
                         }
                     }
                 }
-                for(i=(cmtList.length - 1); i >= 0; i--) {
-                    if(cmtList[i].parentID != postID) {
+                for(var i = (cmtList.length - 1); i >= 0; i--) {
+                    if(cmtList[i].ParentID != postID) {
                         cmtList.slice(i, 1);
                     }
                 }
+
+                console.log(cmtList)
+
                 return cmtList;
             }
         },
@@ -228,24 +237,24 @@
                 url: "/uhubapi/posts/GetByID?PostID=" + encodeURIComponent(postID)
             })
                 ///AJAX -> uhubapi/posts/GetByID
-                .done(function (data) {
-                    postRawData = data;
+                .done(function (pstData) {
+                    postRawData = pstData;
 
-                    var clubID = data.ParentID;
+                    var clubID = pstData.ParentID;
 
-                    self.parentID = data.ParentID;
-                    self.title = htmlEncode(data.Name);
+                    self.parentID = pstData.ParentID;
+                    self.title = htmlEncode(pstData.Name);
                     window.setTimeout(function () {
-                        simplemde.value(data.Content);
+                        simplemde.value(pstData.Content);
                         //set old value to prevent clean updates
                         oldResponseErr = 'Nothing to Update';
                         jsonPostDataOld = JSON.stringify(getPostUpdateData());
                     }, 1);
-                    self.postTime = data.CreatedDate;
+                    self.postTime = pstData.CreatedDate;
 
 
                     $("#post-container").style('display', null);
-                    if (data.CanComment) {
+                    if (pstData.CanComment) {
                         $("#btn_ToggleReply").style('display', null);
                     }
 
@@ -257,11 +266,13 @@
                             url: "/uhubapi/comments/GetByPost?PostID=" + encodeURIComponent(postID)
                         })
                             //AJAX -> /uhubapi/comments/GetByPost
-                            .done(function (data) {
-                                data.sort(dynamicSort("-CreatedDate"));
-                                self.comments = this.arrangeCommentTree(data);
+                            .done(function (cmtData) {
+                                console.log(cmtData)
 
-                                if (data.length == 0 || !postRawData.CanComment) {
+                                //cmtData.sort(dynamicSort("-CreatedDate"));
+                                self.comments = self.arrangeCommentTree(cmtData);
+
+                                if (cmtData.length == 0 || !postRawData.CanComment) {
                                     return;
                                 }
 
