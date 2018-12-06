@@ -53,7 +53,7 @@
             alert(oldResponseErr);
             return false;
         }
-        else if (!formData.GradDate.match(RgxPtrns.User.GRAD_DATE)) {
+        else if (formData.GradDate != "" && !formData.GradDate.match(RgxPtrns.User.GRAD_DATE)) {
             oldResponseErr = 'Grad Date Invalid';
             alert(oldResponseErr);
             return false;
@@ -222,7 +222,7 @@
     registerInputValidator($("#lastname"), RgxPtrns.User.NAME);
     registerInputValidator($("#autocomplete"), RgxPtrns.User.MAJOR);
     registerInputValidator($("#phone"), RgxPtrns.User.PHONE, true);
-    registerInputValidator($("#grad-date"), RgxPtrns.User.GRAD_DATE);
+    registerInputValidator($("#grad-date"), RgxPtrns.User.GRAD_DATE, true);
     registerInputValidator($("#year"), RgxPtrns.User.YEAR);
     registerInputValidator($("#company"), RgxPtrns.User.COMPANY, true);
     registerInputValidator($("#job-title"), RgxPtrns.User.JOB_TITLE, true);
