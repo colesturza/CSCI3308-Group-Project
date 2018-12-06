@@ -5,8 +5,6 @@
     var jsonPostDataOld = null;
     var oldResponseErr = null;
 
-    var RGX_CONTENT = /^.{10,10000}$/s;
-
 
     var postID = encodeURIComponent(window.location.href.split('/').slice(-1)[0]);
     postID = postID.match(/^[0-9]+/)[0];
@@ -345,7 +343,7 @@
 
 
     function processInputValidation(formData) {
-        if (!formData.Content.match(RGX_CONTENT)) {
+        if (!formData.Content.match(RgxPtrns.Post.CONTENT)) {
             oldResponseErr = 'Post Content Invalid';
             alert(oldResponseErr);
             return false;
@@ -408,7 +406,7 @@
 
 
 
-    registerInputValidator($("#txt_PostArea"), RGX_CONTENT);
+    registerInputValidator($("#txt_PostArea"), RgxPtrns.Post.CONTENT);
 
 
 

@@ -3,9 +3,6 @@
     var jsonPostDataOld = null;
     var oldResponseErr = null;
 
-    var RGX_NAME = /^.{1,100}$/;
-    var RGX_CONTENT = /^.{10,10000}$/s;
-
 
     var url = window.location.href;
     var seperated = url.split('/');
@@ -70,12 +67,12 @@
 
     function processInputValidation(formData) {
 
-        if (!formData.Name.match(RGX_NAME)) {
+        if (!formData.Name.match(RgxPtrns.Post.NAME)) {
             oldResponseErr = 'Post Name Invalid';
             alert(oldResponseErr);
             return false;
         }
-        else if (!formData.Content.match(RGX_CONTENT)) {
+        else if (!formData.Content.match(RgxPtrns.Post.CONTENT)) {
             oldResponseErr = 'Post Content Invalid';
             alert(oldResponseErr);
             return false;
@@ -141,8 +138,8 @@
 
 
 
-    registerInputValidator($("#inputTitle"), RGX_NAME);
-    registerInputValidator($("#inputContent"), RGX_CONTENT);
+    registerInputValidator($("#inputTitle"), RgxPtrns.Post.NAME);
+    registerInputValidator($("#inputContent"), RgxPtrns.Post.CONTENT);
 
 
 })();
