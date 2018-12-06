@@ -24,7 +24,7 @@
                     for (var i = 0; i < data.length; i++) {
                         data[i].Content = mdConverter.makeHtml(data[i].Content);
                     }
-                    data.sort(dynamicSort("-CreatedDate"));
+                    data.sort(dynamicSort("-ModifiedDate"));
 
                     self.postVersions = data;
                 } else {
