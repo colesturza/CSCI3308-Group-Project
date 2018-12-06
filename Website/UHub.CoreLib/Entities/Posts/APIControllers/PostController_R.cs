@@ -128,12 +128,12 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             var postEnum = await PostReader.TryGetPostRevisionsAsync(PostID);
             if (postEnum == null)
             {
-                return Content(HttpStatusCode.NotFound, "E1");
+                return NotFound();
             }
             var postList = postEnum.ToList();
             if (postList.Count == 0)
             {
-                return Content(HttpStatusCode.NotFound, "E2");
+                return NotFound();
             }
 
 
@@ -165,7 +165,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
                 //verify same school
                 if (postClub.SchoolID != cmsUser.SchoolID)
                 {
-                    return Content(HttpStatusCode.NotFound, "E3");
+                    return NotFound();
                 }
 
                 var IsUserBanned = await taskIsUserBanned;
@@ -192,7 +192,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             //verify same school
             if (postParentID != cmsUser.SchoolID)
             {
-                return Content(HttpStatusCode.NotFound, "E4");
+                return NotFound();
             }
 
 
