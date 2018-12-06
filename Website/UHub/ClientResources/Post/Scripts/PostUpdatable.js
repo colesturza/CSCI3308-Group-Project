@@ -198,8 +198,6 @@
 
                 for(var i = 0; i < listLength; i++) {
                     cmtList[i].cmt_children = [];
-                    var date = cmtList[i].CreatedDate.split(" ").join("T").concat("Z");
-                    cmtList[i].CreatedDate = new Date(date);
                     cmtList[i].DepthLevel = this.getCommentDepth(cmtList[i], cmtList);
                     if (cmtList[i] > maxDepth) {
                         maxDepth = cmtList.DepthLevel;
