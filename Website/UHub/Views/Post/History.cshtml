@@ -7,7 +7,10 @@
     <div>
         <ul id="post-versions" class="list-group list-group-flush w-100 float-md-left" style="display:none !important">
             <li class="list-group-item mb-3" v-for="postVersion in postVersions">
-                <h4> {{ postVersion.ModifiedDate }} </h4>
+                <template v-if="post.ModifiedDate != null">
+                    <h4> {{ postVersion.ModifiedDate.substring(0,10) }} </h4>
+                </template>
+                <h4 v-else>{{ postVersion.Name }}</h4>
                 <div v-html="postVersion.Content"></div>
             </li>
         </ul>
