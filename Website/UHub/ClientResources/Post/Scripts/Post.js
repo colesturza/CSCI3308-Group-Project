@@ -114,7 +114,7 @@
     new Vue({
         el: "#post-container",
         data: {
-            postID: "",
+            postID: postID,
             parentID: "",
             title: "",
             content: "",
@@ -240,7 +240,6 @@
                     postRawData = data;
                     var clubID = data.ParentID;
 
-                    self.postID = postID;
                     self.parentID = data.ParentID;
                     self.title = htmlEncode(data.Name);
                     self.content = mdConverter.makeHtml(data.Content);
