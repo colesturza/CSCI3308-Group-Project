@@ -60,5 +60,11 @@ namespace UHub.Controllers
 
         }
 
+
+        [MvcAuthControl]
+        public async Task<ActionResult> History()
+        {
+            return View();
+        }
     }
 }
