@@ -135,8 +135,8 @@
         template: '<div class="container">' +
             '            <div class="container-fluid">' +
             '                <div>' +
-            '                    <span class="m-2 mr-0">Posted by</span>' +
-            '                    <a class="">[{{ comment.CreatedBy }}]</a>' +
+            '                    <span class="m-2 mr-0" style="margin-right:0 !important">Posted by</span>' +
+            '                    <a style="margin-right:10px !important">[{{ comment.CreatedBy }}]</a>' +
             '                    <span>{{ comment.CreatedDate.toString().substring(0,10) }}</span>' +
             '                </div>' +
             '                <div class="border border-dark rounded m-2 py-2">' +
