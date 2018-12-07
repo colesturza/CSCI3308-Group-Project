@@ -122,7 +122,7 @@
         }
 
         //sort by newest on top
-        newCmtList.sort(dynamicSort("-ID"));
+        newCmtList.sort(dynamicSort("-CreatedDate"));
         return newCmtList;
     }
 
@@ -150,7 +150,7 @@
             '                    </div>' +
             '                </div>' +
             '               <div>' +
-            '                   <comment-component v-for="comment in comment.cmt_children.sort(dynamicSort("-ID"))" v-on:custom-click="buttonHandler" :key="comment.id" v-bind:comment="comment"><comment-component>' +
+            '                   <comment-component v-for="comment in comment.cmt_children.sort(dynamicSort("-CreatedDate"))" v-on:custom-click="buttonHandler" :key="comment.id" v-bind:comment="comment"><comment-component>' +
             '               </div>' +
             '            </div>' +
             '        </div>',
@@ -185,7 +185,7 @@
                             CreatedBy: "me",
                             CreatedDate: dtStr,
                             Content: formData.Content,
-                            IsEnabled = true
+                            IsEnabled: true
                         };
 
                         rawCommentSet.push(newCmt);
@@ -239,7 +239,7 @@
                             CreatedBy: "me",
                             CreatedDate: dtStr,
                             Content: formData.Content,
-                            IsEnabled = true
+                            IsEnabled: true
                         };
 
                         rawCommentSet.push(newCmt);
