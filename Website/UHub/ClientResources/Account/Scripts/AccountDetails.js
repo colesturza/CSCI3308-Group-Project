@@ -1,17 +1,26 @@
-﻿
-var getUser = new Vue({
-	el: "#user-info",
-	data: {
-		user: {}
-	},
-	mounted: function () {
-		var self = this;
-		$.ajax({
-			method: "POST",
-			url: "/uhubapi/users/GetByID?UserID=" + encodeURIComponent(window.location.href.split('/').slice(-1)[0]),
-			success: function (data) {
-				this.user = data
+﻿(function(){
+	var userID = window.location.href.split('/').slice(-1)[0];
+    var getUser = new Vue({
+        el: "#user-info",
+        data: function () {
+            return {
+            	user: {}
 			}
-		});
-	}
-});
+        },
+        methods: {
+            user_get() {
+                $.ajax({
+                    method: "POST",
+                    url: "/uhubapi/users/GetByID?UserID=" + userID,
+                })
+					.done(function(data) {
+                    console.log(data);
+					this.user = data;
+                });
+            }
+        },
+        beforeMount() {
+            this.user_get()
+        }
+    });
+})();

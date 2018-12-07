@@ -64,6 +64,27 @@ namespace UHub.Controllers
         [MvcAuthControl]
         public async Task<ActionResult> History()
         {
+            var idObj = Url.RequestContext.RouteData.Values["id"];
+            var idStr = idObj?.ToString() ?? "";
+            var valid = int.TryParse(idStr, out var postId);
+
+            if (!valid)
+            {
+                return Redirect("~/Error/400");
+            }
+
+
+            var taskPost = CoreLib.Entities.Posts.DataInterop.PostReader.TryGetPostAsync(postId);
+            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser().CmsUser;
+            var post = await taskPost;
+
+
+            if (post == null)
+            {
+                return Redirect("~/Error/400");
+            }
+
+
             return View();
         }
     }

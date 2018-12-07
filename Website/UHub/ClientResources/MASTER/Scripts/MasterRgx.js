@@ -14,11 +14,10 @@
     },
     Club: {
         NAME: /^(([ \u00c0-\u01ffA-z0-9'\-])+){3,100}$/,
-        DESCRIPTION: /^.{0,2000}$/s
+        DESCRIPTION: /^[\s\S]{0,2000}$/
     },
     Post: {
         NAME: /^.{1,100}$/,
-        CONTENT: /^.{10,10000}$/s
+        CONTENT: /^[\s\S]{10,10000}$/
     }
-
-}
+};
