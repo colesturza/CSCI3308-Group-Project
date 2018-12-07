@@ -12,8 +12,9 @@
         props: ['post'],
         template:
             `
-           <div class="container bg-white mb-3" style="padding: .75rem 1.25rem">
-                
+           <li class="container bg-white mb-3" style="padding: .75rem 1.25rem">
+                <div class="shadowBox"></div>                
+
                 <template v-if="post.ID != undefined" >
                     <a v-bind:href="'/Post/' + post.ID">
                         <h4> {{ post.Name }} </h4>
@@ -22,7 +23,7 @@
                 <h4 v-else> {{ post.Name }} </h4>
 
                <div v-html="post.Content"></div>
-           </div>
+           </li>
         `
     });
 

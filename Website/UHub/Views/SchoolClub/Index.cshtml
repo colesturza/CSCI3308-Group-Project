@@ -21,9 +21,9 @@
 </div>
 
 <div id="body-content" class="container mt-4" style="display:none !important">
-    <div id="post-list" class="w-70 float-md-left">
+    <ul id="post-list" class="w-70 float-md-left">
         <postlistcomp v-for="post in posts" v-bind:post="post" v-bind:key="post.ID"></postlistcomp>
-    </div>
+    </ul>
     <div id="community-block" class="border bg-white p-3 w-25 d-md float-md-right d-sm-none d-xs-none d-md-inline">
         <h5 class="mx-auto d-flex justify-content-center">{{ community.Name }}</h5>
         <div class="container">
