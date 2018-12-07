@@ -12,7 +12,7 @@
         props: ['post'],
         template:
             `
-           <li class="container bg-white mb-3" style="padding: .75rem 1.25rem">
+           <li class="list-group-item mb-3" style="padding: .75rem 1.25rem">
                 <div class="shadowBox"></div>                
 
                 <template v-if="post.ID != undefined" >
