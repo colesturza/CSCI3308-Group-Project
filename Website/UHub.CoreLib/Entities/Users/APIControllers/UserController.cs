@@ -43,7 +43,7 @@ namespace UHub.CoreLib.Entities.Users.APIControllers
 
             var dtoUser = cmsUser.ToDto<User_R_PrivateDTO>();
 
-            return Ok();
+            return Ok(dtoUser);
 
         }
 
