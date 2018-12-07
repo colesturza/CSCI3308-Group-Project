@@ -11,7 +11,7 @@ namespace UHub.Controllers
 {
     public class PostController : Controller
     {
-        const string POST_PREVIEW_POSTFIX = "Preview";
+        const string POST_PREVIEW_POSTFIX = "preview";
 
 
 
