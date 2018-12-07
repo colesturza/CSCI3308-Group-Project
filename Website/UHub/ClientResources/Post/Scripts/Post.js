@@ -82,16 +82,34 @@
         }
 
         //create hierarchy
+        //iterate through all comments in rawSet
         for (var j = 0; j < listLength; j++) {
 
             if (newCmtList[j].DepthLevel == 0) {
                 continue;
             }
 
+            //iterate through all comments again
+            //Looking for parent of [j]
             for (var k = 0; k < listLength; k++) {
 
                 if (newCmtList[k].ID == newCmtList[j].ParentID) {
-                    newCmtList[k].cmt_children.push(newCmtList[j]);
+
+                    //add new child if none exist
+                    var chldCnt = newCmtList[k].cmt_children.length;
+                    if (chldCnt == 0) {
+                        newCmtList[k].cmt_children.push(newCmtList[j]);
+                        break;
+                    }
+
+                    //Add new child (sorted by ID descending) if a child already exists in list
+                    //TODO: Convert to binary insert sort
+                    for (var z = 0; z < chldCnt; z++) {
+                        if (newCmtList[j].ID > newCmtList[k].cmt_children[z].ID) {
+                            newCmtList[k].cmt_children.splice(z, 0, newCmtList[j]);
+                            break;
+                        }
+                    }
                     break;
                 }
             }
@@ -101,7 +119,6 @@
         for (var i = (newCmtList.length - 1); i >= 0; i--) {
             if (newCmtList[i].DepthLevel != 0) {
                 newCmtList.splice(i, 1);
-                newCmtList[i].cmt_children.sort(dynamicSort("-ID"));
             }
         }
 
