@@ -13,7 +13,13 @@
                 })
 					.done(function(data) {
                     console.log(data);
-                    this.user = data;
+                    let chosenUser = this.user;
+                    chosenUser.Username = data.Username;
+                    chosenUser.Major = data.Major;
+                    chosenUser.Year = data.Year;
+                    chosenUser.GradDate = data.GradeDate;
+                    chosenUser.JobTitle = data.JobTitle;
+                    chosenUser.Company = data.Company;
                 });
             }
         },
