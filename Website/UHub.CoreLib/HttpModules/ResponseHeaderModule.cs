@@ -12,7 +12,7 @@ namespace UHub.CoreLib.HttpModules
     /// </summary>
     public sealed class ResponseHeaderModule : IHttpModule
     {
-     
+
         public void Dispose()
         {
             //clean-up code here.
@@ -70,7 +70,11 @@ namespace UHub.CoreLib.HttpModules
 
 
             //set response headers to limit site XSS vectors and frame access
-            doHeaderWork("Content-Security-Policy", csp);
+            if (Response.ContentType.ToLower() == "text/html")
+            {
+                doHeaderWork("Content-Security-Policy", csp);
+            }
+
             doHeaderWork("Referrer-Policy", "strict-origin");
             doHeaderWork("Vary", "Accept-Encoding");
             doHeaderWork("X-UA-Compatible", "IE=edge");
