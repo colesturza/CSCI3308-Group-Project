@@ -118,11 +118,12 @@
         for (var i = (newCmtList.length - 1); i >= 0; i--) {
             if (newCmtList[i].DepthLevel != 0) {
                 newCmtList.splice(i, 1);
+                newCmtList[i].cmt_children.sort(dynamicSort("-ID"));
             }
         }
 
         //sort by newest on top
-        //newCmtList.sort(dynamicSort('-ID');
+        newCmtList.sort(dynamicSort('-ID'));
         return newCmtList;
     }
 
