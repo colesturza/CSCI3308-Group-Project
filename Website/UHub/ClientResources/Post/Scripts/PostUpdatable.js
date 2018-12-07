@@ -108,7 +108,8 @@
 
             //iterate through all comments again
             //Looking for parent of [j]
-            for (var k = 0; k < listLength; k++) {
+            for (var k = 0, kIsGood = true; k < listLength && kIsGood; k++) {
+
 
                 if (newCmtList[k].ID == newCmtList[j].ParentID) {
 
@@ -116,18 +117,18 @@
                     var chldCnt = newCmtList[k].cmt_children.length;
                     if (chldCnt == 0) {
                         newCmtList[k].cmt_children.push(newCmtList[j]);
-                        break;
+                        kIsGood = false;
                     }
 
                     //Add new child (sorted by ID descending) if a child already exists in list
                     //TODO: Convert to binary insert sort
-                    for (var z = 0; z < chldCnt; z++) {
+                    for (var z = 0, zIsGood = true; z < chldCnt && zIsGood; z++) {
                         if (newCmtList[j].ID > newCmtList[k].cmt_children[z].ID) {
                             newCmtList[k].cmt_children.splice(z, 0, newCmtList[j]);
-                            break;
+                            zIsGood = false;
                         }
                     }
-                    break;
+                    kIsGood = false;
                 }
             }
         }
