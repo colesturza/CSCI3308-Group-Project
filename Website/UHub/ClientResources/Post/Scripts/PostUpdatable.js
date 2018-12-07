@@ -227,7 +227,7 @@
             title: "",
             content: "",
             postTime: "",
-            modifiedDate = "",
+            modifiedDate: "",
             comments: []
         },
         methods: {
