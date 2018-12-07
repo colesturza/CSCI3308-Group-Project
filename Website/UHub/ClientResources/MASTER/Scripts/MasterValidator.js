@@ -52,7 +52,7 @@
     if ($(obj).val() != "") {
         validate();
     }
-    $(obj).on('change, keydown, keyup', validate);
+    $(obj).on('change keydown keyup', validate);
 
 
 }
