@@ -2,8 +2,10 @@
 	var userID = window.location.href.split('/').slice(-1)[0];
     var getUser = new Vue({
         el: "#user-info",
-        data: {
-            user: {}
+        data: function () {
+            return {
+            	user: {}
+			}
         },
         methods: {
             user_get() {
@@ -13,13 +15,7 @@
                 })
 					.done(function(data) {
                     console.log(data);
-                    let chosenUser = this.user;
-                    chosenUser.Username = data.Username;
-                    chosenUser.Major = data.Major;
-                    chosenUser.Year = data.Year;
-                    chosenUser.GradDate = data.GradeDate;
-                    chosenUser.JobTitle = data.JobTitle;
-                    chosenUser.Company = data.Company;
+					this.user = data;
                 });
             }
         },
