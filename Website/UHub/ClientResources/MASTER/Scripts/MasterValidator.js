@@ -17,7 +17,7 @@
         var isValid = false;
 
         if (allowEmpty && $(obj).val() == "") {
-            var baseStyles = $(valObj).attr('data-baseStyles');
+            var baseStyles = $(obj).attr('data-baseStyles');
             var bStyleSet = baseStyles.split('|');
 
             $(obj).style('outline-color', bStyleSet[0]);
