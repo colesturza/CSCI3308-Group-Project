@@ -122,7 +122,7 @@
         }
 
         //sort by newest on top
-        //newCmtList.sort(dynamicSort("-CreatedDate"));
+        newCmtList.sort(dynamicSort('-ID');
         return newCmtList;
     }
 
@@ -168,7 +168,7 @@
             '                    </div>' +
             '                </div>' +
             '               <div>' +
-            '                   <comment-component v-for="comment in comment.cmt_children" v-on:custom-click="buttonHandler" :key="comment.id" v-bind:comment="comment"><comment-component>' +
+            '                   <comment-component v-for="comment in comment.cmt_children.sort(dynamicSort(\'-ID\'))" v-on:custom-click="buttonHandler" :key="comment.id" v-bind:comment="comment"><comment-component>' +
             '               </div>' +
             '            </div>' +
             '        </div>',
