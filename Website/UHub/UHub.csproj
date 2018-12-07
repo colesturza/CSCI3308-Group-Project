@@ -316,6 +316,7 @@
     <Content Include="Views\Analytics\_GAnalyticsPartial.cshtml" />
     <Content Include="Views\Post\Index_Updatable.cshtml" />
     <Content Include="Views\Post\History.cshtml" />
+    <Content Include="Views\Account\Logout.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

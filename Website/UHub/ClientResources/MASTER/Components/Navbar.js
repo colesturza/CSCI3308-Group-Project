@@ -61,6 +61,7 @@
                         <div>
                             <!--<button class="form-control" type="submit" class="btn btn-secondary">Search</button>-->
                             <a href="/Account" class="btn btn-secondary acctLnk">My Account</a>
+                            <a href="/Account/Logout" class="btn btn-secondary acctLnk">Logout</a>
                         </div>
                     </div>
                     

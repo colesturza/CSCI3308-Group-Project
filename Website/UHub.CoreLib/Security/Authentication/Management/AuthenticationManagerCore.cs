@@ -160,7 +160,7 @@ namespace UHub.CoreLib.Security.Authentication.Management
                     }
                     catch
                     {
-
+                        //Do nothing
                     }
                 }
 

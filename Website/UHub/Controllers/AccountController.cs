@@ -172,6 +172,18 @@ namespace UHub.Controllers
 
 
         [System.Web.Mvc.HttpGet]
+        [MvcAuthControl]
+        public ActionResult Logout()
+        {
+            var context = System.Web.HttpContext.Current;
+            CoreFactory.Singleton.Auth.TryLogOut(context);
+
+
+            return View();
+        }
+
+
+        [System.Web.Mvc.HttpGet]
         public async Task<ActionResult> Confirm()
         {
             var idObj = Url.RequestContext.RouteData.Values["id"];
