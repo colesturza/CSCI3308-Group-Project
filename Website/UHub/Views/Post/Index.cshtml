@@ -24,7 +24,7 @@
         <div>
             <h4 class="px-3 pt-3" style="display:inline-block !important">{{title}}</h4>
             <template v-if="modifiedDate != null">
-                [<a href="'/Post/History/' + postID">history</a>]
+                [<a v-bind:href="'/Post/History/' + postID">history</a>]
             </template>
             <div class="p-2 pb-2 m-2" v-html="content"></div>
             <button id="btn_ToggleReply" type="button" class="btn-sm btn-outline-dark m-2 mb-1 d-inline" v-on:click="postReply" style="display:none !important">Reply</button>
