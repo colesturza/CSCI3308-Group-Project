@@ -382,17 +382,24 @@
             },
             promptURLs: true,
             spellChecker: true,
-            status: ["lines", "words", {
-                className: "charCount",
-                defaultValue: function (el) {
-                    this.charCount = 0;
-                    el.innerHTML = "Characters: 0 (10 - 10k)";
+            status: ["lines", "words",
+                {
+                    className: "charCount",
+                    defaultValue: function (el) {
+                        this.charCount = 0;
+                        el.innerHTML = "Characters: 0 (10 - 10k)";
+                    },
+                    onUpdate: function (el) {
+                        var ct = simplemde.value().length;
+                        el.innerHTML = "Characters: " + ct + " (10 - 10k)";
+                    }
                 },
-                onUpdate: function (el) {
-                    var ct = simplemde.value().length;
-                    el.innerHTML = "Characters: " + ct + " (10 - 10k)";
-                }
-            }]
+                {
+                    className: "viewAs",
+                    defaultValue: function (el) {
+                        el.innerHTML = '[<a href="?Preview" target="_blank">View As</a>]';
+                    }
+                }]
         });
 
 

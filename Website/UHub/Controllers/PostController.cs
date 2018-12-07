@@ -44,7 +44,7 @@ namespace UHub.Controllers
             var querySet = Request.QueryString[null];
             if (querySet != null)
             {
-                enableUpdatable = !querySet.Contains(POST_PREVIEW_POSTFIX);
+                enableUpdatable = !querySet.ToLower().Split(',').Contains(POST_PREVIEW_POSTFIX);
             }
 
 
