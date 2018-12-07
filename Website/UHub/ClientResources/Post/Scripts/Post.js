@@ -69,6 +69,8 @@
                 newCmtList.splice(i, 1);
             }
         }
+        listLength = newCmtList.length;
+
 
         //Get depth level for each comment
         for (var i = 0; i < listLength; i++) {
@@ -102,6 +104,9 @@
             }
         }
 
+
+        //sort by newest on top
+        //newCmtList.sort(dynamicSort("-CreatedDate"));
         return newCmtList;
     }
 
@@ -164,10 +169,11 @@
                             ID: data,
                             CreatedBy: "me",
                             CreatedDate: dtStr,
-                            Content: formData.Content
+                            Content: formData.Content,
+                            IsEnabled: true
                         };
 
-                        rawCommentSet.splice(0, 0, newCmt);
+                        rawCommentSet.push(newCmt);
                         var cmtArrangedList = arrangeCommentTree(rawCommentSet);
                         vueInstance.comments = cmtArrangedList;
                     });
@@ -221,11 +227,12 @@
                             ID: data,
                             CreatedBy: "me",
                             CreatedDate: dtStr,
-                            Content: formData.Content
+                            Content: formData.Content,
+                            IsEnabled: true
                         };
 
 
-                        rawCommentSet.splice(0, 0, newCmt);
+                        rawCommentSet.push(newCmt);
                         var cmtArrangedList = arrangeCommentTree(rawCommentSet);
                         vueInstance.comments = cmtArrangedList;
                     })
