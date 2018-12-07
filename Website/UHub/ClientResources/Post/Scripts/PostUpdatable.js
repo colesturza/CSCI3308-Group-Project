@@ -76,7 +76,7 @@
     // Arranges array so that children are within parent comments
     function arrangeCommentTree(cmtList) {
         var maxDepth = 0;
-        var newCmtList = oldArray.slice();
+        var newCmtList = cmtList.slice();
 
         var listLength = newCmtList.length;
 

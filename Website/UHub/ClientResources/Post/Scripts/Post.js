@@ -59,7 +59,7 @@
     // Arranges array so that children are within parent comments
     function arrangeCommentTree(cmtList) {
         var maxDepth = 0;
-        var newCmtList = oldArray.slice();
+        var newCmtList = cmtList.slice();
 
         var listLength = newCmtList.length;
 
@@ -240,19 +240,19 @@
                 method: "POST",
                 url: "/uhubapi/posts/GetByID?PostID=" + encodeURIComponent(postID)
             })
-                .done(function (data) {
-                    postRawData = data;
-                    var clubID = data.ParentID;
+                .done(function (pstData) {
+                    postRawData = pstData;
+                    var clubID = pstData.ParentID;
 
-                    self.parentID = data.ParentID;
-                    self.title = htmlEncode(data.Name);
-                    self.content = mdConverter.makeHtml(data.Content);
-                    self.postTime = data.CreatedDate;
-                    self.modifiedDate = data.ModifiedDate;
+                    self.parentID = pstData.ParentID;
+                    self.title = htmlEncode(pstData.Name);
+                    self.content = mdConverter.makeHtml(pstData.Content);
+                    self.postTime = pstData.CreatedDate;
+                    self.modifiedDate = pstData.ModifiedDate;
 
 
                     $("#post-container").style('display', null);
-                    if (data.CanComment) {
+                    if (pstData.CanComment) {
                         $("#btn_ToggleReply").style('display', null);
                     }
 
@@ -263,7 +263,7 @@
                             method: "POST",
                             url: "/uhubapi/comments/GetByPost?PostID=" + encodeURIComponent(postID)
                         })
-                            .done(function (data) {
+                            .done(function (cmtData) {
                                 rawCommentSet = cmtData;
                                 var cmtArrangedList = arrangeCommentTree(rawCommentSet);
                                 //console.log(JSON.parse(JSON.stringify(cmtArrangedList)));
@@ -272,7 +272,7 @@
 
 
 
-                                if (data.length == 0 || !postRawData.CanComment) {
+                                if (cmtData.length == 0 || !postRawData.CanComment) {
                                     return;
                                 }
 
