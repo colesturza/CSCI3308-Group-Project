@@ -25,7 +25,10 @@
 
         <div class="container bg-white w-70 mt-4 py-3">
             <div>
-                <h4 class="px-3 pt-3">{{title}}</h4>
+                <h4 class="px-3 pt-3" style="display:inline-block !important">{{title}}</h4>
+                <template v-if="modifiedDate != null">
+                    [<a :href="'/Post/' + postID">History</a>]
+                </template>
                 <textarea id="txt_PostArea" placeholder="Content (10-10k chars)"></textarea>
                 <button id="btn_UpdatePost" type="button" class="btn-sm btn-outline-dark m-2 mb-1 d-inline">Update</button>
                 <button id="btn_ToggleReply" type="button" class="btn-sm btn-outline-dark m-2 mb-1 d-inline" v-on:click="postReply" style="display:none !important">Reply</button>

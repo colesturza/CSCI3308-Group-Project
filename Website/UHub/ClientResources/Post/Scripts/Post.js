@@ -111,6 +111,23 @@
     }
 
 
+    function showCommentReply() {
+        if (rawCommentSet.length == 0 || !postRawData.CanComment) {
+            return;
+        }
+
+        var cmtInterval = window.setInterval(function () {
+            var cmtBtnSet = $("[data-reply=reply]");
+            if (cmtBtnSet.length == 0) {
+                return;
+            }
+            for (var i = 0; i < cmtBtnSet.length; i++) {
+                $(cmtBtnSet[i]).style('display', null);
+            }
+            window.clearInterval(cmtInterval);
+        }, 10);
+    }
+
 
 
     Vue.component('comment-component', {
@@ -177,6 +194,8 @@
                         rawCommentSet.push(newCmt);
                         var cmtArrangedList = arrangeCommentTree(rawCommentSet);
                         vueInstance.comments = cmtArrangedList;
+
+                        showCommentReply();
                     });
 
             }
@@ -237,6 +256,8 @@
                         rawCommentSet.push(newCmt);
                         var cmtArrangedList = arrangeCommentTree(rawCommentSet);
                         vueInstance.comments = cmtArrangedList;
+
+                        showCommentReply();
                     })
             }
         },
@@ -277,24 +298,9 @@
                                 var cmtArrangedList = arrangeCommentTree(rawCommentSet);
                                 //console.log(JSON.parse(JSON.stringify(cmtArrangedList)));
 
-                                self.comments = cmtArrangedList
+                                self.comments = cmtArrangedList;
 
-
-
-                                if (cmtData.length == 0 || !postRawData.CanComment) {
-                                    return;
-                                }
-
-                                var cmtInterval = window.setInterval(function () {
-                                    var cmtBtnSet = $("[data-reply=reply]");
-                                    if (cmtBtnSet.length == 0) {
-                                        return;
-                                    }
-                                    for (var i = 0; i < cmtBtnSet.length; i++) {
-                                        $(cmtBtnSet[i]).style('display', null);
-                                    }
-                                    window.clearInterval(cmtInterval);
-                                }, 10);
+                                showCommentReply();
 
 
                             })

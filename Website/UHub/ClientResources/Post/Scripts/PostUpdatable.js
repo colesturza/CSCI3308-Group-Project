@@ -127,6 +127,24 @@
     }
 
 
+    function showCommentReply() {
+        if (rawCommentSet.length == 0 || !postRawData.CanComment) {
+            return;
+        }
+
+        var cmtInterval = window.setInterval(function () {
+            var cmtBtnSet = $("[data-reply=reply]");
+            if (cmtBtnSet.length == 0) {
+                return;
+            }
+            for (var i = 0; i < cmtBtnSet.length; i++) {
+                $(cmtBtnSet[i]).style('display', null);
+            }
+            window.clearInterval(cmtInterval);
+        }, 10);
+    }
+
+
     //.sort(dynamicSort(\'-CreatedDate\'))
     Vue.component('comment-component', {
         props: ['comment'],
@@ -192,6 +210,8 @@
                         rawCommentSet.push(newCmt);
                         var cmtArrangedList = arrangeCommentTree(rawCommentSet);
                         vueInstance.comments = cmtArrangedList;
+
+                        showCommentReply();
                     });
 
             }
@@ -247,6 +267,8 @@
                         rawCommentSet.push(newCmt);
                         var cmtArrangedList = arrangeCommentTree(rawCommentSet);
                         vueInstance.comments = cmtArrangedList;
+
+                        showCommentReply();
                     });
 
             }
@@ -297,21 +319,8 @@
 
                                 self.comments = cmtArrangedList
 
+                                showCommentReply();
 
-                                if (cmtData.length == 0 || !postRawData.CanComment) {
-                                    return;
-                                }
-
-                                var cmtInterval = window.setInterval(function () {
-                                    var cmtBtnSet = $("[data-reply=reply]");
-                                    if (cmtBtnSet.length == 0) {
-                                        return;
-                                    }
-                                    for (var i = 0; i < cmtBtnSet.length; i++) {
-                                        $(cmtBtnSet[i]).style('display', null);
-                                    }
-                                    window.clearInterval(cmtInterval);
-                                }, 10);
 
                             })
                             //AJAX -> /uhubapi/comments/GetByPost
