@@ -223,6 +223,7 @@
     new Vue({
         el: "#post-container",
         data: {
+            postID: postID,
             parentID: "",
             title: "",
             content: "",
