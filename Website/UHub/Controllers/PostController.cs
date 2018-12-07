@@ -35,7 +35,7 @@ namespace UHub.Controllers
 
             if (post == null)
             {
-                return Redirect("~/Error/400");
+                return Redirect("~/Error/404");
             }
 
 
@@ -74,14 +74,12 @@ namespace UHub.Controllers
             }
 
 
-            var taskPost = CoreLib.Entities.Posts.DataInterop.PostReader.TryGetPostAsync(postId);
-            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser().CmsUser;
-            var post = await taskPost;
+            var post = await CoreLib.Entities.Posts.DataInterop.PostReader.TryGetPostAsync(postId);
 
 
             if (post == null)
             {
-                return Redirect("~/Error/400");
+                return Redirect("~/Error/404");
             }
 
 
