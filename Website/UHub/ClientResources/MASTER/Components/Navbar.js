@@ -2,6 +2,9 @@
 
     var communities = [];
     var clubName = "Communities";
+    var url = window.location.href;
+    var seperated = url.split('/');
+    var currCommID = seperated.slice(-1)[0];
 
 
     Vue.component('navbar-component', {
@@ -11,9 +14,7 @@
                 url: "/uhubapi/schoolclubs/GetAllBySchool",
                 async: false,
                 success: function (data) {
-                    var url = window.location.href;
-                    var seperated = url.split('/');
-                    var currCommID = seperated.slice(-1)[0];
+                    
 
                     communities = data;
                     communities.sort(dynamicSort("Name"));
@@ -34,7 +35,7 @@
             return {
                 clubName: clubName,
                 communities: communities
-            }
+            };
         },
         template:
             `
