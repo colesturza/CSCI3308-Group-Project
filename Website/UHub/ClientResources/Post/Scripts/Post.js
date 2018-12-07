@@ -37,6 +37,75 @@
             });
     }
 
+    // getCommentById and getCommentDepth  are helper functions for arrangeCommentTree
+    // Returns matching comment object
+    function getCommentById(cmtID, cmtList) {
+        for (var j = 0; j < cmtList.length; j++) {
+            if (cmtList[j].ID == cmtID) {
+                return cmtList[j];
+            }
+        }
+    }
+    // Finds the comment's degrees of separation from post
+    function getCommentDepth(theCmt, cmtList) {
+
+        var depthLevel = 0;
+        while (theCmt.ParentID != postID) {
+            theCmt = getCommentById(theCmt.ParentID, cmtList);
+            depthLevel++;
+        }
+        return depthLevel;
+    }
+    // Arranges array so that children are within parent comments
+    function arrangeCommentTree(cmtList) {
+        var maxDepth = 0;
+        var newCmtList = oldArray.slice();
+
+        var listLength = newCmtList.length;
+
+        //Remove disabled comments
+        for (var i = listLength - 1; i >= 0; i--) {
+            if (!newCmtList[i].IsEnabled) {
+                newCmtList.splice(i, 1);
+            }
+        }
+
+        //Get depth level for each comment
+        for (var i = 0; i < listLength; i++) {
+            newCmtList[i].cmt_children = [];
+            newCmtList[i].DepthLevel = getCommentDepth(newCmtList[i], newCmtList);
+            if (newCmtList[i].DepthLevel > maxDepth) {
+                maxDepth = newCmtList.DepthLevel;
+            }
+        }
+
+        //create hierarchy
+        for (var j = 0; j < listLength; j++) {
+
+            if (newCmtList[j].DepthLevel == 0) {
+                continue;
+            }
+
+            for (var k = 0; k < listLength; k++) {
+
+                if (newCmtList[k].ID == newCmtList[j].ParentID) {
+                    newCmtList[k].cmt_children.push(newCmtList[j]);
+                    break;
+                }
+            }
+        }
+
+
+        for (var i = (newCmtList.length - 1); i >= 0; i--) {
+            if (newCmtList[i].DepthLevel != 0) {
+                newCmtList.splice(i, 1);
+            }
+        }
+
+        return newCmtList;
+    }
+
+
 
 
     Vue.component('comment-component', {
@@ -99,7 +168,7 @@
                         };
 
                         rawCommentSet.splice(0, 0, newCmt);
-                        var cmtArrangedList = self.arrangeCommentTree(rawCommentSet);
+                        var cmtArrangedList = arrangeCommentTree(rawCommentSet);
                         vueInstance.comments = cmtArrangedList;
                     });
 
@@ -157,74 +226,9 @@
 
 
                         rawCommentSet.splice(0, 0, newCmt);
-                        var cmtArrangedList = self.arrangeCommentTree(rawCommentSet);
+                        var cmtArrangedList = arrangeCommentTree(rawCommentSet);
                         vueInstance.comments = cmtArrangedList;
                     })
-            },
-            // getCommentById and getCommentDepth  are helper functions for arrangeCommentTree
-            // Returns matching comment object
-            getCommentById: function (cmtID, cmtList) {
-                for (var j = 0; j < cmtList.length; j++) {
-                    if (cmtList[j].ID == cmtID) {
-                        return cmtList[j];
-                    }
-                }
-            },
-            // Finds the comment's degrees of separation from post
-            getCommentDepth: function (theCmt, cmtList) {
-
-                var depthLevel = 0;
-                while (theCmt.ParentID != postID) {
-                    theCmt = this.getCommentById(theCmt.ParentID, cmtList);
-                    depthLevel++;
-                }
-                return depthLevel;
-            },
-            // Arranges array so that children are within parent comments
-            arrangeCommentTree: function (cmtList) {
-                var maxDepth = 0;
-                var listLength = cmtList.length;
-
-                //Remove disabled comments
-                for (var i = listLength - 1; i >= 0; i--) {
-                    if (!cmtList[i].IsEnabled) {
-                        cmtList.splice(i, 1);
-                    }
-                }
-
-                //Get depth level for each comment
-                for (var i = 0; i < listLength; i++) {
-                    cmtList[i].cmt_children = [];
-                    cmtList[i].DepthLevel = this.getCommentDepth(cmtList[i], cmtList);
-                    if (cmtList[i].DepthLevel > maxDepth) {
-                        maxDepth = cmtList.DepthLevel;
-                    }
-                }
-
-                //create hierarchy
-                for (var j = 0; j < listLength; j++) {
-
-                    if (cmtList[j].DepthLevel == 0) {
-                        continue;
-                    }
-
-                    for (var k = 0; k < listLength; k++) {
-
-                        if (cmtList[k].ID == cmtList[j].ParentID) {
-                            cmtList[k].cmt_children.push(cmtList[j]);
-                            break;
-                        }
-                    }
-                }
-
-
-                for (var i = (cmtList.length - 1); i >= 0; i--) {
-                    if (cmtList[i].DepthLevel != 0) {
-                        cmtList.splice(i, 1);
-                    }
-                }
-
-                return cmtList;
             }
         },
         mounted: function () {
@@ -261,7 +265,7 @@
                         })
                             .done(function (data) {
                                 rawCommentSet = cmtData;
-                                var cmtArrangedList = self.arrangeCommentTree(rawCommentSet);
+                                var cmtArrangedList = arrangeCommentTree(rawCommentSet);
                                 //console.log(JSON.parse(JSON.stringify(cmtArrangedList)));
 
                                 self.comments = cmtArrangedList
