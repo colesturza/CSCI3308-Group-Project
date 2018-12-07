@@ -140,7 +140,13 @@
                 return;
             }
             for (var i = 0; i < cmtBtnSet.length; i++) {
-                $(cmtBtnSet[i]).style('display', null);
+                var depthStr = $(cmtBtnSet[i]).attr('data-cmtDepth');
+                var depth = parseInt(depthStr);
+
+                //max 5 levels of comments
+                if (depth < 4) {
+                    $(cmtBtnSet[i]).style('display', null);
+                }
             }
             window.clearInterval(cmtInterval);
         }, 10);
@@ -162,7 +168,7 @@
             '                        {{ comment.Content }}' +
             '                    </span>' +
             '                </div>' +
-            '                <button type="button" class="btn-sm btn-outline-dark m-2 mb-1" v-on:click="emit(comment.ID)" data-reply="reply" style="display:none !important">Reply</button>' +
+            '                <button type="button" class="btn-sm btn-outline-dark m-2 mb-1" v-on:click="emit(comment.ID)" data-reply="reply" :data-cmtDepth="comment.DepthLevel" style="display:none !important">Reply</button>' +
             '                <div>' +
             '                    <div v-bind:data-cmtID="comment.ID" class="form-group" style="display: none;">' +
             '                        <textarea rows="2" class="mx-auto form-control" ref="commentReply"></textarea>' +
