@@ -227,6 +227,7 @@
             title: "",
             content: "",
             postTime: "",
+            modifiedDate = "",
             comments: []
         },
         methods: {
@@ -297,6 +298,7 @@
                         jsonPostDataOld = JSON.stringify(getPostUpdateData());
                     }, 1);
                     self.postTime = pstData.CreatedDate;
+                    self.modifiedDate = pstData.ModifiedDate;
 
 
                     $("#post-container").style('display', null);

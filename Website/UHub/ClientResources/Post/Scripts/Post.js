@@ -214,7 +214,7 @@
             title: "",
             content: "",
             postTime: "",
-            modifiedDate: null,
+            modifiedDate: "",
             comments: []
         },
         methods: {
