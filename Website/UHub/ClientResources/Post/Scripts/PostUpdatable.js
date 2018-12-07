@@ -182,6 +182,7 @@
 
                         var newCmt = {
                             ID: data,
+                            ParentID: formData.ParentID,
                             CreatedBy: "me",
                             CreatedDate: dtStr,
                             Content: formData.Content,
@@ -236,6 +237,7 @@
 
                         var newCmt = {
                             ID: data,
+                            ParentID: formData.ParentID,
                             CreatedBy: "me",
                             CreatedDate: dtStr,
                             Content: formData.Content,
