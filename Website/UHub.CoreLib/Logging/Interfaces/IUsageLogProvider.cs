@@ -12,7 +12,7 @@ namespace UHub.CoreLib.Logging.Interfaces
 
         void CreateApiActionLog(string ResourceUrl, UsageLogData Data);
 
-        void CreateClientEventLog(ActivityLogType EventType, UsageLogData Data);
+        void CreateClientEventLog(UsageLogType EventType, UsageLogData Data);
 
     }
 }

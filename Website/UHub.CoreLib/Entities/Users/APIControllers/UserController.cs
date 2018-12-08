@@ -32,9 +32,8 @@ namespace UHub.CoreLib.Entities.Users.APIControllers
         [ApiAuthControl]
         public IHttpActionResult GetMe()
         {
-            string status = "";
             HttpStatusCode statCode = HttpStatusCode.BadRequest;
-            if (!this.ValidateSystemState(out status, out statCode))
+            if (!this.ValidateSystemState(out string status, out statCode))
             {
                 return Content(statCode, status);
             }
@@ -44,7 +43,7 @@ namespace UHub.CoreLib.Entities.Users.APIControllers
 
             var dtoUser = cmsUser.ToDto<User_R_PrivateDTO>();
 
-            return Ok();
+            return Ok(dtoUser);
 
         }
 
@@ -52,17 +51,16 @@ namespace UHub.CoreLib.Entities.Users.APIControllers
         [Route("GetByUname")]
         [HttpPost]
         [ApiAuthControl]
-        public async Task<IHttpActionResult> GetByUname(string username)
+        public async Task<IHttpActionResult> GetByUname(string Username)
         {
-            string status = "";
             HttpStatusCode statCode = HttpStatusCode.BadRequest;
-            if (!this.ValidateSystemState(out status, out statCode))
+            if (!this.ValidateSystemState(out string status, out statCode))
             {
                 return Content(statCode, status);
             }
 
-            var userStat = CoreFactory.Singleton.Auth.GetCurrentUser();
-            var cmsUser = userStat.CmsUser;
+            var (TokenStatus, CmsUser) = CoreFactory.Singleton.Auth.GetCurrentUser();
+            var cmsUser = CmsUser;
 
 
             var domain = cmsUser.Email.GetEmailDomain();
@@ -72,11 +70,11 @@ namespace UHub.CoreLib.Entities.Users.APIControllers
             User targetUser = null;
             try
             {
-                targetUser = await UserReader.GetUserAsync(username, domain);
+                targetUser = await UserReader.GetUserAsync(Username, domain);
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync("D8EB78E4-3C48-4976-A234-6B5EACDC053A", ex);
+                CoreFactory.Singleton.Logging.CreateErrorLog("D8EB78E4-3C48-4976-A234-6B5EACDC053A", ex);
                 return InternalServerError();
             }
 
@@ -95,7 +93,7 @@ namespace UHub.CoreLib.Entities.Users.APIControllers
             //Return full detail if user requests self
             if (targetUser.ID == cmsUser.ID)
             {
-                return Ok(cmsUser.ToDto<User_R_PrivateDTO>());
+                return Ok(targetUser.ToDto<User_R_PrivateDTO>());
             }
 
             //only allow users to see users from same school
@@ -105,8 +103,9 @@ namespace UHub.CoreLib.Entities.Users.APIControllers
             }
 
 
+            //otherwise
             //return partial detail
-            return Ok(cmsUser.ToDto<User_R_PublicDTO>());
+            return Ok(targetUser.ToDto<User_R_PublicDTO>());
 
         }
 
@@ -116,9 +115,8 @@ namespace UHub.CoreLib.Entities.Users.APIControllers
         [ApiAuthControl]
         public async Task<IHttpActionResult> GetByID(long UserID)
         {
-            string status = "";
             HttpStatusCode statCode = HttpStatusCode.BadRequest;
-            if (!this.ValidateSystemState(out status, out statCode))
+            if (!this.ValidateSystemState(out string status, out statCode))
             {
                 return Content(statCode, status);
             }
@@ -134,7 +132,7 @@ namespace UHub.CoreLib.Entities.Users.APIControllers
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync("D2D5D240-FEBB-43A0-8B27-2B44AB28AEF7", ex);
+                await CoreFactory.Singleton.Logging.CreateErrorLogAsync("D2D5D240-FEBB-43A0-8B27-2B44AB28AEF7", ex);
                 return InternalServerError();
             }
 
@@ -153,7 +151,7 @@ namespace UHub.CoreLib.Entities.Users.APIControllers
             //Return full detail if user requests self
             if (targetUser.ID == cmsUser.ID)
             {
-                return Ok(cmsUser.ToDto<User_R_PrivateDTO>());
+                return Ok(targetUser.ToDto<User_R_PrivateDTO>());
             }
 
             //only allow users to see users from same school
@@ -162,8 +160,9 @@ namespace UHub.CoreLib.Entities.Users.APIControllers
                 return NotFound();
             }
 
+            //otherwise
             //return partial detail
-            return Ok(cmsUser.ToDto<User_R_PublicDTO>());
+            return Ok(targetUser.ToDto<User_R_PublicDTO>());
 
         }
 

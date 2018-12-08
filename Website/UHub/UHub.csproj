@@ -187,15 +187,17 @@
   <ItemGroup>
     <None Include="ClientResources\Home\Styles\Home.scss" />
     <Content Include="ClientResources\Account\Scripts\CreateAccount.js" />
+    <Content Include="ClientResources\Account\Scripts\AccountDetails.js" />
     <Content Include="ClientResources\Account\Scripts\Login.js" />
     <Content Include="ClientResources\Account\Scripts\Recover.js" />
     <Content Include="ClientResources\Account\Styles\CreateAccount.css" />
     <Content Include="ClientResources\MASTER\Components\Navbar.js" />
     <Content Include="ClientResources\MASTER\Components\PostBar.js" />
-    <Content Include="ClientResources\SampleUHUB_TESTING\homeVue.js" />
-    <Content Include="ClientResources\SampleUHUB_TESTING\index.html" />
-    <Content Include="ClientResources\SampleUHUB_TESTING\postPage.html" />
-    <Content Include="ClientResources\SampleUHUB_TESTING\utilUHUB.css" />
+    <Content Include="ClientResources\MASTER\Scripts\MasterRgx.js" />
+    <Content Include="ClientResources\MASTER\Scripts\MasterValidator.js" />
+    <Content Include="ClientResources\Post\Scripts\History.js" />
+    <Content Include="ClientResources\Post\Scripts\PostUpdatable.js" />
+    <Content Include="ClientResources\Post\Scripts\Post.js" />
     <Content Include="ClientResources\Home\Scripts\Home.js" />
     <Content Include="ClientResources\Home\Scripts\homeVue.js" />
     <Content Include="ClientResources\MASTER\Scripts\Master.js" />
@@ -226,9 +228,6 @@
     <Content Include="ClientResources\MASTER\Styles\Master_Footer.scss" />
     <Content Include="ClientResources\MASTER\Styles\Master_Header.scss" />
     <Content Include="ClientResources\MASTER\Styles\Master.scss" />
-    <Content Include="ClientResources\SampleUHUB_TESTING\.homeVue.js.swp" />
-    <Content Include="ClientResources\SampleUHUB_TESTING\.index.html.swp" />
-    <Content Include="ClientResources\SampleUHUB_TESTING\postPage" />
     <Content Include="ClientResources\MASTER\Components\PostBarStyle.scss" />
     <Content Include="ClientResources\School\Styles\School.scss" />
     <Content Include="ClientResources\MASTER\Components\NavBarStyle.scss" />
@@ -249,6 +248,7 @@
     <Content Include="Scripts\esm\popper.js.map" />
     <Content Include="Scripts\esm\popper-utils.min.js.map" />
     <Content Include="Scripts\esm\popper-utils.js.map" />
+    <None Include="Properties\PublishProfiles\CustomProfile1.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
@@ -314,6 +314,9 @@
     <Content Include="Views\DynamicScripts\Index.cshtml" />
     <Content Include="Views\DynamicScripts\GAnalytics.js.cshtml" />
     <Content Include="Views\Analytics\_GAnalyticsPartial.cshtml" />
+    <Content Include="Views\Post\Index_Updatable.cshtml" />
+    <Content Include="Views\Post\History.cshtml" />
+    <Content Include="Views\Account\Logout.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

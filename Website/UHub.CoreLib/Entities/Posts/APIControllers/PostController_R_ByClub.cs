@@ -152,9 +152,6 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             {
                 return Content(statCode, status);
             }
-
-
-            return InternalServerError();
             
             var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser().CmsUser;
 
@@ -167,6 +164,11 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             await Task.WhenAll(taskTargetClub, taskIsUserBanned);
             var targetClub = taskTargetClub.Result;
             var IsUserBanned = taskIsUserBanned.Result;
+
+            if(targetClub == null)
+            {
+                return NotFound();
+            }
 
             //verify same school
             if (targetClub.SchoolID != cmsUser.SchoolID.Value)
@@ -199,7 +201,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
                     .AsParallel()
                     .Select(x =>
                     {
-                        x.Content = x.Content.SanitizeHtml();
+                        x.Content = x.Content.SanitizeHtml().HtmlDecode();
                         return x.ToDto<Post_R_PublicDTO>();
                     });
             }
@@ -282,7 +284,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
                     .AsParallel()
                     .Select(x =>
                     {
-                        x.Content = x.Content.SanitizeHtml();
+                        x.Content = x.Content.SanitizeHtml().HtmlDecode();
                         return x.ToDto<Post_R_PublicDTO>();
                     });
             }

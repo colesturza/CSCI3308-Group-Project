@@ -11,8 +11,8 @@ namespace UHub.CoreLib.Logging
     {
         None = 0,
 
-        [Obsolete("Not implemented", true)]
-        OnPremProvider = 1,
+        [Obsolete("Not Implemented")]
+        Database = 1,
         GoogleAnalytics = 2,
 
         All = GoogleAnalytics

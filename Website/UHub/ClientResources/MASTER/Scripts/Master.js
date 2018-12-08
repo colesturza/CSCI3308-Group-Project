@@ -93,3 +93,22 @@ function dynamicSort(property) {
         return result * sortOrder;
     };
 }
+
+
+function setShowdownDefaults(converter) {
+    converter.setOption('literalMidWordUnderscores', 'true');
+    converter.setOption('tables', 'true');
+    converter.setOption('tasklists', 'true');
+    converter.setOption('backslashEscapesHTMLTags', 'true');
+    converter.setOption('literalMidWordUnderscores', 'true');
+}
+
+
+
+function htmlEncode(value) {
+    return $('<div/>').text(value).html();
+}
+
+function htmlDecode(value) {
+    return $('<div/>').html(value).text();
+}

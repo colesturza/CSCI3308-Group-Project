@@ -64,9 +64,7 @@ namespace UHub.CoreLib.Attributes
             catch (Exception ex)
             {
                 var errCode = "EA1A7A06-36FD-4276-9D7D-095A83C2E513";
-                Exception ex_outer = new Exception(errCode, ex);
-
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
+                CoreFactory.Singleton.Logging.CreateErrorLog(errCode, ex);
 
                 return false;
             }

@@ -17,6 +17,8 @@
 
 
 
+
+
 GO
 CREATE NONCLUSTERED INDEX [IX_EntChildXRef_ChildID]
     ON [dbo].[EntChildXRef]([ChildEntID] ASC);
@@ -40,4 +42,9 @@ CREATE NONCLUSTERED INDEX [IX_EntChildXRef_Child_ParentType]
 GO
 CREATE NONCLUSTERED INDEX [IX_EntChildXRef_ParentType]
     ON [dbo].[EntChildXRef]([ParentEntType] ASC);
+
+
+GO
+CREATE NONCLUSTERED INDEX [IX_EntChildXRef_Parent_ChildID]
+    ON [dbo].[EntChildXRef]([ParentEntID] ASC, [ChildEntID] ASC, [ParentEntType] ASC);
 

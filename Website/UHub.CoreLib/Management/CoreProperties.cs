@@ -122,7 +122,7 @@ namespace UHub.CoreLib.Management
             Properties.EnableTokenVersioning = cmsConfig.Security.EnableTokenVersioning;
             Properties.HtmlSanitizerMode = cmsConfig.Security.HtmlSanitizerMode;
             //LOGGING
-            Properties.LocalLogMode = cmsConfig.Logging.LocalLogMode;
+            Properties.EventLogMode = cmsConfig.Logging.EventLogMode;
             Properties.LoggingSource = cmsConfig.Logging.LoggingSource;
             Properties.UsageLogMode = cmsConfig.Logging.UsageLogMode;
 
@@ -388,14 +388,14 @@ namespace UHub.CoreLib.Management
         /// <summary>
         /// Logging target mode.  Defines drop zone for log messages
         /// </summary>
-        public LocalLoggingMode LocalLogMode { get; private set; }
+        public EventLoggingMode EventLogMode { get; private set; }
         public UsageLoggingMode UsageLogMode { get; private set; }
         /// <summary>
         /// Name of log folder if using SystemEvents
         /// <para></para>
         /// Default: Application
         /// </summary>
-        public LoggingSource LoggingSource { get; private set; }
+        public LocalSysLoggingSource LoggingSource { get; private set; }
         /// <summary>
         /// Key for google analytics tracking
         /// </summary>

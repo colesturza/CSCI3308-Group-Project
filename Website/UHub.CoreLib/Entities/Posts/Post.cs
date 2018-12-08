@@ -10,7 +10,7 @@ using UHub.CoreLib.Entities.Posts.Interfaces;
 namespace UHub.CoreLib.Entities.Posts
 {
     [DataClass]
-    public sealed partial class Post : DBEntityBase, IPost_R_Public, IPost_C_Public
+    public sealed partial class Post : DBEntityBase, IPost_R_Public, IPost_C_Public, IPost_U_Public
     {
         [DataProperty]
         public long? ID { get; set; }

@@ -42,14 +42,14 @@ namespace UHub.CoreLib.Entities.SchoolMajors.APIControllers
         [HttpGet]
         [Route("GetAllByEmail")]
         [ApiCacheControl(12 * 3600)]
-        public async Task<IHttpActionResult> GetAllByEmail(string email)
+        public async Task<IHttpActionResult> GetAllByEmail(string Email)
         {
-            if (!email.IsValidEmail())
+            if (!Email.IsValidEmail())
             {
                 return BadRequest();
             }
 
-            var majorSet = await SchoolMajorReader.TryGetMajorsByEmailAsync(email);
+            var majorSet = await SchoolMajorReader.TryGetMajorsByEmailAsync(Email);
             if (majorSet == null)
             {
                 return InternalServerError();
@@ -64,15 +64,15 @@ namespace UHub.CoreLib.Entities.SchoolMajors.APIControllers
         [HttpGet]
         [Route("GetAllByDomain")]
         [ApiCacheControl(12 * 3600)]
-        public async Task<IHttpActionResult> GetAllByDomain(string domain)
+        public async Task<IHttpActionResult> GetAllByDomain(string Domain)
         {
-            if (!domain.IsValidEmailDomain())
+            if (!Domain.IsValidEmailDomain())
             {
                 return BadRequest();
             }
 
 
-            var majorSet = await SchoolMajorReader.TryGetMajorsByDomainAsync(domain);
+            var majorSet = await SchoolMajorReader.TryGetMajorsByDomainAsync(Domain);
             if (majorSet == null)
             {
                 return InternalServerError();

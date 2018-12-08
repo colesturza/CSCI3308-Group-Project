@@ -70,7 +70,7 @@ namespace UHub.CoreLib.Entities.Posts.Management
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync("372741E4-6439-41F8-BADC-15BEABA99165", ex);
+                CoreFactory.Singleton.Logging.CreateErrorLog("372741E4-6439-41F8-BADC-15BEABA99165", ex);
                 return (null, PostResultCode.UnknownError);
             }
 
@@ -87,17 +87,17 @@ namespace UHub.CoreLib.Entities.Posts.Management
 
 
 
-        public static bool? TryIncrementViewCount(long PostID)
+        public static bool? TryIncrementViewCount(long PostID, long UserID)
         {
 
             bool? val = null;
             try
             {
-                val = PostWriter.IncrementViewCount(PostID);
+                val = PostWriter.IncrementViewCount(PostID, UserID);
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync("8A829937-3470-4A7C-9E62-36234575FB88", ex);
+                CoreFactory.Singleton.Logging.CreateErrorLog("8A829937-3470-4A7C-9E62-36234575FB88", ex);
             }
 
 
@@ -160,7 +160,7 @@ namespace UHub.CoreLib.Entities.Posts.Management
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync("CDB83704-5E14-48DB-AEB9-FA947EA91D0B", ex);
+                CoreFactory.Singleton.Logging.CreateErrorLog("CDB83704-5E14-48DB-AEB9-FA947EA91D0B", ex);
                 return PostResultCode.UnknownError;
             }
 

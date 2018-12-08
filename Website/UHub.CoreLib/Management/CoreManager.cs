@@ -69,27 +69,8 @@ namespace UHub.CoreLib.Management
 
 
 
-            //LOGGING
-            _logging = new LoggingManager();
-            if ((_properties.LocalLogMode & LocalLoggingMode.LocalFile) != 0)
-            {
-                var fileProvider = new LocalFileEventProvider();
-                _logging.AddProvider(fileProvider);
-            }
-            if ((_properties.LocalLogMode & LocalLoggingMode.SystemEvents) != 0)
-            {
-                var logSrc = Properties.LoggingSource;
-                var fName = Properties.SiteFriendlyName;
-                var eventProvider = new LocalSysEventProvider(logSrc, fName);
-
-                _logging.AddProvider(eventProvider);
-            }
-            if ((_properties.UsageLogMode & UsageLoggingMode.GoogleAnalytics) != 0)
-            {
-                var googleProvider = new UsageGAnalyticsProvider();
-
-                _logging.AddProvider(googleProvider);
-            }
+            //------------------LOGGING------------------
+            _logging = new LoggingManager(_properties);
 
 
 

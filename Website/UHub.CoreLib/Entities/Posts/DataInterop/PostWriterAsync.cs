@@ -53,7 +53,7 @@ namespace UHub.CoreLib.Entities.Posts.DataInterop
         /// </summary>
         /// <param name="cmsPost"></param>
         /// <returns></returns>
-        internal static async Task<bool> IncrementViewCountAsync(long PostID)
+        internal static async Task<bool> IncrementViewCountAsync(long PostID, long UserID)
         {
             if (!CoreFactory.Singleton.IsEnabled)
             {
@@ -67,6 +67,7 @@ namespace UHub.CoreLib.Entities.Posts.DataInterop
                 (cmd) =>
                 {
                     cmd.Parameters.Add("@PostID", SqlDbType.BigInt).Value = PostID;
+                    cmd.Parameters.Add("@UserID", SqlDbType.BigInt).Value = UserID;
                 });
 
         }

@@ -28,7 +28,7 @@ namespace UHub.CoreLib.Entities.Schools.DataInterop
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync("A9C7339B-7FD0-4224-AFAB-C8447611F25D", ex);
+                await CoreFactory.Singleton.Logging.CreateErrorLogAsync("A9C7339B-7FD0-4224-AFAB-C8447611F25D", ex);
                 return null;
             }
         }
@@ -62,7 +62,7 @@ namespace UHub.CoreLib.Entities.Schools.DataInterop
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync("F22F4424-6D73-4F7E-B9AC-87A49EACC88C", ex);
+                await CoreFactory.Singleton.Logging.CreateErrorLogAsync("F22F4424-6D73-4F7E-B9AC-87A49EACC88C", ex);
                 return null;
             }
 
@@ -97,7 +97,7 @@ namespace UHub.CoreLib.Entities.Schools.DataInterop
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync("8B7670E6-9D51-4961-ACD6-28E979BE0EA7", ex);
+                await CoreFactory.Singleton.Logging.CreateErrorLogAsync("8B7670E6-9D51-4961-ACD6-28E979BE0EA7", ex);
                 return null;
             }
         }
@@ -131,7 +131,7 @@ namespace UHub.CoreLib.Entities.Schools.DataInterop
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync("E52D97EE-2CED-4F27-994D-B701C8547311", ex);
+                await CoreFactory.Singleton.Logging.CreateErrorLogAsync("E52D97EE-2CED-4F27-994D-B701C8547311", ex);
                 return null;
             }
 
@@ -172,7 +172,7 @@ namespace UHub.CoreLib.Entities.Schools.DataInterop
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync("23AFFEF9-8D06-4FA1-91BF-BF233B11736D", ex);
+                await CoreFactory.Singleton.Logging.CreateErrorLogAsync("23AFFEF9-8D06-4FA1-91BF-BF233B11736D", ex);
                 return null;
             }
         }
@@ -202,7 +202,7 @@ namespace UHub.CoreLib.Entities.Schools.DataInterop
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync("150FFD55-0B39-43FF-BEE4-C6EC97931D15", ex);
+                await CoreFactory.Singleton.Logging.CreateErrorLogAsync("150FFD55-0B39-43FF-BEE4-C6EC97931D15", ex);
                 return false;
             }
         }
@@ -228,7 +228,7 @@ namespace UHub.CoreLib.Entities.Schools.DataInterop
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync("A18440AB-870D-49B9-8813-09363C0FF1B4", ex);
+                await CoreFactory.Singleton.Logging.CreateErrorLogAsync("A18440AB-870D-49B9-8813-09363C0FF1B4", ex);
                 return false;
             }
         }

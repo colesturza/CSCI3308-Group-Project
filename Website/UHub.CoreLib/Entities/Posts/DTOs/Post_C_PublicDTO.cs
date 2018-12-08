@@ -12,7 +12,6 @@ namespace UHub.CoreLib.Entities.Posts.DTOs
     [DtoClass(typeof(Post))]
     public sealed partial class Post_C_PublicDTO : DtoEntityBase, IPost_C_Public
     {
-        
         public string Name { get; set; }
         public string Content { get; set; }
         public bool CanComment { get; set; }

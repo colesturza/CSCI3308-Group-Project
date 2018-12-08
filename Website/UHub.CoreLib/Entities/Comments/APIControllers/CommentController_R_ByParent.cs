@@ -14,29 +14,29 @@ namespace UHub.CoreLib.Entities.Comments.APIControllers
 {
     public sealed partial class CommentController
     {
-        [HttpPost()]
-        [Route("GetByParent")]
-        [ApiAuthControl]
-        public async Task<IHttpActionResult> GetByParent(long parentID)
-        {
-            string status = "";
-            HttpStatusCode statCode = HttpStatusCode.BadRequest;
-            if (!this.ValidateSystemState(out status, out statCode))
-            {
-                return Content(statCode, status);
-            }
+        //[HttpPost()]
+        //[Route("GetByParent")]
+        //[ApiAuthControl]
+        //public async Task<IHttpActionResult> GetByParent(long ParentID)
+        //{
+        //    string status = "";
+        //    HttpStatusCode statCode = HttpStatusCode.BadRequest;
+        //    if (!this.ValidateSystemState(out status, out statCode))
+        //    {
+        //        return Content(statCode, status);
+        //    }
 
 
 
-            var comments = await CommentReader.TryGetCommentsByParentAsync(parentID);
-            if(comments == null)
-            {
-                return InternalServerError();
-            }
+        //    var comments = await CommentReader.TryGetCommentsByParentAsync(ParentID);
+        //    if(comments == null)
+        //    {
+        //        return InternalServerError();
+        //    }
 
 
-            var outSet = comments.Select(x => x.ToDto<Comment_R_PublicDTO>());
-            return Ok(outSet);
-        }
+        //    var outSet = comments.Select(x => x.ToDto<Comment_R_PublicDTO>());
+        //    return Ok(outSet);
+        //}
     }
 }

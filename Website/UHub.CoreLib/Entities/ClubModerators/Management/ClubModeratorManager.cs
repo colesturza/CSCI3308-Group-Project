@@ -56,7 +56,7 @@ namespace UHub.CoreLib.Entities.ClubModerators.Management
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync("BA84325E-26A2-4BB2-892B-19DCE9704F29", ex);
+                CoreFactory.Singleton.Logging.CreateErrorLog("BA84325E-26A2-4BB2-892B-19DCE9704F29", ex);
                 return (null, ClubModeratorResultCode.UnknownError);
             }
 

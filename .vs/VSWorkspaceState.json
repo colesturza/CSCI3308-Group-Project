@@ -3,6 +3,11 @@
     "",
     "\\Website",
     "\\Website\\UHub",
+    "\\Website\\UHub\\ClientResources",
+    "\\Website\\UHub\\ClientResources\\Account",
+    "\\Website\\UHub\\ClientResources\\Account\\Scripts",
+    "\\Website\\UHub\\Views",
+    "\\Website\\UHub\\Views\\Account"
     "\\Website\\UHub.CoreLib.Tests",
     "\\Website\\UHub.CoreLib.Tests\\Security",
     "\\Website\\UHub.CoreLib.Tests\\Security\\Accounts",

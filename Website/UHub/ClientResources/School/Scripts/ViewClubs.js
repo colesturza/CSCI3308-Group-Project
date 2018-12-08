@@ -8,20 +8,18 @@
 
         $.ajax({
             method: "POST",
-            url: "/uhubapi/SchoolClubs/GetAllBySchool",
-            data: {},
-            statusCode: {
-                200: function (data) {
-                    self.clubs = data;
-                    self.clubs.sort(dynamicSort("Name"));
-                },
-                503: function () {
-                    console.log("Internal Server Error");
-                }
-            },
-            error: function (error) {
+            url: "/uhubapi/SchoolClubs/GetAllBySchool"
+        })
+            //AJAX -> /uhubapi/SchoolClubs/GetAllBySchool
+            .done(function (data) {
+                self.clubs = data;
+                self.clubs.sort(dynamicSort("Name"));
+
+                $("#club-list").style('display', null);
+            })
+            //AJAX -> /uhubapi/SchoolClubs/GetAllBySchool
+            .fail(function (error) {
                 console.log(error);
-            }
-        });
+            });
     }
 });

@@ -39,7 +39,7 @@ namespace UHub.CoreLib.Entities.SchoolClubs.DataInterop
                     cmd.Parameters.Add("@Description", SqlDbType.NVarChar).Value = HandleParamEmpty(Club.Description);
                     cmd.Parameters.Add("@ParentID", SqlDbType.BigInt).Value = Club.SchoolID;
                     cmd.Parameters.Add("@CreatedBy", SqlDbType.BigInt).Value = Club.CreatedBy;
-                    cmd.Parameters.Add("@IsReadOnly", SqlDbType.BigInt).Value = Club.IsReadOnly;
+                    cmd.Parameters.Add("@IsReadOnly", SqlDbType.BigInt).Value = DBNull.Value;       //TODO: IMPLEMENT
                 });
 
 

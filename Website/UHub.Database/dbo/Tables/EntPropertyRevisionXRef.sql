@@ -1,4 +1,4 @@
-﻿CREATE TABLE [dbo].[EntPropertyRevisionXRef] (
+CREATE TABLE [dbo].[EntPropertyRevisionXRef] (
     [EntID]       BIGINT             NOT NULL,
     [EntTypeID]   SMALLINT           NOT NULL,
     [PropID]      INT                NOT NULL,
@@ -16,14 +16,18 @@
 
 
 
+
+
 GO
 CREATE NONCLUSTERED INDEX [IX_EntPropertyRevisionXRef]
-    ON [dbo].[EntPropertyRevisionXRef]([EntID] ASC, [PropID] ASC);
+    ON [dbo].[EntPropertyRevisionXRef]([EntTypeID] ASC, [PropID] ASC);
+
+
 
 
 
 
 GO
-CREATE NONCLUSTERED INDEX [IX_EntPropertyRevisionXRef_Clustered]
+CREATE CLUSTERED INDEX [IX_EntPropertyRevisionXRef_Cluster]
     ON [dbo].[EntPropertyRevisionXRef]([EntID] ASC, [CreatedDate] ASC, [PropID] ASC);
 

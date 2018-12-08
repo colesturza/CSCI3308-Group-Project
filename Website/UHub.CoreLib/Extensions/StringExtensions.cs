@@ -318,7 +318,7 @@ namespace UHub.CoreLib.Extensions
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static string HtmlDecode(this string str)
         {
-            return WebUtility.HtmlEncode(str);
+            return WebUtility.HtmlDecode(str);
         }
 
         /// <summary>
@@ -362,7 +362,6 @@ namespace UHub.CoreLib.Extensions
             sanitizer.AllowDataAttributes = true;
 
             sanitizer.AllowedSchemes.Add("mailto");
-
 
             return sanitizer.Sanitize(str);
         }

@@ -81,9 +81,11 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
                 var ResultCode = postResult.ResultCode;
                 var PostID = postResult.PostID;
 
+
+
                 if (ResultCode == 0)
                 {
-                    status = "Post Created";
+                    status = PostID.ToString();
                     statCode = HttpStatusCode.OK;
                 }
                 else if (ResultCode == PostResultCode.UnknownError)
@@ -101,8 +103,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             catch (Exception ex)
             {
                 var errCode = "d4bcfc43-5247-45a3-b448-5baeea96058e";
-                Exception ex_outer = new Exception(errCode, ex);
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex_outer);
+                await CoreFactory.Singleton.Logging.CreateErrorLogAsync(errCode, ex);
 
                 statCode = HttpStatusCode.InternalServerError;
             }

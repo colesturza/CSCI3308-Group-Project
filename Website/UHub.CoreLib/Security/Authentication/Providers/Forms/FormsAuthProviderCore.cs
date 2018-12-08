@@ -23,7 +23,7 @@ namespace UHub.CoreLib.Security.Authentication.Providers.Forms
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync("D1CBD896-CAB8-48AD-9DA6-DD2DE9CEA2A1", ex);
+                CoreFactory.Singleton.Logging.CreateErrorLog("D1CBD896-CAB8-48AD-9DA6-DD2DE9CEA2A1", ex);
                 return PasswordValidationStatus.UnknownError;
             }
 

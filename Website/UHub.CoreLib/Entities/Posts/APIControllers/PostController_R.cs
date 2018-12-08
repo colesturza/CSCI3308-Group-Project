@@ -25,7 +25,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
         [HttpPost()]
         [Route("GetByID")]
         [ApiAuthControl]
-        public async Task<IHttpActionResult> GetByID(long postID)
+        public async Task<IHttpActionResult> GetByID(long PostID)
         {
             string status = "";
             HttpStatusCode statCode = HttpStatusCode.BadRequest;
@@ -35,7 +35,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             }
 
 
-            var postInternal = await PostReader.TryGetPostAsync(postID);
+            var postInternal = await PostReader.TryGetPostAsync(PostID);
             if (postInternal == null)
             {
                 return NotFound();
@@ -53,6 +53,12 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
 
 
             var postPublic = postInternal.ToDto<Post_R_PublicDTO>();
+            var sanitizerMode = CoreFactory.Singleton.Properties.HtmlSanitizerMode;
+            if ((sanitizerMode & HtmlSanitizerMode.OnRead) != 0)
+            {
+                postPublic.Content = postPublic.Content.SanitizeHtml().HtmlDecode();
+            }
+
 
             var postClub = await taskPostClub;
             if (postClub != null)
@@ -70,31 +76,17 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
                     return Content(HttpStatusCode.Forbidden, "Access Denied");
                 }
 
-                var sanitizerMode = CoreFactory.Singleton.Properties.HtmlSanitizerMode;
-                if ((sanitizerMode & HtmlSanitizerMode.OnRead) != 0)
-                {
-                    postPublic.Content = postPublic.Content.SanitizeHtml();
-                }
-
 
                 var IsUserMember = await taskIsUserMember;
                 //check for member status
-                if (IsUserMember)
+                if (IsUserMember || postInternal.IsPublic)
                 {
-                    await PostManager.TryIncrementViewCountAsync(postID);
+                    await PostManager.TryIncrementViewCountAsync(PostID, cmsUser.ID.Value);
                     return Ok(postPublic);
                 }
                 else
                 {
-                    if (postInternal.IsPublic)
-                    {
-                        await PostManager.TryIncrementViewCountAsync(postID);
-                        return Ok(postPublic);
-                    }
-                    else
-                    {
-                        return Content(HttpStatusCode.Forbidden, "Access Denied");
-                    }
+                    return Content(HttpStatusCode.Forbidden, "Access Denied");
                 }
             }
 
@@ -106,7 +98,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
                 return NotFound();
             }
 
-            await PostManager.TryIncrementViewCountAsync(postInternal.ID.Value);
+            await PostManager.TryIncrementViewCountAsync(postInternal.ID.Value, cmsUser.ID.Value);
             return Ok(postPublic);
         }
 
@@ -115,7 +107,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
         [HttpPost()]
         [Route("GetRevisionsByID")]
         [ApiAuthControl]
-        public async Task<IHttpActionResult> GetRevisionsByID(long postID)
+        public async Task<IHttpActionResult> GetRevisionsByID(long PostID)
         {
             string status = "";
             HttpStatusCode statCode = HttpStatusCode.BadRequest;
@@ -125,7 +117,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             }
 
 
-            var postEnum = await PostReader.TryGetPostRevisionsAsync(postID);
+            var postEnum = await PostReader.TryGetPostRevisionsAsync(PostID);
             if (postEnum == null)
             {
                 return NotFound();
@@ -148,6 +140,15 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
 
 
             List<Post_R_PublicDTO> postListPublic = postList.Select(x => x.ToDto<Post_R_PublicDTO>()).ToList();
+            var sanitizerMode = CoreFactory.Singleton.Properties.HtmlSanitizerMode;
+            if ((sanitizerMode & HtmlSanitizerMode.OnRead) != 0)
+            {
+                postListPublic.ForEach(x =>
+                {
+                    x.Content = x.Content.SanitizeHtml().HtmlDecode();
+                });
+            }
+
 
 
             var postClub = await taskPostClub;
@@ -166,15 +167,6 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
                     return Content(HttpStatusCode.Forbidden, "Access Denied");
                 }
 
-                var sanitizerMode = CoreFactory.Singleton.Properties.HtmlSanitizerMode;
-                if ((sanitizerMode & HtmlSanitizerMode.OnRead) != 0)
-                {
-                    postListPublic.ForEach(x =>
-                    {
-                        x.Content = x.Content.SanitizeHtml();
-                    });
-                }
-
 
                 var IsUserMember = await taskIsUserMember;
                 //check for member status
@@ -183,7 +175,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
                     postListPublic = postListPublic.Where(x => x.IsPublic).ToList();
                 }
 
-                await PostManager.TryIncrementViewCountAsync(postID);
+
                 return Ok(postListPublic);
             }
 
@@ -194,7 +186,6 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             {
                 return NotFound();
             }
-            await PostManager.TryIncrementViewCountAsync(postID);
 
 
             return Ok(postListPublic);

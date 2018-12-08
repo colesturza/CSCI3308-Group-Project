@@ -1,118 +1,148 @@
-var examplePosts = [{ postid: 1, url: '#', subject: "LoremIpsum", postContent: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean eros mauris, mollis at fermentum mattis, interdum et ipsum." },
-{ postid: 2, url: '#', subject: "IpsumLorem", postContent: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean eros mauris, mollis at fermentum mattis, interdum et ipsum." },
-{ postid: 3, url: '#', subject: "LoremIpsum", postContent: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean eros mauris, mollis at fermentum mattis, interdum et ipsum." },
-{ postid: 4, url: '#', subject: "IpsumLorem", postContent: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean eros mauris, mollis at fermentum mattis, interdum et ipsum." },
-{ postid: 4, url: '#', subject: "IpsumLorem", postContent: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean eros mauris, mollis at fermentum mattis, interdum et ipsum." },
-{ postid: 4, url: '#', subject: "IpsumLorem", postContent: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean eros mauris, mollis at fermentum mattis, interdum et ipsum." },
-{ postid: 4, url: '#', subject: "IpsumLorem", postContent: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean eros mauris, mollis at fermentum mattis, interdum et ipsum." }];
-var compsciPosts = [{ postid: 1, url: '#', subject: "LoremIpsum", postContent: "Foobar" },
-{ postid: 2, url: '#', subject: "IpsumLorem", postContent: "Else{ Heart.Break() }" },
-{ postid: 3, url: '#', subject: "LoremIpsum", postContent: "this.post = 'a post'" },
-{ postid: 4, url: '#', subject: "IpsumLorem", postContent: "this.post = 'another post'" },
-{ postid: 4, url: '#', subject: "IpsumLorem", postContent: "Exam avg: 70%" },
-{ postid: 4, url: '#', subject: "IpsumLorem", postContent: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean eros mauris, mollis at fermentum mattis, interdum et ipsum." },
-{ postid: 4, url: '#', subject: "IpsumLorem", postContent: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean eros mauris, mollis at fermentum mattis, interdum et ipsum." }];
+(function () {
+
+    var commID = encodeURIComponent(window.location.href.split('/').slice(-1)[0]);
 
 
-var exampleCommunities = [{ name: "Anthropology", url: "www.google.com" }, { name: "Computer Science B.S.", url: "#" }, { name: "Mechanical Engineering", url: "#" }];
+    var mdConverter = new showdown.Converter();
+    setShowdownDefaults(mdConverter);
 
-/*Sample variable to hold all of the values of the get request*/
-var clubData = {
-    id: Number,
-    schoolID: Number,
-    isEnabled: Boolean,
-    isReadOnly: Boolean,
-    name: String,
-    description: String,
-    createdDate: Number,
-    modifiedDate: Number
-}
 
-/*Prototype for a post list component.*/
-Vue.component('postlistcomp', {
-    template: `
-   <ul  class="list-group list-group-flush w-70 float-md-left">
-   <li class="list-group-item mb-3"  v-for="post in posts">
-       <h4> {{ post.subject }} </h4>
-       <p> {{ post.postContent }} </p>
-   </li>
-   </ul>`,
-    data: function () {
-        return {
-            posts: examplePosts
-        }
-    }
-});
 
-var communityDropdown = new Vue({
-    el: "#communityDrop",
-    data: {
-        communities: [],
-        current: "Dropdown link"
-    },
-    methods: {
-        getCommunities() {
-            this.communities = exampleCommunities;
-            console.log(this.communities);
+    Vue.component('postlistcomp', {
+        props: ['post'],
+        template:
+            `
+           <li class="list-group-item mb-3" style="padding: .75rem 1.25rem">
+                <div class="shadowBox"></div>                
+
+                <template v-if="post.ID != undefined" >
+                    <a v-bind:href="'/Post/' + post.ID">
+                        <h3> {{ post.Name }} </h3>
+                    </a>
+                </template>
+                <h3 v-else> {{ post.Name }} </h3>
+
+               <div v-html="post.Content"></div>
+           </li>
+        `
+    });
+
+
+
+    var vueClubInfo = new Vue({
+        el: "#community-block",
+        data: {
+            community: {}
         },
-        /*updateDisplay is an incomplete function intended to change the name of the dropdown when a community is selected.
-          Since we decided to update the dropdown based on the get request, there shouldn't be a need to use this
-          The function is provided in case it is useful*/
-        updateDisplay(newName) {
-            document.getElementById('navbarDropdownMenuLink').innerHTML = newName
+        methods: {
+            getCommunity() {
+                var self = this;
+
+                loadVueClubInfo();
+            }
+        },
+        beforeMount() {
+            this.getCommunity();
         }
-    },
-    beforeMount() {
-        this.getCommunities()
-    }
-});
+    });
 
-var descript = "This is a mounted description"
 
-var communityblock = new Vue({
-    el: "#community-block",
-    data: {
-        description: "Default Community Description"
-    },
-    methods: {
-        getDescription() {
-            this.description = descript;
+    var vuePostSet = new Vue({
+        el: "#post-list",
+        data: {
+            posts: []
+        },
+        mounted: function () {
+            var self = this;
+
+            loadVuePostData();
         }
-    },
-    /*Updates the description when the instance is mounted to the value in descript.
-      This should be set up so we can update the community description on the get request*/
-    beforeMount() {
-        description = this.getDescription();
-    }
-});
+    });
 
-var postList = new Vue({
-    el: "#post-list",
-    data: {
-        posts: []
-    },
-    methods: {
-        getPosts() {
-            var postRequest = $.ajax({
-                method: "POST",
-                url: "/uhubapi/posts/GetAllByClub",
-                data: { ClubID: window.location.href.split('/').slice(-1)[0] },
-                //dataType: "json",                 //No need to set dataType for this request because it accepts a queryString
-                statusCode: {
-                    200: function () {
-                        this.posts = postRequest.responseJSON;
-                    },
-                    503: function () {
-                        console.log("Internal Server Error");
-                    }
+
+    function loadVueClubInfo() {
+        $.ajax({
+            method: "POST",
+            url: "/uhubapi/schoolclubs/GetByID?ClubID=" + encodeURIComponent(commID),
+            statusCode: {
+                200: function (data) {
+
+                    $(navbarDropdownMenuLink).text(data.Name);
+
+                    vueClubInfo.community = data;
                 },
-                error: function (error) {
-                    console.log(error);
+                503: function () {
+                    console.log("Internal Server Error");
                 }
-            })
-        }
-    },
-    beforeMount() {
-        this.getPosts();
+            }
+        })
+            .fail(function (error) {
+                console.log(error);
+            });
     }
-});
+
+
+    function loadVuePostData() {
+
+        $("#body-content").style('display', "none", "important");
+
+        $.ajax({
+            method: "POST",
+            url: "/uhubapi/posts/GetAllByClub?ClubID=" + encodeURIComponent(commID)
+        })
+            //AJAX -> /uhubapi/posts/GetAllByClub
+            .done(function (formData) {
+
+                if (formData.length > 0) {
+
+                    for (var i = 0; i < formData.length; i++) {
+                        formData[i].Content = mdConverter.makeHtml(formData[i].Content);
+                    }
+                    formData.sort(dynamicSort("-CreatedDate"));
+                    vuePostSet.posts = formData;
+
+                }
+                else {
+                    vuePostSet.posts = [{
+                        Name: "Nothing To See Here",
+                        Content: "This club currently does not have any posts"
+                    }];
+                }
+
+            })
+            //AJAX -> /uhubapi/posts/GetAllByClub
+            .fail(function (error) {
+                console.log(error);
+
+                vuePostSet.posts = [{
+                    Name: "Nothing To See Here",
+                    Content: "Unfortunately, an error occured while fetching posts"
+                }];
+            })
+            //AJAX -> /uhubapi/posts/GetAllByClub
+            .always(function () {
+
+                $("#body-content").style('display', null);
+
+            });
+    }
+
+
+    //dynamic content reloading
+    //loads new community without refreshing the page
+    $("#navbarDropdownMenu span.dropdown-item").click(function () {
+
+        var id = parseInt($(this).attr("data-ClubID"));
+
+        if (id > 0) {
+            commID = id;
+            window.history.pushState('School Club ' + id, 'School Club', '/SchoolClub/' + id);
+
+            loadVuePostData();
+            loadVueClubInfo();
+        }
+
+    });
+
+
+})();

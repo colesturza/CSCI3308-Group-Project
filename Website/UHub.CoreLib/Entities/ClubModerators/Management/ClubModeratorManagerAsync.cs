@@ -55,7 +55,7 @@ namespace UHub.CoreLib.Entities.ClubModerators.Management
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync("169CBE64-325B-4820-9E21-833B1BC8DE4D", ex);
+                await CoreFactory.Singleton.Logging.CreateErrorLogAsync("169CBE64-325B-4820-9E21-833B1BC8DE4D", ex);
                 return (null, ClubModeratorResultCode.UnknownError);
             }
 

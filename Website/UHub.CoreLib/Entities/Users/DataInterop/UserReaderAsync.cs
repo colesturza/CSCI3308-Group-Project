@@ -252,8 +252,28 @@ namespace UHub.CoreLib.Entities.Users.DataInterop
 
 
 
-            return await SqlWorker.ExecBasicQueryAsync<User>(_dbConn, "[dbo].[User_GetAll]");
+            return await SqlWorker.ExecBasicQueryAsync<User>(_dbConn, "[dbo].[Users_GetAll]");
 
+        }
+
+
+
+        public static async Task<IEnumerable<User>> GetAllBySchoolAsync(long SchoolID)
+        {
+
+            if (!CoreFactory.Singleton.IsEnabled)
+            {
+                throw new SystemDisabledException();
+            }
+
+
+            return await SqlWorker.ExecBasicQueryAsync<User>(
+                _dbConn,
+                "[dbo].[Users_GetBySchoolID]",
+                (cmd) =>
+                {
+                    cmd.Parameters.Add("@SchoolID", SqlDbType.BigInt).Value = SchoolID;
+                });
         }
         #endregion Group
 

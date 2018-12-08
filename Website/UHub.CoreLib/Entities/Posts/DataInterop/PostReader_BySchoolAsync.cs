@@ -39,7 +39,7 @@ namespace UHub.CoreLib.Entities.Posts.DataInterop
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync("03631697-0818-490E-9F8A-F9865994EA85", ex);
+                await CoreFactory.Singleton.Logging.CreateErrorLogAsync("03631697-0818-490E-9F8A-F9865994EA85", ex);
                 return null;
             }
         }
@@ -71,7 +71,7 @@ namespace UHub.CoreLib.Entities.Posts.DataInterop
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync("7036C9FE-F904-420E-9F6E-D101D367DB44", ex);
+                await CoreFactory.Singleton.Logging.CreateErrorLogAsync("7036C9FE-F904-420E-9F6E-D101D367DB44", ex);
                 return null;
             }
 
@@ -106,7 +106,7 @@ namespace UHub.CoreLib.Entities.Posts.DataInterop
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync("D36EEB74-6E95-47EE-A396-F05C6E85AC26", ex);
+                await CoreFactory.Singleton.Logging.CreateErrorLogAsync("D36EEB74-6E95-47EE-A396-F05C6E85AC26", ex);
                 return null;
             }
         }
@@ -149,7 +149,7 @@ namespace UHub.CoreLib.Entities.Posts.DataInterop
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync("BC55929E-8421-4C59-B93D-70BD70847A9D", ex);
+                await CoreFactory.Singleton.Logging.CreateErrorLogAsync("BC55929E-8421-4C59-B93D-70BD70847A9D", ex);
                 return null;
             }
         }
@@ -207,7 +207,7 @@ namespace UHub.CoreLib.Entities.Posts.DataInterop
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync("700E9FF9-4912-4547-97F1-ADFF83E3E105", ex);
+                await CoreFactory.Singleton.Logging.CreateErrorLogAsync("700E9FF9-4912-4547-97F1-ADFF83E3E105", ex);
                 return (null, 0);
             }
         }

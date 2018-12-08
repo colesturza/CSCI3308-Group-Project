@@ -172,6 +172,18 @@ namespace UHub.Controllers
 
 
         [System.Web.Mvc.HttpGet]
+        [MvcAuthControl]
+        public ActionResult Logout()
+        {
+            var context = System.Web.HttpContext.Current;
+            CoreFactory.Singleton.Auth.TryLogOut(context);
+
+
+            return View();
+        }
+
+
+        [System.Web.Mvc.HttpGet]
         public async Task<ActionResult> Confirm()
         {
             var idObj = Url.RequestContext.RouteData.Values["id"];
@@ -194,7 +206,7 @@ namespace UHub.Controllers
             var confResult = await CoreFactory.Singleton.Accounts.TryConfirmUserAsync(idStr);
             if (confResult == 0)
             {
-                ViewBag.Message = "User account has been successfully confirmed";
+                ViewBag.Message = "User account has been successfully confirmed.  Please return home to log in";
             }
             else
             {
@@ -402,8 +414,14 @@ namespace UHub.Controllers
         public ActionResult Find()
         {
             var idObj = Url.RequestContext.RouteData.Values["id"];
-            var idStr = idObj?.ToString() ?? "0";
-            var valid = int.TryParse(idStr, out var id);
+            var idStr = idObj?.ToString() ?? "";
+            var valid = int.TryParse(idStr, out var userId);
+
+            if (!valid)
+            {
+                return Redirect("~/Error/400");
+            }
+
 
             return View();
         }

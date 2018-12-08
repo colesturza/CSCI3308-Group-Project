@@ -1,36 +1,7 @@
 (function () {
 
-    var mdConverter = new showdown.Converter();
-
-    var simplemde = new SimpleMDE(
-        {
-            autosave: {
-                enabled: false
-            },
-            element: document.getElementById("inputContent"),
-            previewRender: function (plainText, preview) { // Async method
-
-                setTimeout(function () {
-                    preview.innerHTML = mdConverter.makeHtml(plainText);
-                }, 100);
-
-                return "Loading...";
-            },
-            promptURLs: true,
-            spellChecker: true,
-            status: ["lines", "words", {
-                className: "charCount",
-                defaultValue: function (el) {
-                    this.charCount = 0;
-                    el.innerHTML = "0 Characters (10 - 10k)";
-                },
-                onUpdate: function (el) {
-                    var ct = simplemde.value().length;
-                    el.innerHTML = ct + " Characters (10 - 10k)";
-                }
-            }]
-        });
-
+    var jsonPostDataOld = null;
+    var oldResponseErr = null;
 
 
     var url = window.location.href;
@@ -38,7 +9,51 @@
     var clubID = seperated.slice(-1)[0];
 
 
-    function getData() {
+    var mdConverter = new showdown.Converter();
+    setShowdownDefaults(mdConverter);
+
+
+    $("#auxNav a.btn").attr('href', '/SchoolClub/' + clubID);
+
+
+
+    var simplemde = new SimpleMDE(
+        {
+            autosave: {
+                enabled: false
+            },
+            element: document.getElementById("inputContent"),
+            previewRender: function (plainText) {
+                return mdConverter.makeHtml(plainText);
+            },
+            promptURLs: true,
+            spellChecker: true,
+            status: ["lines", "words", {
+                className: "charCount",
+                defaultValue: function (el) {
+                    this.charCount = 0;
+                    el.innerHTML = "Characters: 0 (10 - 10k)";
+                },
+                onUpdate: function (el) {
+                    var ct = simplemde.value().length;
+                    el.innerHTML = "Characters: " + ct + " (10 - 10k)";
+                }
+            }]
+        });
+
+
+    function setWaitState() {
+        $("#btn_CreatePost").attr("disabled", "disabled");
+        $("html").css({ cursor: "default" });
+    }
+
+    function clearWaitState() {
+        $("#btn_CreatePost").removeAttr("disabled");
+        $("html").css({ cursor: "default" });
+    }
+
+
+    function getFormData() {
 
         return {
             Name: $("#inputTitle").val(),
@@ -49,41 +64,82 @@
         };
     }
 
-    function sendData(formData) {
-        $("#btn_CreatePost").attr("disabled", "disabled");
-        $("html").css({ cursor: "wait" });
 
-        var jsonData = JSON.stringify(formData);
+    function processInputValidation(formData) {
+
+        if (!formData.Name.match(RgxPtrns.Post.NAME)) {
+            oldResponseErr = 'Post Name Invalid';
+            alert(oldResponseErr);
+            return false;
+        }
+        else if (!formData.Content.match(RgxPtrns.Post.CONTENT)) {
+            oldResponseErr = 'Post Content Invalid';
+            alert(oldResponseErr);
+            return false;
+        }
+
+        return true;
+    }
+
+
+    function sendData(formData) {
+        setWaitState();
+
+        var jsonPostData = JSON.stringify(formData);
+
+
+        if (jsonPostData == jsonPostDataOld) {
+            alert(oldResponseErr);
+            clearWaitState();
+            return;
+        }
+        jsonPostDataOld = jsonPostData;
+
+
+        if (!processInputValidation(formData)) {
+            clearWaitState();
+            return;
+        }
+
 
         $.ajax({
             method: "POST",
             contentType: "application/json; charset=utf-8",
             dataType: "json",
-            data: jsonData,
-            url: "/uhubapi/posts/Create",
-            complete: function (data) {
-                $("#btn_CreatePost").removeAttr("disabled");
-                $("html").css({ cursor: "default" });
-                console.log(data);
-            },
-            success: function (data) {
+            data: jsonPostData,
+            url: "/uhubapi/posts/Create"
+        })
+            .done(function (data) {
                 $("#inputTitle").val("");
                 simplemde.value("");
                 $("#inputMakePrivate")[0].checked = false;
                 $("#inputCanComment")[0].checked = true;
 
-                alert(data);
-            },
-            error: function (data) {
-                alert(data.responseJSON);
-            }
-        });
+                alert("Post Created");
+
+                window.location.href = "/Post/" + data;
+            })
+            .fail(function (resp) {
+                oldResponseErr = resp.responseJSON;
+                alert(oldResponseErr);
+            })
+            .always(function () {
+                clearWaitState();
+            });
+
     }
 
 
+
     $("#btn_CreatePost").click(function () {
-        var data = getData();
+        var data = getFormData();
         sendData(data);
     });
+
+
+
+    registerInputValidator($("#inputTitle"), RgxPtrns.Post.NAME);
+    registerInputValidator($("#inputContent"), RgxPtrns.Post.CONTENT);
+
 
 })();

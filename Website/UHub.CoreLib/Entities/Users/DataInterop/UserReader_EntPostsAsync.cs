@@ -33,12 +33,32 @@ namespace UHub.CoreLib.Entities.Users.DataInterop
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync("E8A7C53B-BC51-4556-A730-16A570952B5D", ex);
+                await CoreFactory.Singleton.Logging.CreateErrorLogAsync("E8A7C53B-BC51-4556-A730-16A570952B5D", ex);
                 return false;
             }
 
         }
 
+
+        public static async Task<IEnumerable<User>> TryGetPostCommentersAsync(long PostID)
+        {
+            try
+            {
+                return await SqlWorker.ExecBasicQueryAsync<User>(
+                    _dbConn,
+                    "[dbo].[Users_GetPostCommenters]",
+                    (cmd) =>
+                    {
+                        cmd.Parameters.Add("@PostID", SqlDbType.BigInt).Value = PostID;
+                    });
+
+            }
+            catch (Exception ex)
+            {
+                CoreFactory.Singleton.Logging.CreateErrorLog("E9B4EC13-A376-4DF2-84DC-97B4508418EB", ex);
+                return null;
+            }
+        }
 
     }
 }

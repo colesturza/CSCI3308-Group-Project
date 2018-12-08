@@ -69,7 +69,7 @@ namespace UHub.CoreLib.Entities.SchoolClubs.Management
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLogAsync("45CB4726-3D28-4D65-A0FE-AB53EFA3C705", ex);
+                await CoreFactory.Singleton.Logging.CreateErrorLogAsync("45CB4726-3D28-4D65-A0FE-AB53EFA3C705", ex);
                 return (null, SchoolClubResultCode.UnknownError);
             }
 
@@ -79,7 +79,7 @@ namespace UHub.CoreLib.Entities.SchoolClubs.Management
 
             if (id == null)
             {
-                return (id, SchoolClubResultCode.UnknownError);
+                return (null, SchoolClubResultCode.UnknownError);
             }
             return (id, SchoolClubResultCode.Success);
 

@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using UHub.CoreLib.Extensions;
 using UHub.CoreLib.Logging.Interfaces;
+using UHub.CoreLib.Logging.Providers;
+using UHub.CoreLib.Management;
 
 namespace UHub.CoreLib.Logging.Management
 {
@@ -13,29 +15,57 @@ namespace UHub.CoreLib.Logging.Management
     // </summary>
     public sealed partial class LoggingManager
     {
-        private List<ILocalLogProvider> localProviders;
+        private List<IEventLogProvider> localProviders;
         private List<IUsageLogProvider> usageProviders;
 
 
-        internal LoggingManager()
+        internal LoggingManager(in CoreProperties properties)
         {
-            localProviders = new List<ILocalLogProvider>();
+            localProviders = new List<IEventLogProvider>();
             usageProviders = new List<IUsageLogProvider>();
+
+
+            //EVENTS
+            if ((properties.EventLogMode & EventLoggingMode.LocalFile) != 0)
+            {
+                var fileProvider = new EventFileProvider();
+                AddProvider(fileProvider);
+            }
+            if ((properties.EventLogMode & EventLoggingMode.SystemEvents) != 0)
+            {
+                var logSrc = properties.LoggingSource;
+                var fName = properties.SiteFriendlyName;
+                var eventProvider = new EventLocalSysProvider(logSrc, fName);
+
+                AddProvider(eventProvider);
+            }
+            if ((properties.EventLogMode & EventLoggingMode.Database) != 0)
+            {
+                var dbProvider = new EventDatabaseProvider();
+                AddProvider(dbProvider);
+            }
+
+
+            //USAGE
+            if ((properties.UsageLogMode & UsageLoggingMode.GoogleAnalytics) != 0)
+            {
+                var googleProvider = new UsageGAnalyticsProvider();
+
+                AddProvider(googleProvider);
+            }
+
         }
 
-        internal void AddProvider(ILocalLogProvider LocalLogProvider)
+
+
+        public void AddProvider(IEventLogProvider LocalLogProvider)
         {
             localProviders.Add(LocalLogProvider);
         }
-        internal void AddProvider(IUsageLogProvider UsageLogProvider)
+        private void AddProvider(IUsageLogProvider UsageLogProvider)
         {
             usageProviders.Add(UsageLogProvider);
         }
-
-
-        #region Site Analytics/Usage Logs
-
-        #endregion
 
 
     }

@@ -12,7 +12,7 @@ namespace UHub.CoreLib.HttpModules
     /// </summary>
     public sealed class ResponseHeaderModule : IHttpModule
     {
-     
+
         public void Dispose()
         {
             //clean-up code here.
@@ -25,12 +25,12 @@ namespace UHub.CoreLib.HttpModules
         {
 
             var cspBuilder = new StringBuilder();
-            cspBuilder.Append("default-src 'self' *.u-hub.life;");
+            cspBuilder.Append("default-src 'self' *.u-hub.life *.google.com *.google-analytics.com;");
             cspBuilder.Append("script-src 'self' 'unsafe-eval' *.u-hub.life *.google.com *.gstatic.com *.googletagmanager.com *.google-analytics.com *.bootstrapcdn.com code.jquery.com cdn.jsdelivr.net cdnjs.cloudflare.com;");
-            cspBuilder.Append("connect-src 'self' *.u-hub.life *.gstatic.com *.googletagmanager.com *.google-analytics.com *.bootstrapcdn.com cdn.jsdelivr.net;");
+            cspBuilder.Append("connect-src 'self' *.u-hub.life *.google.com *.gstatic.com *.googletagmanager.com *.google-analytics.com *.bootstrapcdn.com cdn.jsdelivr.net;");
             cspBuilder.Append("style-src 'self' 'unsafe-inline' *.u-hub.life *.google.com *.gstatic.com *.bootstrapcdn.com code.jquery.com cdn.jsdelivr.net;");
-            cspBuilder.Append("img-src *;");
-            cspBuilder.Append("font-src 'self' *.u-hub.life fonts.gstatic.com *.bootstrapcdn.com;");
+            cspBuilder.Append("img-src * data:;");
+            cspBuilder.Append("font-src 'self' *.u-hub.life fonts.gstatic.com *.bootstrapcdn.com data:;");
             cspBuilder.Append("child-src *.google.com;");
             csp = cspBuilder.ToString();
 
@@ -70,7 +70,11 @@ namespace UHub.CoreLib.HttpModules
 
 
             //set response headers to limit site XSS vectors and frame access
-            doHeaderWork("Content-Security-Policy", csp);
+            if (Response.ContentType.ToLower() == "text/html")
+            {
+                doHeaderWork("Content-Security-Policy", csp);
+            }
+
             doHeaderWork("Referrer-Policy", "strict-origin");
             doHeaderWork("Vary", "Accept-Encoding");
             doHeaderWork("X-UA-Compatible", "IE=edge");

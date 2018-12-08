@@ -44,5 +44,33 @@ namespace UHub.CoreLib.Entities.SchoolClubs.APIControllers
             return Ok(clubSet.Select(x => x.ToDto<SchoolClub_R_PublicDTO>()));
         }
 
+
+        [HttpPost]
+        [Route("GetByID")]
+        [ApiAuthControl]
+        public async Task<IHttpActionResult> GetByID(long ClubID)
+        {
+
+            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser().CmsUser;
+
+            var schoolID = cmsUser.SchoolID.Value;
+
+
+            var clubInternal = await SchoolClubReader.TryGetClubAsync(ClubID);
+            if (clubInternal == null)
+            {
+                return NotFound();
+            }
+
+
+            if(clubInternal.SchoolID != schoolID)
+            {
+                return NotFound();
+            }
+
+
+            return Ok(clubInternal.ToDto<SchoolClub_R_PublicDTO>());
+        }
+
     }
 }

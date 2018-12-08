@@ -41,6 +41,9 @@ namespace UHub
                 .IncludeDirectory("~/ClientResources/Master/Styles", "*css", true));
 
 
+            bundles.Add(new ScriptBundle("~/resources/scripts/navBar")
+                .Include("~/ClientResources/Master/Components/NavBar.js"));
+            
 
             //---------------------------------ACCOUNT------------------------------------------------------
             //LOGIN
