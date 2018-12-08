@@ -32,7 +32,7 @@
                         for (var i = 0; i < data.length; i++) {
                             for (var j = 0; j < clubSet.length; j++) {
                                 if (data[i].ParentID == $(clubSet[j]).attr("data-clubID")) {
-                                    data[i].ClubName = clubSet[j].text();
+                                    data[i].ClubName = $(clubSet[j]).text();
                                 }
                             }
                         }
