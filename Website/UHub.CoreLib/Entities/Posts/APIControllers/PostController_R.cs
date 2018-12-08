@@ -79,22 +79,14 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
 
                 var IsUserMember = await taskIsUserMember;
                 //check for member status
-                if (IsUserMember)
+                if (IsUserMember || postInternal.IsPublic)
                 {
                     await PostManager.TryIncrementViewCountAsync(PostID, cmsUser.ID.Value);
                     return Ok(postPublic);
                 }
                 else
                 {
-                    if (postInternal.IsPublic)
-                    {
-                        await PostManager.TryIncrementViewCountAsync(PostID, cmsUser.ID.Value);
-                        return Ok(postPublic);
-                    }
-                    else
-                    {
-                        return Content(HttpStatusCode.Forbidden, "Access Denied");
-                    }
+                    return Content(HttpStatusCode.Forbidden, "Access Denied");
                 }
             }
 
