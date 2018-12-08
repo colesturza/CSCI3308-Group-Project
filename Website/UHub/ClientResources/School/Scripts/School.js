@@ -33,6 +33,7 @@
                             for (var j = 0; j < clubSet.length; j++) {
                                 if (data[i].ParentID == $(clubSet[j]).attr("data-clubID")) {
                                     data[i].ClubName = $(clubSet[j]).text();
+                                    break;
                                 }
                             }
                         }
