@@ -1,4 +1,4 @@
-(function () {
+﻿(function () {
 	var getUser = new Vue({
 		el: "#user-info",
 		data: function () {
