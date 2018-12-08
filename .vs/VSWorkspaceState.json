@@ -1,29 +1,14 @@
 {
   "ExpandedNodes": [
     "",
-    "\\HtmlInProgress",
-    "\\HtmlInProgress\\Justin",
-    "\\HtmlInProgress\\Justin\\Communities",
-    "\\HtmlInProgress",
-    "\\HtmlInProgress\\Nick",
-    "\\HtmlInProgress\\Nick\\login",
-    "\\HtmlInProgress\\Nick\\login\\html",
     "\\Website",
     "\\Website\\UHub",
-    "\\Website\\UHub\\ClientResources",
-    "\\Website\\UHub\\ClientResources\\Home",
-    "\\Website\\UHub\\ClientResources\\Home\\Scripts",
-    "\\Website\\UHub\\ClientResources\\MASTER",
-    "\\Website\\UHub\\ClientResources\\MASTER\\Scripts",
-    "\\Website\\UHub\\ClientResources\\School",
-    "\\Website\\UHub\\ClientResources\\School\\Scripts",
-    "\\Website\\UHub\\Views\\Post",
-    "\\Website\\UHub\\Views\\Security"
-    "\\Website\\UHub.CoreLib",
-    "\\Website\\UHub\\Views",
-    "\\Website\\UHub\\Views\\Account"
+    "\\Website\\UHub.CoreLib.Tests",
+    "\\Website\\UHub.CoreLib.Tests\\Security",
+    "\\Website\\UHub.CoreLib.Tests\\Security\\Accounts",
+    "\\Website\\UHub.Static",
+    "\\Website\\UHub\\Views"
   ],
-  "SelectedNode": "\\Website\\UHub\\Views\\Account\\Login.cshtml",
-  "SelectedNode": "\\Website\\UHub\\ClientResources\\MASTER\\Styles",
+  "SelectedNode": "\\Website\\UHub.sln",
   "PreviewInSolutionExplorer": false
 }
