@@ -89,6 +89,57 @@ blockquote p {
 }
 
 
+.uhub-login-label {
+    /*color: white;*/
+    margin-top: 10px;
+    font-size: 20px;
+}
+
+
+.uhub-login-recaptchaWrapper {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 50px;
+
+    > p {
+        width: 100%;
+    }
+}
+
+.uhub-login-submitBtn {
+    padding-left: 40px;
+    padding-right: 40px;
+    opacity: 1 !important;
+    font-size: large;
+    border: 2px solid black;
+}
+
+.uhub-login-img-wrapper {
+    height: 525px;
+    position: absolute;
+    overflow: hidden;
+    top: 0;
+    z-index: -1;
+    margin-top: 55px;
+    width: 100%;
+
+
+    > img {
+        min-width: 100% !important;
+        max-width: initial !important;
+        max-height: 140%;
+        bottom: 0;
+        min-height: 100%;
+        transform: translate(-50%, -5%);
+        position: relative;
+        left: 50%;
+        filter: brightness(30%);
+    }
+}
+
+
+
 /*JQ UI AutoComplete Fix*/
 .ui-autocomplete {
     .ui-menu-item-wrapper {
