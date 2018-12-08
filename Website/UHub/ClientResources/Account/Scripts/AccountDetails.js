@@ -16,7 +16,7 @@
 					console.log(data);
 
 					$(document).ready(function () {
-						if (data.JobTitle == "" && data.Company == "") {
+						if (data.JobTitle == "" || data.JobTitle == null || data.Company == "" || data.Company == null) {
 							$("#toggle_hide").hide();
 						}
 					});
