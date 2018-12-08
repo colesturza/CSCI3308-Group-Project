@@ -160,7 +160,7 @@
             '            <div class="container-fluid">' +
             '                <div>' +
             '                    <span class="m-2 mr-0" style="margin-right:0 !important">Posted by</span>' +
-            '                    [<a v-bind:href="'/Account/find/' + comment.CreatedBy">{{ comment.Username }}</a>]' +
+            '                    [<a v-bind:href="\'/Account/find/\' + comment.CreatedBy">{{ comment.Username }}</a>]' +
             '                    <span> • {{ comment.CreatedDate.toString().substring(0,10) }}</span>' +
             '                </div>' +
             '                <div class="border border-dark rounded m-2 py-2">' +
