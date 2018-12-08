@@ -235,6 +235,8 @@
         data: {
             postID: postID,
             parentID: "",
+            commName: "",
+            postCreater: "",
             title: "",
             content: "",
             postTime: "",
@@ -333,16 +335,30 @@
                             });
                     }
 
-
-
                     //set navbar title to current club
                     var comms = $("#navbarDropdownMenu a");
                     var commLen = comms.length;
                     for (var i = 0; i < commLen; i++) {
                         if (clubID == $(comms[i]).attr("data-ClubID")) {
                             $("#navbarDropdownMenuLink").text($(comms[i]).text());
+                            self.parentName = $(comms[i]).text();
+                            console.log(self.parentName);
                         }
                     }
+
+                    $.ajax({
+                        method: "POST",
+                        url: "/uhubapi/users/GetByID?UserID" + pstData.CreatedBy
+                    })
+                        .done(function (userData) {
+
+                            self.postCreater = userData.Username;
+                            console.log(self.postCreater);
+
+                        })
+                        .fail(function (jqAjax, errorText) {
+                            alert("Error" + errorText);
+                        });
 
                 })
                 .fail(function (jqAjax, errorText) {
