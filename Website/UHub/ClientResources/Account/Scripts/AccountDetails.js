@@ -7,20 +7,16 @@
             	user: {}
 			}
         },
-        methods: {
-            user_get() {
-                $.ajax({
-                    method: "POST",
-                    url: "/uhubapi/users/GetByID?UserID=" + userID,
-                })
-					.done(function(data) {
+        mounted: function() {
+            var self = this;
+            $.ajax({
+                method: "POST",
+                url: "/uhubapi/users/GetByID?UserID=" + userID,
+            })
+                .success(function(data) {
                     console.log(data);
-					this.user = data;
+					self.user = data;
                 });
-            }
-        },
-        beforeMount() {
-            this.user_get()
         }
     });
 })();
