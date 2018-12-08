@@ -325,6 +325,20 @@
                                 //console.log(JSON.parse(JSON.stringify(cmtArrangedList)));
 
                                 self.comments = cmtArrangedList;
+                                commentsLen = self.comments.length;
+                                for (var i = 0; i < commentsLen; i++) {
+                                    $.ajax({
+                                        method: "POST",
+                                        url: "/uhubapi/users/GetByID?UserID=" + self.comments[i].CreatedBy
+                                    })
+                                        .done(function (userData) {
+                                            self.comments[i].commentCreator = userData.Username;
+                                            console.log(self.comments[i].commentCreator);
+                                        })
+                                        .fail(function (jqAjax, errorText) {
+                                            alert("Error" + errorText);
+                                        });
+                                }
 
                                 showCommentReply();
 
@@ -348,7 +362,7 @@
 
                     $.ajax({
                         method: "POST",
-                        url: "/uhubapi/users/GetByID?UserID" + pstData.CreatedBy
+                        url: "/uhubapi/users/GetByID?UserID=" + pstData.CreatedBy
                     })
                         .done(function (userData) {
 
