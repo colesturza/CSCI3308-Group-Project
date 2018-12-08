@@ -93,7 +93,7 @@ namespace UHub.CoreLib.Entities.Users.APIControllers
             //Return full detail if user requests self
             if (targetUser.ID == cmsUser.ID)
             {
-                return Ok(cmsUser.ToDto<User_R_PrivateDTO>());
+                return Ok(targetUser.ToDto<User_R_PrivateDTO>());
             }
 
             //only allow users to see users from same school
@@ -103,8 +103,9 @@ namespace UHub.CoreLib.Entities.Users.APIControllers
             }
 
 
+            //otherwise
             //return partial detail
-            return Ok(cmsUser.ToDto<User_R_PublicDTO>());
+            return Ok(targetUser.ToDto<User_R_PublicDTO>());
 
         }
 
@@ -150,7 +151,7 @@ namespace UHub.CoreLib.Entities.Users.APIControllers
             //Return full detail if user requests self
             if (targetUser.ID == cmsUser.ID)
             {
-                return Ok(cmsUser.ToDto<User_R_PrivateDTO>());
+                return Ok(targetUser.ToDto<User_R_PrivateDTO>());
             }
 
             //only allow users to see users from same school
@@ -159,8 +160,9 @@ namespace UHub.CoreLib.Entities.Users.APIControllers
                 return NotFound();
             }
 
+            //otherwise
             //return partial detail
-            return Ok(cmsUser.ToDto<User_R_PublicDTO>());
+            return Ok(targetUser.ToDto<User_R_PublicDTO>());
 
         }
 
