@@ -226,5 +226,6 @@
     <Build Include="dbo\Stored Procedures\Logging_CreateEventLog.sql" />
     <Build Include="dbo\Stored Procedures\Users_GetBySchoolID.sql" />
     <Build Include="dbo\Stored Procedures\Users_GetAll.sql" />
+    <Build Include="dbo\Stored Procedures\Users_GetPostCommenters.sql" />
   </ItemGroup>
 </Project>

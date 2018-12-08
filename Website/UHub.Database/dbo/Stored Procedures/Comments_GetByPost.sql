@@ -18,37 +18,43 @@ CREATE proc [dbo].[Comments_GetByPost]
 as
 begin
 
-with recursiveFind as
-(
 
-	select
-		vu.ID,
-		vu.IsEnabled,
-		vu.IsReadonly,
-		vu.[Content],
-		vu.[IsModified],
-		vu.[ViewCount],
-		vu.ParentID,
-		vu.[IsDeleted],
-		vu.[CreatedBy],
-		vu.[CreatedDate],
-		vu.[ModifiedBy],
-		vu.[ModifiedDate],
-		vu.[DeletedBy],
-		vu.[DeletedDate]
-	from dbo.vComments vu
+	with recursiveFind as
+	(
 
-	inner JOIN dbo.EntChildXRef
-	ON
-		ChildEntID = vu.ID
-		and ChildEntType = 7
-		and ParentEntID = @PostID 
-		and ParentEntType = 6 --POST TYPE [6]
+		select
+			ChildEntID,
+			ChildEntType,
+			ParentEntID,
+			ParentEntType
+		from dbo.EntChildXRef ecx
+		where
+			ecx.ChildEntType = 7
+			and ecx.ParentEntID = @PostID 
+			and ecx.ParentEntType = 6 --POST TYPE [6]
+			and ecx.IsDeleted = 0
 
 
-	UNION ALL
+		UNION ALL
 
 	
+		select
+			ecx.ChildEntID,
+			ecx.ChildEntType,
+			ecx.ParentEntID,
+			ecx.ParentEntType
+		from dbo.EntChildXRef ecx
+
+		inner join recursiveFind rf
+		on
+			ecx.ParentEntID = rf.ChildEntID
+			and ecx.ParentEntType = 7 --COMMENT TYPE [6]
+
+		where
+			ecx.ChildEntType = 7
+			and ecx.IsDeleted = 0
+	)
+
 	select
 		vu.ID,
 		vu.IsEnabled,
@@ -64,22 +70,13 @@ with recursiveFind as
 		vu.[ModifiedDate],
 		vu.[DeletedBy],
 		vu.[DeletedDate]
-	from dbo.vComments vu
-
-	inner JOIN dbo.EntChildXRef ecx
-	ON
-		ChildEntID = vu.ID
-		and ChildEntType = 7
-
-	inner join recursiveFind rf
+	from recursiveFind rf
+	
+	inner join dbo.vComments vu
 	on
-		ecx.ParentEntID = rf.ID
-		and ParentEntType = 7 --COMMENT TYPE [6]
-)
+		vu.ID = rf.ChildEntID
 
 
-
-select * from recursiveFind
 
 end
 

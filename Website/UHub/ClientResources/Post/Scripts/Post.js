@@ -160,8 +160,8 @@
             '            <div class="container-fluid">' +
             '                <div>' +
             '                    <span class="m-2 mr-0" style="margin-right:0 !important">Posted by</span>' +
-            '                    <a style="margin-right:10px !important">[{{ comment.CreatedBy }}]</a>' +
-            '                    <span>{{ comment.CreatedDate.toString().substring(0,10) }}</span>' +
+            '                    <a>[{{ comment.CreatedBy }}]</a>' +
+            '                    <span> • {{ comment.CreatedDate.toString().substring(0,10) }}</span>' +
             '                </div>' +
             '                <div class="border border-dark rounded m-2 py-2">' +
             '                    <span class="text-body p-2">' +
@@ -344,28 +344,33 @@
                         }
                     }
 
+
+                    //get club info
                     $.ajax({
                         method: "POST",
                         url: "/uhubapi/schoolclubs/GetByID?ClubID=" + clubID
                     })
+                        //-->/uhubapi/schoolclubs/GetByID
                         .done(function (clubData) {
 
                             self.commName = clubData.Name;
 
                         })
+                        //-->/uhubapi/schoolclubs/GetByID
                         .fail(function (jqAjax, errorText) {
                             alert("Error" + errorText);
                         });
 
+                    //Get poster info
                     $.ajax({
                         method: "POST",
                         url: "/uhubapi/users/GetByID?UserID=" + pstData.CreatedBy
                     })
+                        //-->/uhubapi/users/GetByID
                         .done(function (userData) {
-
                             self.postCreater = userData.Username;
-
                         })
+                        //-->/uhubapi/users/GetByID
                         .fail(function (jqAjax, errorText) {
                             alert("Error" + errorText);
                         });

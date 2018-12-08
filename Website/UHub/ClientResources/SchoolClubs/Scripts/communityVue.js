@@ -17,10 +17,10 @@
 
                 <template v-if="post.ID != undefined" >
                     <a v-bind:href="'/Post/' + post.ID">
-                        <h4> {{ post.Name }} </h4>
+                        <h3> {{ post.Name }} </h3>
                     </a>
                 </template>
-                <h4 v-else> {{ post.Name }} </h4>
+                <h3 v-else> {{ post.Name }} </h3>
 
                <div v-html="post.Content"></div>
            </li>
