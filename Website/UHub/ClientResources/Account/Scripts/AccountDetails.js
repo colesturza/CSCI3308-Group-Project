@@ -24,9 +24,9 @@
 					self.user = data;
 				},
 				statusCode: {
-					404: function (
+					404: function () {
 						alert("User Not Found");
-					)
+					}
 				}
             })
         }
