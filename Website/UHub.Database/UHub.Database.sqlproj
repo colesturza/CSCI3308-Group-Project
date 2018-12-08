@@ -153,7 +153,6 @@
     <Build Include="dbo\Stored Procedures\User_UpdateByID.sql" />
     <Build Include="dbo\Stored Procedures\User_GetIDByEmail.sql" />
     <Build Include="dbo\Stored Procedures\User_GetIDByUsername.sql" />
-    <Build Include="dbo\Stored Procedures\User_GetAll.sql" />
     <Build Include="dbo\Stored Procedures\User_GetRecoveryContextByUserID.sql" />
     <Build Include="dbo\Stored Procedures\User_GetRecoveryContextByID.sql" />
     <Build Include="dbo\Stored Procedures\User_GetTokenValidator.sql" />
@@ -225,5 +224,7 @@
     <Build Include="dbo\Tables\EventLogTypes.sql" />
     <Build Include="dbo\Tables\EventLog.sql" />
     <Build Include="dbo\Stored Procedures\Logging_CreateEventLog.sql" />
+    <Build Include="dbo\Stored Procedures\Users_GetBySchoolID.sql" />
+    <Build Include="dbo\Stored Procedures\Users_GetAll.sql" />
   </ItemGroup>
 </Project>
