@@ -27,6 +27,7 @@
 
 
             <div class="uhub-login-recaptchaWrapper">
+                @ViewBag.ErrorMsg
                 @{Html.RenderPartial("~/Views/Security/_RecaptchaPartial.cshtml", new UHub.Models.Security.RecaptchaLoginViewModel
                     {
                         SubmitText = "Login",
@@ -41,8 +42,8 @@
 
 </div>
 @*<div class="uhub-login-img-wrapper">
-    <img class="center_LR" src="https://upload.wikimedia.org/wikipedia/commons/8/80/Flatirons_Winter_Sunrise_edit_2.jpg" />
-</div>*@
+        <img class="center_LR" src="https://upload.wikimedia.org/wikipedia/commons/8/80/Flatirons_Winter_Sunrise_edit_2.jpg" />
+    </div>*@
 <p></p>
 
 <div class="container w-70" style="margin-top:150px">

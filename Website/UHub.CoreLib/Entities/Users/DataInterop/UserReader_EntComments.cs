@@ -40,6 +40,5 @@ namespace UHub.CoreLib.Entities.Users.DataInterop
 
         }
 
-
     }
 }

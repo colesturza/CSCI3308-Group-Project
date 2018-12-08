@@ -48,7 +48,7 @@ namespace UHub.CoreLib.Entities.Comments.APIControllers
             var taskIsUserBanned = SchoolClubReader.TryIsUserBannedAsync(parentID, cmsUser.ID.Value);
             var taskIsUserMember = SchoolClubReader.TryValidateMembershipAsync(parentID, cmsUser.ID.Value);
             var taskComments = CommentReader.TryGetCommentsByPostAsync(PostID);
-            var taskUsers = UserReader.GetAllBySchoolAsync(cmsUser.SchoolID.Value);
+            var taskUsers = UserReader.TryGetPostCommentersAsync(PostID);
 
 
 

@@ -40,5 +40,27 @@ namespace UHub.CoreLib.Entities.Users.DataInterop
         }
 
 
+
+        public static IEnumerable<User> TryGetPostCommenters(long PostID)
+        {
+            try
+            {
+                return SqlWorker.ExecBasicQuery<User>(
+                    _dbConn,
+                    "[dbo].[Users_GetPostCommenters]",
+                    (cmd) =>
+                    {
+                        cmd.Parameters.Add("@PostID", SqlDbType.BigInt).Value = PostID;
+                    });
+
+            }
+            catch (Exception ex)
+            {
+                CoreFactory.Singleton.Logging.CreateErrorLog("C21265BA-9169-4F85-A2AB-72151DFB896F", ex);
+                return null;
+            }
+        }
+
+
     }
 }
