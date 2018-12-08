@@ -2,8 +2,18 @@
   "ExpandedNodes": [
     "",
     "\\Website",
-    "\\Website\\UHub.CoreLib\\Security\\Accounts",
-    "\\Website\\UHub.CoreLib\\Security\\Authentication"
+    "\\Website\\UHub",
+    "\\Website\\UHub\\ClientResources",
+    "\\Website\\UHub\\ClientResources\\Account",
+    "\\Website\\UHub\\ClientResources\\Account\\Scripts",
+    "\\Website\\UHub\\Views",
+    "\\Website\\UHub\\Views\\Account"
+    "\\Website\\UHub.CoreLib.Tests",
+    "\\Website\\UHub.CoreLib.Tests\\Security",
+    "\\Website\\UHub.CoreLib.Tests\\Security\\Accounts",
+    "\\Website\\UHub.Static",
+    "\\Website\\UHub\\Views"
   ],
+  "SelectedNode": "\\Website\\UHub.sln",
   "PreviewInSolutionExplorer": false
 }

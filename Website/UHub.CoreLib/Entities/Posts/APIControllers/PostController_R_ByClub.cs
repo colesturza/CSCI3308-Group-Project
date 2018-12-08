@@ -184,6 +184,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
 
 
             var taskPosts = PostReader.TryGetPostsByClubAsync(ClubID);
+            var taskUsers = UserReader.GetAllBySchoolAsync(cmsUser.SchoolID.Value);
             var sanitizerMode = CoreFactory.Singleton.Properties.HtmlSanitizerMode;
             var shouldSanitize = (sanitizerMode & HtmlSanitizerMode.OnRead) != 0;
 
@@ -215,7 +216,6 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
                     });
             }
 
-
             //check for member status
             var isUserMember = await taskIsUserMember;
             if (!isUserMember)
@@ -223,7 +223,31 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
                 outSet = outSet.Where(x => x.IsPublic);
             }
 
-            return Ok(outSet);
+            await taskUsers;
+            var userSet = taskUsers.Result;
+            var outSetWithUser =
+                from post in outSet.AsParallel()
+                join user in userSet.AsParallel() on post.CreatedBy equals user.ID
+                select new
+                {
+                    post.ID,
+                    post.IsReadOnly,
+                    post.Name,
+                    post.Content,
+                    post.IsModified,
+                    post.ViewCount,
+                    post.IsLocked,
+                    post.CanComment,
+                    post.IsPublic,
+                    post.ParentID,
+                    post.CreatedBy,
+                    post.CreatedDate,
+                    post.ModifiedBy,
+                    post.ModifiedDate,
+                    user.Username
+                };
+
+            return Ok(outSetWithUser);
         }
 
 
