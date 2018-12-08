@@ -12,13 +12,14 @@
         <ul id="post-list" class="list-group list-group-flush w-70 float-md-left" style="display:none !important">
             <li class="list-group-item mb-3" v-for="post in posts">
                 <div class="shadowBox"></div>
+                <a v-bind:href="'/SchoolClub/' + post.ParentID">{{post.ClubName}}</a>
                 <template v-if="post.ID != undefined">
                     <a v-bind:href="'/Post/' + post.ID">
                         <h4>{{ post.Name }}</h4>
                     </a>
                 </template>
                 <h4 v-else> {{ post.Name }} </h4>
-                
+
                 <div v-html="post.Content"></div>
             </li>
         </ul>
