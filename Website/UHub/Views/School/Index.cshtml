@@ -12,13 +12,14 @@
         <ul id="post-list" class="list-group list-group-flush w-70 float-md-left" style="display:none !important">
             <li class="list-group-item mb-3" v-for="post in posts">
                 <div class="shadowBox"></div>
-                <a v-bind:href="'/SchoolClub/' + post.ParentID">{{post.ClubName}}</a>
                 <template v-if="post.ID != undefined">
+                    <a v-bind:href="'/SchoolClub/' + post.ParentID">{{post.ClubName}}</a>
+                    <p></p>
                     <a v-bind:href="'/Post/' + post.ID">
-                        <h4>{{ post.Name }}</h4>
+                        <h3>{{ post.Name }}</h3>
                     </a>
                 </template>
-                <h4 v-else> {{ post.Name }} </h4>
+                <h3 v-else> {{ post.Name }} </h3>
 
                 <div v-html="post.Content"></div>
             </li>
@@ -27,7 +28,7 @@
     <div id="community-block" class="border bg-white p-3 w-25 float-md-right">
         <h5 class="mx-auto d-flex justify-content-center p-2">Home</h5>
         <div class="container">
-            <span >You can find the most recent posts here.</span>
+            <span>You can find the most recent posts here.</span>
         </div>
     </div>
 </div>
