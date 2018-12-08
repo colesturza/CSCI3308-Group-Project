@@ -12,11 +12,11 @@
             $.ajax({
                 method: "POST",
                 url: "/uhubapi/users/GetByID?UserID=" + userID,
-            })
-                .success(function(data) {
+                success: function(data) {
                     console.log(data);
-					self.user = data;
-                });
+                    self.user = data;
+                }
+            })
         }
     });
 })();
