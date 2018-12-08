@@ -120,7 +120,7 @@ header {
 
 
         .dropdown-menu-UHUB {
-            z-index: 1000;
+            z-index: 9999;
             display: none;
             padding: .5rem 0;
             margin: .125rem 0 0;
@@ -139,7 +139,8 @@ header {
             left: 0;
             width: 100%;
 
-            > a {
+            > a, span {
+                cursor: pointer;
                 white-space: normal !important;
             }
 

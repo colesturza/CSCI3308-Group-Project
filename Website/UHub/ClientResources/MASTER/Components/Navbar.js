@@ -3,9 +3,15 @@
     var communities = [];
     var clubName = "Communities";
     var url = window.location.href;
-    var seperated = url.split('/');
-    var currCommID = seperated.slice(-1)[0];
+    var currClubStr = url.split('/').slice(-1)[0];
+    var urlRgxMatch = currClubStr.match(/^[0-9]+/);
+    currClubID = -1;
+    if (urlRgxMatch != null) {
+        currClubID = urlRgxMatch[0];
+    }
 
+
+    var isClubPage = url.toLowerCase().indexOf("/schoolclub/") > 0;
 
     Vue.component('navbar-component', {
         data: function () {
@@ -14,15 +20,16 @@
                 url: "/uhubapi/schoolclubs/GetAllBySchool",
                 async: false,
                 success: function (data) {
-                    
 
                     communities = data;
                     communities.sort(dynamicSort("Name"));
 
-
+                    //traverse through club list
+                    //If the url contains a valid clubID, then display that club name in the DropDownBox
+                    //ALlows users to see their curent club context
                     var commLen = communities.length;
                     for (var i = 0; i < commLen; i++) {
-                        if (currCommID == communities[i].ID) {
+                        if (currClubID == communities[i].ID) {
                             clubName = communities[i].Name;
                         }
                     }
@@ -33,6 +40,8 @@
                 }
             });
             return {
+                isClubPage: isClubPage,
+                currentClub: currClubID,
                 clubName: clubName,
                 communities: communities
             };
@@ -69,12 +78,22 @@
                 </nav>
                 <div id="navbarDropdownMenu" class="dropdown-menu-UHUB scrollable-menu" aria-labelledby="navbarDropdownMenuLink">
                     <a class="dropdown-item" href="/School/Clubs">— View All —</a>
-                    <a class="dropdown-item"
-                        v-for="community in communities"
-                        v-bind:href="'/SchoolClub/' + community.ID"
-                        v-bind:data-ClubID="community.ID">
-                        {{ community.Name }}
-                    </a>
+                    <template v-if="isClubPage">
+                        <span class="dropdown-item"
+                            v-for="community in communities"
+                            v-bind:href="'/SchoolClub/' + community.ID"
+                            v-bind:data-ClubID="community.ID">
+                            {{ community.Name }}
+                        </span>
+                    </template>
+                    <template v-else>
+                        <a class="dropdown-item"
+                            v-for="community in communities"
+                            v-bind:href="'/SchoolClub/' + community.ID"
+                            v-bind:data-ClubID="community.ID">
+                            {{ community.Name }}
+                        </a>
+                    </template>
                 </div>
             </div>
         </div>
