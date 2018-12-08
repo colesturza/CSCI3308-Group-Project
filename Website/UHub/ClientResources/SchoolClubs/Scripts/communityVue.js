@@ -16,6 +16,7 @@
                 <div class="shadowBox"></div>                
 
                 <template v-if="post.ID != undefined" >
+                    Posted by [<a v-bind:href="'/Account/find/' + post.CreatedBy">{{post.Username}}</a>]
                     <a v-bind:href="'/Post/' + post.ID">
                         <h3> {{ post.Name }} </h3>
                     </a>
