@@ -341,14 +341,26 @@
                     for (var i = 0; i < commLen; i++) {
                         if (clubID == $(comms[i]).attr("data-ClubID")) {
                             $("#navbarDropdownMenuLink").text($(comms[i]).text());
-                            self.parentName = $(comms[i]).text();
-                            console.log(self.parentName);
                         }
                     }
 
                     $.ajax({
                         method: "POST",
-                        url: "/uhubapi/users/GetByID?UserID" + pstData.CreatedBy
+                        url: "/uhubapi/schoolclubs/GetByID?ClubID=" + clubID
+                    })
+                        .done(function (clubData) {
+
+                            self.commName = clubData.Name;
+                            console.log(self.commName);
+
+                        })
+                        .fail(function (jqAjax, errorText) {
+                            alert("Error" + errorText);
+                        });
+
+                    $.ajax({
+                        method: "POST",
+                        url: "/uhubapi/users/GetByID?UserID=" + pstData.CreatedBy
                     })
                         .done(function (userData) {
 

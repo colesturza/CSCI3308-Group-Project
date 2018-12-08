@@ -22,9 +22,12 @@
 
     <div class="container bg-white w-70 mt-4 py-3">
         <div>
+            <a v-bind:href="'/SchoolClub/' + parentID">{{commName}}</a>
+            <p class="d-inline justify-content-lg-end">{{postCreater}}</p>
             <h4 class="px-3 pt-3" style="display:inline-block !important">{{title}}</h4>
             <template v-if="modifiedDate != null">
-                [<a v-bind:href="'/Post/History/' + postID">History</a>]
+                [
+                <a v-bind:href="'/Post/History/' + postID">History</a>]
             </template>
             <div class="p-2 pb-2 m-2" v-html="content"></div>
             <button id="btn_ToggleReply" type="button" class="btn-sm btn-outline-dark m-2 mb-1 d-inline" v-on:click="postReply" style="display:none !important">Reply</button>
