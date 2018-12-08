@@ -20,13 +20,13 @@
     <postbar-component></postbar-component>
 </div>
 
-<div id="body-content" class="container mt-4" style="display:none !important">
+<div id="body-content" class="mt-4" style="display:none !important">
     <ul id="post-list" class="list-group list-group-flush w-70 float-md-left">
         <postlistcomp v-for="post in posts" v-bind:post="post" v-bind:key="post.ID"></postlistcomp>
     </ul>
-    <div id="community-block" class="border bg-white p-3 w-25 d-md float-md-right d-sm-none d-xs-none d-md-inline">
+    <div id="community-block" class="border bg-white p-3 d-md float-md-right d-sm-none d-xs-none d-md-inline">
         <h5 class="mx-auto d-flex justify-content-center">{{ community.Name }}</h5>
-        <div class="container">
+        <div class="container text-center">
             <span class="justify-content-center">
                 {{ community.Description }}
             </span>

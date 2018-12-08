@@ -160,7 +160,7 @@
             '            <div class="container-fluid">' +
             '                <div>' +
             '                    <span class="m-2 mr-0" style="margin-right:0 !important">Posted by</span>' +
-            '                    <a>[{{ comment.Username }}]</a>' +
+            '                    [<a v-bind:href="'/Account/find/' + comment.CreatedBy">{{ comment.Username }}</a>]' +
             '                    <span> • {{ comment.CreatedDate.toString().substring(0,10) }}</span>' +
             '                </div>' +
             '                <div class="border border-dark rounded m-2 py-2">' +
@@ -237,6 +237,7 @@
             parentID: "",
             commName: "",
             postCreater: "",
+            createdBy: "",
             title: "",
             content: "",
             postTime: "",
@@ -304,6 +305,7 @@
                     self.title = htmlEncode(pstData.Name);
                     self.content = mdConverter.makeHtml(pstData.Content);
                     self.postTime = pstData.CreatedDate;
+                    self.createdBy = pstData.CreatedBy;
                     self.modifiedDate = pstData.ModifiedDate;
 
 

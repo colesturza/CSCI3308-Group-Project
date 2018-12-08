@@ -13,3 +13,31 @@
 .custom-color1 {
     background-color: #dae0e6;
 }
+
+@media only screen and (max-width: 767px){
+    #body-content{
+      position: absolute;
+      float: none;
+      left: 10px;
+      right: 10px;
+      width: auto;
+    }
+    .list-group{
+    width: auto;
+    }
+    #community-block{
+      margin: auto;
+      width: 50%;
+    }
+}
+@media only screen and (min-width: 768px){
+  #body-content{
+    position: absolute;
+    float: none;
+    left: 10px;
+    right: 10px;
+  }
+  #community-block{
+    width: 25%;
+  }
+}

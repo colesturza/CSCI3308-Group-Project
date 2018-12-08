@@ -1,17 +1,16 @@
-﻿(function(){
-	var userID = window.location.href.split('/').slice(-1)[0];
-    var getUser = new Vue({
-        el: "#user-info",
-        data: function () {
-            return {
-            	user: {}
+﻿(function () {
+	var getUser = new Vue({
+		el: "#user-info",
+		data: function () {
+			return {
+				user: {}
 			}
 		},
-        mounted: function() {
-            var self = this;
+		mounted: function () {
+			var self = this;
 			$.ajax({
 				method: "POST",
-				url: "/uhubapi/users/GetByID?UserID=" + userID,
+				url: "/uhubapi/users/GetMe",
 				success: function (data) {
 					console.log(data);
 
@@ -28,7 +27,7 @@
 						alert("User Not Found");
 					}
 				}
-            })
-        }
-    });
+			})
+		}
+	});
 })();

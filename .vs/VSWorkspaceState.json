@@ -8,7 +8,12 @@
     "\\Website\\UHub\\ClientResources\\Account\\Scripts",
     "\\Website\\UHub\\Views",
     "\\Website\\UHub\\Views\\Account"
+    "\\Website\\UHub.CoreLib.Tests",
+    "\\Website\\UHub.CoreLib.Tests\\Security",
+    "\\Website\\UHub.CoreLib.Tests\\Security\\Accounts",
+    "\\Website\\UHub.Static",
+    "\\Website\\UHub\\Views"
   ],
-  "SelectedNode": "\\Website\\UHub\\Views\\Account\\Find.cshtml",
+  "SelectedNode": "\\Website\\UHub.sln",
   "PreviewInSolutionExplorer": false
 }

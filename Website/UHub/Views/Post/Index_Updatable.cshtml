@@ -20,7 +20,7 @@
                 <span>[<a :href="'/Post/History/' + postID">History</a>]</span>
             </template>
             <textarea id="txt_PostArea" placeholder="Content (10-10k chars)"></textarea>
-            <span>Posted by [{{postCreater}}] • </span>
+            [<a v-bind:href="'/Account/find/' + createdBy">{{postCreater}}</a>]
             <span>{{postTime.substring(0,10)}}</span>
 
             <p></p>
