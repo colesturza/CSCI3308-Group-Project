@@ -6,16 +6,28 @@
             return {
             	user: {}
 			}
-        },
+		},
         mounted: function() {
             var self = this;
-            $.ajax({
-                method: "POST",
-                url: "/uhubapi/users/GetByID?UserID=" + userID,
-                success: function(data) {
-                    console.log(data);
-                    self.user = data;
-                }
+			$.ajax({
+				method: "POST",
+				url: "/uhubapi/users/GetByID?UserID=" + userID,
+				success: function (data) {
+					console.log(data);
+
+					$(document).ready(function () {
+						if (data.JobTitle == "" && data.Company == "") {
+							$("#toggle_hide").hide();
+						}
+					});
+
+					self.user = data;
+				},
+				statusCode: {
+					404: function (
+						alert("User Not Found");
+					)
+				}
             })
         }
     });
