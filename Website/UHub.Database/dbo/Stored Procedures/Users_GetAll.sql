@@ -1,5 +1,5 @@
 ﻿
-CREATE proc [dbo].[User_GetAll]
+CREATE proc [dbo].[Users_GetAll]
 
 
 as

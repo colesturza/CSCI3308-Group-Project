@@ -219,10 +219,7 @@ namespace UHub.CoreLib.Entities.Users.DataInterop
 
 
         #region Group
-        /// <summary>
-        /// Get users with lower security class
-        /// </summary>
-        /// <returns></returns>
+
         public static IEnumerable<User> GetAllUsers()
         {
 
@@ -231,8 +228,27 @@ namespace UHub.CoreLib.Entities.Users.DataInterop
                 throw new SystemDisabledException();
             }
 
+            return SqlWorker.ExecBasicQuery<User>(_dbConn, "[dbo].[Users_GetAll]");
+        }
 
-            return SqlWorker.ExecBasicQuery<User>(_dbConn, "[dbo].[User_GetAll]");
+
+
+        public static IEnumerable<User> GetAllBySchool(long SchoolID)
+        {
+
+            if (!CoreFactory.Singleton.IsEnabled)
+            {
+                throw new SystemDisabledException();
+            }
+
+
+            return SqlWorker.ExecBasicQuery<User>(
+                _dbConn,
+                "[dbo].[Users_GetBySchoolID]",
+                (cmd) =>
+                {
+                    cmd.Parameters.Add("@SchoolID", SqlDbType.BigInt).Value = SchoolID;
+                });
         }
         #endregion Group
 
