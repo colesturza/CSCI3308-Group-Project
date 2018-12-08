@@ -76,21 +76,17 @@ namespace UHub.CoreLib.Entities.Comments.APIControllers
 
                     await Task.WhenAll(taskComments, taskUsers);
                     var commentSet = taskComments.Result.Select(x => x.ToDto<Comment_R_PublicDTO>());
-                    var userSet = taskUsers.Result.Select(x => x.ToDto<User_R_PublicDTO>());
+                    var userSet = taskUsers.Result;//.Select(x => x.ToDto<User_R_PublicDTO>());
 
-                    //---------------------------------------------
-                    //FOR COLE
-                    //
-                    //join user IDs to comment set to get userName
-                    //use c# linq "join: tool
-                    //
-                    //look up "c# join query syntax"
-                    //also
-                    //"create new lambda class instance"
-                    //---------------------------------------------
+                    var commentUserSet = 
+                        from comment in commentSet.AsParallel()
+                        join user in userSet.AsParallel() on comment.CreatedBy equals user.ID
+                        select new {
+                            Comment = comment,
+                            User = user.ToDto<User_R_PublicDTO>()
+                        };
 
-
-                    return Ok(commentSet);
+                    return Ok(commentUserSet);
 
                 }
                 else
@@ -111,16 +107,18 @@ namespace UHub.CoreLib.Entities.Comments.APIControllers
 
             await Task.WhenAll(taskComments, taskUsers);
             var commentSetOuter = taskComments.Result.Select(x => x.ToDto<Comment_R_PublicDTO>());
-            var userSetOuter = taskUsers.Result.Select(x => x.ToDto<User_R_PublicDTO>());
+            var userSetOuter = taskUsers.Result;//.Select(x => x.ToDto<User_R_PublicDTO>());
 
-            //------------------------------------
-            //FOR COLE
-            //
-            //repeat previous join statement here
-            //------------------------------------
+            var commentUserOuterSet =
+                from comment in commentSetOuter.AsParallel()
+                join user in userSetOuter.AsParallel() on comment.CreatedBy equals user.ID
+                select new
+                {
+                    Comment = comment,
+                    User = user.ToDto<User_R_PublicDTO>()
+                };
 
-
-            return Ok(commentSetOuter);
+            return Ok(commentUserOuterSet);
 
         }
     }
