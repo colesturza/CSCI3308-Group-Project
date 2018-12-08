@@ -351,7 +351,6 @@
                         .done(function (clubData) {
 
                             self.commName = clubData.Name;
-                            console.log(self.commName);
 
                         })
                         .fail(function (jqAjax, errorText) {
@@ -365,7 +364,6 @@
                         .done(function (userData) {
 
                             self.postCreater = userData.Username;
-                            console.log(self.postCreater);
 
                         })
                         .fail(function (jqAjax, errorText) {
