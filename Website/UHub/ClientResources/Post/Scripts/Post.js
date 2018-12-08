@@ -325,20 +325,6 @@
                                 //console.log(JSON.parse(JSON.stringify(cmtArrangedList)));
 
                                 self.comments = cmtArrangedList;
-                                commentsLen = self.comments.length;
-                                for (var i = 0; i < commentsLen; i++) {
-                                    $.ajax({
-                                        method: "POST",
-                                        url: "/uhubapi/users/GetByID?UserID=" + self.comments[i].CreatedBy
-                                    })
-                                        .done(function (userData) {
-                                            self.comments[i].commentCreator = userData.Username;
-                                            console.log(self.comments[i].commentCreator);
-                                        })
-                                        .fail(function (jqAjax, errorText) {
-                                            alert("Error" + errorText);
-                                        });
-                                }
 
                                 showCommentReply();
 
@@ -355,10 +341,22 @@
                     for (var i = 0; i < commLen; i++) {
                         if (clubID == $(comms[i]).attr("data-ClubID")) {
                             $("#navbarDropdownMenuLink").text($(comms[i]).text());
-                            self.parentName = $(comms[i]).text();
-                            console.log(self.parentName);
                         }
                     }
+
+                    $.ajax({
+                        method: "POST",
+                        url: "/uhubapi/schoolclubs/GetByID?ClubID=" + clubID
+                    })
+                        .done(function (clubData) {
+
+                            self.commName = clubData.Name;
+                            console.log(self.commName);
+
+                        })
+                        .fail(function (jqAjax, errorText) {
+                            alert("Error" + errorText);
+                        });
 
                     $.ajax({
                         method: "POST",
