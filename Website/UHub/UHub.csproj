@@ -189,6 +189,7 @@
     <Content Include="ClientResources\Account\Scripts\CreateAccount.js" />
     <Content Include="ClientResources\Account\Scripts\AccountDetails.js" />
     <Content Include="ClientResources\Account\Scripts\Login.js" />
+    <Content Include="ClientResources\Account\Scripts\MyAccount.js" />
     <Content Include="ClientResources\Account\Scripts\Recover.js" />
     <Content Include="ClientResources\Account\Styles\CreateAccount.css" />
     <Content Include="ClientResources\MASTER\Components\Navbar.js" />
