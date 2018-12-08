@@ -82,8 +82,18 @@ namespace UHub.CoreLib.Entities.Comments.APIControllers
                         from comment in commentSet.AsParallel()
                         join user in userSet.AsParallel() on comment.CreatedBy equals user.ID
                         select new {
-                            Comment = comment,
-                            User = user.ToDto<User_R_PublicDTO>()
+                            comment.ID,
+                            comment.IsEnabled,
+                            comment.IsReadOnly,
+                            comment.Content,
+                            comment.IsModified,
+                            comment.ViewCount,
+                            comment.ParentID,
+                            comment.CreatedBy,
+                            comment.CreatedDate,
+                            comment.ModifiedBy,
+                            comment.ModifiedDate,
+                            user.Username
                         };
 
                     return Ok(commentUserSet);
@@ -114,8 +124,18 @@ namespace UHub.CoreLib.Entities.Comments.APIControllers
                 join user in userSetOuter.AsParallel() on comment.CreatedBy equals user.ID
                 select new
                 {
-                    Comment = comment,
-                    User = user.ToDto<User_R_PublicDTO>()
+                    comment.ID,
+                    comment.IsEnabled,
+                    comment.IsReadOnly,
+                    comment.Content,
+                    comment.IsModified,
+                    comment.ViewCount,
+                    comment.ParentID,
+                    comment.CreatedBy,
+                    comment.CreatedDate,
+                    comment.ModifiedBy,
+                    comment.ModifiedDate,
+                    user.Username
                 };
 
             return Ok(commentUserOuterSet);
