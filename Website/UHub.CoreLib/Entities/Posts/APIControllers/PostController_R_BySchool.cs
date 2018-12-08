@@ -144,7 +144,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
 
             var schoolID = cmsUser.SchoolID.Value;
 
-
+            var taskUsers = UserReader.GetAllBySchoolAsync(cmsUser.SchoolID.Value);
             var posts = await PostReader.TryGetPostsBySchoolAsync(schoolID);
 
 
@@ -173,8 +173,31 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
                     });
             }
 
+            await taskUsers;
+            var userSet = taskUsers.Result;
+            var outSetWithUser =
+                from post in outSet.AsParallel()
+                join user in userSet.AsParallel() on post.CreatedBy equals user.ID
+                select new
+                {
+                    post.ID,
+                    post.IsReadOnly,
+                    post.Name,
+                    post.Content,
+                    post.IsModified,
+                    post.ViewCount,
+                    post.IsLocked,
+                    post.CanComment,
+                    post.IsPublic,
+                    post.ParentID,
+                    post.CreatedBy,
+                    post.CreatedDate,
+                    post.ModifiedBy,
+                    post.ModifiedDate,
+                    user.Username
+                };
 
-            return Ok(outSet);
+            return Ok(outSetWithUser);
 
         }
 
