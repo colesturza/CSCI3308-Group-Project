@@ -330,7 +330,6 @@
 
                     var postTimeMoment = moment(self.postTime);
                     var now = moment();
-                    console.log(parseInt(now.diff(postTimeMoment, 'days')));
                     if (parseInt(now.diff(postTimeMoment, 'days')) <= 7) {
                         self.dateCreatedFromNow = postTimeMoment.fromNow();
                     }
@@ -349,13 +348,14 @@
                         })
                             .done(function (cmtData) {
                                 rawCommentSet = cmtData;
+                                rawCommentSet.forEach(comment => {
+                                    comment.dateCreatedFromNow = moment(comment.CreatedDate).fromNow();
+                                });
                                 var cmtArrangedList = arrangeCommentTree(rawCommentSet);
                                 //console.log(JSON.parse(JSON.stringify(cmtArrangedList)));
 
+
                                 self.comments = cmtArrangedList;
-                                self.comments.forEach(comment => {
-                                    comment.dateCreatedFromNow = moment(comment.CreatedDate).fromNow();
-                                });
 
                                 showCommentReply();
 

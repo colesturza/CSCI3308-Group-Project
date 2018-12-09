@@ -381,13 +381,13 @@
                             //AJAX -> /uhubapi/comments/GetByPost
                             .done(function (cmtData) {
                                 rawCommentSet = cmtData;
+                                rawCommentSet.forEach(comment => {
+                                    comment.dateCreatedFromNow = moment(comment.CreatedDate).fromNow();
+                                });
                                 var cmtArrangedList = arrangeCommentTree(rawCommentSet);
                                 //console.log(JSON.parse(JSON.stringify(cmtArrangedList)));
 
                                 self.comments = cmtArrangedList;
-                                self.comments.forEach(comment => {
-                                    comment.dateCreatedFromNow = moment(comment.CreatedDate).fromNow();
-                                });
 
                                 showCommentReply();
 
