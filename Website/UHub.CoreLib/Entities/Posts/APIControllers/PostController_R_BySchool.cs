@@ -211,7 +211,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
                     });
 
 
-                return Ok(outSetWithUser);
+                return Ok(outSetWithUser.ToList());
             }
             catch (Exception ex)
             {
