@@ -27,21 +27,26 @@
                 .done(function (data) {
 
                     if (data.length > 0) {
-
                         data.sort(dynamicSort("-CreatedDate"));
 
                         //set parentName
                         var clubSet = $("#navbarDropdownMenu a.dropdown-item");
+                        var parentNameDict = {}
+                        for (var j = 0; j < clubSet.length; j++) {
+                            var key = parseInt($(clubSet[j]).attr("data-clubID"));
+                            var val = $(clubSet[j]).text();
+
+                            parentNameDict[key] = val;
+                        }
+
+
                         for (var i = 0; i < data.length; i++) {
                             data[i].Content = mdConverter.makeHtml(data[i].Content);
                             data[i].dateCreatedFromNow = moment(data[i].CreatedDate).fromNow();
 
-
-                            for (var j = 0; j < clubSet.length; j++) {
-                                if (data[i].ParentID == $(clubSet[j]).attr("data-clubID")) {
-                                    data[i].ClubName = $(clubSet[j]).text();
-                                    break;
-                                }
+                            var parentName = parentNameDict[data[i].ParentID];
+                            if (parentName != undefined) {
+                                data[i].ClubName = parentName;
                             }
                         }
 
