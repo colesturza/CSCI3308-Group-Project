@@ -16,14 +16,16 @@
                 <div class="shadowBox"></div>                
 
                 <template v-if="post.ID != undefined" >
-                    Posted by [<a v-bind:href="'/Account/find/' + post.CreatedBy">{{post.Username}}</a>]
+                    Posted by <span>[<a v-bind:href="'/Account/find/' + post.CreatedBy">{{post.Username}}</a>]</span>
+                    <span>{{post.dateCreatedFromNow}}</span>
+                    <p></p>
                     <a v-bind:href="'/Post/' + post.ID">
                         <h3> {{ post.Name }} </h3>
                     </a>
                 </template>
                 <h3 v-else> {{ post.Name }} </h3>
 
-               <div v-html="post.Content"></div>
+                <div v-html="post.Content"></div>
            </li>
         `
     });
@@ -98,6 +100,7 @@
 
                     for (var i = 0; i < formData.length; i++) {
                         formData[i].Content = mdConverter.makeHtml(formData[i].Content);
+                        formData[i].dateCreatedFromNow = moment(formData[i].CreatedDate).fromNow();
                     }
                     formData.sort(dynamicSort("-CreatedDate"));
                     vuePostSet.posts = formData;
