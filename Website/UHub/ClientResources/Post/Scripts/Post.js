@@ -356,7 +356,7 @@
                                 var commentsLen = self.comments.length;
                                 for (var i = 0; i < commentsLen; i++) {
                                     self.comments[i].dateCreatedFromNow = moment(self.comments[i].CreatedDate).fromNow();
-                                    console.log(self.comments[i].dateCreatedFromNow);
+                                    console.log("comment" + i + ": " + self.comments[i].dateCreatedFromNow);
                                 }
 
                                 showCommentReply();

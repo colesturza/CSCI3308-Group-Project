@@ -15,7 +15,7 @@
                 <span>[<a :href="'/Post/History/' + postID">History</a>]</span>
             </template>
             <div class="p-2 pb-2 m-2" v-html="content"></div>
-            Post By [<a v-bind:href="'/Account/find/' + createdBy">{{postCreater}}</a>]
+            Posted By [<a v-bind:href="'/Account/find/' + createdBy">{{postCreater}}</a>]
             <template v-if="dateCreatedFromNow != null">
                 <span>{{dateCreatedFromNow}}</span>
             </template>
