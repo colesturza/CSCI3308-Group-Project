@@ -28,6 +28,7 @@
 
             <div class="uhub-login-recaptchaWrapper">
                 @ViewBag.ErrorMsg
+                <p></p>
                 @{Html.RenderPartial("~/Views/Security/_RecaptchaPartial.cshtml", new UHub.Models.Security.RecaptchaLoginViewModel
                     {
                         SubmitText = "Login",
@@ -47,6 +48,9 @@
 <p></p>
 
 <div class="container w-70" style="margin-top:150px">
+    <h2>
+        About
+    </h2>
     UHUB is a social media site with students in mind.  We help you stay in touch with class mates quickly and easily to discuss school events or club meetings.
 
     <p></p>

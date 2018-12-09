@@ -75,13 +75,58 @@ namespace UHub.CoreLib.Entities.Comments.APIControllers
                 {
 
                     await Task.WhenAll(taskComments, taskUsers);
-                    var commentSet = taskComments.Result.Select(x => x.ToDto<Comment_R_PublicDTO>());
-                    var userSet = taskUsers.Result;//.Select(x => x.ToDto<User_R_PublicDTO>());
+                    var userNameDict = taskUsers.Result.ToDictionary(key => key.ID, val => val.Username);
 
-                    var commentUserSet = 
-                        from comment in commentSet.AsParallel()
-                        join user in userSet.AsParallel() on comment.CreatedBy equals user.ID
-                        select new {
+                    var commentUserSet = taskComments.Result
+                        .AsParallel()
+                        .Select(comment =>
+                        {
+                            var Username = userNameDict[comment.CreatedBy];
+                            return new
+                            {
+                                comment.ID,
+                                comment.IsEnabled,
+                                comment.IsReadOnly,
+                                comment.Content,
+                                comment.IsModified,
+                                comment.ViewCount,
+                                comment.ParentID,
+                                comment.CreatedBy,
+                                comment.CreatedDate,
+                                comment.ModifiedBy,
+                                comment.ModifiedDate,
+                                Username
+                            };
+                        });
+
+                    return Ok(commentUserSet);
+
+                }
+                else
+                {
+                    return Content(HttpStatusCode.Forbidden, "Access Denied");
+                }
+            }
+            else
+            {
+
+                // This is what happens if the parent is a school.
+                //verify same school
+                if (postInternal.ParentID != cmsUser.SchoolID)
+                {
+                    return NotFound();
+                }
+
+                await Task.WhenAll(taskComments, taskUsers);
+                var userNameDict = taskUsers.Result.ToDictionary(key => key.ID, val => val.Username);
+
+                var commentUserSet = taskComments.Result
+                    .AsParallel()
+                    .Select(comment =>
+                    {
+                        var Username = userNameDict[comment.CreatedBy];
+                        return new
+                        {
                             comment.ID,
                             comment.IsEnabled,
                             comment.IsReadOnly,
@@ -93,52 +138,13 @@ namespace UHub.CoreLib.Entities.Comments.APIControllers
                             comment.CreatedDate,
                             comment.ModifiedBy,
                             comment.ModifiedDate,
-                            user.Username
+                            Username
                         };
+                    });
 
-                    return Ok(commentUserSet);
+                return Ok(commentUserSet);
 
-                }
-                else
-                {
-                    return Content(HttpStatusCode.Forbidden, "Access Denied");
-                }
             }
-
-
-            // This is what happens if the parent is a school.
-            //verify same school
-            if (postInternal.ParentID != cmsUser.SchoolID)
-            {
-                return NotFound();
-            }
-
-
-
-            await Task.WhenAll(taskComments, taskUsers);
-            var commentSetOuter = taskComments.Result.Select(x => x.ToDto<Comment_R_PublicDTO>());
-            var userSetOuter = taskUsers.Result;//.Select(x => x.ToDto<User_R_PublicDTO>());
-
-            var commentUserOuterSet =
-                from comment in commentSetOuter.AsParallel()
-                join user in userSetOuter.AsParallel() on comment.CreatedBy equals user.ID
-                select new
-                {
-                    comment.ID,
-                    comment.IsEnabled,
-                    comment.IsReadOnly,
-                    comment.Content,
-                    comment.IsModified,
-                    comment.ViewCount,
-                    comment.ParentID,
-                    comment.CreatedBy,
-                    comment.CreatedDate,
-                    comment.ModifiedBy,
-                    comment.ModifiedDate,
-                    user.Username
-                };
-
-            return Ok(commentUserOuterSet);
 
         }
     }

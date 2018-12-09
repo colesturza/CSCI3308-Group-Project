@@ -19,12 +19,15 @@ using UHub.CoreLib.Extensions;
 using UHub.CoreLib.Management;
 using UHub.CoreLib.Security;
 using UHub.CoreLib.Tools;
+using UHub.CoreLib.Entities.Users;
 
 namespace UHub.CoreLib.Entities.Posts.APIControllers
 {
 
     public sealed partial class PostController
     {
+
+        private static Dictionary<long, IEnumerable<User>> LocalUserCache = new Dictionary<long, IEnumerable<User>>();
 
 
         [HttpPost()]
@@ -174,28 +177,34 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             }
 
             await taskUsers;
-            var userSet = taskUsers.Result;
-            var outSetWithUser =
-                from post in outSet.AsParallel()
-                join user in userSet.AsParallel() on post.CreatedBy equals user.ID
-                select new
+            var userNameDict = taskUsers.Result.ToDictionary(key => key.ID, val => val.Username);
+
+
+            var outSetWithUser = outSet
+                .AsParallel()
+                .Select(post =>
                 {
-                    post.ID,
-                    post.IsReadOnly,
-                    post.Name,
-                    post.Content,
-                    post.IsModified,
-                    post.ViewCount,
-                    post.IsLocked,
-                    post.CanComment,
-                    post.IsPublic,
-                    post.ParentID,
-                    post.CreatedBy,
-                    post.CreatedDate,
-                    post.ModifiedBy,
-                    post.ModifiedDate,
-                    user.Username
-                };
+                    var Username = userNameDict[post.CreatedBy];
+                    return new
+                    {
+                        post.ID,
+                        post.IsReadOnly,
+                        post.Name,
+                        post.Content,
+                        post.IsModified,
+                        post.ViewCount,
+                        post.IsLocked,
+                        post.CanComment,
+                        post.IsPublic,
+                        post.ParentID,
+                        post.CreatedBy,
+                        post.CreatedDate,
+                        post.ModifiedBy,
+                        post.ModifiedDate,
+                        Username
+                    };
+                });
+
 
             return Ok(outSetWithUser);
 
