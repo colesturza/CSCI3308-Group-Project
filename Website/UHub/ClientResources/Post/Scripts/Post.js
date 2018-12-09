@@ -354,6 +354,7 @@
 
                                 self.comments = cmtArrangedList;
                                 var commentsLen = self.comments.length;
+                                console.log(commentsLen);
                                 for (var i = 0; i < commentsLen; i++) {
                                     self.comments[i].dateCreatedFromNow = moment(self.comments[i].CreatedDate).fromNow();
                                     console.log("comment" + i + ": " + self.comments[i].dateCreatedFromNow);
