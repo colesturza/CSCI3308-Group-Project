@@ -175,38 +175,47 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
                         return x.ToDto<Post_R_PublicDTO>();
                     });
             }
+            try
+            {
 
-            await taskUsers;
-            var userNameDict = taskUsers.Result.ToDictionary(key => key.ID, val => val.Username);
+
+                await taskUsers;
+                var userNameDict = taskUsers.Result.ToDictionary(key => key.ID, val => val.Username);
 
 
-            var outSetWithUser = outSet
-                .AsParallel()
-                .Select(post =>
-                {
-                    var Username = userNameDict[post.CreatedBy];
-                    return new
+                var outSetWithUser = outSet
+                    .AsParallel()
+                    .Select(post =>
                     {
-                        post.ID,
-                        post.IsReadOnly,
-                        post.Name,
-                        post.Content,
-                        post.IsModified,
-                        post.ViewCount,
-                        post.IsLocked,
-                        post.CanComment,
-                        post.IsPublic,
-                        post.ParentID,
-                        post.CreatedBy,
-                        post.CreatedDate,
-                        post.ModifiedBy,
-                        post.ModifiedDate,
-                        Username
-                    };
-                });
+                        var Username = userNameDict[post.CreatedBy];
+                        return new
+                        {
+                            post.ID,
+                            post.IsReadOnly,
+                            post.Name,
+                            post.Content,
+                            post.IsModified,
+                            post.ViewCount,
+                            post.IsLocked,
+                            post.CanComment,
+                            post.IsPublic,
+                            post.ParentID,
+                            post.CreatedBy,
+                            post.CreatedDate,
+                            post.ModifiedBy,
+                            post.ModifiedDate,
+                            Username
+                        };
+                    });
 
 
-            return Ok(outSetWithUser);
+                return Ok(outSetWithUser);
+            }
+            catch (Exception ex)
+            {
+                CoreFactory.Singleton.Logging.CreateErrorLog("C0D5A5B1-896B-47A1-A152-B658378057C7", ex);
+                return InternalServerError();
+            }
 
         }
 
