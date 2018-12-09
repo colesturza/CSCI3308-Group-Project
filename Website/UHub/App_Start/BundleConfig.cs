@@ -68,13 +68,15 @@ namespace UHub
 
 
             //---------------------------------SCHOOL CLUB------------------------------------------------------
-            //CREATE POST
-            bundles.Add(new ScriptBundle("~/resources/schoolClub/createPostScript")
-                .Include("~/ClientResources/SchoolClubs/Scripts/createPost.js"));
+
 
             //INDEX
             bundles.Add(new ScriptBundle("~/resources/schoolClub/indexScript")
-                .Include("~/ClientResources/SchoolClubs/Scripts/communityView.js"));
+                .Include("~/ClientResources/SchoolClubs/Scripts/communityVue.js"));
+
+            //CREATE POST
+            bundles.Add(new ScriptBundle("~/resources/schoolClub/createPostScript")
+                .Include("~/ClientResources/SchoolClubs/Scripts/createPost.js"));
 
 
 
