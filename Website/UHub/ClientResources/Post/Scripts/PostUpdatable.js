@@ -520,6 +520,12 @@
             //AJAX -> /uhubapi/posts/Update
             .done(function (data) {
                 oldResponseErr = 'Nothing to Update';
+
+                if (postRawData.CanComment) {
+                    $("#btn_ToggleReply").style('display', null);
+                }
+                showCommentReply();
+
                 alert(data);
             })
             //AJAX -> /uhubapi/posts/Update
