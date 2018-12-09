@@ -47,7 +47,7 @@
                             var now = moment();
                             var postTimeMoment = moment(data[i].CreatedDate);
                             data[i].postTime = postTimeMoment.format("YYYY-MM-DD HH:mm");
-                            if (parseInt(now.diff(postTimeMoment, 'days')) <= 7) {
+                            if (parseInt(now.diff(postTimeMoment, 'days')) < 7) {
                                 data[i].dateCreatedFromNow = postTimeMoment.fromNow();
                             }
 

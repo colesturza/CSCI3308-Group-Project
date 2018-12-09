@@ -216,7 +216,7 @@
                         var postTime = now.format("YYYY-MM-DD HH:mm");
                         var cmtTimeMoment = now;
                         var fromNow = null;
-                        if (parseInt(now.diff(cmtTimeMoment, 'days')) <= 7) {
+                        if (parseInt(now.diff(cmtTimeMoment, 'days')) < 7) {
                             fromNow = cmtTimeMoment.fromNow();
                         }
 
@@ -328,7 +328,7 @@
                         var postTime = now.format("YYYY-MM-DD HH:mm");
                         var cmtTimeMoment = now;
                         var fromNow = null;
-                        if (parseInt(now.diff(cmtTimeMoment, 'days')) <= 7) {
+                        if (parseInt(now.diff(cmtTimeMoment, 'days')) < 7) {
                             fromNow = cmtTimeMoment.fromNow();
                         }
 
@@ -386,7 +386,7 @@
 
                     var postTimeMoment = moment(pstData.CreatedDate);
                     var now = moment();
-                    if (parseInt(now.diff(postTimeMoment, 'days')) <= 7) {
+                    if (parseInt(now.diff(postTimeMoment, 'days')) < 7) {
                         self.dateCreatedFromNow = postTimeMoment.fromNow();
                     }
 
@@ -409,7 +409,7 @@
 
                                     var cmtTimeMoment = moment(comment.CreatedDate);
                                     var now = moment();
-                                    if (parseInt(now.diff(cmtTimeMoment, 'days')) <= 7) {
+                                    if (parseInt(now.diff(cmtTimeMoment, 'days')) < 7) {
                                         comment.dateCreatedFromNow = cmtTimeMoment.fromNow();
                                     }
                                 });

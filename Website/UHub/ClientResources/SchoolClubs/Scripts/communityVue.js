@@ -104,8 +104,8 @@
 
                         var now = moment();
                         var postTimeMoment = moment(formData[i].CreatedDate);
-                        data[i].postTime = postTimeMoment.format("YYYY-MM-DD HH:mm");
-                        if (parseInt(now.diff(postTimeMoment, 'days')) <= 7) {
+                        formData[i].postTime = postTimeMoment.format("YYYY-MM-DD HH:mm");
+                        if (parseInt(now.diff(postTimeMoment, 'days')) < 7) {
                             formData[i].dateCreatedFromNow = postTimeMoment.fromNow();
                         }
 
