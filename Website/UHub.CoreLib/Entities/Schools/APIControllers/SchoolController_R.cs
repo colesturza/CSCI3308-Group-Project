@@ -18,6 +18,7 @@ using UHub.CoreLib.Entities.Users;
 using UHub.CoreLib.Entities.Users.DTOs;
 using UHub.CoreLib.Entities.Users.Interfaces;
 using UHub.CoreLib.Attributes;
+using UHub.CoreLib.Management;
 
 namespace UHub.CoreLib.Entities.Schools.APIControllers
 {
@@ -39,7 +40,6 @@ namespace UHub.CoreLib.Entities.Schools.APIControllers
             {
                 return InternalServerError();
             }
-
 
             return Ok(schoolSet.Select(x => x.ToDto<School_R_PublicDTO>()));
 
@@ -95,6 +95,26 @@ namespace UHub.CoreLib.Entities.Schools.APIControllers
             {
                 return Ok();
             }
+
+        }
+
+
+        [HttpGet()]
+        [Route("GetMine")]
+        [ApiCacheControl(12 * 3600)]
+        public async Task<IHttpActionResult> GetMine()
+        {
+            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser().CmsUser;
+
+
+            var school = await SchoolReader.TryGetSchoolAsync(cmsUser.SchoolID.Value);
+            if (school == null)
+            {
+                return InternalServerError();
+            }
+
+
+            return Ok(school.ToDto<School_R_PublicDTO>());
 
         }
 

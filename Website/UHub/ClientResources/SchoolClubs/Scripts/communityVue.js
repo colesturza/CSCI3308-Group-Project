@@ -139,6 +139,8 @@
             commID = id;
             window.history.pushState('School Club ' + id, 'School Club', '/SchoolClub/' + id);
 
+            $("#btn_HeaderCreatePost").attr('href', '/SchoolClub/CreatePost/' + id);
+
             loadVuePostData();
             loadVueClubInfo();
         }
