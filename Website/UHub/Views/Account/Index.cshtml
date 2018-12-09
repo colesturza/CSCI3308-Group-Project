@@ -26,7 +26,9 @@
                             <h5><strong>Graduation Date: </strong>{{user.GradDate}}</h5>
                             <h5 id="toggle_hide"><strong>Job Title: </strong>{{user.JobTitle}}</h5>
                             <h5 id="toggle_hide"><strong>Company: </strong>{{user.Company}}</h5>
-                            <h5><strong>School: </strong>{{user.SchoolID}}</h5
+                            <h5>
+                                <strong>School: </strong>{{user.SchoolID}}
+                            </h5>
                         </li>
                     </ul>
                 </div>
@@ -34,8 +36,8 @@
         </div>
     </div>
     <br>
-    @Html.ActionLink("Update Password", "UpdatePassword", "Account")
 
+    <h4>@Html.ActionLink("Update Password", "UpdatePassword", "Account")</h4>
 </div>
 
 @section scripts{
