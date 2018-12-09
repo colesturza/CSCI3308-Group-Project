@@ -1,4 +1,4 @@
-﻿CREATE proc [Post_CreateUserLike]
+﻿CREATE proc [dbo].[Post_CreateUserLike]
 
 	@PostID bigint,
 	@UserID bigint
@@ -26,12 +26,12 @@ begin
 			1			--USER TYPE [1]
 		)
 
-		select cast(1 as bit)
+		return cast(1 as bit)
 
 	end try
 	begin catch
 
-		select cast(0 as bit)
+		return cast(0 as bit)
 
 	end catch
 end
