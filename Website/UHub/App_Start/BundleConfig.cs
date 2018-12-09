@@ -41,10 +41,6 @@ namespace UHub
                 .IncludeDirectory("~/ClientResources/Master/Styles", "*css", true));
 
 
-            bundles.Add(new ScriptBundle("~/resources/scripts/navBar")
-                .Include("~/ClientResources/Master/Components/NavBar.js"));
-            
-
             //---------------------------------ACCOUNT------------------------------------------------------
             //LOGIN
             bundles.Add(
@@ -76,6 +72,9 @@ namespace UHub
             bundles.Add(new ScriptBundle("~/resources/schoolClub/createPostScript")
                 .Include("~/ClientResources/SchoolClubs/Scripts/createPost.js"));
 
+            //INDEX
+            bundles.Add(new ScriptBundle("~/resources/schoolClub/indexScript")
+                .Include("~/ClientResources/SchoolClubs/Scripts/communityView.js"));
 
 
 
@@ -84,19 +83,44 @@ namespace UHub
                 .IncludeDirectory("~/ClientResources/School/Styles", "*css", true));
 
 
+            //VIEW CLUBS
+            bundles.Add(new ScriptBundle("~/resources/school/ViewClubsScript")
+                .Include("~/ClientResources/School/Scripts/ViewClubs.js"));
+
+
             //CREATE POST
             bundles.Add(new ScriptBundle("~/resources/school/createClubScript")
                 .Include("~/ClientResources/School/Scripts/createClub.js"));
 
 
             //VIEW CLUBS
-            bundles.Add(new ScriptBundle("~/resources/school/ViewClubsScript")
-                .Include("~/ClientResources/School/Scripts/ViewClubs.js"));
+            bundles.Add(new ScriptBundle("~/resources/school/indexScript")
+                .Include("~/ClientResources/School/Scripts/School.js"));
+
+
+
+            //----------------------------------------POSTS------------------------------------------------------
+            //INDEX
+            bundles.Add(new ScriptBundle("~/resources/post/indexScript")
+                .Include("~/ClientResources/Post/Scripts/Post.js"));
+
+
+            //INDEX - UPDATABLE
+            bundles.Add(new ScriptBundle("~/resources/post/indexUpdatableScript")
+                .Include("~/ClientResources/Post/Scripts/PostUpdatable.js"));
 
 
             //---------------------------------COMPONENTS------------------------------------------------------
             bundles.Add(new CustomStyleBundle("~/resources/css/components")
                 .IncludeDirectory("~/ClientResources/MASTER/Components", "*css", true));
+
+            //NAV BAR
+            bundles.Add(new ScriptBundle("~/resources/scripts/navBar")
+                .Include("~/ClientResources/Master/Components/NavBar.js"));
+
+            //POST BAR
+            bundles.Add(new ScriptBundle("~/resources/scripts/postBar")
+                .Include("~/ClientResources/Master/Components/postBar.js"));
 
 
 
