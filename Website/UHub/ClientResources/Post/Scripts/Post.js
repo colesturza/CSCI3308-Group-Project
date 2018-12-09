@@ -160,10 +160,8 @@
             '            <div class="container-fluid">' +
             '                <div>' +
             '                    <span class="m-2 mr-0" style="margin-right:0 !important">Posted by</span>' +
-            '                    <span>[</span>' +
-            '                       <a v-if="comment.CreatedBy > 0" v-bind:href="\'/Account/find/\' + comment.CreatedBy" style="display:inline-block">{{ comment.Username }}</a>]' +
-            '                       <a v-else href="/Account" style="display:inline-block">{{ comment.Username }}</a>' +
-            '                    <span>]</span>' +
+            '                    <span v-if="comment.CreatedBy > 0">[<a v-bind:href="\'/Account/find/\' + comment.CreatedBy">{{ comment.Username }}</a>]</span>' +
+            '                    <span v-else>[<a href="/Account">{{ comment.Username }}</a>]</span>' +
             '                    <span> • {{ comment.CreatedDate.toString().substring(0,10) }}</span>' +
             '                </div>' +
             '                <div class="border border-dark rounded m-2 py-2">' +
@@ -209,7 +207,7 @@
 
                         var dtStr = getTodayDateStr();
 
-                        var newCommentCreatorID = "-1";
+                        var newCommentCreatorID = -1;
                         var newCommentCreatorName = "me";
                         if (currentUser != null) {
                             newCommentCreatorID = currentUser.ID;
@@ -281,7 +279,7 @@
 
                         var dtStr = getTodayDateStr();
 
-                        var newCommentCreatorID = "-1";
+                        var newCommentCreatorID = -1;
                         var newCommentCreatorName = "me";
                         if (currentUser != null) {
                             newCommentCreatorID = currentUser.ID;
