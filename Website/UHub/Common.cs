@@ -46,7 +46,7 @@ namespace UHub
                 return null;
             }
 
-            
+
             if (env == "PRD")
             {
                 return GetPrdConfig();
@@ -59,7 +59,7 @@ namespace UHub
             {
                 return GetDevConfig();
             }
-            
+
         }
 
         private static CmsConfiguration_Grouped GetPrdConfig()
@@ -72,6 +72,9 @@ namespace UHub
 
             //DB
             var dbConn = WebConfigurationManager.AppSettings["DB_CONN"];
+
+            //SECURITY
+            var autoApproveAccts = bool.Parse(WebConfigurationManager.AppSettings["AutoApproveNewUsers"]);
 
             //MAIL
             var ContactFormRecipient = WebConfigurationManager.AppSettings["ContactFormRecipient"];
@@ -155,7 +158,7 @@ namespace UHub
                     RecaptchaPublicKey = captchaPublicKey,
                     RecaptchaPrivateKey = captchaPrivateKey,
                     AutoConfirmNewAccounts = false,
-                    AutoApproveNewAccounts = true,
+                    AutoApproveNewAccounts = autoApproveAccts,
                     EnableTokenVersioning = true,                                   //VERSION
                     CookieSameSiteMode = CookieSameSiteModes.Lax,
                     EnablePswdRecovery = true,
@@ -214,6 +217,9 @@ namespace UHub
             //DB
             var dbConn = WebConfigurationManager.AppSettings["DB_CONN"];
 
+            //SECURITY
+            var autoApproveAccts = bool.Parse(WebConfigurationManager.AppSettings["AutoApproveNewUsers"]);
+
             //MAIL
             var ContactFormRecipient = WebConfigurationManager.AppSettings["ContactFormRecipient"];
             var mailFromAddr = WebConfigurationManager.AppSettings["MailFromAddress"];
@@ -296,7 +302,7 @@ namespace UHub
                     RecaptchaPublicKey = captchaPublicKey,
                     RecaptchaPrivateKey = captchaPrivateKey,
                     AutoConfirmNewAccounts = false,
-                    AutoApproveNewAccounts = true,
+                    AutoApproveNewAccounts = autoApproveAccts,
                     EnableTokenVersioning = false,                                  //VERSION
                     CookieSameSiteMode = CookieSameSiteModes.Lax,
                     EnablePswdRecovery = true,

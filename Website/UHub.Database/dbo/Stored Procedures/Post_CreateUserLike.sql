@@ -26,12 +26,12 @@ begin
 			1			--USER TYPE [1]
 		)
 
-		return cast(1 as bit)
+		select cast(1 as bit)
 
 	end try
 	begin catch
 
-		return cast(0 as bit)
+		select cast(0 as bit)
 
 	end catch
 end
