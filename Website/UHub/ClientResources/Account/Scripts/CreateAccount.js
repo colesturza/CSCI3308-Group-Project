@@ -101,7 +101,7 @@
                 this.Username = refs.inputUSR.value;
                 this.Password = refs.inputPWD.value;
                 this.Email = refs.inputEmail.value;
-                this.Name = refs.inputFirst.value + refs.inputLast.value;
+                this.Name = refs.inputFirst.value + " " + refs.inputLast.value;
                 this.Major = refs.inputMajor.value;
                 this.PhoneNumber = refs.inputPhone.value;
                 this.Year = refs.inputYear.value;

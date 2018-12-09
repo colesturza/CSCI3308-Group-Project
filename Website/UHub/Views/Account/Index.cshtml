@@ -1,5 +1,4 @@
-﻿@using UHub.CoreLib.Extensions;
-@{
+﻿@{
     ViewBag.Title = "My Account";
     Layout = "~/Views/Shared/_LayoutAuth.cshtml";
 }
@@ -27,7 +26,7 @@
                             <h5><strong>Graduation Date: </strong>{{user.GradDate}}</h5>
                             <h5 id="toggle_hide"><strong>Job Title: </strong>{{user.JobTitle}}</h5>
                             <h5 id="toggle_hide"><strong>Company: </strong>{{user.Company}}</h5>
-                            <h5><strong>SchoolID: </strong>{{user.SchoolID}}</h5
+                            <h5><strong>School: </strong>{{schoolID.Name}}</h5
                         </li>
                     </ul>
                 </div>
