@@ -228,7 +228,6 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
 
 
             var outSetWithUser = outSet
-                .AsParallel()
                 .Select(post =>
                 {
                     var Username = userNameDict[post.CreatedBy];
