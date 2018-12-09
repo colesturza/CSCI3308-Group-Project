@@ -235,32 +235,17 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             }
 
 
-            
-
-
             var sanitizerMode = CoreFactory.Singleton.Properties.HtmlSanitizerMode;
             var shouldSanitize = (sanitizerMode & HtmlSanitizerMode.OnRead) != 0;
 
-
-            IEnumerable<Post_R_PublicDTO> outSet = null;
-
+            posts = posts.AsParallel();
             if (shouldSanitize)
             {
-                outSet = posts
-                    .AsParallel()
+                posts = posts
                     .Select(x =>
                     {
                         x.Content = x.Content.SanitizeHtml().HtmlDecode();
-                        return x.ToDto<Post_R_PublicDTO>();
-                    });
-            }
-            else
-            {
-                outSet = posts
-                    .AsParallel()
-                    .Select(x =>
-                    {
-                        return x.ToDto<Post_R_PublicDTO>();
+                        return x;
                     });
             }
 
@@ -268,7 +253,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             var userNameDict = taskUsers.Result.ToDictionary(key => key.ID, val => val.Username);
 
 
-            var outSetWithUser = outSet
+            var outSetWithUser = posts
                 .Select(post =>
                 {
                     var Username = userNameDict[post.CreatedBy];

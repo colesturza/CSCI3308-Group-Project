@@ -163,7 +163,7 @@ namespace UHub
                     CookieSameSiteMode = CookieSameSiteModes.Lax,
                     EnablePswdRecovery = true,
                     EnablePersistentAuthTokens = true,
-                    HtmlSanitizerMode = HtmlSanitizerMode.Both
+                    HtmlSanitizerMode = HtmlSanitizerMode.OnWrite
                 },
                 Logging = new CmsConfig_Logging
                 {
@@ -307,7 +307,7 @@ namespace UHub
                     CookieSameSiteMode = CookieSameSiteModes.Lax,
                     EnablePswdRecovery = true,
                     EnablePersistentAuthTokens = true,
-                    HtmlSanitizerMode = HtmlSanitizerMode.Both
+                    HtmlSanitizerMode = HtmlSanitizerMode.OnWrite
                 },
                 Logging = new CmsConfig_Logging
                 {

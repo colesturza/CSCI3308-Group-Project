@@ -195,38 +195,30 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             }
 
 
-            IEnumerable<Post_R_PublicDTO> outSet = null;
+            posts = posts.AsParallel();
             if (shouldSanitize)
             {
-                outSet = posts
+                posts = posts
                     .Select(x =>
                     {
                         x.Content = x.Content.SanitizeHtml().HtmlDecode();
-                        return x.ToDto<Post_R_PublicDTO>();
+                        return x;
                     });
             }
-            else
-            {
-                outSet = posts
-                    .Select(x =>
-                    {
-                        return x.ToDto<Post_R_PublicDTO>();
-                    });
-            }
-
 
             //check for member status
             var isUserMember = await taskIsUserMember;
             if (!isUserMember)
             {
-                outSet = outSet.Where(x => x.IsPublic);
+                posts = posts.Where(x => x.IsPublic);
             }
+
 
             await taskUsers;
             var userNameDict = taskUsers.Result.ToDictionary(key => key.ID, val => val.Username);
 
 
-            var outSetWithUser = outSet
+            var outSetWithUser = posts
                 .Select(post =>
                 {
                     var Username = userNameDict[post.CreatedBy];
