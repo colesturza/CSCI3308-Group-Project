@@ -235,50 +235,31 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             }
 
 
-            
-
-
             var sanitizerMode = CoreFactory.Singleton.Properties.HtmlSanitizerMode;
             var shouldSanitize = (sanitizerMode & HtmlSanitizerMode.OnRead) != 0;
 
-
-            IEnumerable<Post_R_PublicDTO> outSet = null;
-
-            if (shouldSanitize)
-            {
-                outSet = posts
-                    .AsParallel()
-                    .Select(x =>
-                    {
-                        x.Content = x.Content.SanitizeHtml().HtmlDecode();
-                        return x.ToDto<Post_R_PublicDTO>();
-                    });
-            }
-            else
-            {
-                outSet = posts
-                    .AsParallel()
-                    .Select(x =>
-                    {
-                        return x.ToDto<Post_R_PublicDTO>();
-                    });
-            }
 
             await taskUsers;
             var userNameDict = taskUsers.Result.ToDictionary(key => key.ID, val => val.Username);
 
 
-            var outSetWithUser = outSet
+            var outSetWithUser = posts
                 .AsParallel()
                 .Select(post =>
                 {
                     var Username = userNameDict[post.CreatedBy];
+                    var Content = post.Content;
+                    if (shouldSanitize)
+                    {
+                        Content = Content.SanitizeHtml().HtmlDecode();
+                    }
+
                     return new
                     {
                         post.ID,
                         post.IsReadOnly,
                         post.Name,
-                        post.Content,
+                        Content,
                         post.IsModified,
                         post.ViewCount,
                         post.IsLocked,
