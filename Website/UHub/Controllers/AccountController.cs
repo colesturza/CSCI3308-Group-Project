@@ -238,7 +238,7 @@ namespace UHub.Controllers
                 var isCaptchaValid = await CoreFactory.Singleton.Recaptcha.IsCaptchaValidAsync(context);
                 if (!isCaptchaValid)
                 {
-                    ViewBag.ErrorMsg = "Captcha is not valid";
+                    ViewBag.Message = "Captcha is not valid";
                     return View();
                 }
             }
@@ -252,7 +252,6 @@ namespace UHub.Controllers
 
 
             var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser().CmsUser;
-
 
             var result = await CoreFactory.Singleton.Accounts.TryUpdatePasswordAsync(
                 cmsUser.ID.Value,

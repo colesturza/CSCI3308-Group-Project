@@ -44,7 +44,7 @@ namespace UHub.CoreLib.Logging.Providers
             try
             {
 
-                EventLogEntryType SysEventType = 0;
+                EventLogEntryType SysEventType = EventLogEntryType.Information;
                 short category = 0;
                 short eventID = 0;
                 if (EventData.EventType == EventType.Success)
