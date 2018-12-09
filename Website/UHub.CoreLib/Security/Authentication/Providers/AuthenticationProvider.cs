@@ -15,6 +15,7 @@ using UHub.CoreLib.Entities.Users.Interfaces;
 using UHub.CoreLib.Entities.Users.DataInterop;
 using System.Runtime.CompilerServices;
 using UHub.CoreLib.Security.Authentication.Management;
+using System.Security.Cryptography;
 
 namespace UHub.CoreLib.Security.Authentication.Providers
 {
@@ -107,6 +108,11 @@ namespace UHub.CoreLib.Security.Authentication.Providers
             try
             {
                 authToken = AuthenticationToken.Decrypt(tokenStr);
+            }
+            catch(CryptographicException)
+            {
+                var cmsUser = UserReader.GetAnonymousUser();
+                return (TokenValidationStatus.TokenAESFailure, cmsUser);
             }
             catch (Exception ex)
             {
