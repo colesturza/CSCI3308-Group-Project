@@ -269,15 +269,28 @@
 
 
                 if (!hasLiked) {
+                    $("#btn_LikePost").attr('disabled', 'disabled');
 
                     $.ajax({
                         method: "POST",
-                        url: "/uhubapi/posts/CreateLike?PostID=" + encodeURIComponent(postID)
-                    })
-                        .done(function () {
-                            hasLiked = true;
-                            self.likeCount++;
-                        });
+                        url: "/uhubapi/posts/CreateLike?PostID=" + encodeURIComponent(postID),
+                        statusCode: {
+                            200: function () {
+                                hasLiked = true;
+                                self.likeCount++;
+                            },
+                            400: function () {
+                                hasLiked = true;
+                            },
+                            403: function () {
+                                hasLiked = true;
+                            },
+                            404: function () {
+                                hasLiked = true;
+                            },
+                            500: function () { $("#btn_LikePost").removeAttr("disabled"); }
+                        }
+                    });
                 }
 
             },
