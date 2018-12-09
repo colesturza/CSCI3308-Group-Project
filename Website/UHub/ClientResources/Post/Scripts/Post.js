@@ -330,7 +330,7 @@
 
                     var postTimeMoment = moment(self.postTime);
                     var postTimeMomentFromNow = postTimeMoment.fromNow();
-                    if (parseInt(postTimeMomentFromNow.diff(postTimeMoment)) <= 7) {
+                    if (parseInt(postTimeMomentFromNow.diff(postTimeMoment, 'days')) <= 7) {
                         self.dateCreatedFromNow = postTimeMomentFromNow;
                     }
 
