@@ -18,8 +18,14 @@
                 <div class="shadowBox"></div>
                 <template v-if="post.ID != undefined">
                     <span><a v-bind:href="'/SchoolClub/' + post.ParentID">{{post.ClubName}}</a></span>
-                    • Posted by <span>[<a v-bind:href="'/Account/find/' + post.CreatedBy">{{post.Username}}</a>]</span>
-                    <span>{{post.dateCreatedFromNow}}</span>
+                    • Posted by
+                    <span>[<a v-bind:href="'/Account/find/' + post.CreatedBy">{{post.Username}}</a>]</span>
+
+                    <template v-if="post.dateCreatedFromNow != null">
+                        <span> • {{post.dateCreatedFromNow}}</span>
+                    </template>
+                    <span v-else> • {{post.CreatedDate.substring(0,10)}}</span>
+
                     <p></p>
                     <a v-bind:href="'/Post/' + post.ID">
                         <h3>{{ post.Name }}</h3>

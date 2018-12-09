@@ -42,7 +42,13 @@
 
                         for (var i = 0; i < data.length; i++) {
                             data[i].Content = mdConverter.makeHtml(data[i].Content);
-                            data[i].dateCreatedFromNow = moment(data[i].CreatedDate).fromNow();
+
+                            var postTimeMoment = moment(data[i].CreatedDate);
+                            var now = moment();
+                            if (parseInt(now.diff(postTimeMoment, 'days')) <= 7) {
+                                data[i].dateCreatedFromNow = postTimeMoment.fromNow();
+                            }
+
 
                             var parentName = parentNameDict[data[i].ParentID];
                             if (parentName != undefined) {
