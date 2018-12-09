@@ -2,6 +2,13 @@
     var mdConverter = new showdown.Converter();
     setShowdownDefaults(mdConverter);
 
+    $.ajax({
+        method: "POST",
+        url: "/uhubapi/schools/GetMine"
+    })
+        .done(function (data) {
+            $("school-name").text(data.Name);
+        });
 
     new Vue({
         el: "#post-list",
