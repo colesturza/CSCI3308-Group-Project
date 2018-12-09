@@ -16,7 +16,8 @@ namespace UHub.Controllers
             return View();
         }
 
-        [HttpGet]
+
+        [System.Web.Mvc.HttpGet]
         protected override void HandleUnknownAction(string actionName)
         {
             var res = this.JavaScriptFromView();

@@ -19,6 +19,7 @@ namespace UHub.Controllers
 {
     public class AccountController : Controller
     {
+        [System.Web.Mvc.HttpGet]
         [MvcAuthControl]
         public ActionResult Index()
         {
@@ -32,6 +33,7 @@ namespace UHub.Controllers
         }
 
 
+        [System.Web.Mvc.HttpGet]
         public ActionResult Create()
         {
             return View();
@@ -356,6 +358,7 @@ namespace UHub.Controllers
         }
 
 
+        [System.Web.Mvc.HttpPost]
         public async Task<ActionResult> Recover(string txt_RecoveryKey, string txt_NewPswd, string txt_ConfirmPswd)
         {
             var idObj = Url.RequestContext.RouteData.Values["id"];
@@ -410,6 +413,7 @@ namespace UHub.Controllers
         }
 
 
+        [System.Web.Mvc.HttpGet]
         [MvcAuthControl]
         public ActionResult Find()
         {

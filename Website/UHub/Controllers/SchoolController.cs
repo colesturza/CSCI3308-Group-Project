@@ -9,6 +9,7 @@ namespace UHub.Controllers
 {
     public class SchoolController : Controller
     {
+        [System.Web.Mvc.HttpGet]
         [MvcAuthControl]
         public ActionResult Index()
         {
@@ -19,6 +20,7 @@ namespace UHub.Controllers
         }
 
 
+        [System.Web.Mvc.HttpGet]
         [MvcAuthControl(RequireAdmin = true)]
         public ActionResult CreatePost()
         {
@@ -29,6 +31,7 @@ namespace UHub.Controllers
         }
 
 
+        [System.Web.Mvc.HttpGet]
         [MvcAuthControl]
         public ActionResult Clubs()
         {
@@ -39,6 +42,7 @@ namespace UHub.Controllers
         }
 
 
+        [System.Web.Mvc.HttpGet]
         [MvcAuthControl]
         public ActionResult CreateClub()
         {
