@@ -15,7 +15,7 @@
         <div>
             <a v-bind:href="'/SchoolClub/' + parentID">{{commName}}</a>
             <p></p>
-            <h3 class="px-3 pt-3" style="display:inline-block !important">{{likeCount}} • {{title}}</h3>
+            <h3 class="px-3 pt-3" style="display:inline-block !important">⮝ {{likeCount}} • {{title}}</h3>
             <template v-if="modifiedDate != null">
                 <span>[<a :href="'/Post/History/' + postID">History</a>]</span>
             </template>
