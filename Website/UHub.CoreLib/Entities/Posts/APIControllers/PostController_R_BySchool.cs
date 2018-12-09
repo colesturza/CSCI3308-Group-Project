@@ -158,40 +158,53 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
                 var shouldSanitize = (sanitizerMode & HtmlSanitizerMode.OnRead) != 0;
 
 
+                IEnumerable<Post_R_PublicDTO> outSet = null;
+                if (shouldSanitize)
+                {
+                    outSet = posts
+                        .Select(x =>
+                        {
+                            x.Content = x.Content.SanitizeHtml().HtmlDecode();
+                            return x.ToDto<Post_R_PublicDTO>();
+                        });
+                }
+                else
+                {
+                    outSet = posts
+                        .Select(x =>
+                        {
+                            return x.ToDto<Post_R_PublicDTO>();
+                        });
+                }
+
+
                 await taskUsers;
                 var userNameDict = taskUsers.Result.ToDictionary(key => key.ID, val => val.Username);
 
 
-                var outSetWithUser = posts
-                .AsParallel()
-                .Select(post =>
-                {
-                    var Username = userNameDict[post.CreatedBy];
-                    var Content = post.Content;
-                    if (shouldSanitize)
+                var outSetWithUser = outSet
+                    .Select(post =>
                     {
-                        Content = Content.SanitizeHtml().HtmlDecode();
-                    }
-
-                    return new
-                    {
-                        post.ID,
-                        post.IsReadOnly,
-                        post.Name,
-                        Content,
-                        post.IsModified,
-                        post.ViewCount,
-                        post.IsLocked,
-                        post.CanComment,
-                        post.IsPublic,
-                        post.ParentID,
-                        post.CreatedBy,
-                        post.CreatedDate,
-                        post.ModifiedBy,
-                        post.ModifiedDate,
-                        Username
-                    };
-                });
+                        var Username = userNameDict[post.CreatedBy];
+                        return new
+                        {
+                            post.ID,
+                            post.IsReadOnly,
+                            post.Name,
+                            post.Content,
+                            post.IsModified,
+                            post.ViewCount,
+                            post.IsLocked,
+                            post.CanComment,
+                            post.IsPublic,
+                            post.ParentID,
+                            post.CreatedBy,
+                            post.CreatedDate,
+                            post.ModifiedBy,
+                            post.ModifiedDate,
+                            Username
+                        };
+                    });
 
 
                 return Ok(outSetWithUser);

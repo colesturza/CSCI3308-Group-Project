@@ -152,7 +152,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             {
                 return Content(statCode, status);
             }
-
+            
             var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser().CmsUser;
 
 
@@ -165,7 +165,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             var targetClub = taskTargetClub.Result;
             var IsUserBanned = taskIsUserBanned.Result;
 
-            if (targetClub == null)
+            if(targetClub == null)
             {
                 return NotFound();
             }
@@ -194,34 +194,48 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
                 return InternalServerError();
             }
 
+
+            IEnumerable<Post_R_PublicDTO> outSet = null;
+            if (shouldSanitize)
+            {
+                outSet = posts
+                    .Select(x =>
+                    {
+                        x.Content = x.Content.SanitizeHtml().HtmlDecode();
+                        return x.ToDto<Post_R_PublicDTO>();
+                    });
+            }
+            else
+            {
+                outSet = posts
+                    .Select(x =>
+                    {
+                        return x.ToDto<Post_R_PublicDTO>();
+                    });
+            }
+
+
             //check for member status
             var isUserMember = await taskIsUserMember;
             if (!isUserMember)
             {
-                posts = posts.Where(x => x.IsPublic);
+                outSet = outSet.Where(x => x.IsPublic);
             }
 
             await taskUsers;
             var userNameDict = taskUsers.Result.ToDictionary(key => key.ID, val => val.Username);
 
 
-            var outSetWithUser = posts
-                .AsParallel()
+            var outSetWithUser = outSet
                 .Select(post =>
                 {
                     var Username = userNameDict[post.CreatedBy];
-                    var Content = post.Content;
-                    if (shouldSanitize)
-                    {
-                        Content = Content.SanitizeHtml().HtmlDecode();
-                    }
-
                     return new
                     {
                         post.ID,
                         post.IsReadOnly,
                         post.Name,
-                        Content,
+                        post.Content,
                         post.IsModified,
                         post.ViewCount,
                         post.IsLocked,
@@ -235,6 +249,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
                         Username
                     };
                 });
+
 
 
             return Ok(outSetWithUser);
@@ -285,7 +300,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             var shouldSanitize = (sanitizerMode & HtmlSanitizerMode.OnRead) != 0;
 
             var posts = await taskPosts;
-            if (posts == null)
+            if(posts == null)
             {
                 return InternalServerError();
             }
