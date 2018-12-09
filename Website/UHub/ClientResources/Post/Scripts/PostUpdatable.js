@@ -276,6 +276,7 @@
             postTime: "",
             modifiedDate: "",
             dateCreatedFromNow: null,
+            likeCount: -1,
             comments: []
         },
         methods: {
@@ -359,6 +360,8 @@
                     self.createdBy = pstData.CreatedBy;
                     self.modifiedDate = pstData.ModifiedDate;
                     self.postCreater = pstData.Username;
+                    self.likeCount = pstData.LikeCount;
+
 
                     var postTimeMoment = moment(self.postTime);
                     var now = moment();

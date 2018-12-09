@@ -3,7 +3,7 @@
     var hasLiked = false;
     var vueInstance;
     var postRawData;
-    var rawCommentSet = []
+    var rawCommentSet = [];
 
 
     var postID = encodeURIComponent(window.location.href.split('/').slice(-1)[0]);
@@ -254,7 +254,7 @@
             postTime: "",
             modifiedDate: "",
             dateCreatedFromNow: null,
-            likeCount: 0,
+            likeCount: -1,
             comments: []
         },
         methods: {

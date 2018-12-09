@@ -210,9 +210,24 @@ begin
 			@IsNewRecord = @_isNew
 
 
-		exec dbo.Post_CreateUserLike
-			@PostID = @_entID,
-			@UserID = @CreatedBy
+
+		--CREATE INITIAL POST-USER LIKE
+		insert into dbo.EntLikeXRef
+		(
+			TargetEntID,
+			ActorEntID,
+			TargetEntTypeID,
+			ActorEntTypeID
+		)
+		values
+		(
+			@_entID,
+			@CreatedBy,
+			6,			--POST TYPE [6]
+			1			--USER TYPE [1]
+		)
+
+
 
 		select @_entID
 
