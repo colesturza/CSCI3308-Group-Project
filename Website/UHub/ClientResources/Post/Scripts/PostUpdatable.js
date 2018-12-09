@@ -251,6 +251,7 @@
             parentID: "",
             commName: "",
             postCreater: "",
+            createdBy: "",
             title: "",
             content: "",
             postTime: "",
