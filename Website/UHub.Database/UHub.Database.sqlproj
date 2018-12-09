@@ -229,5 +229,7 @@
     <Build Include="dbo\Stored Procedures\Users_GetPostCommenters.sql" />
     <Build Include="dbo\Stored Procedures\Post_GetUserLikeCount.sql" />
     <Build Include="dbo\Stored Procedures\Post_CreateUserLike.sql" />
+    <Build Include="dbo\Stored Procedures\SchoolClub_Delete.sql" />
+    <Build Include="dbo\Stored Procedures\Post_Delete.sql" />
   </ItemGroup>
 </Project>
