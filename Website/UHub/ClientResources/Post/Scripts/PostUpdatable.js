@@ -185,7 +185,7 @@
             '                    <span class="m-2 mr-0" style="margin-right:0 !important">Posted by</span>' +
             '                    <span v-if="comment.CreatedBy > 0">[<a v-bind:href="\'/Account/find/\' + comment.CreatedBy">{{ comment.Username }}</a>]</span>' +
             '                    <span v-else>[<a href="/Account">{{ comment.Username }}</a>]</span>' +
-            '                    <span>{{dateCreatedFromNow}}</span>' +
+            '                    <span>{{comment.dateCreatedFromNow}}</span>' +
             '                </div>' +
             '                <div class="border border-dark rounded m-2 py-2">' +
             '                    <span class="text-body p-2">' +
