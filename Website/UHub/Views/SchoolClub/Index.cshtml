@@ -7,20 +7,14 @@
 
 @section header
 {
-    <div>
+    <div id="postbar-uhub">
         <postbar-component></postbar-component>
     </div>
 }
 
-<div id="navbar-uhub">
-    <navbar-component></navbar-component>
-</div>
 
-<div id="postbar-uhub">
-    <postbar-component></postbar-component>
-</div>
 
-<div id="body-content" class="mt-4" style="display:none !important">
+<div id="body-content" class="container mt-4" style="display:none !important">
     <ul id="post-list" class="list-group list-group-flush w-70 float-md-left">
         <postlistcomp v-for="post in posts" v-bind:post="post" v-bind:key="post.ID"></postlistcomp>
     </ul>
