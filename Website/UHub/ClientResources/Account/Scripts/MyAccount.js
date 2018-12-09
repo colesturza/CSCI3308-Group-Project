@@ -26,7 +26,7 @@
 						url: "/uhubapi/schools/GetByID?SchoolID=" + data.SchoolID,
 						success: function (schoolName) {
 							console.log(schoolName)
-							self.user.SchoolID = schoolName
+							self.user.SchoolID = schoolName.Name
 						}
 					})
 
