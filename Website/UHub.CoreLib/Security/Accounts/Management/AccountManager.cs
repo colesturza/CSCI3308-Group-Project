@@ -492,10 +492,6 @@ namespace UHub.CoreLib.Security.Accounts.Management
 #pragma warning disable 612, 618
             try
             {
-                if (!UserReader.DoesUserExist(UserID))
-                {
-                    return false;
-                }
 
                 UserWriter.UpdateUserVersion(UserID, version);
                 return true;

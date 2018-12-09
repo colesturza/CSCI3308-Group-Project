@@ -506,12 +506,6 @@ namespace UHub.CoreLib.Security.Accounts.Management
 #pragma warning disable 612, 618
             try
             {
-                var doesExist = await UserReader.DoesUserExistAsync(UserID);
-                if (!doesExist)
-                {
-                    return false;
-                }
-
                 await UserWriter.UpdateUserVersionAsync(UserID, version);
                 return true;
             }
@@ -640,6 +634,7 @@ namespace UHub.CoreLib.Security.Accounts.Management
                 var isPswdChanged = await TryDoPasswordWorkAsync(modUser.ID.Value, NewPassword);
                 if (!isPswdChanged)
                 {
+                    await CoreFactory.Singleton.Logging.CreateErrorLogAsync("BB36362F-0415-485F-B89D-A1D9CB920C8B");
                     return AcctPswdResultCode.UnknownError;
                 }
 
@@ -651,6 +646,7 @@ namespace UHub.CoreLib.Security.Accounts.Management
                     var versionResult = await TryUpdateUserVersionAsync(modUser.ID.Value);
                     if (!versionResult)
                     {
+                        await CoreFactory.Singleton.Logging.CreateErrorLogAsync("3069253E-2B22-4B00-B9AA-2DBA12CADF6D");
                         return AcctPswdResultCode.UnknownError;
                     }
 
