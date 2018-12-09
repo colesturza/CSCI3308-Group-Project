@@ -328,6 +328,7 @@
                     self.postTime = pstData.CreatedDate;
                     self.createdBy = pstData.CreatedBy;
                     self.modifiedDate = pstData.ModifiedDate;
+                    self.postCreater = pstData.Username;
 
 
                     $("#post-container").style('display', null);
@@ -385,20 +386,6 @@
 
                         })
                         //-->/uhubapi/schoolclubs/GetByID
-                        .fail(function (jqAjax, errorText) {
-                            alert("Error" + errorText);
-                        });
-
-                    //Get poster info
-                    $.ajax({
-                        method: "POST",
-                        url: "/uhubapi/users/GetByID?UserID=" + pstData.CreatedBy
-                    })
-                        //-->/uhubapi/users/GetByID
-                        .done(function (userData) {
-                            self.postCreater = userData.Username;
-                        })
-                        //-->/uhubapi/users/GetByID
                         .fail(function (jqAjax, errorText) {
                             alert("Error" + errorText);
                         });

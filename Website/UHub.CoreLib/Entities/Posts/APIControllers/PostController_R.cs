@@ -17,6 +17,8 @@ using UHub.CoreLib.Management;
 using UHub.CoreLib.Tools;
 using UHub.CoreLib.Security;
 using UHub.CoreLib.Entities.Posts.Management;
+using System.Dynamic;
+using UHub.CoreLib.Entities.Users.DataInterop;
 
 namespace UHub.CoreLib.Entities.Posts.APIControllers
 {
@@ -41,6 +43,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
                 return NotFound();
             }
 
+            var taskPostCreateUser = UserReader.GetUserAsync(postInternal.CreatedBy);
             var parentID = postInternal.ParentID;
             var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser().CmsUser;
 
@@ -49,7 +52,6 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             var taskPostClub = SchoolClubReader.TryGetClubAsync(parentID);
             var taskIsUserBanned = SchoolClubReader.TryIsUserBannedAsync(parentID, cmsUser.ID.Value);
             var taskIsUserMember = SchoolClubReader.TryValidateMembershipAsync(parentID, cmsUser.ID.Value);
-
 
 
             var postPublic = postInternal.ToDto<Post_R_PublicDTO>();
@@ -78,11 +80,40 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
 
 
                 var IsUserMember = await taskIsUserMember;
+
+
+                
+
+
                 //check for member status
                 if (IsUserMember || postInternal.IsPublic)
                 {
-                    await PostManager.TryIncrementViewCountAsync(PostID, cmsUser.ID.Value);
-                    return Ok(postPublic);
+                    var taskIncrementCount = PostManager.TryIncrementViewCountAsync(PostID, cmsUser.ID.Value);
+                    var postCreateUser = await taskPostCreateUser;
+
+
+                    var postPublicWithUser = new
+                    {
+                        postPublic.ID,
+                        postPublic.IsReadOnly,
+                        postPublic.Name,
+                        postPublic.Content,
+                        postPublic.IsModified,
+                        postPublic.ViewCount,
+                        postPublic.IsLocked,
+                        postPublic.CanComment,
+                        postPublic.IsPublic,
+                        postPublic.ParentID,
+                        postPublic.CreatedBy,
+                        postPublic.CreatedDate,
+                        postPublic.ModifiedBy,
+                        postPublic.ModifiedDate,
+                        postCreateUser.Username
+                    };
+
+
+                    await taskIncrementCount;
+                    return Ok(postPublicWithUser);
                 }
                 else
                 {
@@ -98,8 +129,34 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
                 return NotFound();
             }
 
-            await PostManager.TryIncrementViewCountAsync(postInternal.ID.Value, cmsUser.ID.Value);
-            return Ok(postPublic);
+
+            var taskIncrementCountOuter = PostManager.TryIncrementViewCountAsync(PostID, cmsUser.ID.Value);
+            var postCreateUserOuter = await taskPostCreateUser;
+
+
+
+            var postPublicWithUserOuter = new
+            {
+                postPublic.ID,
+                postPublic.IsReadOnly,
+                postPublic.Name,
+                postPublic.Content,
+                postPublic.IsModified,
+                postPublic.ViewCount,
+                postPublic.IsLocked,
+                postPublic.CanComment,
+                postPublic.IsPublic,
+                postPublic.ParentID,
+                postPublic.CreatedBy,
+                postPublic.CreatedDate,
+                postPublic.ModifiedBy,
+                postPublic.ModifiedDate,
+                postCreateUserOuter.Username
+            };
+
+
+            await taskIncrementCountOuter;
+            return Ok(postPublicWithUserOuter);
         }
 
 
