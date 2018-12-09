@@ -24,7 +24,7 @@
             <input type="checkbox" id="chk_CanComment" v-model="postCanComment" />
             <p></p>
 
-            Post By [<a v-bind:href="'/Account/find/' + createdBy">{{postCreater}}</a>]
+            Posted By [<a v-bind:href="'/Account/find/' + createdBy">{{postCreater}}</a>]
             <template v-if="dateCreatedFromNow != null">
                 <span>{{dateCreatedFromNow}}</span>
             </template>
