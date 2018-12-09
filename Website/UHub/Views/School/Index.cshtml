@@ -17,8 +17,9 @@
             <li class="list-group-item mb-3" v-for="post in posts" :key="post.ID">
                 <div class="shadowBox"></div>
                 <template v-if="post.ID != undefined">
-                    <a v-bind:href="'/SchoolClub/' + post.ParentID">{{post.ClubName}}</a>
+                    <span><a v-bind:href="'/SchoolClub/' + post.ParentID">{{post.ClubName}}</a></span>
                     • Posted by <span>[<a v-bind:href="'/Account/find/' + post.CreatedBy">{{post.Username}}</a>]</span>
+                    <span>{{post.dateCreatedFromNow}}</span>
                     <p></p>
                     <a v-bind:href="'/Post/' + post.ID">
                         <h3>{{ post.Name }}</h3>
