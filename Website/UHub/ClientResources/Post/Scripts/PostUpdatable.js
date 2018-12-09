@@ -378,7 +378,7 @@
                         jsonPostDataOld = JSON.stringify(getPostUpdateData());
                     }, 1);
                     self.postCanComment = pstData.CanComment;
-                    self.postTime = moment(pstData.CreatedDate).format("YYYY-MM-DD HH:mm");
+                    self.postTime = moment(pstData.CreatedDate).local().format("YYYY-MM-DD HH:mm");
                     self.createdBy = pstData.CreatedBy;
                     self.modifiedDate = pstData.ModifiedDate;
                     self.postCreater = pstData.Username;
@@ -407,7 +407,7 @@
                             .done(function (cmtData) {
                                 rawCommentSet = cmtData;
                                 rawCommentSet.forEach(comment => {
-                                    comment.postTime = moment(comment.CreatedDate).format("YYYY-MM-DD HH:mm");
+                                    comment.postTime = moment(comment.CreatedDate).local().format("YYYY-MM-DD HH:mm");
 
                                     var cmtTimeMoment = moment(comment.CreatedDate);
                                     var now = moment();
