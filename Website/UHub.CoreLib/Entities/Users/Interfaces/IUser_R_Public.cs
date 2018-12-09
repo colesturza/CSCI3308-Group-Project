@@ -12,7 +12,7 @@ namespace UHub.CoreLib.Entities.Users.Interfaces
     /// </summary>
     public interface IUser_R_Public
     {
-        
+        long? ID { get; set; }
         string Username { get; }
         string Major { get; set; }
         string Year { get; set; }

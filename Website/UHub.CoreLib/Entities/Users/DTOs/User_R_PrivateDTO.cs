@@ -13,6 +13,7 @@ namespace UHub.CoreLib.Entities.Users.DTOs
     [DtoClass(typeof(User))]
     public sealed partial class User_R_PrivateDTO : DtoEntityBase, IUser_R_Private
     {
+        public long? ID { get; set; }
         public string Email { get; set; }
         public string Name { get; set; }
         public string PhoneNumber { get; set; }
