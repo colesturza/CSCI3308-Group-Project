@@ -1,4 +1,4 @@
-﻿create proc Users_GetBySchoolID
+﻿CREATE proc [dbo].[Users_GetBySchoolID]
 
 	@SchoolID bigint
 
@@ -40,6 +40,7 @@ inner join EntChildXRef ecx
 on
 	ecx.ChildEntID = vu.ID
 	and ParentEntType = 2		--SCHOOL TYPE [2]
+	and ParentEntID = @SchoolID
 
 
 end
