@@ -28,16 +28,15 @@
 
                     if (data.length > 0) {
 
-                        for (var i = 0; i < data.length; i++) {
-                            data[i].Content = mdConverter.makeHtml(data[i].Content);
-                            data[i].dateCreatedFromNow = moment(data[i].CreatedDate).fromNow();
-                        }
                         data.sort(dynamicSort("-CreatedDate"));
-
 
                         //set parentName
                         var clubSet = $("#navbarDropdownMenu a.dropdown-item");
                         for (var i = 0; i < data.length; i++) {
+                            data[i].Content = mdConverter.makeHtml(data[i].Content);
+                            data[i].dateCreatedFromNow = moment(data[i].CreatedDate).fromNow();
+
+
                             for (var j = 0; j < clubSet.length; j++) {
                                 if (data[i].ParentID == $(clubSet[j]).attr("data-clubID")) {
                                     data[i].ClubName = $(clubSet[j]).text();
