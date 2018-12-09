@@ -197,7 +197,7 @@ namespace UHub.Controllers
             var idStr = idObj.ToString();
 
 
-            if(idStr.ToLower() == "new")
+            if (idStr.ToLower() == "new")
             {
                 ViewBag.Message = "Your new account has been created, please check your email and follow the confirmation instructions";
                 return View();
@@ -232,40 +232,49 @@ namespace UHub.Controllers
         [MvcAuthControl]
         public async Task<ActionResult> UpdatePassword(string txt_CurrentPswd, string txt_NewPswd, string txt_ConfirmPswd, bool chk_DeviceLogout = false)
         {
-            var context = System.Web.HttpContext.Current;
-            if (CoreFactory.Singleton.Properties.EnableRecaptcha)
+            try
             {
-                var isCaptchaValid = await CoreFactory.Singleton.Recaptcha.IsCaptchaValidAsync(context);
-                if (!isCaptchaValid)
+
+
+                var context = System.Web.HttpContext.Current;
+                if (CoreFactory.Singleton.Properties.EnableRecaptcha)
                 {
-                    ViewBag.Message = "Captcha is not valid";
+                    var isCaptchaValid = await CoreFactory.Singleton.Recaptcha.IsCaptchaValidAsync(context);
+                    if (!isCaptchaValid)
+                    {
+                        ViewBag.Message = "Captcha is not valid";
+                        return View();
+                    }
+                }
+
+
+                if (txt_NewPswd != txt_ConfirmPswd)
+                {
+                    ViewBag.Message = "Passwords must match";
                     return View();
                 }
-            }
 
 
-            if (txt_NewPswd != txt_ConfirmPswd)
-            {
-                ViewBag.Message = "Passwords must match";
+                var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser().CmsUser;
+
+                var result = await CoreFactory.Singleton.Accounts.TryUpdatePasswordAsync(
+                    cmsUser.ID.Value,
+                    txt_CurrentPswd,
+                    txt_NewPswd,
+                    chk_DeviceLogout,
+                    context);
+
+
+                ViewBag.Message = result.ToString();
+
+                ViewBag.CanForward = (result == 0);
+
                 return View();
             }
-
-
-            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser().CmsUser;
-
-            var result = await CoreFactory.Singleton.Accounts.TryUpdatePasswordAsync(
-                cmsUser.ID.Value,
-                txt_CurrentPswd,
-                txt_NewPswd,
-                chk_DeviceLogout,
-                context);
-
-
-            ViewBag.Message = result.ToString();
-
-            ViewBag.CanForward = (result == 0);
-
-            return View();
+            catch(Exception ex)
+            {
+                CoreFactory.Singleton.Logging.CreateErrorLog("7E6943EB-4A3E-48FB-9763-CC08179288E6", ex);
+            }
         }
 
 
