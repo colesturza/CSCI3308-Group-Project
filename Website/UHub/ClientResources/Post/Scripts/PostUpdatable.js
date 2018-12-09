@@ -155,6 +155,7 @@
 
         if (!postRawData.CanComment) {
             $("[data-reply=reply]").style('display', 'none', 'important');
+            return;
         }
 
         var cmtInterval = window.setInterval(function () {
