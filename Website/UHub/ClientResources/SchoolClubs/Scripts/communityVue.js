@@ -17,7 +17,10 @@
 
                 <template v-if="post.ID != undefined" >
                     Posted by <span>[<a v-bind:href="'/Account/find/' + post.CreatedBy">{{post.Username}}</a>]</span>
-                    <span>{{post.dateCreatedFromNow}}</span>
+                    <template v-if="post.dateCreatedFromNow != null">
+                        <span>{{post.dateCreatedFromNow}}</span>
+                    </template>
+                    <span v-else>{{post.postTime}}</span>
                     <p></p>
                     <a v-bind:href="'/Post/' + post.ID">
                         <h3> {{ post.Name }} </h3>
