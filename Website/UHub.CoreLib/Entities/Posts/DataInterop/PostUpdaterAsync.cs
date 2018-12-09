@@ -91,7 +91,7 @@ namespace UHub.CoreLib.Entities.Posts.DataInterop
 
             return await SqlWorker.ExecScalarAsync<bool>(
                 _dbConn,
-                "[dbo].[Post_TryCreateUserLike]",
+                "[dbo].[Post_CreateUserLike]",
                 (cmd) =>
                 {
                     cmd.Parameters.Add("@PostID", SqlDbType.BigInt).Value = PostID;

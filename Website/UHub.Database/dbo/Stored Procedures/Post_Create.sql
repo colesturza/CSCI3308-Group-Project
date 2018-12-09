@@ -209,6 +209,11 @@ begin
 			@ModifiedDate = @CreatedDate,
 			@IsNewRecord = @_isNew
 
+
+		exec dbo.Post_CreateUserLike
+			@PostID = @_entID,
+			@UserID = @CreatedBy
+
 		select @_entID
 
 		COMMIT TRAN
