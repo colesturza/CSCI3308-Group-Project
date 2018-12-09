@@ -232,50 +232,43 @@ namespace UHub.Controllers
         [MvcAuthControl]
         public async Task<ActionResult> UpdatePassword(string txt_CurrentPswd, string txt_NewPswd, string txt_ConfirmPswd, bool chk_DeviceLogout = false)
         {
-            try
+            ViewBag.CanForward = false;
+
+
+            var context = System.Web.HttpContext.Current;
+            if (CoreFactory.Singleton.Properties.EnableRecaptcha)
             {
-
-
-                var context = System.Web.HttpContext.Current;
-                if (CoreFactory.Singleton.Properties.EnableRecaptcha)
+                var isCaptchaValid = await CoreFactory.Singleton.Recaptcha.IsCaptchaValidAsync(context);
+                if (!isCaptchaValid)
                 {
-                    var isCaptchaValid = await CoreFactory.Singleton.Recaptcha.IsCaptchaValidAsync(context);
-                    if (!isCaptchaValid)
-                    {
-                        ViewBag.Message = "Captcha is not valid";
-                        return View();
-                    }
-                }
-
-
-                if (txt_NewPswd != txt_ConfirmPswd)
-                {
-                    ViewBag.Message = "Passwords must match";
+                    ViewBag.Message = "Captcha is not valid";
                     return View();
                 }
-
-
-                var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser().CmsUser;
-
-                var result = await CoreFactory.Singleton.Accounts.TryUpdatePasswordAsync(
-                    cmsUser.ID.Value,
-                    txt_CurrentPswd,
-                    txt_NewPswd,
-                    chk_DeviceLogout,
-                    context);
-
-
-                ViewBag.Message = result.ToString();
-
-                ViewBag.CanForward = (result == 0);
-
-                return View();
             }
-            catch(Exception ex)
+
+
+            if (txt_NewPswd != txt_ConfirmPswd)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLog("7E6943EB-4A3E-48FB-9763-CC08179288E6", ex);
+                ViewBag.Message = "Passwords must match";
                 return View();
             }
+
+
+            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser().CmsUser;
+
+            var result = await CoreFactory.Singleton.Accounts.TryUpdatePasswordAsync(
+                cmsUser.ID.Value,
+                txt_CurrentPswd,
+                txt_NewPswd,
+                chk_DeviceLogout,
+                context);
+
+
+            ViewBag.CanForward = (result == 0);
+            ViewBag.Message = result.ToString();
+
+            return View();
+
         }
 
 
@@ -372,6 +365,8 @@ namespace UHub.Controllers
         {
             var idObj = Url.RequestContext.RouteData.Values["id"];
             var recoveryID = idObj?.ToString() ?? "";
+            ViewBag.CanForward = false;
+
 
             if (recoveryID.IsEmpty() || recoveryID.Length > 200)
             {
@@ -398,7 +393,7 @@ namespace UHub.Controllers
                 var isCaptchaValid = await CoreFactory.Singleton.Recaptcha.IsCaptchaValidAsync(context);
                 if (!isCaptchaValid)
                 {
-                    ViewBag.ErrorMsg = "Captcha is not valid";
+                    ViewBag.Message = "Captcha is not valid";
                     return View();
                 }
             }
@@ -413,9 +408,8 @@ namespace UHub.Controllers
                 context);
 
 
-            ViewBag.Message = result.ToString();
-
             ViewBag.CanForward = (result == 0);
+            ViewBag.Message = result.ToString();
 
 
             return View();

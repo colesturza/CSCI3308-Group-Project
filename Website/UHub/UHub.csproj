@@ -190,6 +190,7 @@
     <Content Include="ClientResources\Account\Scripts\AccountDetails.js" />
     <Content Include="ClientResources\Account\Scripts\Login.js" />
     <Content Include="ClientResources\Account\Scripts\MyAccount.js" />
+    <Content Include="ClientResources\Account\Scripts\Update.js" />
     <Content Include="ClientResources\Account\Scripts\Recover.js" />
     <Content Include="ClientResources\Account\Styles\CreateAccount.css" />
     <Content Include="ClientResources\Imgs\like.svg" />
