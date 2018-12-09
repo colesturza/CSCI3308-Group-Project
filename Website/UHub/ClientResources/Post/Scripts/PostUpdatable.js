@@ -28,6 +28,7 @@
 
     function getPostUpdateData() {
         postRawData.Content = simplemde.value();
+        postRawData.CanComment = $("#chk_CanComment")[0].checked;
 
         return {
             ID: postRawData.ID,
@@ -266,6 +267,7 @@
             createdBy: "",
             title: "",
             content: "",
+            postCanComment: false,
             postTime: "",
             modifiedDate: "",
             comments: []
@@ -346,6 +348,7 @@
                         oldResponseErr = 'Nothing to Update';
                         jsonPostDataOld = JSON.stringify(getPostUpdateData());
                     }, 1);
+                    self.postCanComment = pstData.CanComment;
                     self.postTime = pstData.CreatedDate;
                     self.createdBy = pstData.CreatedBy;
                     self.modifiedDate = pstData.ModifiedDate;
