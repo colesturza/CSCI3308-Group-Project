@@ -22,7 +22,7 @@
                 <li>
                 <li class="nav-item">
                     <div class="text-center">
-                        <a :href="createURL" id="btn_HeaderCreatePost" class="btn btn-secondary acctLnk" style="padding:3px;margin:5px 0 0 0">Create Post</a>
+                        <a :href="createURL" id="btn_HeaderCreatePost" class="btn btn-secondary acctLnk" style="padding:3px;margin:5px 0 5px 0">Create Post</a>
                     </div>
                 </li>
             </ul>
