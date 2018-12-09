@@ -167,6 +167,24 @@ namespace UHub.CoreLib.Entities.Posts.Management
 
             return PostResultCode.Success;
         }
+
+
+        public static bool? TryCreateUserLike(long PostID, long UserID)
+        {
+
+            bool? val = null;
+            try
+            {
+                val = PostWriter.CreateUserLike(PostID, UserID);
+            }
+            catch (Exception ex)
+            {
+                CoreFactory.Singleton.Logging.CreateErrorLog("76A086E9-7C41-4464-8607-ED2EBE178FC5", ex);
+            }
+
+
+            return val;
+        }
     }
 
 #pragma warning restore

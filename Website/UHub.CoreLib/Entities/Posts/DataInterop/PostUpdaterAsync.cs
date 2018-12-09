@@ -16,39 +16,6 @@ namespace UHub.CoreLib.Entities.Posts.DataInterop
     {
 
         /// <summary>
-        /// Attempts to create a new CMS post in the database and returns the PostID if successful
-        /// </summary>
-        /// <param name="cmsPost"></param>
-        /// <returns></returns>
-        internal static async Task<long?> CreatePostAsync(Post cmsPost)
-        {
-            if (!CoreFactory.Singleton.IsEnabled)
-            {
-                throw new SystemDisabledException();
-            }
-
-
-            long? PostID = await SqlWorker.ExecScalarAsync<long?>(
-                _dbConn,
-                "[dbo].[Post_Create]",
-                (cmd) =>
-                {
-                    cmd.Parameters.Add("@Name", SqlDbType.NVarChar).Value = HandleParamEmpty(cmsPost.Name);
-                    cmd.Parameters.Add("@Content", SqlDbType.NVarChar).Value = HandleParamEmpty(cmsPost.Content);
-                    cmd.Parameters.Add("@IsLocked", SqlDbType.Bit).Value = HandleParamEmpty(cmsPost.IsLocked);
-                    cmd.Parameters.Add("@CanComment", SqlDbType.Bit).Value = HandleParamEmpty(cmsPost.CanComment);
-                    cmd.Parameters.Add("@IsPublic", SqlDbType.Bit).Value = HandleParamEmpty(cmsPost.IsPublic);
-                    cmd.Parameters.Add("@ParentID", SqlDbType.BigInt).Value = HandleParamEmpty(cmsPost.ParentID);
-                    cmd.Parameters.Add("@CreatedBy", SqlDbType.BigInt).Value = HandleParamEmpty(cmsPost.CreatedBy);
-                    cmd.Parameters.Add("@IsReadonly", SqlDbType.Bit).Value = HandleParamEmpty(cmsPost.IsReadOnly);
-                });
-
-
-            return PostID;
-        }
-
-
-        /// <summary>
         /// Attempts to increment the viewcount of specified post
         /// </summary>
         /// <param name="cmsPost"></param>
@@ -102,6 +69,33 @@ namespace UHub.CoreLib.Entities.Posts.DataInterop
                     cmd.Parameters.Add("@CanComment", SqlDbType.Bit).Value = HandleParamEmpty(cmsPost.CanComment);
                     cmd.Parameters.Add("@IsPublic", SqlDbType.Bit).Value = HandleParamEmpty(cmsPost.IsPublic);
                     cmd.Parameters.Add("@ModifiedBy", SqlDbType.BigInt).Value = HandleParamEmpty(cmsPost.ModifiedBy);
+
+                });
+
+        }
+
+
+        /// <summary>
+        /// Attempt to create a "like" relationship from a User to a Post
+        /// </summary>
+        /// <param name="PostID"></param>
+        /// <param name="UserID"></param>
+        internal static async Task<bool> CreateUserLikeAsync(long PostID, long UserID)
+        {
+
+            if (!CoreFactory.Singleton.IsEnabled)
+            {
+                throw new SystemDisabledException();
+            }
+
+
+            return await SqlWorker.ExecScalarAsync<bool>(
+                _dbConn,
+                "[dbo].[Post_TryCreateUserLike]",
+                (cmd) =>
+                {
+                    cmd.Parameters.Add("@PostID", SqlDbType.BigInt).Value = PostID;
+                    cmd.Parameters.Add("@UserID", SqlDbType.BigInt).Value = UserID;
 
                 });
 

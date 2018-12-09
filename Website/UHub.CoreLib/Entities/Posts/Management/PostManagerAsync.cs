@@ -162,6 +162,27 @@ namespace UHub.CoreLib.Entities.Posts.Management
 
             return PostResultCode.Success;
         }
+
+
+
+        public static async Task<bool?> TryCreateUserLikeAsync(long PostID, long UserID)
+        {
+
+            bool? val = null;
+            try
+            {
+                val = await PostWriter.CreateUserLikeAsync(PostID, UserID);
+            }
+            catch (Exception ex)
+            {
+                CoreFactory.Singleton.Logging.CreateErrorLog("36CF1120-C6C2-4499-B9EF-203F87645CD6", ex);
+            }
+
+
+            return val;
+        }
+
+
     }
 
 #pragma warning restore

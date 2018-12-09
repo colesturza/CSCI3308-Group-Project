@@ -133,5 +133,113 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
 
         }
 
+
+
+        [HttpPost()]
+        [Route("CreateLike")]
+        [ApiAuthControl]
+        public async Task<IHttpActionResult> CreateLike(long PostID)
+        {
+            string status = "";
+            HttpStatusCode statCode = HttpStatusCode.BadRequest;
+            if (!this.ValidateSystemState(out status, out statCode))
+            {
+                return Content(statCode, status);
+            }
+
+
+            var postInternal = await PostReader.TryGetPostAsync(PostID);
+            if (postInternal == null)
+            {
+                return NotFound();
+            }
+
+            var taskPostCreateUser = UserReader.GetUserAsync(postInternal.CreatedBy);
+            var parentID = postInternal.ParentID;
+            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser().CmsUser;
+
+
+
+            var taskPostClub = SchoolClubReader.TryGetClubAsync(parentID);
+            var taskIsUserBanned = SchoolClubReader.TryIsUserBannedAsync(parentID, cmsUser.ID.Value);
+            var taskIsUserMember = SchoolClubReader.TryValidateMembershipAsync(parentID, cmsUser.ID.Value);
+
+
+
+            var postClub = await taskPostClub;
+            if (postClub != null)
+            {
+                //verify same school
+                if (postClub.SchoolID != cmsUser.SchoolID)
+                {
+                    return NotFound();
+                }
+
+                var IsUserBanned = await taskIsUserBanned;
+                //ensure not banned
+                if (IsUserBanned)
+                {
+                    return Content(HttpStatusCode.Forbidden, "Access Denied");
+                }
+
+
+                var IsUserMember = await taskIsUserMember;
+
+                //check for member status
+                if (IsUserMember || postInternal.IsPublic)
+                {
+                    var stat = await PostManager.TryCreateUserLikeAsync(PostID, cmsUser.ID.Value);
+                    if (stat == true)
+                    {
+                        return Ok();
+                    }
+                    else if (stat == false)
+                    {
+                        return BadRequest();
+                    }
+                    else
+                    {
+                        return InternalServerError();
+                    }
+                }
+                else
+                {
+                    return Content(HttpStatusCode.Forbidden, "Access Denied");
+                }
+            }
+            else
+            {
+
+
+                // This is what happens if the parent is a school.
+                //verify same school
+                if (postInternal.ParentID != cmsUser.SchoolID)
+                {
+                    return NotFound();
+                }
+
+
+                var stat = await PostManager.TryCreateUserLikeAsync(PostID, cmsUser.ID.Value);
+                if (stat == true)
+                {
+                    return Ok();
+                }
+                else if (stat == false)
+                {
+                    return BadRequest();
+                }
+                else
+                {
+                    return InternalServerError();
+                }
+
+
+
+            }
+
+        }
+
+
+
     }
 }

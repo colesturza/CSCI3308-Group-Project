@@ -43,6 +43,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
                 return NotFound();
             }
 
+            var taskLikeCount = PostReader.TryGetUserLikeCountAsync(PostID);
             var taskPostCreateUser = UserReader.GetUserAsync(postInternal.CreatedBy);
             var parentID = postInternal.ParentID;
             var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser().CmsUser;
@@ -82,7 +83,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
                 var IsUserMember = await taskIsUserMember;
 
 
-                
+
 
 
                 //check for member status
@@ -90,7 +91,7 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
                 {
                     var taskIncrementCount = PostManager.TryIncrementViewCountAsync(PostID, cmsUser.ID.Value);
                     var postCreateUser = await taskPostCreateUser;
-
+                    var LikeCount = await taskLikeCount;
 
                     var postPublicWithUser = new
                     {
@@ -108,7 +109,8 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
                         postPublic.CreatedDate,
                         postPublic.ModifiedBy,
                         postPublic.ModifiedDate,
-                        postCreateUser.Username
+                        postCreateUser.Username,
+                        LikeCount
                     };
 
 
@@ -120,43 +122,46 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
                     return Content(HttpStatusCode.Forbidden, "Access Denied");
                 }
             }
-
-
-            // This is what happens if the parent is a school.
-            //verify same school
-            if (postInternal.ParentID != cmsUser.SchoolID)
+            else
             {
-                return NotFound();
+
+                // This is what happens if the parent is a school.
+                //verify same school
+                if (postInternal.ParentID != cmsUser.SchoolID)
+                {
+                    return NotFound();
+                }
+
+
+                var taskIncrementCount = PostManager.TryIncrementViewCountAsync(PostID, cmsUser.ID.Value);
+                var postCreateUser = await taskPostCreateUser;
+                var LikeCount = await taskLikeCount;
+
+
+                var postPublicWithUser = new
+                {
+                    postPublic.ID,
+                    postPublic.IsReadOnly,
+                    postPublic.Name,
+                    postPublic.Content,
+                    postPublic.IsModified,
+                    postPublic.ViewCount,
+                    postPublic.IsLocked,
+                    postPublic.CanComment,
+                    postPublic.IsPublic,
+                    postPublic.ParentID,
+                    postPublic.CreatedBy,
+                    postPublic.CreatedDate,
+                    postPublic.ModifiedBy,
+                    postPublic.ModifiedDate,
+                    postCreateUser.Username,
+                    LikeCount
+                };
+
+
+                await taskIncrementCount;
+                return Ok(postPublicWithUser);
             }
-
-
-            var taskIncrementCountOuter = PostManager.TryIncrementViewCountAsync(PostID, cmsUser.ID.Value);
-            var postCreateUserOuter = await taskPostCreateUser;
-
-
-
-            var postPublicWithUserOuter = new
-            {
-                postPublic.ID,
-                postPublic.IsReadOnly,
-                postPublic.Name,
-                postPublic.Content,
-                postPublic.IsModified,
-                postPublic.ViewCount,
-                postPublic.IsLocked,
-                postPublic.CanComment,
-                postPublic.IsPublic,
-                postPublic.ParentID,
-                postPublic.CreatedBy,
-                postPublic.CreatedDate,
-                postPublic.ModifiedBy,
-                postPublic.ModifiedDate,
-                postCreateUserOuter.Username
-            };
-
-
-            await taskIncrementCountOuter;
-            return Ok(postPublicWithUserOuter);
         }
 
 

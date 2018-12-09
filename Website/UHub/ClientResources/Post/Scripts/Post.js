@@ -1,5 +1,6 @@
 ﻿(function () {
 
+    var hasLiked = false;
     var vueInstance;
     var postRawData;
     var rawCommentSet = []
@@ -253,6 +254,7 @@
             postTime: "",
             modifiedDate: "",
             dateCreatedFromNow: null,
+            likeCount: 0,
             comments: []
         },
         methods: {
@@ -261,6 +263,23 @@
             },
             postReply: function () {
                 $("#post-reply").toggle();
+            },
+            postLike: function () {
+                var self = this;
+
+
+                if (!hasLiked) {
+
+                    $.ajax({
+                        method: "POST",
+                        url: "/uhubapi/posts/CreateLike?PostID=" + encodeURIComponent(postID)
+                    })
+                        .done(function () {
+                            hasLiked = true;
+                            self.likeCount++;
+                        });
+                }
+
             },
             submitCommentPost: function () {
 
@@ -327,6 +346,8 @@
                     self.createdBy = pstData.CreatedBy;
                     self.modifiedDate = pstData.ModifiedDate;
                     self.postCreater = pstData.Username;
+                    self.likeCount = pstData.LikeCount;
+
 
                     var postTimeMoment = moment(self.postTime);
                     var now = moment();
