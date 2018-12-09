@@ -274,6 +274,7 @@ namespace UHub.Controllers
             catch(Exception ex)
             {
                 CoreFactory.Singleton.Logging.CreateErrorLog("7E6943EB-4A3E-48FB-9763-CC08179288E6", ex);
+                return View();
             }
         }
 
