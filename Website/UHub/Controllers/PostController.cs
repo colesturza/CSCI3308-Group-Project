@@ -14,7 +14,7 @@ namespace UHub.Controllers
         const string POST_PREVIEW_POSTFIX = "preview";
 
 
-
+        [System.Web.Mvc.HttpGet]
         [MvcAuthControl]
         public async Task<ActionResult> Index()
         {
@@ -61,6 +61,7 @@ namespace UHub.Controllers
         }
 
 
+        [System.Web.Mvc.HttpGet]
         [MvcAuthControl]
         public async Task<ActionResult> History()
         {

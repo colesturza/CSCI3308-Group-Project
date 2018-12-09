@@ -4,6 +4,8 @@
     var postRawData;
     var jsonPostDataOld = null;
     var oldResponseErr = null;
+    var rawCommentSet = [];
+    var currentUser = null;
 
 
     var postID = encodeURIComponent(window.location.href.split('/').slice(-1)[0]);
@@ -13,7 +15,6 @@
     var mdConverter = new showdown.Converter();
     setShowdownDefaults(mdConverter);
 
-    var rawCommentSet = []
 
 
     function getTodayDateStr() {
@@ -176,7 +177,8 @@
             '            <div class="container-fluid">' +
             '                <div>' +
             '                    <span class="m-2 mr-0" style="margin-right:0 !important">Posted by</span>' +
-            '                    [<a v-bind:href="\'/Account/find/\' + comment.CreatedBy">{{ comment.Username }}</a>]' +
+            '                    <span v-if="comment.CreatedBy > 0">[<a v-bind:href="\'/Account/find/\' + comment.CreatedBy">{{ comment.Username }}</a>]</span>' +
+            '                    <span v-else>[<a href="/Account">{{ comment.Username }}</a>]</span>' +
             '                    <span> • {{ comment.CreatedDate.toString().substring(0,10) }}</span>' +
             '                </div>' +
             '                <div class="border border-dark rounded m-2 py-2">' +
@@ -222,10 +224,20 @@
 
                         var dtStr = getTodayDateStr();
 
+
+                        var newCommentCreatorID = -1;
+                        var newCommentCreatorName = "me";
+                        if (currentUser != null) {
+                            newCommentCreatorID = currentUser.ID;
+                            newCommentCreatorName = currentUser.Username;
+                        }
+
+
                         var newCmt = {
                             ID: data,
                             ParentID: formData.ParentID,
-                            CreatedBy: "me",
+                            CreatedBy: newCommentCreatorID,
+                            Username: newCommentCreatorName,
                             CreatedDate: dtStr,
                             Content: formData.Content,
                             IsEnabled: true
@@ -284,10 +296,19 @@
 
                         var dtStr = getTodayDateStr();
 
+                        var newCommentCreatorID = -1;
+                        var newCommentCreatorName = "me";
+                        if (currentUser != null) {
+                            newCommentCreatorID = currentUser.ID;
+                            newCommentCreatorName = currentUser.Username;
+                        }
+
+
                         var newCmt = {
                             ID: data,
                             ParentID: formData.ParentID,
-                            CreatedBy: "me",
+                            CreatedBy: newCommentCreatorID,
+                            Username: newCommentCreatorName,
                             CreatedDate: dtStr,
                             Content: formData.Content,
                             IsEnabled: true
@@ -389,6 +410,17 @@
                         .fail(function (jqAjax, errorText) {
                             alert("Error" + errorText);
                         });
+
+
+                    //get current user
+                    $.ajax({
+                        method: "POST",
+                        url: "/uhubapi/Users/GetMe"
+                    })
+                        .done(function (data) {
+                            currentUser = data;
+                        });
+
 
                 })
                 ///AJAX -> uhubapi/posts/GetByID

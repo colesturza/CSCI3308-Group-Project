@@ -9,6 +9,7 @@ namespace UHub.Controllers
 {
     public class SchoolClubController : Controller
     {
+        [System.Web.Mvc.HttpGet]
         [MvcAuthControl]
         public ActionResult Index()
         {
@@ -26,6 +27,7 @@ namespace UHub.Controllers
         }
 
 
+        [System.Web.Mvc.HttpGet]
         [MvcAuthControl]
         public ActionResult About()
         {
@@ -43,7 +45,8 @@ namespace UHub.Controllers
         }
 
 
-        [MvcAuthControl]
+        [System.Web.Mvc.HttpGet]
+        [MvcAuthControl(RequireAdmin = true)]
         public ActionResult ModEdit()
         {
             var idObj = Url.RequestContext.RouteData.Values["id"];
@@ -60,6 +63,7 @@ namespace UHub.Controllers
         }
 
 
+        [System.Web.Mvc.HttpGet]
         [MvcAuthControl]
         public ActionResult CreatePost()
         {

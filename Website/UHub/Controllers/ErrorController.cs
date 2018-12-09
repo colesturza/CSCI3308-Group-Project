@@ -26,6 +26,7 @@ namespace UHub.Controllers
 
 
         // GET: Error
+        [System.Web.Mvc.HttpGet]
         public ActionResult Index()
         {
             Response.TrySkipIisCustomErrors = true;
@@ -103,6 +104,7 @@ namespace UHub.Controllers
 
 
 
+        [System.Web.Mvc.HttpGet]
         public ActionResult Startup()
         {
             try
