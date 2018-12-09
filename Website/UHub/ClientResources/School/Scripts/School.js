@@ -3,7 +3,7 @@
     setShowdownDefaults(mdConverter);
 
     $.ajax({
-        method: "POST",
+        method: "GET",
         url: "/uhubapi/schools/GetMine"
     })
         .done(function (data) {
