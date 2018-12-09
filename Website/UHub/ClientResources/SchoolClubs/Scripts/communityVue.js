@@ -74,6 +74,7 @@
                 200: function (data) {
 
                     $(navbarDropdownMenuLink).text(data.Name);
+                    $("#club-name").text(data.Name);
 
                     vueClubInfo.community = data;
                 },
