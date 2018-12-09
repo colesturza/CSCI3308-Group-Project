@@ -330,6 +330,7 @@
 
                     var postTimeMoment = moment(self.postTime);
                     var now = moment();
+                    console.log(parseInt(now.diff(postTimeMoment, 'days')));
                     if (parseInt(now.diff(postTimeMoment, 'days')) <= 7) {
                         self.dateCreatedFromNow = postTimeMoment.fromNow();
                     }
@@ -355,6 +356,7 @@
                                 var commentsLen = self.comments.length;
                                 for (var i = 0; i < commentsLen; i++) {
                                     self.comments[i].dateCreatedFromNow = moment(self.comments[i].CreatedDate).fromNow();
+                                    console.log(self.comments[i].dateCreatedFromNow);
                                 }
 
                                 showCommentReply();
