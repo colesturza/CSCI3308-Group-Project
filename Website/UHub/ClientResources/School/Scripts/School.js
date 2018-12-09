@@ -43,8 +43,10 @@
                         for (var i = 0; i < data.length; i++) {
                             data[i].Content = mdConverter.makeHtml(data[i].Content);
 
-                            var postTimeMoment = moment(data[i].CreatedDate);
+                            
                             var now = moment();
+                            var postTimeMoment = moment(data[i].CreatedDate);
+                            data[i].postTime = postTimeMoment.format("YYYY-MM-DD HH:mm");
                             if (parseInt(now.diff(postTimeMoment, 'days')) <= 7) {
                                 data[i].dateCreatedFromNow = postTimeMoment.fromNow();
                             }

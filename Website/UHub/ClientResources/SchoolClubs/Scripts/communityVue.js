@@ -100,7 +100,15 @@
 
                     for (var i = 0; i < formData.length; i++) {
                         formData[i].Content = mdConverter.makeHtml(formData[i].Content);
-                        formData[i].dateCreatedFromNow = moment(formData[i].CreatedDate).fromNow();
+
+
+                        var now = moment();
+                        var postTimeMoment = moment(formData[i].CreatedDate);
+                        data[i].postTime = postTimeMoment.format("YYYY-MM-DD HH:mm");
+                        if (parseInt(now.diff(postTimeMoment, 'days')) <= 7) {
+                            formData[i].dateCreatedFromNow = postTimeMoment.fromNow();
+                        }
+
                     }
                     formData.sort(dynamicSort("-CreatedDate"));
                     vuePostSet.posts = formData;

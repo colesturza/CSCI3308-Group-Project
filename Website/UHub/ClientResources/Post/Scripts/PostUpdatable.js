@@ -15,7 +15,9 @@
     var mdConverter = new showdown.Converter();
     setShowdownDefaults(mdConverter);
 
-
+    function getToday() {
+        return moment().format();
+    }
 
     function getTodayDateStr() {
         var today = new Date();
@@ -185,7 +187,10 @@
             '                    <span class="m-2 mr-0" style="margin-right:0 !important">Posted by</span>' +
             '                    <span v-if="comment.CreatedBy > 0">[<a v-bind:href="\'/Account/find/\' + comment.CreatedBy">{{ comment.Username }}</a>]</span>' +
             '                    <span v-else>[<a href="/Account">{{ comment.Username }}</a>]</span>' +
-            '                    <span>{{comment.dateCreatedFromNow}}</span>' +
+            '                    <template v-if="comment.dateCreatedFromNow != null">' +
+            '                       <span>{{comment.dateCreatedFromNow}}</span>' +
+            '                    </template>' +
+            '                    <span v-else>{{ comment.postTime }}</span>' +
             '                </div>' +
             '                <div class="border border-dark rounded m-2 py-2">' +
             '                    <span class="text-body p-2">' +
@@ -228,7 +233,13 @@
                         $("[data-cmtID=" + formData.ParentID + "]").toggle();
 
 
-                        var dtStr = getTodayDateStr();
+                        var now = moment();
+                        var postTime = now.format("YYYY-MM-DD HH:mm");
+                        var cmtTimeMoment = now;
+                        var fromNow = null;
+                        if (parseInt(now.diff(cmtTimeMoment, 'days')) <= 7) {
+                            fromNow = cmtTimeMoment.fromNow();
+                        }
 
 
                         var newCommentCreatorID = -1;
@@ -244,7 +255,9 @@
                             ParentID: formData.ParentID,
                             CreatedBy: newCommentCreatorID,
                             Username: newCommentCreatorName,
-                            CreatedDate: dtStr,
+                            CreatedDate: getToday(),
+                            postTime: postTime,
+                            dateCreatedFromNow: fromNow,
                             Content: formData.Content,
                             IsEnabled: true
                         };
@@ -303,7 +316,14 @@
                         $("#post-reply textarea").val("");
                         $("#post-reply").toggle();
 
-                        var dtStr = getTodayDateStr();
+
+                        var now = moment();
+                        var postTime = now.format("YYYY-MM-DD HH:mm");
+                        var cmtTimeMoment = now;
+                        var fromNow = null;
+                        if (parseInt(now.diff(cmtTimeMoment, 'days')) <= 7) {
+                            fromNow = cmtTimeMoment.fromNow();
+                        }
 
                         var newCommentCreatorID = -1;
                         var newCommentCreatorName = "me";
@@ -318,7 +338,9 @@
                             ParentID: formData.ParentID,
                             CreatedBy: newCommentCreatorID,
                             Username: newCommentCreatorName,
-                            CreatedDate: dtStr,
+                            CreatedDate: getToday(),
+                            postTime: postTime,
+                            dateCreatedFromNow: fromNow,
                             Content: formData.Content,
                             IsEnabled: true
                         };
@@ -356,14 +378,14 @@
                         jsonPostDataOld = JSON.stringify(getPostUpdateData());
                     }, 1);
                     self.postCanComment = pstData.CanComment;
-                    self.postTime = pstData.CreatedDate;
+                    self.postTime = moment(pstData.CreatedDate).format("YYYY-MM-DD HH:mm");
                     self.createdBy = pstData.CreatedBy;
                     self.modifiedDate = pstData.ModifiedDate;
                     self.postCreater = pstData.Username;
                     self.likeCount = pstData.LikeCount;
 
 
-                    var postTimeMoment = moment(self.postTime);
+                    var postTimeMoment = moment(pstData.CreatedDate);
                     var now = moment();
                     if (parseInt(now.diff(postTimeMoment, 'days')) <= 7) {
                         self.dateCreatedFromNow = postTimeMoment.fromNow();
@@ -385,7 +407,13 @@
                             .done(function (cmtData) {
                                 rawCommentSet = cmtData;
                                 rawCommentSet.forEach(comment => {
-                                    comment.dateCreatedFromNow = moment(comment.CreatedDate).fromNow();
+                                    comment.postTime = moment(comment.CreatedDate).format("YYYY-MM-DD HH:mm");
+
+                                    var cmtTimeMoment = moment(comment.CreatedDate);
+                                    var now = moment();
+                                    if (parseInt(now.diff(cmtTimeMoment, 'days')) <= 7) {
+                                        comment.dateCreatedFromNow = cmtTimeMoment.fromNow();
+                                    }
                                 });
                                 var cmtArrangedList = arrangeCommentTree(rawCommentSet);
                                 //console.log(JSON.parse(JSON.stringify(cmtArrangedList)));
