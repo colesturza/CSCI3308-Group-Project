@@ -7,7 +7,7 @@
         url: "/uhubapi/schools/GetMine"
     })
         .done(function (data) {
-            $("school-name").text(data.Name);
+            $("#school-name").text(data.Name);
         });
 
     new Vue({
