@@ -1,11 +1,11 @@
-﻿CREATE proc Logging_CreateEventLog
+﻿CREATE proc [dbo].[Logging_CreateEventLog]
 
 
 	@EventTypeID smallint,
 	@EventID nvarchar(100),
 	@Content nvarchar(max),
 	@CreatedBy bigint null,
-	@CreatedDate datetimeoffset(7) null
+	@CreatedDate datetimeoffset(7) null = null
 
 as
 begin

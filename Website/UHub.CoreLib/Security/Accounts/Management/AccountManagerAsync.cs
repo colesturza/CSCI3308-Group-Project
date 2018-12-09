@@ -657,7 +657,11 @@ namespace UHub.CoreLib.Security.Accounts.Management
 
                 //remove any recovery contexts
                 var recoverContext = await TryGetActiveRecoveryContextAsync(modUser.ID.Value);
-                await recoverContext?.TryDeleteAsync();
+                if (recoverContext != null)
+                {
+                    await recoverContext.TryDeleteAsync();
+                }
+
 
 
                 return AcctPswdResultCode.Success;
@@ -876,13 +880,21 @@ namespace UHub.CoreLib.Security.Accounts.Management
                 }
                 catch
                 {
-                    await CoreFactory.Singleton.Logging.CreateErrorLogAsync("5F537D00-DB22-4C72-8D52-9FC557BAEED2");
+                    //do nothing
                 }
 
-                //remove any recovery contexts
-                var recoverContext = await TryGetActiveRecoveryContextAsync(modUser.ID.Value);
-                await recoverContext?.TryDeleteAsync();
 
+                //remove any recovery contexts
+                //proceed despite error
+                try
+                {
+                    var recoverContext = await TryGetActiveRecoveryContextAsync(modUser.ID.Value);
+                    await recoverContext?.TryDeleteAsync();
+                }
+                catch (Exception ex)
+                {
+                    await CoreFactory.Singleton.Logging.CreateErrorLogAsync("347A406B-85D2-4C6D-B966-3B3D81120DC3", ex);
+                }
 
 
                 return AcctRecoveryResultCode.Success;
