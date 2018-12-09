@@ -185,7 +185,7 @@
             '                    <span class="m-2 mr-0" style="margin-right:0 !important">Posted by</span>' +
             '                    <span v-if="comment.CreatedBy > 0">[<a v-bind:href="\'/Account/find/\' + comment.CreatedBy">{{ comment.Username }}</a>]</span>' +
             '                    <span v-else>[<a href="/Account">{{ comment.Username }}</a>]</span>' +
-            '                    <span> • {{ comment.CreatedDate.toString().substring(0,10) }}</span>' +
+            '                    <span>{{dateCreatedFromNow}}</span>' +
             '                </div>' +
             '                <div class="border border-dark rounded m-2 py-2">' +
             '                    <span class="text-body p-2">' +
@@ -275,6 +275,7 @@
             postCanComment: false,
             postTime: "",
             modifiedDate: "",
+            dateCreatedFromNow: null,
             comments: []
         },
         methods: {
@@ -359,6 +360,11 @@
                     self.modifiedDate = pstData.ModifiedDate;
                     self.postCreater = pstData.Username;
 
+                    var postTimeMoment = moment(self.postTime);
+                    var now = moment();
+                    if (parseInt(now.diff(postTimeMoment, 'days')) <= 7) {
+                        self.dateCreatedFromNow = postTimeMoment.fromNow();
+                    }
 
                     $("#post-container").style('display', null);
                     if (pstData.CanComment) {
@@ -379,6 +385,10 @@
                                 //console.log(JSON.parse(JSON.stringify(cmtArrangedList)));
 
                                 self.comments = cmtArrangedList;
+                                var commentsLen = self.comments.length;
+                                for (var i = 0; i < commentsLen; i++) {
+                                    self.comments[i].dateCreatedFromNow = moment(self.comments[i].CreatedDate).fromNow();
+                                }
 
                                 showCommentReply();
 

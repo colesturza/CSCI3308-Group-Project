@@ -329,9 +329,9 @@
                     self.postCreater = pstData.Username;
 
                     var postTimeMoment = moment(self.postTime);
-                    var postTimeMomentFromNow = postTimeMoment.fromNow();
-                    if (parseInt(postTimeMomentFromNow.diff(postTimeMoment, 'days')) <= 7) {
-                        self.dateCreatedFromNow = postTimeMomentFromNow;
+                    var now = moment();
+                    if (parseInt(now.diff(postTimeMoment, 'days')) <= 7) {
+                        self.dateCreatedFromNow = postTimeMoment.fromNow();
                     }
 
                     $("#post-container").style('display', null);
