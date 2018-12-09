@@ -149,8 +149,12 @@
 
 
     function showCommentReply() {
-        if (rawCommentSet.length == 0 || !postRawData.CanComment) {
+        if (rawCommentSet.length == 0) {
             return;
+        }
+
+        if (!postRawData.CanComment) {
+            $("[data-reply=reply]").style('display', 'none', 'important');
         }
 
         var cmtInterval = window.setInterval(function () {
