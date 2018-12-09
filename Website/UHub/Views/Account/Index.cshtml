@@ -1,5 +1,4 @@
-﻿@using UHub.CoreLib.Extensions;
-@{
+﻿@{
     ViewBag.Title = "My Account";
     Layout = "~/Views/Shared/_LayoutAuth.cshtml";
 }
@@ -19,7 +18,7 @@
                     <ul style="width: 100%; padding: 0;">
                         <li style="list-style: none">
                             <h3>{{user.Name}}</h3>
-                            <h4>@{{user.Username}}</h4>
+                            <h4>[{{user.Username}}]</h4>
                             <h5><strong>Email: </strong>{{user.Email}}</h5>
                             <h5><strong>Phone Number: </strong>{{user.PhoneNumber}}</h5>
                             <h5><strong>Major: </strong>{{user.Major}}</h5>
@@ -27,7 +26,7 @@
                             <h5><strong>Graduation Date: </strong>{{user.GradDate}}</h5>
                             <h5 id="toggle_hide"><strong>Job Title: </strong>{{user.JobTitle}}</h5>
                             <h5 id="toggle_hide"><strong>Company: </strong>{{user.Company}}</h5>
-                            <h5><strong>SchoolID: </strong>{{user.SchoolID}}</h5
+                            <h5><strong>School: </strong>{{schoolID.Name}}</h5
                         </li>
                     </ul>
                 </div>

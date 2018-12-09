@@ -12,6 +12,36 @@
 
     new Vue({
         el: "#post-list",
+        methods: {
+            emit: function (cmtID) {
+                this.$emit('custom-click', cmtID);
+            },
+            buttonHandler: function (commentID) {
+
+                window.setTimeout(function () {
+
+                    function clicker(e) {
+                        e.stopPropagation();
+
+                        var listBltParent = $(this).closest(".list-group-item");
+
+                        if ($(listBltParent).style('max-height') == 'initial') {
+                            $(listBltParent).style('max-height', "");
+                            listBltParent.children(".shadowBox").css('display', "");
+                        }
+                        else {
+                            $(listBltParent).style('max-height', 'initial', "important");
+                            listBltParent.children(".shadowBox").css('display', 'none');
+                        }
+                    }
+
+
+                    $("postViewWrapper [data-postID=" + commentID + "]").click(clicker);
+                    $("postViewWrapper [data-postID=" + commentID + "]").find("*").click(clicker);
+
+                }, 10);
+            }
+        },
         data: {
             posts: []
         },
