@@ -13,14 +13,14 @@
             <li class="list-group-item mb-3" v-for="post in posts" :key="post.ID">
                 <div class="shadowBox"></div>
                 <template v-if="post.ID != undefined">
-                    <div v-on:custom-click="buttonHandler(post.ID)" class="postViewWrapper" :data-postID="post.ID">
+                    @*<div v-on:custom-click="buttonHandler(post.ID)" class="postViewWrapper" :data-postID="post.ID">*@
                         <a v-bind:href="'/SchoolClub/' + post.ParentID">{{post.ClubName}}</a>
                         • Posted by [<a v-bind:href="'/Account/find/' + post.CreatedBy">{{post.Username}}</a>]
                         <p></p>
                         <a v-bind:href="'/Post/' + post.ID">
                             <h3>{{ post.Name }}</h3>
                         </a>
-                    </div>
+                    @*</div>*@
                 </template>
                 <h3 v-else> {{ post.Name }} </h3>
 
