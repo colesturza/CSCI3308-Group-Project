@@ -10,7 +10,7 @@
         <div>
             <a v-bind:href="'/SchoolClub/' + parentID">{{commName}}</a>
             <p></p>
-            <h3 class="px-3 pt-3" style="display:inline-block !important">{{title}}</h3>
+            <h3 class="px-3 pt-3" style="display:inline-block !important">{{likeCount}} • {{title}}</h3>
             <template v-if="modifiedDate != null">
                 <span>[<a :href="'/Post/History/' + postID">History</a>]</span>
             </template>
@@ -22,6 +22,7 @@
             <span v-else> • {{postTime.substring(0,10)}}</span>
             <p></p>
             <button id="btn_ToggleReply" type="button" class="btn-sm btn-outline-dark m-2 mb-1 d-inline" v-on:click="postReply" style="display:none !important">Reply</button>
+            <button id="btn_LikePost" type="button" class="btn-sm btn-outline-dark m-2 mb-1 d-inline" v-on:click="postLike">Like</button>
         </div>
         <div class="container-fluid">
             <div id="post-reply" class="form-group" style="display: none;">

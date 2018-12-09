@@ -229,6 +229,10 @@
     <Compile Include="Entities\Posts\APIControllers\PostController_R_ByClub.cs" />
     <Compile Include="Entities\Posts\APIControllers\PostController_R_ByParent.cs" />
     <Compile Include="Entities\Posts\APIControllers\PostController_R_BySchool.cs" />
+    <Compile Include="Entities\Posts\DataInterop\PostReader_LikesAsync.cs" />
+    <Compile Include="Entities\Posts\DataInterop\PostReader_Likes.cs" />
+    <Compile Include="Entities\Posts\DataInterop\PostUpdaterAsync.cs" />
+    <Compile Include="Entities\Posts\DataInterop\PostUpdater.cs" />
     <Compile Include="Entities\Posts\DataInterop\PostReader_RevisionsAsync.cs" />
     <Compile Include="Entities\Posts\DataInterop\PostReader_Revisions.cs" />
     <Compile Include="Entities\Posts\DataInterop\PostReader.cs" />
@@ -240,8 +244,8 @@
     <Compile Include="Entities\Posts\DataInterop\PostReader_BySchoolAsync.cs" />
     <Compile Include="Entities\Posts\DataInterop\PostReaderCore.cs" />
     <Compile Include="Entities\Posts\DataInterop\PostReaderAsync.cs" />
-    <Compile Include="Entities\Posts\DataInterop\PostWriter.cs" />
-    <Compile Include="Entities\Posts\DataInterop\PostWriterAsync.cs" />
+    <Compile Include="Entities\Posts\DataInterop\PostCreator.cs" />
+    <Compile Include="Entities\Posts\DataInterop\PostCreatorAsync.cs" />
     <Compile Include="Entities\Posts\DataInterop\PostWriterCore.cs" />
     <Compile Include="Entities\Posts\DTOs\Post_U_PublicDTO.cs" />
     <Compile Include="Entities\Posts\DTOs\Post_C_PublicDTO.cs" />
