@@ -142,41 +142,43 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             {
                 return Content(statCode, status);
             }
-
-            var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser().CmsUser;
-
-            var schoolID = cmsUser.SchoolID.Value;
-
-            var taskUsers = UserReader.GetAllBySchoolAsync(cmsUser.SchoolID.Value);
-            var posts = await PostReader.TryGetPostsBySchoolAsync(schoolID);
-
-
-            var sanitizerMode = CoreFactory.Singleton.Properties.HtmlSanitizerMode;
-            var shouldSanitize = (sanitizerMode & HtmlSanitizerMode.OnRead) != 0;
-
-
-            IEnumerable<Post_R_PublicDTO> outSet = null;
-            if (shouldSanitize)
-            {
-                outSet = posts
-                    .AsParallel()
-                    .Select(x =>
-                    {
-                        x.Content = x.Content.SanitizeHtml().HtmlDecode();
-                        return x.ToDto<Post_R_PublicDTO>();
-                    });
-            }
-            else
-            {
-                outSet = posts
-                    .AsParallel()
-                    .Select(x =>
-                    {
-                        return x.ToDto<Post_R_PublicDTO>();
-                    });
-            }
             try
             {
+
+
+                var cmsUser = CoreFactory.Singleton.Auth.GetCurrentUser().CmsUser;
+
+                var schoolID = cmsUser.SchoolID.Value;
+
+                var taskUsers = UserReader.GetAllBySchoolAsync(cmsUser.SchoolID.Value);
+                var posts = await PostReader.TryGetPostsBySchoolAsync(schoolID);
+
+
+                var sanitizerMode = CoreFactory.Singleton.Properties.HtmlSanitizerMode;
+                var shouldSanitize = (sanitizerMode & HtmlSanitizerMode.OnRead) != 0;
+
+
+                IEnumerable<Post_R_PublicDTO> outSet = null;
+                if (shouldSanitize)
+                {
+                    outSet = posts
+                        .AsParallel()
+                        .Select(x =>
+                        {
+                            x.Content = x.Content.SanitizeHtml().HtmlDecode();
+                            return x.ToDto<Post_R_PublicDTO>();
+                        });
+                }
+                else
+                {
+                    outSet = posts
+                        .AsParallel()
+                        .Select(x =>
+                        {
+                            return x.ToDto<Post_R_PublicDTO>();
+                        });
+                }
+
 
 
                 await taskUsers;
