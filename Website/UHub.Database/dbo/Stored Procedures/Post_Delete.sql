@@ -24,6 +24,36 @@ begin
 
 
 
+
+			--Migrate all live property data to historical archive
+			insert into dbo.EntPropertyRevisionXRef
+			(
+				EntID,
+				EntTypeID,
+				PropID,
+				PropValue,
+				CreatedBy,
+				CreatedDate
+			)
+			select
+				epx.EntID,
+				epx.EntTypeID,
+				epx.PropID,
+				epx.PropValue,
+				epx.CreatedBy,
+				epx.CreatedDate
+			from EntPropertyXRef epx
+			where
+				epx.EntID = @PostID;
+
+
+			--delete property data from live system
+			delete from EntPropertyXRef
+			where
+				EntID = @PostID;
+
+
+
 			--find all child comments
 			with recursiveFind as
 			(
@@ -85,6 +115,37 @@ begin
 				or ChildEntID in (select ChildEntID from #childCommentSet)
 				or ParentEntID in (select ChildEntID from #childCommentSet)
 	
+
+
+			
+			--Migrate all live property data to historical archive
+			insert into dbo.EntPropertyRevisionXRef
+			(
+				EntID,
+				EntTypeID,
+				PropID,
+				PropValue,
+				CreatedBy,
+				CreatedDate
+			)
+			select
+				epx.EntID,
+				epx.EntTypeID,
+				epx.PropID,
+				epx.PropValue,
+				epx.CreatedBy,
+				epx.CreatedDate
+			from EntPropertyXRef epx
+			where
+				epx.EntID in (select ChildEntID from #childCommentSet)
+
+
+
+			--delete property data from live system
+			delete from EntPropertyXRef
+			where
+				EntID in (select ChildEntID from #childCommentSet)
+
 
 
 			COMMIT TRAN

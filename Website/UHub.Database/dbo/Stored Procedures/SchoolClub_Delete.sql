@@ -1,4 +1,4 @@
-﻿create proc SchoolClub_Delete
+﻿CREATE proc [dbo].[SchoolClub_Delete]
 
 	@ClubID bigint,
 	@DeletedBy bigint
@@ -23,6 +23,39 @@ begin
 				and EntTypeID = 4			--SCHOOL CLUB TYPE [4]
 
 
+
+			--Migrate all live property data to historical archive
+			insert into dbo.EntPropertyRevisionXRef
+			(
+				EntID,
+				EntTypeID,
+				PropID,
+				PropValue,
+				CreatedBy,
+				CreatedDate
+			)
+			select
+				epx.EntID,
+				epx.EntTypeID,
+				epx.PropID,
+				epx.PropValue,
+				epx.CreatedBy,
+				epx.CreatedDate
+			from EntPropertyXRef epx
+			where
+				epx.EntID = @ClubID;
+
+
+			--delete property data from live system
+			delete from EntPropertyXRef
+			where
+				EntID = @ClubID;
+
+
+
+
+
+
 			--get descendant posts
 			SELECT ChildEntID INTO #childPostSet
 			FROM EntChildXRef
@@ -40,6 +73,39 @@ begin
 			where
 				ID in (select ChildEntID from #childPostSet) 
 				and EntTypeID = 6;		--POST TYPE [6]
+				
+
+
+			--Migrate all live property data to historical archive
+			insert into dbo.EntPropertyRevisionXRef
+			(
+				EntID,
+				EntTypeID,
+				PropID,
+				PropValue,
+				CreatedBy,
+				CreatedDate
+			)
+			select
+				epx.EntID,
+				epx.EntTypeID,
+				epx.PropID,
+				epx.PropValue,
+				epx.CreatedBy,
+				epx.CreatedDate
+			from EntPropertyXRef epx
+			where
+				epx.EntID in (select ChildEntID from #childPostSet)
+
+
+			--delete property data from live system
+			delete from EntPropertyXRef
+			where
+				EntID in (select ChildEntID from #childPostSet);
+
+
+
+
 
 
 
@@ -108,6 +174,38 @@ begin
 				or ChildEntID in (select ChildEntID from #childPostSet)
 				or ParentEntID in (select ChildEntID from #childPostSet)
 	
+
+
+
+	--Migrate all live property data to historical archive
+			insert into dbo.EntPropertyRevisionXRef
+			(
+				EntID,
+				EntTypeID,
+				PropID,
+				PropValue,
+				CreatedBy,
+				CreatedDate
+			)
+			select
+				epx.EntID,
+				epx.EntTypeID,
+				epx.PropID,
+				epx.PropValue,
+				epx.CreatedBy,
+				epx.CreatedDate
+			from EntPropertyXRef epx
+			where
+				epx.EntID in (select ChildEntID from #childCommentSet)
+
+
+			--delete property data from live system
+			delete from EntPropertyXRef
+			where
+				EntID in (select ChildEntID from #childCommentSet)
+
+
+
 
 
 			COMMIT TRAN
