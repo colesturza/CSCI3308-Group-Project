@@ -20,7 +20,7 @@ namespace UHub.Controllers
         {
             var idObj = Url.RequestContext.RouteData.Values["id"];
             var idStr = idObj?.ToString() ?? "";
-            var valid = int.TryParse(idStr, out var postId);
+            var valid = long.TryParse(idStr, out var postId);
 
             if (!valid)
             {
@@ -67,7 +67,7 @@ namespace UHub.Controllers
         {
             var idObj = Url.RequestContext.RouteData.Values["id"];
             var idStr = idObj?.ToString() ?? "";
-            var valid = int.TryParse(idStr, out var postId);
+            var valid = long.TryParse(idStr, out var postId);
 
             if (!valid)
             {
