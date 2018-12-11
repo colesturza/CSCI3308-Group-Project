@@ -172,6 +172,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Common.cs" />
+    <Compile Include="ConfigHelper.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\DynamicScriptsController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />

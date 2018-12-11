@@ -62,41 +62,42 @@ namespace UHub
 
         }
 
+
         private static CmsConfiguration_Grouped GetPrdConfig()
         {
             var domain = "u-hub.life";
 
 
             //ENV
-            var env = WebConfigurationManager.AppSettings["Environment"];
+            var env = ConfigHelper.GetWebConfVar<string>("Environment");
 
             //DB
-            var dbConn = WebConfigurationManager.AppSettings["DB_CONN"];
+            var dbConn = ConfigHelper.GetWebConfVar<string>("DB_CONN");
 
             //SECURITY
-            var autoApproveAccts = bool.Parse(WebConfigurationManager.AppSettings["AutoApproveNewUsers"]);
+            var autoApproveAccts = ConfigHelper.GetWebConfVar<bool>("AutoApproveNewUsers");
 
             //MAIL
-            var ContactFormRecipient = WebConfigurationManager.AppSettings["ContactFormRecipient"];
-            var mailFromAddr = WebConfigurationManager.AppSettings["MailFromAddress"];
-            var mailFromName = WebConfigurationManager.AppSettings["MailFromName"];
-            var mailHost = WebConfigurationManager.AppSettings["MailHost"];
-            var mailPort = int.Parse(WebConfigurationManager.AppSettings["MailPort"]);
-            var mailUsername = WebConfigurationManager.AppSettings["MailUsername"];
-            var mailPswd = WebConfigurationManager.AppSettings["MailPassword"];
+            var ContactFormRecipient = ConfigHelper.GetWebConfVar<string>("ContactFormRecipient");
+            var mailFromAddr = ConfigHelper.GetWebConfVar<string>("MailFromAddress");
+            var mailFromName = ConfigHelper.GetWebConfVar<string>("MailFromName");
+            var mailHost = ConfigHelper.GetWebConfVar<string>("MailHost");
+            var mailPort = ConfigHelper.GetWebConfVar<int>("MailPort");
+            var mailUsername = ConfigHelper.GetWebConfVar<string>("MailUsername");
+            var mailPswd = ConfigHelper.GetWebConfVar<string>("MailPassword");
 
             //FILES
-            var fileStoreDir = WebConfigurationManager.AppSettings["FileStoreDirectory"];
-            var imgStoreDir = WebConfigurationManager.AppSettings["ImageStoreDirectory"];
-            var tempCacheDir = WebConfigurationManager.AppSettings["TempCacheDirectory"];
-            var logStoreDir = WebConfigurationManager.AppSettings["LogStoreDirectory"];
+            var fileStoreDir = ConfigHelper.GetWebConfVar<string>("FileStoreDirectory");
+            var imgStoreDir = ConfigHelper.GetWebConfVar<string>("ImageStoreDirectory");
+            var tempCacheDir = ConfigHelper.GetWebConfVar<string>("TempCacheDirectory");
+            var logStoreDir = ConfigHelper.GetWebConfVar<string>("LogStoreDirectory");
 
             //CAPTCHA
-            var captchaPublicKey = WebConfigurationManager.AppSettings["RecaptchaPublicKey"];
-            var captchaPrivateKey = WebConfigurationManager.AppSettings["RecaptchaPrivateKey"];
+            var captchaPublicKey = ConfigHelper.GetWebConfVar<string>("RecaptchaPublicKey");
+            var captchaPrivateKey = ConfigHelper.GetWebConfVar<string>("RecaptchaPrivateKey");
 
             //LOGGING
-            var googleAnalyticsKey = WebConfigurationManager.AppSettings["GoogleAnalyticsKey"];
+            var googleAnalyticsKey = ConfigHelper.GetWebConfVar<string>("GoogleAnalyticsKey");
 
 
 
@@ -212,35 +213,35 @@ namespace UHub
 
 
             //ENV
-            var env = WebConfigurationManager.AppSettings["Environment"];
+            var env = ConfigHelper.GetWebConfVar<string>("Environment");
 
             //DB
-            var dbConn = WebConfigurationManager.AppSettings["DB_CONN"];
+            var dbConn = ConfigHelper.GetWebConfVar<string>("DB_CONN");
 
             //SECURITY
-            var autoApproveAccts = bool.Parse(WebConfigurationManager.AppSettings["AutoApproveNewUsers"]);
+            var autoApproveAccts = ConfigHelper.GetWebConfVar<bool>("AutoApproveNewUsers");
 
             //MAIL
-            var ContactFormRecipient = WebConfigurationManager.AppSettings["ContactFormRecipient"];
-            var mailFromAddr = WebConfigurationManager.AppSettings["MailFromAddress"];
-            var mailFromName = WebConfigurationManager.AppSettings["MailFromName"];
-            var mailHost = WebConfigurationManager.AppSettings["MailHost"];
-            var mailPort = int.Parse(WebConfigurationManager.AppSettings["MailPort"]);
-            var mailUsername = WebConfigurationManager.AppSettings["MailUsername"];
-            var mailPswd = WebConfigurationManager.AppSettings["MailPassword"];
+            var ContactFormRecipient = ConfigHelper.GetWebConfVar<string>("ContactFormRecipient");
+            var mailFromAddr = ConfigHelper.GetWebConfVar<string>("MailFromAddress");
+            var mailFromName = ConfigHelper.GetWebConfVar<string>("MailFromName");
+            var mailHost = ConfigHelper.GetWebConfVar<string>("MailHost");
+            var mailPort = ConfigHelper.GetWebConfVar<int>("MailPort");
+            var mailUsername = ConfigHelper.GetWebConfVar<string>("MailUsername");
+            var mailPswd = ConfigHelper.GetWebConfVar<string>("MailPassword");
 
             //FILES
-            var fileStoreDir = WebConfigurationManager.AppSettings["FileStoreDirectory"];
-            var imgStoreDir = WebConfigurationManager.AppSettings["ImageStoreDirectory"];
-            var tempCacheDir = WebConfigurationManager.AppSettings["TempCacheDirectory"];
-            var logStoreDir = WebConfigurationManager.AppSettings["LogStoreDirectory"];
+            var fileStoreDir = ConfigHelper.GetWebConfVar<string>("FileStoreDirectory");
+            var imgStoreDir = ConfigHelper.GetWebConfVar<string>("ImageStoreDirectory");
+            var tempCacheDir = ConfigHelper.GetWebConfVar<string>("TempCacheDirectory");
+            var logStoreDir = ConfigHelper.GetWebConfVar<string>("LogStoreDirectory");
 
             //CAPTCHA
-            var captchaPublicKey = WebConfigurationManager.AppSettings["RecaptchaPublicKey"];
-            var captchaPrivateKey = WebConfigurationManager.AppSettings["RecaptchaPrivateKey"];
+            var captchaPublicKey = ConfigHelper.GetWebConfVar<string>("RecaptchaPublicKey");
+            var captchaPrivateKey = ConfigHelper.GetWebConfVar<string>("RecaptchaPrivateKey");
 
             //LOGGING
-            var googleAnalyticsKey = WebConfigurationManager.AppSettings["GoogleAnalyticsKey"];
+            var googleAnalyticsKey = ConfigHelper.GetWebConfVar<string>("GoogleAnalyticsKey");
 
 
 
