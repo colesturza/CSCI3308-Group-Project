@@ -34,6 +34,24 @@ namespace UHub.CoreLib.Logging.Management
             CreateEventLog(eventData);
         }
         /// <summary>
+        /// Create success message using anonymous type
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="data"></param>
+        public void CreateSuccessLog<T>(T Data, string UID)
+        {
+            var eventData = new EventLogData
+            {
+                EventType = EventType.Success,
+                EventID = UID,
+                Content = Data.ToFormattedJSON(),
+                CreatedBy = null,
+                CreatedDate = DateTimeOffset.UtcNow
+            };
+
+            CreateEventLog(eventData);
+        }
+        /// <summary>
         /// Create success message
         /// </summary>
         /// <param name="message"></param>
@@ -43,6 +61,23 @@ namespace UHub.CoreLib.Logging.Management
             {
                 EventType = EventType.Success,
                 EventID = null,
+                Content = Message,
+                CreatedBy = null,
+                CreatedDate = DateTimeOffset.UtcNow
+            };
+
+            CreateEventLog(eventData);
+        }
+        /// <summary>
+        /// Create success message
+        /// </summary>
+        /// <param name="message"></param>
+        public void CreateSuccessLog(string Message, string UID)
+        {
+            var eventData = new EventLogData
+            {
+                EventType = EventType.Success,
+                EventID = UID,
                 Content = Message,
                 CreatedBy = null,
                 CreatedDate = DateTimeOffset.UtcNow
@@ -71,6 +106,24 @@ namespace UHub.CoreLib.Logging.Management
             CreateEventLog(eventData);
         }
         /// <summary>
+        /// Create information message using anonymous type
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="data"></param>
+        public void CreateInfoLog<T>(T Data, string UID)
+        {
+            var eventData = new EventLogData
+            {
+                EventType = EventType.Information,
+                EventID = UID,
+                Content = Data.ToFormattedJSON(),
+                CreatedBy = null,
+                CreatedDate = DateTimeOffset.UtcNow
+            };
+
+            CreateEventLog(eventData);
+        }
+        /// <summary>
         /// Create information message
         /// </summary>
         /// <param name="message"></param>
@@ -80,6 +133,23 @@ namespace UHub.CoreLib.Logging.Management
             {
                 EventType = EventType.Information,
                 EventID = null,
+                Content = Message,
+                CreatedBy = null,
+                CreatedDate = DateTimeOffset.UtcNow
+            };
+
+            CreateEventLog(eventData);
+        }
+        /// <summary>
+        /// Create information message
+        /// </summary>
+        /// <param name="message"></param>
+        public void CreateInfoLog(string Message, string UID)
+        {
+            var eventData = new EventLogData
+            {
+                EventType = EventType.Information,
+                EventID = UID,
                 Content = Message,
                 CreatedBy = null,
                 CreatedDate = DateTimeOffset.UtcNow
@@ -108,6 +178,24 @@ namespace UHub.CoreLib.Logging.Management
             CreateEventLog(eventData);
         }
         /// <summary>
+        /// Create warning message using anonymous type
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="data"></param>
+        public void CreateWarningLog<T>(T Data, string UID)
+        {
+            var eventData = new EventLogData
+            {
+                EventType = EventType.Warning,
+                EventID = UID,
+                Content = Data.ToFormattedJSON(),
+                CreatedBy = null,
+                CreatedDate = DateTimeOffset.UtcNow
+            };
+
+            CreateEventLog(eventData);
+        }
+        /// <summary>
         /// Create warning message
         /// </summary>
         /// <param name="message"></param>
@@ -124,6 +212,24 @@ namespace UHub.CoreLib.Logging.Management
 
             CreateEventLog(eventData);
         }
+        /// <summary>
+        /// Create warning message
+        /// </summary>
+        /// <param name="message"></param>
+        public void CreateWarningLog(string Message, string UID)
+        {
+            var eventData = new EventLogData
+            {
+                EventType = EventType.Warning,
+                EventID = UID,
+                Content = Message,
+                CreatedBy = null,
+                CreatedDate = DateTimeOffset.UtcNow
+            };
+
+            CreateEventLog(eventData);
+        }
+
 
 
         /// <summary>
@@ -145,6 +251,24 @@ namespace UHub.CoreLib.Logging.Management
             CreateEventLog(eventData);
         }
         /// <summary>
+        /// Create failure message using anonymous type
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="data"></param>
+        public void CreateFailureLog<T>(T Data, string UID)
+        {
+            var eventData = new EventLogData
+            {
+                EventType = EventType.Failure,
+                EventID = UID,
+                Content = Data.ToFormattedJSON(),
+                CreatedBy = null,
+                CreatedDate = DateTimeOffset.UtcNow
+            };
+
+            CreateEventLog(eventData);
+        }
+        /// <summary>
         /// Create failure message
         /// </summary>
         /// <param name="message"></param>
@@ -154,6 +278,23 @@ namespace UHub.CoreLib.Logging.Management
             {
                 EventType = EventType.Failure,
                 EventID = null,
+                Content = Message,
+                CreatedBy = null,
+                CreatedDate = DateTimeOffset.UtcNow
+            };
+
+            CreateEventLog(eventData);
+        }
+        /// <summary>
+        /// Create failure message
+        /// </summary>
+        /// <param name="message"></param>
+        public void CreateFailureLog(string Message, string UID)
+        {
+            var eventData = new EventLogData
+            {
+                EventType = EventType.Failure,
+                EventID = UID,
                 Content = Message,
                 CreatedBy = null,
                 CreatedDate = DateTimeOffset.UtcNow
@@ -180,7 +321,7 @@ namespace UHub.CoreLib.Logging.Management
 
             CreateEventLog(eventData);
         }
-        public void CreateErrorLog(string UID, Exception exInner)
+        public void CreateErrorLog(Exception exInner, string UID)
         {
             var eventData = new EventLogData
             {
@@ -216,7 +357,7 @@ namespace UHub.CoreLib.Logging.Management
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="data"></param>
-        public void CreateErrorLog<T>(string UID, T Data)
+        public void CreateErrorLog<T>(T Data, string UID)
         {
             var eventData = new EventLogData
             {
@@ -261,7 +402,7 @@ namespace UHub.CoreLib.Logging.Management
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="data"></param>
-        public void CreateEventLog<T>(string UID, T Data, EventType EventType)
+        public void CreateEventLog<T>(T Data, EventType EventType, string UID)
         {
             var eventData = new EventLogData
             {
@@ -295,7 +436,7 @@ namespace UHub.CoreLib.Logging.Management
         /// Create success message
         /// </summary>
         /// <param name="message"></param>
-        public void CreateEventLog(string UID, string Message, EventType EventType)
+        public void CreateEventLog(string Message, EventType EventType, string UID)
         {
             var eventData = new EventLogData
             {

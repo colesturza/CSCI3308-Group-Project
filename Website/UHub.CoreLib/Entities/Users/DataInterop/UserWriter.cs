@@ -242,7 +242,7 @@ namespace UHub.CoreLib.Entities.Users.DataInterop
             catch (Exception ex)
             {
                 var errCode = "84986584-BD1D-4DDB-8DAA-475A3BB874C1";
-                CoreFactory.Singleton.Logging.CreateErrorLog(errCode, ex);
+                CoreFactory.Singleton.Logging.CreateErrorLog(ex, errCode);
 
                 return false;
             }
@@ -269,7 +269,7 @@ namespace UHub.CoreLib.Entities.Users.DataInterop
             catch (Exception ex)
             {
                 var errCode = "CDFB440C-2271-4DB4-BDE8-FC198D1FDACC";
-                CoreFactory.Singleton.Logging.CreateErrorLog(errCode, ex);
+                CoreFactory.Singleton.Logging.CreateErrorLog(ex, errCode);
 
                 return false;
             }

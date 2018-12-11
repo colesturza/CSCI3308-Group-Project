@@ -22,7 +22,7 @@ namespace UHub.CoreLib.Logging
         public override string ToString()
         {
             var msgBuilder = new StringBuilder();
-            msgBuilder.AppendFormat("{0,o}\n", this.CreatedDate);
+            msgBuilder.AppendFormat("{0:o}\n", this.CreatedDate);
             msgBuilder.AppendFormat("Event Type: {0}\n", this.EventType.ToString());
             msgBuilder.AppendFormat("Event ID: {0}\n", this.EventID);
             msgBuilder.AppendFormat("Created By: {0}\n", this.CreatedBy);

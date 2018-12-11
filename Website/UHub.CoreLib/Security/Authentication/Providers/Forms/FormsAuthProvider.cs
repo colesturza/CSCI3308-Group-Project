@@ -55,7 +55,7 @@ namespace UHub.CoreLib.Security.Authentication.Providers.Forms
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLog("78B4CACB-D93D-4D3B-945D-923676D05A91", ex);
+                CoreFactory.Singleton.Logging.CreateErrorLog(ex, "78B4CACB-D93D-4D3B-945D-923676D05A91");
                 return AuthResultCode.UnknownError;
             }
 
@@ -81,7 +81,7 @@ namespace UHub.CoreLib.Security.Authentication.Providers.Forms
                     }
                     catch (Exception ex)
                     {
-                        CoreFactory.Singleton.Logging.CreateErrorLog("6E63EB15-1A36-4D12-95F7-693B7F9A9AE3", ex);
+                        CoreFactory.Singleton.Logging.CreateErrorLog(ex, "6E63EB15-1A36-4D12-95F7-693B7F9A9AE3");
                         return AuthResultCode.UnknownError;
                     }
                 }
@@ -99,7 +99,7 @@ namespace UHub.CoreLib.Security.Authentication.Providers.Forms
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLog("CC051A0E-3530-4DAB-8654-2FEA5DB40332", ex);
+                CoreFactory.Singleton.Logging.CreateErrorLog(ex, "CC051A0E-3530-4DAB-8654-2FEA5DB40332");
                 return AuthResultCode.UnknownError;
             }
             if (validationStatus != PasswordValidationStatus.Success)
@@ -136,7 +136,7 @@ namespace UHub.CoreLib.Security.Authentication.Providers.Forms
             catch (Exception ex)
             {
 
-                CoreFactory.Singleton.Logging.CreateErrorLog("D1CBD896-CAB8-48AD-9DA6-DD2DE9CEA2A1", ex);
+                CoreFactory.Singleton.Logging.CreateErrorLog(ex, "D1CBD896-CAB8-48AD-9DA6-DD2DE9CEA2A1");
                 return AuthResultCode.UnknownError;
             }
 

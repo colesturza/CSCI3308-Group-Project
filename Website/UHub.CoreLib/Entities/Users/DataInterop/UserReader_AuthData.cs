@@ -30,7 +30,7 @@ namespace UHub.CoreLib.Entities.Users.DataInterop
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLog("CFB022ED-7385-45DF-9FB0-ED56E25ABD5C", ex);
+                CoreFactory.Singleton.Logging.CreateErrorLog(ex, "CFB022ED-7385-45DF-9FB0-ED56E25ABD5C");
                 return null;
             }
         }
@@ -50,7 +50,7 @@ namespace UHub.CoreLib.Entities.Users.DataInterop
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLog("99E80625-980D-4F19-89B1-41FBA4D62A02", ex);
+                CoreFactory.Singleton.Logging.CreateErrorLog(ex, "99E80625-980D-4F19-89B1-41FBA4D62A02");
                 return null;
             }
         }
@@ -73,7 +73,7 @@ namespace UHub.CoreLib.Entities.Users.DataInterop
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLog("D77C69A0-CAE4-49F8-99DC-407F01B5E394", ex);
+                CoreFactory.Singleton.Logging.CreateErrorLog(ex, "D77C69A0-CAE4-49F8-99DC-407F01B5E394");
                 return null;
             }
         }

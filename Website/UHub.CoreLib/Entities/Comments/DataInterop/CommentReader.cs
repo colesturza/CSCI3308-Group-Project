@@ -41,7 +41,7 @@ namespace UHub.CoreLib.Entities.Comments.DataInterop
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLog("88E483DA-53AE-492D-95CA-C02E14FC5868", ex);
+                CoreFactory.Singleton.Logging.CreateErrorLog(ex, "88E483DA-53AE-492D-95CA-C02E14FC5868");
                 return null;
             }
         }
@@ -74,7 +74,7 @@ namespace UHub.CoreLib.Entities.Comments.DataInterop
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLog("EE567558-4FFB-4017-A4BF-EE7D3B5A5365", ex);
+                CoreFactory.Singleton.Logging.CreateErrorLog(ex, "EE567558-4FFB-4017-A4BF-EE7D3B5A5365");
                 return null;
             }
         }

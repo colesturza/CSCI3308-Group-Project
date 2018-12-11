@@ -58,7 +58,7 @@ namespace UHub.CoreLib.Security.Authentication.Management
                 }
                 catch (Exception ex)
                 {
-                    CoreFactory.Singleton.Logging.CreateErrorLog("AC0FB05B-0910-4407-B567-2CDCB7A31733", ex);
+                    CoreFactory.Singleton.Logging.CreateErrorLog(ex, "AC0FB05B-0910-4407-B567-2CDCB7A31733");
                     return false;
                 }
             }
@@ -105,14 +105,14 @@ namespace UHub.CoreLib.Security.Authentication.Management
                 catch (CryptographicException ex)
                 {
                     token = "ERROR";
-                    CoreFactory.Singleton.Logging.CreateErrorLog("5350AF25-954A-4C4F-B162-B93A1BF57B38", ex);
+                    CoreFactory.Singleton.Logging.CreateErrorLog(ex, "5350AF25-954A-4C4F-B162-B93A1BF57B38");
 
                     return false;
                 }
                 catch (Exception ex)
                 {
                     token = "ERROR";
-                    CoreFactory.Singleton.Logging.CreateErrorLog("810D0724-BCBB-46AC-B661-556A89EBA34B", ex);
+                    CoreFactory.Singleton.Logging.CreateErrorLog(ex, "810D0724-BCBB-46AC-B661-556A89EBA34B");
 
                     return false;
                 }

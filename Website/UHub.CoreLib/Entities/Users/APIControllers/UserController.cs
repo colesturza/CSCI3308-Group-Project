@@ -74,7 +74,7 @@ namespace UHub.CoreLib.Entities.Users.APIControllers
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLog("D8EB78E4-3C48-4976-A234-6B5EACDC053A", ex);
+                CoreFactory.Singleton.Logging.CreateErrorLog(ex, "D8EB78E4-3C48-4976-A234-6B5EACDC053A");
                 return InternalServerError();
             }
 

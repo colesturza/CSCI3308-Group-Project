@@ -29,7 +29,7 @@ namespace UHub.CoreLib.Entities.Schools.DataInterop
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLog("90649690-2183-4086-8A87-4EC4CE12D329", ex);
+                CoreFactory.Singleton.Logging.CreateErrorLog(ex, "90649690-2183-4086-8A87-4EC4CE12D329");
                 return null;
             }
 
@@ -62,7 +62,7 @@ namespace UHub.CoreLib.Entities.Schools.DataInterop
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLog("A9D37B0B-7567-4C82-A0CB-A4E979BE8EFB", ex);
+                CoreFactory.Singleton.Logging.CreateErrorLog(ex, "A9D37B0B-7567-4C82-A0CB-A4E979BE8EFB");
                 return null;
             }
         }
@@ -94,7 +94,7 @@ namespace UHub.CoreLib.Entities.Schools.DataInterop
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLog("306296C0-50D4-4781-A6C4-ADBAA61E12CC", ex);
+                CoreFactory.Singleton.Logging.CreateErrorLog(ex, "306296C0-50D4-4781-A6C4-ADBAA61E12CC");
                 return null;
             }
         }
@@ -128,7 +128,7 @@ namespace UHub.CoreLib.Entities.Schools.DataInterop
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLog("6FBF084B-B86A-4DEA-8AD4-58E4B56E36BC", ex);
+                CoreFactory.Singleton.Logging.CreateErrorLog(ex, "6FBF084B-B86A-4DEA-8AD4-58E4B56E36BC");
                 return null;
             }
         }
@@ -167,7 +167,7 @@ namespace UHub.CoreLib.Entities.Schools.DataInterop
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLog("C58714AF-812E-446A-A756-955DF6FBA428", ex);
+                CoreFactory.Singleton.Logging.CreateErrorLog(ex, "C58714AF-812E-446A-A756-955DF6FBA428");
                 return null;
             }
         }
@@ -195,7 +195,7 @@ namespace UHub.CoreLib.Entities.Schools.DataInterop
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLog("57C20943-768B-4C32-9CC5-85DBFDE563B5", ex);
+                CoreFactory.Singleton.Logging.CreateErrorLog(ex, "57C20943-768B-4C32-9CC5-85DBFDE563B5");
                 return false;
             }
         }
@@ -222,7 +222,7 @@ namespace UHub.CoreLib.Entities.Schools.DataInterop
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLog("66D95D70-3261-4E26-BC06-9C01BF476E08", ex);
+                CoreFactory.Singleton.Logging.CreateErrorLog(ex, "66D95D70-3261-4E26-BC06-9C01BF476E08");
                 return false;
             }
         }

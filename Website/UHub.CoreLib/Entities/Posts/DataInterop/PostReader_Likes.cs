@@ -37,7 +37,7 @@ namespace UHub.CoreLib.Entities.Posts.DataInterop
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLog("E7CCA92C-2FFA-4DDE-B862-7CA2CFB01AAF", ex);
+                CoreFactory.Singleton.Logging.CreateErrorLog(ex, "E7CCA92C-2FFA-4DDE-B862-7CA2CFB01AAF");
                 return -1L;
             }
 

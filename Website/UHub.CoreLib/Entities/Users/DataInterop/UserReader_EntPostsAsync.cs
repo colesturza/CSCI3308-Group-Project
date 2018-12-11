@@ -55,7 +55,7 @@ namespace UHub.CoreLib.Entities.Users.DataInterop
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLog("E9B4EC13-A376-4DF2-84DC-97B4508418EB", ex);
+                CoreFactory.Singleton.Logging.CreateErrorLog(ex, "E9B4EC13-A376-4DF2-84DC-97B4508418EB");
                 return null;
             }
         }

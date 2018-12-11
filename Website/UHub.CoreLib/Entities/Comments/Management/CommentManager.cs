@@ -68,7 +68,7 @@ namespace UHub.CoreLib.Entities.Comments.Management
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLog("49F489CE-8053-4248-86CB-D6474569D4B1", ex);
+                CoreFactory.Singleton.Logging.CreateErrorLog(ex, "49F489CE-8053-4248-86CB-D6474569D4B1");
                 return (null, CommentResultCode.UnknownError);
             }
 

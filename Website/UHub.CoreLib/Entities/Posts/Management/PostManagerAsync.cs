@@ -175,7 +175,7 @@ namespace UHub.CoreLib.Entities.Posts.Management
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLog("36CF1120-C6C2-4499-B9EF-203F87645CD6", ex);
+                CoreFactory.Singleton.Logging.CreateErrorLog(ex, "36CF1120-C6C2-4499-B9EF-203F87645CD6");
             }
 
 
