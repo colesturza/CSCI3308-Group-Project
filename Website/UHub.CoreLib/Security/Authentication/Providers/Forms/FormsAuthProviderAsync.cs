@@ -58,7 +58,8 @@ namespace UHub.CoreLib.Security.Authentication.Providers.Forms
             }
             catch (Exception ex)
             {
-                await CoreFactory.Singleton.Logging.CreateErrorLogAsync("2645E23E-6171-487A-AE7C-8970511C3390", ex);
+                var exID = new Guid("2645E23E-6171-487A-AE7C-8970511C3390");
+                await CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex, exID);
                 return AuthResultCode.UnknownError;
             }
             //ensure account exists
@@ -89,7 +90,8 @@ namespace UHub.CoreLib.Security.Authentication.Providers.Forms
                     }
                     catch (Exception ex)
                     {
-                        await CoreFactory.Singleton.Logging.CreateErrorLogAsync("A53922C5-0923-4382-A572-50ED87A0B2BE", ex);
+                        var exID = new Guid("A53922C5-0923-4382-A572-50ED87A0B2BE");
+                        await CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex, exID);
                         return AuthResultCode.UnknownError;
                     }
                 }
@@ -107,7 +109,8 @@ namespace UHub.CoreLib.Security.Authentication.Providers.Forms
             }
             catch (Exception ex)
             {
-                await CoreFactory.Singleton.Logging.CreateErrorLogAsync("55AE48DF-B91A-4B24-8EED-2077493BEFE8", ex);
+                var exID = new Guid("55AE48DF-B91A-4B24-8EED-2077493BEFE8");
+                await CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex, exID);
                 return AuthResultCode.UnknownError;
             }
             if (validationStatus != PasswordValidationStatus.Success)
@@ -127,7 +130,8 @@ namespace UHub.CoreLib.Security.Authentication.Providers.Forms
                 }
                 else
                 {
-                    await CoreFactory.Singleton.Logging.CreateErrorLogAsync("07F533B2-FBAD-4751-A467-494BA2D6D19D");
+                    var exID = new Guid("07F533B2-FBAD-4751-A467-494BA2D6D19D");
+                    await CoreFactory.Singleton.Logging.CreateErrorLogAsync(exID);
                     return AuthResultCode.UnknownError;
                 }
 
@@ -144,7 +148,8 @@ namespace UHub.CoreLib.Security.Authentication.Providers.Forms
             }
             catch (Exception ex)
             {
-                await CoreFactory.Singleton.Logging.CreateErrorLogAsync("D7101F53-4E23-4786-A1C2-69CC6E5EFA25", ex);
+                var exID = new Guid("D7101F53-4E23-4786-A1C2-69CC6E5EFA25");
+                await CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex, exID);
                 return AuthResultCode.UnknownError;
             }
 

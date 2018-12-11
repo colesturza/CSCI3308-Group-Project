@@ -45,7 +45,8 @@ namespace UHub.CoreLib.Entities.Posts.DataInterop
             }
             catch (Exception ex)
             {
-                await CoreFactory.Singleton.Logging.CreateErrorLogAsync("9ED9915C-F4C5-4CB7-991F-B40ABDD6A965", ex);
+                var exID = new Guid("9ED9915C-F4C5-4CB7-991F-B40ABDD6A965");
+                await CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex, exID);
                 return null;
             }
 
@@ -71,7 +72,8 @@ namespace UHub.CoreLib.Entities.Posts.DataInterop
             }
             catch (Exception ex)
             {
-                await CoreFactory.Singleton.Logging.CreateErrorLogAsync("A273171F-BBF0-4A01-9187-17AF7BA3FEA4", ex);
+                var exID = new Guid("A273171F-BBF0-4A01-9187-17AF7BA3FEA4");
+                await CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex, exID);
                 return null;
             }
         }
@@ -95,7 +97,8 @@ namespace UHub.CoreLib.Entities.Posts.DataInterop
             }
             catch (Exception ex)
             {
-                await CoreFactory.Singleton.Logging.CreateErrorLogAsync("556303EA-E9D0-46CE-945C-F702C4A9315F", ex);
+                var exID = new Guid("556303EA-E9D0-46CE-945C-F702C4A9315F");
+                await CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex, exID);
                 return null;
             }
         }

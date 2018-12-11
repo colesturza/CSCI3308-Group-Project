@@ -67,7 +67,8 @@ namespace UHub.CoreLib.Entities.Comments.Management
             }
             catch (Exception ex)
             {
-                await CoreFactory.Singleton.Logging.CreateErrorLogAsync("82EEC0B9-31CB-4CD2-9B0F-2CD56CAA83C4", ex);
+                var exID = new Guid("82EEC0B9-31CB-4CD2-9B0F-2CD56CAA83C4");
+                await CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex, exID);
                 return (null, CommentResultCode.UnknownError);
             }
 

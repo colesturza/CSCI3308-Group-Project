@@ -68,7 +68,8 @@ namespace UHub.CoreLib.Entities.Comments.Management
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex, "49F489CE-8053-4248-86CB-D6474569D4B1");
+                var exID = new Guid("49F489CE-8053-4248-86CB-D6474569D4B1");
+                CoreFactory.Singleton.Logging.CreateErrorLog(ex, exID);
                 return (null, CommentResultCode.UnknownError);
             }
 

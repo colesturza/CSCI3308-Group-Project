@@ -82,8 +82,8 @@ namespace UHub.CoreLib.Entities.SchoolClubs.APIControllers
             }
             catch (Exception ex)
             {
-                var errCode = "C3546EA7-AF05-43C0-A9F0-3C6E724EFF20";
-                await CoreFactory.Singleton.Logging.CreateErrorLogAsync(errCode, ex);
+                var exID = new Guid("C3546EA7-AF05-43C0-A9F0-3C6E724EFF20");
+                await CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex, exID);
 
 
                 statCode = HttpStatusCode.InternalServerError;

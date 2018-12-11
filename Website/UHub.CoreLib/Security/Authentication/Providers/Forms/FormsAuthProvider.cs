@@ -55,7 +55,8 @@ namespace UHub.CoreLib.Security.Authentication.Providers.Forms
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex, "78B4CACB-D93D-4D3B-945D-923676D05A91");
+                var exID = new Guid("78B4CACB-D93D-4D3B-945D-923676D05A91");
+                CoreFactory.Singleton.Logging.CreateErrorLog(ex, exID);
                 return AuthResultCode.UnknownError;
             }
 
@@ -81,7 +82,8 @@ namespace UHub.CoreLib.Security.Authentication.Providers.Forms
                     }
                     catch (Exception ex)
                     {
-                        CoreFactory.Singleton.Logging.CreateErrorLog(ex, "6E63EB15-1A36-4D12-95F7-693B7F9A9AE3");
+                        var exID = new Guid("6E63EB15-1A36-4D12-95F7-693B7F9A9AE3");
+                        CoreFactory.Singleton.Logging.CreateErrorLog(ex, exID);
                         return AuthResultCode.UnknownError;
                     }
                 }
@@ -99,7 +101,8 @@ namespace UHub.CoreLib.Security.Authentication.Providers.Forms
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex, "CC051A0E-3530-4DAB-8654-2FEA5DB40332");
+                var exID = new Guid("CC051A0E-3530-4DAB-8654-2FEA5DB40332");
+                CoreFactory.Singleton.Logging.CreateErrorLog(ex, exID);
                 return AuthResultCode.UnknownError;
             }
             if (validationStatus != PasswordValidationStatus.Success)
@@ -120,7 +123,8 @@ namespace UHub.CoreLib.Security.Authentication.Providers.Forms
                 else
                 {
                     var errMsg = "Pswd Validation Error - " + validationStatus.ToString();
-                    CoreFactory.Singleton.Logging.CreateErrorLog(errMsg, "E4D786E2-6574-4C11-95BF-06FF2BA069B1");
+                    var exID = new Guid("E4D786E2-6574-4C11-95BF-06FF2BA069B1");
+                    CoreFactory.Singleton.Logging.CreateErrorLog(errMsg, exID);
                     return AuthResultCode.UnknownError;
                 }
             }
@@ -136,8 +140,8 @@ namespace UHub.CoreLib.Security.Authentication.Providers.Forms
             }
             catch (Exception ex)
             {
-
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex, "D1CBD896-CAB8-48AD-9DA6-DD2DE9CEA2A1");
+                var exID = new Guid("D1CBD896-CAB8-48AD-9DA6-DD2DE9CEA2A1");
+                CoreFactory.Singleton.Logging.CreateErrorLog(ex, exID);
                 return AuthResultCode.UnknownError;
             }
 

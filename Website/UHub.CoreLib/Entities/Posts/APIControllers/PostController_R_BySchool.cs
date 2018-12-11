@@ -203,7 +203,8 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex, "C0D5A5B1-896B-47A1-A152-B658378057C7");
+                var exID = new Guid("C0D5A5B1-896B-47A1-A152-B658378057C7");
+                CoreFactory.Singleton.Logging.CreateErrorLog(ex, exID);
                 return InternalServerError();
             }
 

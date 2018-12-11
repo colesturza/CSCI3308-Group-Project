@@ -34,7 +34,8 @@ namespace UHub.CoreLib.Security.Authentication.Management
             }
             catch (Exception ex)
             {
-                await CoreFactory.Singleton.Logging.CreateErrorLogAsync("7137ACEB-3DA4-43B4-BF66-034D3303DB27", ex);
+                var exID = new Guid("7137ACEB-3DA4-43B4-BF66-034D3303DB27");
+                await CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex, exID);
                 return null;
             }
 

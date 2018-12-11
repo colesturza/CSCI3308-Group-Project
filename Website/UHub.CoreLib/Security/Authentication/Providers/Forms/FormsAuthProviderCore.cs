@@ -23,7 +23,8 @@ namespace UHub.CoreLib.Security.Authentication.Providers.Forms
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex, "D1CBD896-CAB8-48AD-9DA6-DD2DE9CEA2A1");
+                var exID = new Guid("D1CBD896-CAB8-48AD-9DA6-DD2DE9CEA2A1");
+                CoreFactory.Singleton.Logging.CreateErrorLog(ex, exID);
                 return PasswordValidationStatus.UnknownError;
             }
 

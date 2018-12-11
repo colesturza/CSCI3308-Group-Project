@@ -42,7 +42,8 @@ namespace UHub.CoreLib.Entities.SchoolMajors.DataInterop
             }
             catch (Exception ex)
             {
-                await CoreFactory.Singleton.Logging.CreateErrorLogAsync("E80BCB26-D221-458A-999C-C885A0D4F018", ex);
+                var exID = new Guid("E80BCB26-D221-458A-999C-C885A0D4F018");
+                await CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex, exID);
                 return null;
             }
         }
@@ -68,7 +69,8 @@ namespace UHub.CoreLib.Entities.SchoolMajors.DataInterop
             }
             catch (Exception ex)
             {
-                await CoreFactory.Singleton.Logging.CreateErrorLogAsync("B007CC88-B728-4BDE-854C-C125A263FDB5", ex);
+                var exID = new Guid("B007CC88-B728-4BDE-854C-C125A263FDB5");
+                await CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex, exID);
                 return null;
             }
         }
@@ -100,7 +102,8 @@ namespace UHub.CoreLib.Entities.SchoolMajors.DataInterop
             }
             catch (Exception ex)
             {
-                await CoreFactory.Singleton.Logging.CreateErrorLogAsync("03710860-1CB4-4867-BFE8-2ED83F0ED6A2", ex);
+                var exID = new Guid("03710860-1CB4-4867-BFE8-2ED83F0ED6A2");
+                await CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex, exID);
                 return null;
             }
         }
@@ -137,7 +140,8 @@ namespace UHub.CoreLib.Entities.SchoolMajors.DataInterop
             }
             catch (Exception ex)
             {
-                await CoreFactory.Singleton.Logging.CreateErrorLogAsync("EA923AAB-04CE-4B39-8F83-6DED5538CE76", ex);
+                var exID = new Guid("EA923AAB-04CE-4B39-8F83-6DED5538CE76");
+                await CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex, exID);
                 return null;
             }
         }
@@ -174,7 +178,8 @@ namespace UHub.CoreLib.Entities.SchoolMajors.DataInterop
             }
             catch (Exception ex)
             {
-                await CoreFactory.Singleton.Logging.CreateErrorLogAsync("203FD5B2-3C56-4A67-9D8F-01DC54A1F5B2", ex);
+                var exID = new Guid("203FD5B2-3C56-4A67-9D8F-01DC54A1F5B2");
+                await CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex, exID);
                 return null;
             }
         }

@@ -44,7 +44,8 @@ namespace UHub.CoreLib.Entities.Posts.DataInterop
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex, "15DBCA1B-D428-4584-975A-2CFFE96A65CA");
+                var exID = new Guid("15DBCA1B-D428-4584-975A-2CFFE96A65CA");
+                CoreFactory.Singleton.Logging.CreateErrorLog(ex, exID);
                 return null;
             }
 
@@ -79,7 +80,8 @@ namespace UHub.CoreLib.Entities.Posts.DataInterop
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex, "7697B4EE-AFAD-42D3-8468-0E24FAB42533");
+                var exID = new Guid("7697B4EE-AFAD-42D3-8468-0E24FAB42533");
+                CoreFactory.Singleton.Logging.CreateErrorLog(ex, exID);
                 return null;
             }
         }
@@ -120,7 +122,8 @@ namespace UHub.CoreLib.Entities.Posts.DataInterop
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex, "60FDED7B-BF1D-4EE2-A1C9-85CAE25152AF");
+                var exID = new Guid("60FDED7B-BF1D-4EE2-A1C9-85CAE25152AF");
+                CoreFactory.Singleton.Logging.CreateErrorLog(ex, exID);
                 return null;
             }
         }
@@ -175,14 +178,15 @@ namespace UHub.CoreLib.Entities.Posts.DataInterop
                 return postSet;
 
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex, "C3406AA4-2E97-4D83-BE47-0597F8773898");
+                var exID = new Guid("C3406AA4-2E97-4D83-BE47-0597F8773898");
+                CoreFactory.Singleton.Logging.CreateErrorLog(ex, exID);
                 StartID = 0;
                 return null;
             }
 
         }
 
-        }
     }
+}

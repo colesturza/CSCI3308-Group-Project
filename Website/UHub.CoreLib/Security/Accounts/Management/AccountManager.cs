@@ -83,7 +83,8 @@ namespace UHub.CoreLib.Security.Accounts.Management
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex, "AADC0919-B3BE-4C98-BB8E-FCB283E6F02E");
+                var exID = new Guid("AADC0919-B3BE-4C98-BB8E-FCB283E6F02E");
+                CoreFactory.Singleton.Logging.CreateErrorLog(ex, exID);
                 return AcctCreateResultCode.UnknownError;
             }
 
@@ -102,7 +103,8 @@ namespace UHub.CoreLib.Security.Accounts.Management
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex, "B48A52B7-CDCC-42DB-9CFF-CF60C3C7067A");
+                var exID = new Guid("B48A52B7-CDCC-42DB-9CFF-CF60C3C7067A");
+                CoreFactory.Singleton.Logging.CreateErrorLog(ex, exID);
                 return AcctCreateResultCode.UnknownError;
             }
 
@@ -117,7 +119,8 @@ namespace UHub.CoreLib.Security.Accounts.Management
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex, "84B9559A-4F55-4B00-9160-7C713D22D29C");
+                var exID = new Guid("84B9559A-4F55-4B00-9160-7C713D22D29C");
+                CoreFactory.Singleton.Logging.CreateErrorLog(ex, exID);
                 return AcctCreateResultCode.UnknownError;
             }
 
@@ -138,7 +141,8 @@ namespace UHub.CoreLib.Security.Accounts.Management
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex, "90820E9B-F97A-48F2-BEB2-C23E17DE22D0");
+                var exID = new Guid("90820E9B-F97A-48F2-BEB2-C23E17DE22D0");
+                CoreFactory.Singleton.Logging.CreateErrorLog(ex, exID);
                 return AcctCreateResultCode.UnknownError;
             }
 
@@ -190,7 +194,8 @@ namespace UHub.CoreLib.Security.Accounts.Management
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex, "A983AFB8-920A-4850-9197-3DDE7F6E89CC");
+                var exID = new Guid("A983AFB8-920A-4850-9197-3DDE7F6E89CC");
+                CoreFactory.Singleton.Logging.CreateErrorLog(ex, exID);
                 return AcctCreateResultCode.UnknownError;
             }
 
@@ -198,8 +203,9 @@ namespace UHub.CoreLib.Security.Accounts.Management
 
 
             if (userID == null)
-            {                
-                CoreFactory.Singleton.Logging.CreateErrorLog("UserID Empty", "2669D182-B402-44A4-A8ED-F507994E8C2D");
+            {
+                var exID = new Guid("2669D182-B402-44A4-A8ED-F507994E8C2D");
+                CoreFactory.Singleton.Logging.CreateFailureLog("UserID Empty", exID);
                 return AcctCreateResultCode.UnknownError;
             }
 
@@ -216,7 +222,6 @@ namespace UHub.CoreLib.Security.Accounts.Management
 #pragma warning restore
 
 
-
             //get cms user
             User cmsUser = null;
             IUserConfirmToken confirmToken = null;
@@ -227,18 +232,22 @@ namespace UHub.CoreLib.Security.Accounts.Management
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex, "03AE31F9-5EA5-4456-9FB8-67765ECBC7D7");
+                var exID = new Guid("03AE31F9-5EA5-4456-9FB8-67765ECBC7D7");
+                CoreFactory.Singleton.Logging.CreateErrorLog(ex, exID);
                 return AcctCreateResultCode.UnknownError;
             }
 
-            if (userID == null)
+            if (cmsUser == null)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLog("UserID Empty", "60E0DCEE-AE49-4892-8E4B-1A1165F12383");
+                var exID = new Guid("FBDE65A7-281C-456B-9CCE-2F599D15F8F1");
+                CoreFactory.Singleton.Logging.CreateFailureLog(exID);
                 return AcctCreateResultCode.UnknownError;
             }
+
             if (confirmToken == null)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLog("Confirmation Token Not Available", "33EC210D-5BE2-433B-8E39-FA5E3AD57312");
+                var exID = new Guid("33EC210D-5BE2-433B-8E39-FA5E3AD57312");
+                CoreFactory.Singleton.Logging.CreateFailureLog("Confirmation Token Not Available", exID);
                 return AcctCreateResultCode.UnknownError;
             }
 
@@ -266,7 +275,8 @@ namespace UHub.CoreLib.Security.Accounts.Management
                 {
                     //account creating, but auto login failed
                     //should only ever occur during tests
-                    CoreFactory.Singleton.Logging.CreateFailureLog("Test Failure - Ignore", "A275649B-AD89-43E3-8DE2-B81B6F47FE6A");
+                    var exID = new Guid("A275649B-AD89-43E3-8DE2-B81B6F47FE6A");
+                    CoreFactory.Singleton.Logging.CreateWarningLog("Test Failure - Ignore", exID);
                     canLogin = false;
                 }
             }
@@ -282,7 +292,8 @@ namespace UHub.CoreLib.Security.Accounts.Management
                 var emailSendStatus = CoreFactory.Singleton.Mail.TrySendMessage(msg);
                 if (emailSendStatus != EmailResultCode.Success)
                 {
-                    CoreFactory.Singleton.Logging.CreateFailureLog("Email Failed to Send", "AEBDE62B-31D5-4B48-8D26-3123AA5219A3");
+                    var exID = new Guid("AEBDE62B-31D5-4B48-8D26-3123AA5219A3");
+                    CoreFactory.Singleton.Logging.CreateFailureLog("Email Failed to Send", exID);
                     return AcctCreateResultCode.UnknownError;
                 }
             }
@@ -338,7 +349,8 @@ namespace UHub.CoreLib.Security.Accounts.Management
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex, "194B1895-E9AB-44B3-A8CD-FCACCA4286FB");
+                var exID = new Guid("194B1895-E9AB-44B3-A8CD-FCACCA4286FB");
+                CoreFactory.Singleton.Logging.CreateErrorLog(ex, exID);
                 return AcctUpdateResultCode.UnknownError;
             }
 
@@ -381,7 +393,8 @@ namespace UHub.CoreLib.Security.Accounts.Management
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex, "9E33013D-A3E9-4E96-A2A1-1E5462446125");
+                var exID = new Guid("9E33013D-A3E9-4E96-A2A1-1E5462446125");
+                CoreFactory.Singleton.Logging.CreateErrorLog(ex, exID);
                 return AcctUpdateResultCode.UnknownError;
             }
 
@@ -443,7 +456,8 @@ namespace UHub.CoreLib.Security.Accounts.Management
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex, "8E19A36A-57F3-463A-8F7C-BCFDE476D09A");
+                var exID = new Guid("8E19A36A-57F3-463A-8F7C-BCFDE476D09A");
+                CoreFactory.Singleton.Logging.CreateErrorLog(ex, exID);
                 return AcctConfirmResultCode.UnknownError;
             }
         }
@@ -469,7 +483,8 @@ namespace UHub.CoreLib.Security.Accounts.Management
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex, "D5D6FADE-9B32-40C3-A576-E1756884FCFD");
+                var exID = new Guid("D5D6FADE-9B32-40C3-A576-E1756884FCFD");
+                CoreFactory.Singleton.Logging.CreateErrorLog(ex, exID);
                 return false;
             }
 #pragma warning restore
@@ -486,6 +501,7 @@ namespace UHub.CoreLib.Security.Accounts.Management
         {
             var version = SysSec.Membership.GeneratePassword(USER_VERSION_LEN, 0);
             //sterilize for token processing
+            //TODO:
             version = version.Replace('|', '0');
 
 
@@ -498,7 +514,8 @@ namespace UHub.CoreLib.Security.Accounts.Management
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex, "695B957C-585E-42C2-95B2-1926257732B9");
+                var exID = new Guid("695B957C-585E-42C2-95B2-1926257732B9");
+                CoreFactory.Singleton.Logging.CreateErrorLog(ex, exID);
                 return false;
             }
 #pragma warning restore
@@ -540,7 +557,8 @@ namespace UHub.CoreLib.Security.Accounts.Management
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex, "FE482294-6197-4048-99DC-4DE4421823B9");
+                var exID = new Guid("FE482294-6197-4048-99DC-4DE4421823B9");
+                CoreFactory.Singleton.Logging.CreateErrorLog(ex, exID);
                 return AcctPswdResultCode.UnknownError;
             }
 
@@ -617,6 +635,8 @@ namespace UHub.CoreLib.Security.Accounts.Management
                 var isPswdChanged = TryDoPasswordWork(modUser.ID.Value, NewPassword);
                 if (!isPswdChanged)
                 {
+                    var exID = new Guid("FAF8E35E-A038-460D-893F-284ACB5B5FB3");
+                    CoreFactory.Singleton.Logging.CreateFailureLog(exID);
                     return AcctPswdResultCode.UnknownError;
                 }
 
@@ -628,6 +648,8 @@ namespace UHub.CoreLib.Security.Accounts.Management
                     var versionResult = TryUpdateUserVersion(modUser.ID.Value);
                     if (!versionResult)
                     {
+                        var exID = new Guid("CB720EC3-43E3-460E-A77C-F1220333E1A9");
+                        CoreFactory.Singleton.Logging.CreateFailureLog(exID);
                         return AcctPswdResultCode.UnknownError;
                     }
 
@@ -646,7 +668,8 @@ namespace UHub.CoreLib.Security.Accounts.Management
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex, "B9932471-7779-4710-A97E-BB1FA147A995");
+                var exID = new Guid("B9932471-7779-4710-A97E-BB1FA147A995");
+                CoreFactory.Singleton.Logging.CreateErrorLog(ex, exID);
                 return AcctPswdResultCode.UnknownError;
             }
         }
@@ -691,7 +714,8 @@ namespace UHub.CoreLib.Security.Accounts.Management
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex, "8B2D0169-6AFA-46FB-807B-1CA3F88C90C2");
+                var exID = new Guid("8B2D0169-6AFA-46FB-807B-1CA3F88C90C2");
+                CoreFactory.Singleton.Logging.CreateErrorLog(ex, exID);
                 return AcctRecoveryResultCode.UnknownError;
             }
 
@@ -710,7 +734,8 @@ namespace UHub.CoreLib.Security.Accounts.Management
                 }
                 catch (Exception ex)
                 {
-                    CoreFactory.Singleton.Logging.CreateErrorLog(ex, "3F6883F6-3241-4B55-A7FB-7C2C8C43153A");
+                    var exID = new Guid("3F6883F6-3241-4B55-A7FB-7C2C8C43153A");
+                    CoreFactory.Singleton.Logging.CreateErrorLog(ex, exID);
                 }
                 return resultCode;
             }
@@ -766,7 +791,8 @@ namespace UHub.CoreLib.Security.Accounts.Management
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex, "C16CA5A3-B142-45FB-8337-F8FB8CB5F0B4");
+                var exID = new Guid("C16CA5A3-B142-45FB-8337-F8FB8CB5F0B4");
+                CoreFactory.Singleton.Logging.CreateErrorLog(ex, exID);
                 return AcctRecoveryResultCode.UnknownError;
             }
 
@@ -857,7 +883,8 @@ namespace UHub.CoreLib.Security.Accounts.Management
                 }
                 catch (Exception ex)
                 {
-                    CoreFactory.Singleton.Logging.CreateErrorLog(ex, "6B11B5D6-6B8D-419C-B45D-0444EE23EA32");
+                    var exID = new Guid("6B11B5D6-6B8D-419C-B45D-0444EE23EA32");
+                    CoreFactory.Singleton.Logging.CreateWarningLog(ex, exID);
                 }
 
                 //remove any recovery contexts
@@ -871,7 +898,8 @@ namespace UHub.CoreLib.Security.Accounts.Management
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex, "8641F1E3-B29B-4CC1-ABA5-90B8693625EE");
+                var exID = new Guid("8641F1E3-B29B-4CC1-ABA5-90B8693625EE");
+                CoreFactory.Singleton.Logging.CreateErrorLog(ex, exID);
                 return AcctRecoveryResultCode.UnknownError;
             }
         }
@@ -893,7 +921,8 @@ namespace UHub.CoreLib.Security.Accounts.Management
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex, "8CA322D4-FAD2-4C03-9290-47BED6C9C89B");
+                var exID = new Guid("8CA322D4-FAD2-4C03-9290-47BED6C9C89B");
+                CoreFactory.Singleton.Logging.CreateErrorLog(ex, exID);
                 return null;
             }
         }
@@ -925,7 +954,8 @@ namespace UHub.CoreLib.Security.Accounts.Management
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex, "06ADB8E2-6A9C-44DD-B871-0713D51CD700");
+                var exID = new Guid("06ADB8E2-6A9C-44DD-B871-0713D51CD700");
+                CoreFactory.Singleton.Logging.CreateErrorLog(ex, exID);
                 return (AcctRecoveryResultCode.UnknownError, null, null);
             }
 
@@ -984,7 +1014,8 @@ namespace UHub.CoreLib.Security.Accounts.Management
 
                 if (context == null)
                 {
-                    CoreFactory.Singleton.Logging.CreateErrorLog("Recovery Context Not Found", "FD4B0698-16C5-4446-BC8C-F1DFCBF21C3C");
+                    var exID = new Guid("C60DF37E-2FC2-4CC3-96BC-C414F00ED4A2");
+                    CoreFactory.Singleton.Logging.CreateFailureLog("Recovery Context Not Found", exID);
                     return (AcctRecoveryResultCode.UnknownError, null, null);
                 }
 
@@ -994,7 +1025,8 @@ namespace UHub.CoreLib.Security.Accounts.Management
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex, "84D8B77E-6C6E-4D2B-A37A-4433F5A4E102");
+                var exID = new Guid("84D8B77E-6C6E-4D2B-A37A-4433F5A4E102");
+                CoreFactory.Singleton.Logging.CreateErrorLog(ex, exID);
                 return (AcctRecoveryResultCode.UserInvalid, null, null);
             }
 
@@ -1059,7 +1091,8 @@ namespace UHub.CoreLib.Security.Accounts.Management
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex, "54879964-C1BD-420C-B54D-BFBECFB71A52");
+                var exID = new Guid("54879964-C1BD-420C-B54D-BFBECFB71A52");
+                CoreFactory.Singleton.Logging.CreateErrorLog(ex, exID);
                 return false;
             }
 #pragma warning restore
@@ -1089,12 +1122,14 @@ namespace UHub.CoreLib.Security.Accounts.Management
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex, "AA3E2DB3-5CCF-400D-8046-1D982E723F58");
+                var exID = new Guid("AA3E2DB3-5CCF-400D-8046-1D982E723F58");
+                CoreFactory.Singleton.Logging.CreateErrorLog(ex, exID);
                 return false;
             }
             if (pswdHash.IsEmpty())
             {
-                CoreFactory.Singleton.Logging.CreateErrorLog("Pswd Not Set", "3C722062-9158-4FCB-8A9D-2D132B6784E5");
+                var exID = new Guid("3C722062-9158-4FCB-8A9D-2D132B6784E5");
+                CoreFactory.Singleton.Logging.CreateFailureLog("Pswd Not Set", exID);
                 return false;
             }
             try
@@ -1104,7 +1139,8 @@ namespace UHub.CoreLib.Security.Accounts.Management
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex, "047BD588-A27E-4B49-AB5B-8157589AAA4B");
+                var exID = new Guid("047BD588-A27E-4B49-AB5B-8157589AAA4B");
+                CoreFactory.Singleton.Logging.CreateErrorLog(ex, exID);
                 return false;
             }
 

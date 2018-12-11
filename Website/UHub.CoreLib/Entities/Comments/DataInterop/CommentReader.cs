@@ -41,7 +41,8 @@ namespace UHub.CoreLib.Entities.Comments.DataInterop
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex, "88E483DA-53AE-492D-95CA-C02E14FC5868");
+                var exID = new Guid("88E483DA-53AE-492D-95CA-C02E14FC5868");
+                CoreFactory.Singleton.Logging.CreateErrorLog(ex, exID);
                 return null;
             }
         }
@@ -74,7 +75,8 @@ namespace UHub.CoreLib.Entities.Comments.DataInterop
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex, "EE567558-4FFB-4017-A4BF-EE7D3B5A5365");
+                var exID = new Guid("EE567558-4FFB-4017-A4BF-EE7D3B5A5365");
+                CoreFactory.Singleton.Logging.CreateErrorLog(ex, exID);
                 return null;
             }
         }

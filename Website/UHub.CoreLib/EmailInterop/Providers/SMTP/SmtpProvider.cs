@@ -48,7 +48,8 @@ namespace UHub.CoreLib.EmailInterop.Providers.SMTP
                     }
                     catch (Exception ex)
                     {
-                        CoreFactory.Singleton.Logging.CreateErrorLog(ex, "052CD68D-D621-4549-BDFD-B4A0587C908A");
+                        var exID = new Guid("052CD68D-D621-4549-BDFD-B4A0587C908A");
+                        CoreFactory.Singleton.Logging.CreateErrorLog(ex, exID);
                         return EmailResultCode.SendError;
                     }
                 }

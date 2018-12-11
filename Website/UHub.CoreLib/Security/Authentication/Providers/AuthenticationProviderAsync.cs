@@ -113,7 +113,8 @@ namespace UHub.CoreLib.Security.Authentication.Providers
             }
             catch (Exception ex)
             {
-                await CoreFactory.Singleton.Logging.CreateErrorLogAsync("8959AB05-5BEF-4351-A980-A3A8AD140EE7", ex);
+                var exID = new Guid("8959AB05-5BEF-4351-A980-A3A8AD140EE7");
+                await CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex, exID);
 
                 var CmsUser = UserReader.GetAnonymousUser();
                 return (TokenValidationStatus.TokenAESFailure, CmsUser);

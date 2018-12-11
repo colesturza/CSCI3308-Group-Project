@@ -105,8 +105,8 @@ namespace UHub.CoreLib.Entities.ClubModerators.APIControllers
             }
             catch (Exception ex)
             {
-                var errCode = "69605919-C129-4409-BE24-3FFFBD702B39";
-                await CoreFactory.Singleton.Logging.CreateErrorLogAsync(errCode, ex);
+                var exID = new Guid("69605919-C129-4409-BE24-3FFFBD702B39");
+                await CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex, exID);
 
                 statCode = HttpStatusCode.InternalServerError;
             }

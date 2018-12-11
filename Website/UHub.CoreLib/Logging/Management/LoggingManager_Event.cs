@@ -22,10 +22,16 @@ namespace UHub.CoreLib.Logging.Management
         /// <param name="data"></param>
         public void CreateSuccessLog<T>(T Data)
         {
+            string uid = null;
+            if (Data is Guid)
+            {
+                uid = Data.ToString();
+            }
+
             var eventData = new EventLogData
             {
                 EventType = EventType.Success,
-                EventID = null,
+                EventID = uid,
                 Content = Data.ToFormattedJSON(),
                 CreatedBy = null,
                 CreatedDate = DateTimeOffset.UtcNow
@@ -38,12 +44,12 @@ namespace UHub.CoreLib.Logging.Management
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="data"></param>
-        public void CreateSuccessLog<T>(T Data, string UID)
+        public void CreateSuccessLog<T>(T Data, Guid UID)
         {
             var eventData = new EventLogData
             {
                 EventType = EventType.Success,
-                EventID = UID,
+                EventID = UID.ToString(),
                 Content = Data.ToFormattedJSON(),
                 CreatedBy = null,
                 CreatedDate = DateTimeOffset.UtcNow
@@ -72,12 +78,12 @@ namespace UHub.CoreLib.Logging.Management
         /// Create success message
         /// </summary>
         /// <param name="message"></param>
-        public void CreateSuccessLog(string Message, string UID)
+        public void CreateSuccessLog(string Message, Guid UID)
         {
             var eventData = new EventLogData
             {
                 EventType = EventType.Success,
-                EventID = UID,
+                EventID = UID.ToString(),
                 Content = Message,
                 CreatedBy = null,
                 CreatedDate = DateTimeOffset.UtcNow
@@ -94,10 +100,16 @@ namespace UHub.CoreLib.Logging.Management
         /// <param name="data"></param>
         public void CreateInfoLog<T>(T Data)
         {
+            string uid = null;
+            if (Data is Guid)
+            {
+                uid = Data.ToString();
+            }
+
             var eventData = new EventLogData
             {
                 EventType = EventType.Information,
-                EventID = null,
+                EventID = uid,
                 Content = Data.ToFormattedJSON(),
                 CreatedBy = null,
                 CreatedDate = DateTimeOffset.UtcNow
@@ -110,12 +122,12 @@ namespace UHub.CoreLib.Logging.Management
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="data"></param>
-        public void CreateInfoLog<T>(T Data, string UID)
+        public void CreateInfoLog<T>(T Data, Guid UID)
         {
             var eventData = new EventLogData
             {
                 EventType = EventType.Information,
-                EventID = UID,
+                EventID = UID.ToString(),
                 Content = Data.ToFormattedJSON(),
                 CreatedBy = null,
                 CreatedDate = DateTimeOffset.UtcNow
@@ -144,12 +156,12 @@ namespace UHub.CoreLib.Logging.Management
         /// Create information message
         /// </summary>
         /// <param name="message"></param>
-        public void CreateInfoLog(string Message, string UID)
+        public void CreateInfoLog(string Message, Guid UID)
         {
             var eventData = new EventLogData
             {
                 EventType = EventType.Information,
-                EventID = UID,
+                EventID = UID.ToString(),
                 Content = Message,
                 CreatedBy = null,
                 CreatedDate = DateTimeOffset.UtcNow
@@ -166,10 +178,16 @@ namespace UHub.CoreLib.Logging.Management
         /// <param name="data"></param>
         public void CreateWarningLog<T>(T Data)
         {
+            string uid = null;
+            if (Data is Guid)
+            {
+                uid = Data.ToString();
+            }
+
             var eventData = new EventLogData
             {
                 EventType = EventType.Warning,
-                EventID = null,
+                EventID = uid,
                 Content = Data.ToFormattedJSON(),
                 CreatedBy = null,
                 CreatedDate = DateTimeOffset.UtcNow
@@ -182,12 +200,12 @@ namespace UHub.CoreLib.Logging.Management
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="data"></param>
-        public void CreateWarningLog<T>(T Data, string UID)
+        public void CreateWarningLog<T>(T Data, Guid UID)
         {
             var eventData = new EventLogData
             {
                 EventType = EventType.Warning,
-                EventID = UID,
+                EventID = UID.ToString(),
                 Content = Data.ToFormattedJSON(),
                 CreatedBy = null,
                 CreatedDate = DateTimeOffset.UtcNow
@@ -216,12 +234,12 @@ namespace UHub.CoreLib.Logging.Management
         /// Create warning message
         /// </summary>
         /// <param name="message"></param>
-        public void CreateWarningLog(string Message, string UID)
+        public void CreateWarningLog(string Message, Guid UID)
         {
             var eventData = new EventLogData
             {
                 EventType = EventType.Warning,
-                EventID = UID,
+                EventID = UID.ToString(),
                 Content = Message,
                 CreatedBy = null,
                 CreatedDate = DateTimeOffset.UtcNow
@@ -239,10 +257,16 @@ namespace UHub.CoreLib.Logging.Management
         /// <param name="data"></param>
         public void CreateFailureLog<T>(T Data)
         {
+            string uid = null;
+            if (Data is Guid)
+            {
+                uid = Data.ToString();
+            }
+
             var eventData = new EventLogData
             {
                 EventType = EventType.Failure,
-                EventID = null,
+                EventID = uid,
                 Content = Data.ToFormattedJSON(),
                 CreatedBy = null,
                 CreatedDate = DateTimeOffset.UtcNow
@@ -255,12 +279,12 @@ namespace UHub.CoreLib.Logging.Management
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="data"></param>
-        public void CreateFailureLog<T>(T Data, string UID)
+        public void CreateFailureLog<T>(T Data, Guid UID)
         {
             var eventData = new EventLogData
             {
                 EventType = EventType.Failure,
-                EventID = UID,
+                EventID = UID.ToString(),
                 Content = Data.ToFormattedJSON(),
                 CreatedBy = null,
                 CreatedDate = DateTimeOffset.UtcNow
@@ -289,12 +313,12 @@ namespace UHub.CoreLib.Logging.Management
         /// Create failure message
         /// </summary>
         /// <param name="message"></param>
-        public void CreateFailureLog(string Message, string UID)
+        public void CreateFailureLog(string Message, Guid UID)
         {
             var eventData = new EventLogData
             {
                 EventType = EventType.Failure,
-                EventID = UID,
+                EventID = UID.ToString(),
                 Content = Message,
                 CreatedBy = null,
                 CreatedDate = DateTimeOffset.UtcNow
@@ -312,29 +336,30 @@ namespace UHub.CoreLib.Logging.Management
         public void CreateErrorLog<T>(T Data)
         {
             EventLogData eventData = null;
+            string content = "";
+            string uid = null;
+
             if (Data is Exception ex)
             {
-                eventData = new EventLogData
-                {
-                    EventType = EventType.Error,
-                    EventID = null,
-                    Content = ex.ToString(),
-                    CreatedBy = null,
-                    CreatedDate = DateTimeOffset.UtcNow
-                };
+                content = ex.ToString();
+            }
+            else if(Data is Guid)
+            {
+                uid = Data.ToString();
             }
             else
             {
-                eventData = new EventLogData
-                {
-                    EventType = EventType.Error,
-                    EventID = null,
-                    Content = Data.ToFormattedJSON(),
-                    CreatedBy = null,
-                    CreatedDate = DateTimeOffset.UtcNow
-                };
+                content = Data.ToFormattedJSON();
             }
 
+            eventData = new EventLogData
+            {
+                EventType = EventType.Error,
+                EventID = uid,
+                Content = content,
+                CreatedBy = null,
+                CreatedDate = DateTimeOffset.UtcNow
+            };
 
             CreateEventLog(eventData);
         }
@@ -343,31 +368,28 @@ namespace UHub.CoreLib.Logging.Management
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="data"></param>
-        public void CreateErrorLog<T>(T Data, string UID)
+        public void CreateErrorLog<T>(T Data, Guid UID)
         {
             EventLogData eventData = null;
+            string content = "";
+
             if (Data is Exception ex)
             {
-                eventData = new EventLogData
-                {
-                    EventType = EventType.Error,
-                    EventID = UID,
-                    Content = ex.ToString(),
-                    CreatedBy = null,
-                    CreatedDate = DateTimeOffset.UtcNow
-                };
+                content = ex.ToString();
             }
             else
             {
-                eventData = new EventLogData
-                {
-                    EventType = EventType.Error,
-                    EventID = UID,
-                    Content = Data.ToFormattedJSON(),
-                    CreatedBy = null,
-                    CreatedDate = DateTimeOffset.UtcNow
-                };
+                content = Data.ToFormattedJSON();
             }
+
+            eventData = new EventLogData
+            {
+                EventType = EventType.Error,
+                EventID = UID.ToString(),
+                Content = content,
+                CreatedBy = null,
+                CreatedDate = DateTimeOffset.UtcNow
+            };
 
             CreateEventLog(eventData);
         }
@@ -394,12 +416,12 @@ namespace UHub.CoreLib.Logging.Management
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="data"></param>
-        public void CreateErrorLog(string Message, string UID)
+        public void CreateErrorLog(string Message, Guid UID)
         {
             var eventData = new EventLogData
             {
                 EventType = EventType.Error,
-                EventID = UID,
+                EventID = UID.ToString(),
                 Content = Message,
                 CreatedBy = null,
                 CreatedDate = DateTimeOffset.UtcNow
@@ -423,10 +445,16 @@ namespace UHub.CoreLib.Logging.Management
         /// <param name="data"></param>
         public void CreateEventLog<T>(T Data, EventType EventType)
         {
+            string uid = null;
+            if (Data is Guid)
+            {
+                uid = Data.ToString();
+            }
+
             var eventData = new EventLogData
             {
                 EventType = EventType,
-                EventID = null,
+                EventID = uid,
                 Content = Data.ToFormattedJSON(),
                 CreatedBy = null,
                 CreatedDate = DateTimeOffset.UtcNow
@@ -439,12 +467,12 @@ namespace UHub.CoreLib.Logging.Management
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="data"></param>
-        public void CreateEventLog<T>(T Data, EventType EventType, string UID)
+        public void CreateEventLog<T>(T Data, EventType EventType, Guid UID)
         {
             var eventData = new EventLogData
             {
                 EventType = EventType,
-                EventID = UID,
+                EventID = UID.ToString(),
                 Content = Data.ToFormattedJSON(),
                 CreatedBy = null,
                 CreatedDate = DateTimeOffset.UtcNow
@@ -473,12 +501,12 @@ namespace UHub.CoreLib.Logging.Management
         /// Create success message
         /// </summary>
         /// <param name="message"></param>
-        public void CreateEventLog(string Message, EventType EventType, string UID)
+        public void CreateEventLog(string Message, EventType EventType, Guid UID)
         {
             var eventData = new EventLogData
             {
                 EventType = EventType,
-                EventID = UID,
+                EventID = UID.ToString(),
                 Content = Message,
                 CreatedBy = null,
                 CreatedDate = DateTimeOffset.UtcNow

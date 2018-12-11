@@ -68,7 +68,8 @@ namespace UHub.CoreLib.Entities.SchoolMajors.Management
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex, "2804D040-6F5A-4F96-9752-1DEFB73642C6");
+                var exID = new Guid("2804D040-6F5A-4F96-9752-1DEFB73642C6");
+                CoreFactory.Singleton.Logging.CreateErrorLog(ex, exID);
                 return (null, SchoolMajorResultCode.UnknownError);
             }
 

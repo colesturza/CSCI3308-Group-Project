@@ -41,7 +41,8 @@ namespace UHub.CoreLib.Entities.SchoolClubs.DataInterop
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex, "DB0F9B85-F015-4898-9640-AC932B7BE290");
+                var exID = new Guid("DB0F9B85-F015-4898-9640-AC932B7BE290");
+                CoreFactory.Singleton.Logging.CreateErrorLog(ex, exID);
                 return null;
             }
         }
@@ -68,7 +69,8 @@ namespace UHub.CoreLib.Entities.SchoolClubs.DataInterop
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex, "1632E25F-B6D8-4597-B45C-F96A6E3B2EE1");
+                var exID = new Guid("1632E25F-B6D8-4597-B45C-F96A6E3B2EE1");
+                CoreFactory.Singleton.Logging.CreateErrorLog(ex, exID);
                 return null;
             }
         }
@@ -100,7 +102,8 @@ namespace UHub.CoreLib.Entities.SchoolClubs.DataInterop
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex, "9F041C9F-1ACC-4BFE-BAEF-04906E62FCC4");
+                var exID = new Guid("9F041C9F-1ACC-4BFE-BAEF-04906E62FCC4");
+                CoreFactory.Singleton.Logging.CreateErrorLog(ex, exID);
                 return null;
             }
         }
@@ -137,7 +140,8 @@ namespace UHub.CoreLib.Entities.SchoolClubs.DataInterop
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex, "47AC2532-FABD-4709-A436-07F307472741");
+                var exID = new Guid("47AC2532-FABD-4709-A436-07F307472741");
+                CoreFactory.Singleton.Logging.CreateErrorLog(ex, exID);
                 return null;
             }
         }
@@ -174,7 +178,8 @@ namespace UHub.CoreLib.Entities.SchoolClubs.DataInterop
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex, "9ED9915C-F4C5-4CB7-991F-B40ABDD6A965");
+                var exID = new Guid("9ED9915C-F4C5-4CB7-991F-B40ABDD6A965");
+                CoreFactory.Singleton.Logging.CreateErrorLog(ex, exID);
                 return null;
             }
         }

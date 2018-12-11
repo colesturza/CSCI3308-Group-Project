@@ -55,7 +55,8 @@ namespace UHub.CoreLib.Entities.ClubModerators.Management
             }
             catch (Exception ex)
             {
-                await CoreFactory.Singleton.Logging.CreateErrorLogAsync("169CBE64-325B-4820-9E21-833B1BC8DE4D", ex);
+                var exID = new Guid("169CBE64-325B-4820-9E21-833B1BC8DE4D");
+                await CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex, exID);
                 return (null, ClubModeratorResultCode.UnknownError);
             }
 

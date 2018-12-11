@@ -74,7 +74,8 @@ namespace UHub.CoreLib.Entities.Users.APIControllers
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex, "D8EB78E4-3C48-4976-A234-6B5EACDC053A");
+                var exID = new Guid("D8EB78E4-3C48-4976-A234-6B5EACDC053A");
+                CoreFactory.Singleton.Logging.CreateErrorLog(ex, exID);
                 return InternalServerError();
             }
 
@@ -132,7 +133,8 @@ namespace UHub.CoreLib.Entities.Users.APIControllers
             }
             catch (Exception ex)
             {
-                await CoreFactory.Singleton.Logging.CreateErrorLogAsync("D2D5D240-FEBB-43A0-8B27-2B44AB28AEF7", ex);
+                var exID = new Guid("D2D5D240-FEBB-43A0-8B27-2B44AB28AEF7");
+                await CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex, exID);
                 return InternalServerError();
             }
 

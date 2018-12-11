@@ -68,7 +68,8 @@ namespace UHub.CoreLib.Entities.SchoolClubs.Management
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex, "196DC520-0ADE-4B16-AF2E-E33A49F9CD73");
+                var exID = new Guid("196DC520-0ADE-4B16-AF2E-E33A49F9CD73");
+                CoreFactory.Singleton.Logging.CreateErrorLog(ex, exID);
                 return (null, SchoolClubResultCode.UnknownError);
             }
 

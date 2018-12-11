@@ -122,8 +122,8 @@ namespace UHub.CoreLib.Entities.Posts.APIControllers
             }
             catch (Exception ex)
             {
-                var errCode = "2EAA1B03-A569-4A16-A77F-403F7DB7CA36";
-                await CoreFactory.Singleton.Logging.CreateErrorLogAsync(errCode, ex);
+                var exID = new Guid("2EAA1B03-A569-4A16-A77F-403F7DB7CA36");
+                await CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex, exID);
 
                 statCode = HttpStatusCode.InternalServerError;
             }

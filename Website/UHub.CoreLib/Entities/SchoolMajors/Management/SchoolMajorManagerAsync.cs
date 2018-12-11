@@ -69,7 +69,8 @@ namespace UHub.CoreLib.Entities.SchoolMajors.Management
             }
             catch (Exception ex)
             {
-                await CoreFactory.Singleton.Logging.CreateErrorLogAsync("B19909EB-E344-4A45-97C1-D8A504950D70", ex);
+                var exID = new Guid("B19909EB-E344-4A45-97C1-D8A504950D70");
+                await CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex, exID);
                 return (null, SchoolMajorResultCode.UnknownError);
             }
 

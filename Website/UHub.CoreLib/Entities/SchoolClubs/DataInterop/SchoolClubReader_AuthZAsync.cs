@@ -30,7 +30,8 @@ namespace UHub.CoreLib.Entities.SchoolClubs.DataInterop
             }
             catch (Exception ex)
             {
-                await CoreFactory.Singleton.Logging.CreateErrorLogAsync("92A4A7C6-FA84-4E58-BACB-076FF9C806E4", ex);
+                var exID = new Guid("92A4A7C6-FA84-4E58-BACB-076FF9C806E4");
+                await CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex, exID);
                 return false;
             }
         }
@@ -53,7 +54,8 @@ namespace UHub.CoreLib.Entities.SchoolClubs.DataInterop
             }
             catch (Exception ex)
             {
-                await CoreFactory.Singleton.Logging.CreateErrorLogAsync("BDC177ED-9A72-4A50-90D4-AF03CB32E9EB", ex);
+                var exID = new Guid("BDC177ED-9A72-4A50-90D4-AF03CB32E9EB");
+                await CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex, exID);
                 return true;
             }
         }

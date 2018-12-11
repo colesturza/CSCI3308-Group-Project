@@ -30,7 +30,8 @@ namespace UHub.CoreLib.Entities.Users.DataInterop
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex, "CFB022ED-7385-45DF-9FB0-ED56E25ABD5C");
+                var exID = new Guid("CFB022ED-7385-45DF-9FB0-ED56E25ABD5C");
+                CoreFactory.Singleton.Logging.CreateErrorLog(ex, exID);
                 return null;
             }
         }
@@ -50,7 +51,8 @@ namespace UHub.CoreLib.Entities.Users.DataInterop
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex, "99E80625-980D-4F19-89B1-41FBA4D62A02");
+                var exID = new Guid("99E80625-980D-4F19-89B1-41FBA4D62A02");
+                CoreFactory.Singleton.Logging.CreateErrorLog(ex, exID);
                 return null;
             }
         }
@@ -73,7 +75,8 @@ namespace UHub.CoreLib.Entities.Users.DataInterop
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex, "D77C69A0-CAE4-49F8-99DC-407F01B5E394");
+                var exID = new Guid("D77C69A0-CAE4-49F8-99DC-407F01B5E394");
+                CoreFactory.Singleton.Logging.CreateErrorLog(ex, exID);
                 return null;
             }
         }

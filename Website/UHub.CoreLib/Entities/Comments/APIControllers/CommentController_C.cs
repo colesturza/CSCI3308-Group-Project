@@ -83,8 +83,8 @@ namespace UHub.CoreLib.Entities.Comments.APIControllers
             }
             catch (Exception ex)
             {
-                var errCode = "8b9255a4-070b-427c-91a9-4755199aaded";
-                await CoreFactory.Singleton.Logging.CreateErrorLogAsync(errCode, ex);
+                var exID = new Guid("5F25CA95-2E34-45DB-8E79-A0F334730AF7");
+                await CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex, exID);
 
                 statCode = HttpStatusCode.InternalServerError;
             }

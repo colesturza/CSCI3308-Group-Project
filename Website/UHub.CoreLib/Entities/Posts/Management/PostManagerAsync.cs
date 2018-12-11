@@ -64,7 +64,8 @@ namespace UHub.CoreLib.Entities.Posts.Management
             }
             catch (Exception ex)
             {
-                await CoreFactory.Singleton.Logging.CreateErrorLogAsync("05D71E7E-0D15-4D87-8ADB-16BBFD966B0C", ex);
+                var exID = new Guid("05D71E7E-0D15-4D87-8ADB-16BBFD966B0C");
+                await CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex, exID);
                 return (null, PostResultCode.UnknownError);
             }
 
@@ -90,7 +91,8 @@ namespace UHub.CoreLib.Entities.Posts.Management
             }
             catch (Exception ex)
             {
-                await CoreFactory.Singleton.Logging.CreateErrorLogAsync("7FB424FA-8548-47F1-AC05-A38183376902", ex);
+                var exID = new Guid("7FB424FA-8548-47F1-AC05-A38183376902");
+                await CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex, exID);
             }
 
 
@@ -155,7 +157,8 @@ namespace UHub.CoreLib.Entities.Posts.Management
             }
             catch (Exception ex)
             {
-                await CoreFactory.Singleton.Logging.CreateErrorLogAsync("CDB83704-5E14-48DB-AEB9-FA947EA91D0B", ex);
+                var exID = new Guid("CDB83704-5E14-48DB-AEB9-FA947EA91D0B");
+                await CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex, exID);
                 return PostResultCode.UnknownError;
             }
 
@@ -175,7 +178,8 @@ namespace UHub.CoreLib.Entities.Posts.Management
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex, "36CF1120-C6C2-4499-B9EF-203F87645CD6");
+                var exID = new Guid("36CF1120-C6C2-4499-B9EF-203F87645CD6");
+                CoreFactory.Singleton.Logging.CreateErrorLog(ex, exID);
             }
 
 

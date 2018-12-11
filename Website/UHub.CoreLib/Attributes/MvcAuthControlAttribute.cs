@@ -70,8 +70,8 @@ namespace UHub.CoreLib.Attributes
             }
             catch (Exception ex)
             {
-                var errCode = "C39F81BF-E61D-4C55-AA0D-E8950549E74B";
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex, errCode);
+                var exID = new Guid("C39F81BF-E61D-4C55-AA0D-E8950549E74B");
+                CoreFactory.Singleton.Logging.CreateErrorLog(ex, exID);
 
 
                 HandleLoginRedirect(ref filterContext);

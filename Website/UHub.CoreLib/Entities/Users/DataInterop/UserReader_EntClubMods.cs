@@ -35,7 +35,8 @@ namespace UHub.CoreLib.Entities.Users.DataInterop
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex, "AFB6D420-F9C2-433E-9EF5-9DF877C2409E");
+                var exID = new Guid("AFB6D420-F9C2-433E-9EF5-9DF877C2409E");
+                CoreFactory.Singleton.Logging.CreateErrorLog(ex, exID);
                 return false;
             }
 

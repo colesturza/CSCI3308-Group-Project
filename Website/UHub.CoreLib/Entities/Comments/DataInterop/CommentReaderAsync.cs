@@ -41,7 +41,8 @@ namespace UHub.CoreLib.Entities.Comments.DataInterop
             }
             catch (Exception ex)
             {
-                await CoreFactory.Singleton.Logging.CreateErrorLogAsync("66C367D8-119F-4539-92DD-48F01738BDA1", ex);
+                var exID = new Guid("66C367D8-119F-4539-92DD-48F01738BDA1");
+                await CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex, exID);
                 return null;
             }
         }
@@ -75,7 +76,8 @@ namespace UHub.CoreLib.Entities.Comments.DataInterop
             }
             catch (Exception ex)
             {
-                await CoreFactory.Singleton.Logging.CreateErrorLogAsync("63E18CDB-F9A3-41EE-AF75-954AD55A4E40", ex);
+                var exID = new Guid("63E18CDB-F9A3-41EE-AF75-954AD55A4E40");
+                await CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex, exID);
                 return null;
             }
         }

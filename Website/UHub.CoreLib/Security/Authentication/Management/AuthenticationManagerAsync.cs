@@ -58,7 +58,8 @@ namespace UHub.CoreLib.Security.Authentication.Management
                 }
                 catch (Exception ex)
                 {
-                    CoreFactory.Singleton.Logging.CreateErrorLog(ex, "AC0FB05B-0910-4407-B567-2CDCB7A31733");
+                    var exID = new Guid("AC0FB05B-0910-4407-B567-2CDCB7A31733");
+                    CoreFactory.Singleton.Logging.CreateErrorLog(ex, exID);
                     return false;
                 }
             }
@@ -105,14 +106,16 @@ namespace UHub.CoreLib.Security.Authentication.Management
                 catch (CryptographicException ex)
                 {
                     token = "ERROR";
-                    CoreFactory.Singleton.Logging.CreateErrorLog(ex, "5350AF25-954A-4C4F-B162-B93A1BF57B38");
+                    var exID = new Guid("5350AF25-954A-4C4F-B162-B93A1BF57B38");
+                    CoreFactory.Singleton.Logging.CreateErrorLog(ex, exID);
 
                     return false;
                 }
                 catch (Exception ex)
                 {
                     token = "ERROR";
-                    CoreFactory.Singleton.Logging.CreateErrorLog(ex, "810D0724-BCBB-46AC-B661-556A89EBA34B");
+                    var exID = new Guid("810D0724-BCBB-46AC-B661-556A89EBA34B");
+                    CoreFactory.Singleton.Logging.CreateErrorLog(ex, exID);
 
                     return false;
                 }
@@ -226,7 +229,7 @@ namespace UHub.CoreLib.Security.Authentication.Management
 
             Context.Items[REQUEST_CURRENT_USER] = cmsUser;
 
-            
+
             return tokenStatus;
         }
 
@@ -364,7 +367,8 @@ namespace UHub.CoreLib.Security.Authentication.Management
             }
             catch (Exception ex)
             {
-                await CoreFactory.Singleton.Logging.CreateErrorLogAsync("56BB6A44-406A-487C-988B-9BBF0CF9F660", ex);
+                var exID = new Guid("56BB6A44-406A-487C-988B-9BBF0CF9F660");
+                await CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex, exID);
 
                 var CmsUser = UserReader.GetAnonymousUser();
                 return (TokenValidationStatus.AnonUser, CmsUser);

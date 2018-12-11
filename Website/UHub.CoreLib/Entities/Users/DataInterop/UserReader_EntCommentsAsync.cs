@@ -33,7 +33,8 @@ namespace UHub.CoreLib.Entities.Users.DataInterop
             }
             catch (Exception ex)
             {
-                await CoreFactory.Singleton.Logging.CreateErrorLogAsync("806327DF-92D9-4400-974C-11D7EB2C1793", ex);
+                var exID = new Guid("806327DF-92D9-4400-974C-11D7EB2C1793");
+                await CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex, exID);
                 return false;
             }
 

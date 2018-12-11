@@ -87,7 +87,8 @@ namespace UHub.CoreLib.Security.Accounts.APIControllers
             }
             catch (Exception ex)
             {
-                await CoreFactory.Singleton.Logging.CreateErrorLogAsync("68934E91-EC89-41A4-A25A-C985496B99AA", ex);
+                var exID = new Guid("68934E91-EC89-41A4-A25A-C985496B99AA");
+                await CoreFactory.Singleton.Logging.CreateErrorLogAsync(ex, exID);
            
             }
 

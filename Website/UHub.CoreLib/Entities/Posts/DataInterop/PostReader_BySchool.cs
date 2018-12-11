@@ -41,7 +41,8 @@ namespace UHub.CoreLib.Entities.Posts.DataInterop
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex, "F70A563D-BD5C-4304-A7F8-E83A869F96E4");
+                var exID = new Guid("F70A563D-BD5C-4304-A7F8-E83A869F96E4");
+                CoreFactory.Singleton.Logging.CreateErrorLog(ex, exID);
                 return null;
             }
 
@@ -75,7 +76,8 @@ namespace UHub.CoreLib.Entities.Posts.DataInterop
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex, "56B2BB40-B3BC-4B75-92F8-C70D646BFA4F");
+                var exID = new Guid("56B2BB40-B3BC-4B75-92F8-C70D646BFA4F");
+                CoreFactory.Singleton.Logging.CreateErrorLog(ex, exID);
                 return null;
             }
 
@@ -111,7 +113,8 @@ namespace UHub.CoreLib.Entities.Posts.DataInterop
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex, "20788253-3045-419B-BBA4-D72A4A54EC36");
+                var exID = new Guid("20788253-3045-419B-BBA4-D72A4A54EC36");
+                CoreFactory.Singleton.Logging.CreateErrorLog(ex, exID);
                 return null;
             }
         }
@@ -154,7 +157,8 @@ namespace UHub.CoreLib.Entities.Posts.DataInterop
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex, "38436ACD-707E-42C1-86E3-8C9B252F582A");
+                var exID = new Guid("38436ACD-707E-42C1-86E3-8C9B252F582A");
+                CoreFactory.Singleton.Logging.CreateErrorLog(ex, exID);
                 return null;
             }
         }
@@ -209,7 +213,8 @@ namespace UHub.CoreLib.Entities.Posts.DataInterop
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex, "38436ACD-707E-42C1-86E3-8C9B252F582A");
+                var exID = new Guid("38436ACD-707E-42C1-86E3-8C9B252F582A");
+                CoreFactory.Singleton.Logging.CreateErrorLog(ex, exID);
                 StartID = 0;
                 return null;
             }

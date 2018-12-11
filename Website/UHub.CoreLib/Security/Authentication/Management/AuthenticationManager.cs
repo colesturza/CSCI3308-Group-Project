@@ -58,7 +58,8 @@ namespace UHub.CoreLib.Security.Authentication.Management
                 }
                 catch (Exception ex)
                 {
-                    CoreFactory.Singleton.Logging.CreateErrorLog(ex, "F1459F20-3C34-4DAD-9925-A3A09D917E5F");
+                    var exID = new Guid("F1459F20-3C34-4DAD-9925-A3A09D917E5F");
+                    CoreFactory.Singleton.Logging.CreateErrorLog(ex, exID);
                     return false;
                 }
             }
@@ -106,14 +107,16 @@ namespace UHub.CoreLib.Security.Authentication.Management
                 catch (CryptographicException ex)
                 {
                     token = "ERROR";
-                    CoreFactory.Singleton.Logging.CreateErrorLog(ex, "28A013BC-BB19-47FF-977A-A4AAA6798884");
+                    var exID = new Guid("28A013BC-BB19-47FF-977A-A4AAA6798884");
+                    CoreFactory.Singleton.Logging.CreateErrorLog(ex, exID);
 
                     return false;
                 }
                 catch (Exception ex)
                 {
                     token = "ERROR";
-                    CoreFactory.Singleton.Logging.CreateErrorLog(ex, "3BB3F302-6D3F-4271-824C-589EDFD49C13");
+                    var exID = new Guid("3BB3F302-6D3F-4271-824C-589EDFD49C13");
+                    CoreFactory.Singleton.Logging.CreateErrorLog(ex, exID);
 
                     return false;
                 }
@@ -419,7 +422,8 @@ namespace UHub.CoreLib.Security.Authentication.Management
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex, "FF7B1AA6-FAD8-43CB-A633-868E2BD7784B");
+                var exID = new Guid("FF7B1AA6-FAD8-43CB-A633-868E2BD7784B");
+                CoreFactory.Singleton.Logging.CreateErrorLog(ex, exID);
                 var cmsUser = UserReader.GetAnonymousUser();
                 return (TokenValidationStatus.AnonUser, cmsUser);
             }

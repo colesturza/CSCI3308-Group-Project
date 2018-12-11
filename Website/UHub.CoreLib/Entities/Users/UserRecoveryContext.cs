@@ -135,7 +135,8 @@ namespace UHub.CoreLib.Entities.Users
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex, "320E32EC-416F-4627-ADA1-D38EA201FCF0");
+                var exID = new Guid("320E32EC-416F-4627-ADA1-D38EA201FCF0");
+                CoreFactory.Singleton.Logging.CreateErrorLog(ex, exID);
                 return AcctRecoveryResultCode.UnknownError;
             }
 #pragma warning restore
@@ -154,7 +155,8 @@ namespace UHub.CoreLib.Entities.Users
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex, "AEB010D9-AF61-4108-9C5F-448CCAFE9EA8");
+                var exID = new Guid("AEB010D9-AF61-4108-9C5F-448CCAFE9EA8");
+                CoreFactory.Singleton.Logging.CreateErrorLog(ex, exID);
                 return false;
             }
 #pragma warning restore
