@@ -119,7 +119,8 @@ namespace UHub.CoreLib.Security.Authentication.Providers.Forms
                 }
                 else
                 {
-                    CoreFactory.Singleton.Logging.CreateErrorLog("E4D786E2-6574-4C11-95BF-06FF2BA069B1");
+                    var errMsg = "Pswd Validation Error - " + validationStatus.ToString();
+                    CoreFactory.Singleton.Logging.CreateErrorLog(errMsg, "E4D786E2-6574-4C11-95BF-06FF2BA069B1");
                     return AuthResultCode.UnknownError;
                 }
             }

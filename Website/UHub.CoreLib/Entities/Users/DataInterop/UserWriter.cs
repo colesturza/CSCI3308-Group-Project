@@ -297,8 +297,7 @@ namespace UHub.CoreLib.Entities.Users.DataInterop
             catch (Exception ex)
             {
                 var errCode = "6FE73439-372D-4935-92C9-912B47822499";
-                Exception ex_outer = new Exception(errCode, ex);
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex_outer);
+                CoreFactory.Singleton.Logging.CreateErrorLog(ex, errCode);
             }
         }
 

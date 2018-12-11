@@ -32,7 +32,7 @@ namespace UHub.CoreLib.Security.Authentication.Management
             }
             catch (Exception ex)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLog(ex);
+                CoreFactory.Singleton.Logging.CreateErrorLog(ex, "14C7A3B5-9D4B-4FCA-B8E4-0D68192A78B8");
                 return null;
             }
 

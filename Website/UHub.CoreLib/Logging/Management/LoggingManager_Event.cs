@@ -164,7 +164,7 @@ namespace UHub.CoreLib.Logging.Management
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="data"></param>
-        public void  CreateWarningLog<T>(T Data)
+        public void CreateWarningLog<T>(T Data)
         {
             var eventData = new EventLogData
             {
@@ -305,50 +305,36 @@ namespace UHub.CoreLib.Logging.Management
 
 
         /// <summary>
-        /// Create error message
-        /// </summary>
-        /// <param name="ex"></param>
-        public void CreateErrorLog(Exception ex)
-        {
-            var eventData = new EventLogData
-            {
-                EventType = EventType.Error,
-                EventID = null,
-                Content = ex?.ToString() ?? "UNKNOWN EXCEPTION",
-                CreatedBy = null,
-                CreatedDate = DateTimeOffset.UtcNow
-            };
-
-            CreateEventLog(eventData);
-        }
-        public void CreateErrorLog(Exception exInner, string UID)
-        {
-            var eventData = new EventLogData
-            {
-                EventType = EventType.Error,
-                EventID = UID,
-                Content = exInner?.ToString() ?? "UNKNOWN EXCEPTION",
-                CreatedBy = null,
-                CreatedDate = DateTimeOffset.UtcNow
-            };
-
-            CreateEventLog(eventData);
-        }
-        /// <summary>
         /// Create error message using anonymous type
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="data"></param>
         public void CreateErrorLog<T>(T Data)
         {
-            var eventData = new EventLogData
+            EventLogData eventData = null;
+            if (Data is Exception ex)
             {
-                EventType = EventType.Error,
-                EventID = null,
-                Content = Data.ToFormattedJSON(),
-                CreatedBy = null,
-                CreatedDate = DateTimeOffset.UtcNow
-            };
+                eventData = new EventLogData
+                {
+                    EventType = EventType.Error,
+                    EventID = null,
+                    Content = ex.ToString(),
+                    CreatedBy = null,
+                    CreatedDate = DateTimeOffset.UtcNow
+                };
+            }
+            else
+            {
+                eventData = new EventLogData
+                {
+                    EventType = EventType.Error,
+                    EventID = null,
+                    Content = Data.ToFormattedJSON(),
+                    CreatedBy = null,
+                    CreatedDate = DateTimeOffset.UtcNow
+                };
+            }
+
 
             CreateEventLog(eventData);
         }
@@ -359,11 +345,62 @@ namespace UHub.CoreLib.Logging.Management
         /// <param name="data"></param>
         public void CreateErrorLog<T>(T Data, string UID)
         {
+            EventLogData eventData = null;
+            if (Data is Exception ex)
+            {
+                eventData = new EventLogData
+                {
+                    EventType = EventType.Error,
+                    EventID = UID,
+                    Content = ex.ToString(),
+                    CreatedBy = null,
+                    CreatedDate = DateTimeOffset.UtcNow
+                };
+            }
+            else
+            {
+                eventData = new EventLogData
+                {
+                    EventType = EventType.Error,
+                    EventID = UID,
+                    Content = Data.ToFormattedJSON(),
+                    CreatedBy = null,
+                    CreatedDate = DateTimeOffset.UtcNow
+                };
+            }
+
+            CreateEventLog(eventData);
+        }
+        /// <summary>
+        /// Create error message using anonymous type
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="data"></param>
+        public void CreateErrorLog(string Message)
+        {
+            var eventData = new EventLogData
+            {
+                EventType = EventType.Error,
+                EventID = null,
+                Content = Message,
+                CreatedBy = null,
+                CreatedDate = DateTimeOffset.UtcNow
+            };
+
+            CreateEventLog(eventData);
+        }
+        /// <summary>
+        /// Create error message using anonymous type
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="data"></param>
+        public void CreateErrorLog(string Message, string UID)
+        {
             var eventData = new EventLogData
             {
                 EventType = EventType.Error,
                 EventID = UID,
-                Content = Data.ToFormattedJSON(),
+                Content = Message,
                 CreatedBy = null,
                 CreatedDate = DateTimeOffset.UtcNow
             };
@@ -378,7 +415,7 @@ namespace UHub.CoreLib.Logging.Management
         //---------------------------------------------------------------------------------------------------------
         //---------------------------------------------------------------------------------------------------------
 
-        
+
         /// <summary>
         /// Create success message using anonymous type
         /// </summary>

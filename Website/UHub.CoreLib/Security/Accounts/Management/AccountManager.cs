@@ -198,8 +198,8 @@ namespace UHub.CoreLib.Security.Accounts.Management
 
 
             if (userID == null)
-            {
-                CoreFactory.Singleton.Logging.CreateErrorLog(new Guid("2669D182-B402-44A4-A8ED-F507994E8C2D"));
+            {                
+                CoreFactory.Singleton.Logging.CreateErrorLog("UserID Empty", "2669D182-B402-44A4-A8ED-F507994E8C2D");
                 return AcctCreateResultCode.UnknownError;
             }
 
@@ -233,12 +233,12 @@ namespace UHub.CoreLib.Security.Accounts.Management
 
             if (userID == null)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLog("60E0DCEE-AE49-4892-8E4B-1A1165F12383");
+                CoreFactory.Singleton.Logging.CreateErrorLog("UserID Empty", "60E0DCEE-AE49-4892-8E4B-1A1165F12383");
                 return AcctCreateResultCode.UnknownError;
             }
             if (confirmToken == null)
             {
-                CoreFactory.Singleton.Logging.CreateErrorLog("33EC210D-5BE2-433B-8E39-FA5E3AD57312");
+                CoreFactory.Singleton.Logging.CreateErrorLog("Confirmation Token Not Available", "33EC210D-5BE2-433B-8E39-FA5E3AD57312");
                 return AcctCreateResultCode.UnknownError;
             }
 
@@ -266,7 +266,7 @@ namespace UHub.CoreLib.Security.Accounts.Management
                 {
                     //account creating, but auto login failed
                     //should only ever occur during tests
-                    CoreFactory.Singleton.Logging.CreateErrorLog("A275649B-AD89-43E3-8DE2-B81B6F47FE6A");
+                    CoreFactory.Singleton.Logging.CreateFailureLog("Test Failure - Ignore", "A275649B-AD89-43E3-8DE2-B81B6F47FE6A");
                     canLogin = false;
                 }
             }
@@ -282,7 +282,7 @@ namespace UHub.CoreLib.Security.Accounts.Management
                 var emailSendStatus = CoreFactory.Singleton.Mail.TrySendMessage(msg);
                 if (emailSendStatus != EmailResultCode.Success)
                 {
-                    CoreFactory.Singleton.Logging.CreateErrorLog("AEBDE62B-31D5-4B48-8D26-3123AA5219A3");
+                    CoreFactory.Singleton.Logging.CreateFailureLog("Email Failed to Send", "AEBDE62B-31D5-4B48-8D26-3123AA5219A3");
                     return AcctCreateResultCode.UnknownError;
                 }
             }
@@ -984,7 +984,7 @@ namespace UHub.CoreLib.Security.Accounts.Management
 
                 if (context == null)
                 {
-                    CoreFactory.Singleton.Logging.CreateErrorLog("FD4B0698-16C5-4446-BC8C-F1DFCBF21C3C");
+                    CoreFactory.Singleton.Logging.CreateErrorLog("Recovery Context Not Found", "FD4B0698-16C5-4446-BC8C-F1DFCBF21C3C");
                     return (AcctRecoveryResultCode.UnknownError, null, null);
                 }
 
@@ -1094,7 +1094,7 @@ namespace UHub.CoreLib.Security.Accounts.Management
             }
             if (pswdHash.IsEmpty())
             {
-                CoreFactory.Singleton.Logging.CreateErrorLog("3C722062-9158-4FCB-8A9D-2D132B6784E5");
+                CoreFactory.Singleton.Logging.CreateErrorLog("Pswd Not Set", "3C722062-9158-4FCB-8A9D-2D132B6784E5");
                 return false;
             }
             try
