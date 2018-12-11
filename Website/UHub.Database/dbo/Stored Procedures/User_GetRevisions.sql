@@ -12,6 +12,8 @@ begin
 	declare @isEnabled bit
 	declare @isReadOnly bit
 	declare @isDeleted bit
+	declare @deletedBy bigint
+	declare @deletedDate datetimeoffset(7)
 	declare @createdBy bigint
 	declare @createdDate datetimeoffset(7)
 	declare @modDate datetimeoffset(7)
@@ -19,19 +21,14 @@ begin
 		@isEnabled = IsEnabled,
 		@isReadOnly = IsReadOnly,
 		@isDeleted = IsDeleted,
+		@deletedBy = DeletedBy,
+		@deletedDate = DeletedDate,
 		@createdBy = CreatedBy,
 		@createdDate = CreatedDate,
 		@modDate = ModifiedDate
 	from dbo.Entities
 	where
 		ID = @UserID
-
-
-
-	if(@isDeleted  is null or @isDeleted = 1)
-	begin
-		return;
-	end
 
 
 	declare @parentID bigint
@@ -113,7 +110,7 @@ begin
 		where
 			eprx.EntID = @UserID
 			and eprx.EntTypeID = @entType
-			and CreatedDate != @modDate
+			and (CreatedDate != @modDate or @isDeleted = 1)
 	),
 	DynamicSet2 as
 	(
@@ -208,13 +205,13 @@ begin
 		rs.JobTitle,
 		rs.IsFinished,
 		@parentID		as ParentID,
-		cast(0 as bit)	as IsDeleted,
+		@isDeleted		as IsDeleted,
 		@createdBy		as CreatedBy,
 		@createdDate	as CreatedDate,
 		rs.ModifiedBy,
 		rs.ModifiedDate,
-		NULL			as DeletedBy,
-		NULL			as DeletedDate
+		@deletedBy		as DeletedBy,
+		@deletedDate	as DeletedDate
 	from RecurseSet rs
 
 end
